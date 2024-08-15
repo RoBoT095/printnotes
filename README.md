@@ -2,7 +2,7 @@
 
 **Inspired by Google Keep and Obsidian**
 
-![All Themes](https://github.com/RoBoT095/printnotes/blob/main/image/AllThemes.png?raw=true)
+<img src="https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes.png?raw=true" alt="all themes" />
 
 ## Features
 
@@ -17,6 +17,13 @@
 - Toolbar for easy markdown editing (borrowed from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor))
 
 ---
+
+<p>
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneSettings.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneEditor.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneEditing.png?raw=true" alt="all themes" width=200 />
+</p>
 
 ## Future Features on the List
 
