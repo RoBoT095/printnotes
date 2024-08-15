@@ -8,6 +8,7 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_layout.dart';
+import 'package:printnotes/utils/configs/user_sort.dart';
 
 import 'package:printnotes/view/intro_screen.dart';
 import 'package:printnotes/view/notes_screen.dart';
@@ -86,6 +87,7 @@ class _MainPageState extends State<MainPage> {
         case 'list':
           isGrid = false;
       }
+      sortOrder = settings['sortOrder'];
       currentDirectory = settings['directory'];
     });
   }
@@ -109,6 +111,7 @@ class _MainPageState extends State<MainPage> {
 
   void _sortItems(String order) {
     setState(() {
+      UserSortPref.setSortOrder(order);
       sortOrder = order;
     });
   }
@@ -116,8 +119,8 @@ class _MainPageState extends State<MainPage> {
   Widget mainScaffold(String title, {required Widget body, Widget? drawer}) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        foregroundColor: Theme.of(context).colorScheme.onBackground,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         title: isSearching
             ? TextField(
                 autofocus: true,
@@ -185,7 +188,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     const breakpoint = 1000.0;
-// TODO: Maybe use Future.builder instead
+
     return firstTimeUser
         ? IntroScreen(onDone: () {
             setState(() {
@@ -199,7 +202,7 @@ class _MainPageState extends State<MainPage> {
                 SizedBox(
                     width: 240,
                     child: Drawer(
-                      backgroundColor: Theme.of(context).colorScheme.background,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.zero)),
                       child: DrawerListView(
@@ -226,7 +229,7 @@ class _MainPageState extends State<MainPage> {
                   drawer: screenWidth < breakpoint
                       ? Drawer(
                           backgroundColor:
-                              Theme.of(context).colorScheme.background,
+                              Theme.of(context).colorScheme.surface,
                           child: DrawerListView(
                             onItemChanged: _loadSettings,
                           ),

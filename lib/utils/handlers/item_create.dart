@@ -73,11 +73,21 @@ class ItemCreationHandler {
         ),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: const Text('OK'),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
             onPressed: () => Navigator.of(context).pop(name),
           ),
         ],

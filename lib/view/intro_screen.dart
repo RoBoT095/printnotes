@@ -102,11 +102,12 @@ class _IntroScreenState extends State<IntroScreen> {
         PageViewModel(
           title: "Choose Your Notes Folder",
           bodyWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text("Select a folder to store your notes:"),
               ListTile(
-                title: const Text('Notes Location'),
-                subtitle: Text(selectedDirectory ?? 'Not Set'),
+                title: const Center(child: Text('Notes Location')),
+                subtitle: Center(child: Text(selectedDirectory ?? 'Not Set')),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -118,6 +119,10 @@ class _IntroScreenState extends State<IntroScreen> {
                     await DataPath.setSelectedDirectory(pickedDirectory);
                   }
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                ),
                 child: const Text("Select Folder"),
               ),
             ],
@@ -133,11 +138,16 @@ class _IntroScreenState extends State<IntroScreen> {
       showSkipButton: false,
       showNextButton: true,
       showDoneButton: true,
-      next: const Icon(
+      next: Icon(
         Icons.arrow_forward_rounded,
+        color: Theme.of(context).colorScheme.secondary,
         size: 30,
       ),
-      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+      done: Text("Done",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.secondary,
+          )),
       onDone: () {
         if (selectedDirectory != null) {
           UserFirstTime.setShowIntro(false);

@@ -8,10 +8,9 @@ class AppThemes {
       onPrimary: Colors.white,
       secondary: Color.fromRGBO(68, 138, 255, 1),
       onSecondary: Colors.white,
-      background: Colors.white,
-      onBackground: Colors.black,
       surface: Colors.white,
       onSurface: Colors.black,
+      surfaceContainer: Color.fromRGBO(246, 250, 255, 1),
     ),
   );
 
@@ -22,10 +21,9 @@ class AppThemes {
       onPrimary: Colors.white,
       secondary: Color.fromRGBO(68, 138, 255, 1),
       onSecondary: Colors.black,
-      background: Color.fromRGBO(33, 33, 33, 1),
-      onBackground: Colors.white,
-      surface: Color.fromRGBO(66, 66, 66, 1),
+      surface: Color.fromRGBO(33, 33, 33, 1),
       onSurface: Colors.white,
+      surfaceContainer: Color.fromRGBO(41, 43, 44, 1),
     ),
   );
 
@@ -36,10 +34,9 @@ class AppThemes {
       onPrimary: Colors.black,
       secondary: Color.fromRGBO(127, 205, 131, 1),
       onSecondary: Colors.black,
-      background: Color.fromRGBO(237, 248, 237, 1),
-      onBackground: Colors.black,
-      surface: Color.fromRGBO(200, 234, 202, 1),
+      surface: Color.fromRGBO(237, 248, 237, 1),
       onSurface: Colors.black,
+      surfaceContainer: Color.fromRGBO(227, 241, 227, 1),
     ),
   );
 
@@ -50,10 +47,9 @@ class AppThemes {
       onPrimary: Colors.white,
       secondary: Color.fromRGBO(137, 195, 85, 1),
       onSecondary: Colors.white,
-      background: Color.fromRGBO(26, 47, 26, 1),
-      onBackground: Colors.white,
-      surface: Color.fromRGBO(45, 82, 45, 1),
+      surface: Color.fromRGBO(26, 47, 26, 1),
       onSurface: Colors.white,
+      surfaceContainer: Color.fromRGBO(32, 61, 32, 1),
     ),
   );
 
@@ -64,10 +60,9 @@ class AppThemes {
       onPrimary: Colors.white,
       secondary: Color.fromRGBO(134, 134, 219, 1),
       onSecondary: Colors.white,
-      background: Color.fromRGBO(224, 224, 253, 1),
-      onBackground: Colors.black,
-      surface: Color.fromRGBO(210, 210, 255, 1),
+      surface: Color.fromRGBO(224, 224, 253, 1),
       onSurface: Colors.black,
+      surfaceContainer: Color.fromRGBO(214, 214, 252, 1),
     ),
   );
 
@@ -78,10 +73,9 @@ class AppThemes {
       onPrimary: Colors.white,
       secondary: Color.fromRGBO(151, 74, 206, 1),
       onSecondary: Colors.white,
-      background: Color.fromRGBO(42, 16, 60, 1),
-      onBackground: Color.fromRGBO(222, 232, 255, 1),
-      surface: Color.fromRGBO(70, 27, 100, 1),
-      onSurface: Colors.white,
+      surface: Color.fromRGBO(42, 16, 60, 1),
+      onSurface: Color.fromRGBO(222, 232, 255, 1),
+      surfaceContainer: Color.fromRGBO(54, 23, 77, 1),
     ),
   );
 
@@ -92,24 +86,21 @@ class AppThemes {
       onPrimary: Colors.white,
       secondary: Color.fromRGBO(213, 120, 119, 1),
       onSecondary: Colors.black,
-      background: Color.fromRGBO(249, 236, 236, 1),
-      onBackground: Colors.black,
-      surface: Color.fromRGBO(235, 216, 216, 1),
+      surface: Color.fromRGBO(249, 236, 236, 1),
       onSurface: Colors.black,
+      surfaceContainer: Color.fromRGBO(247, 228, 228, 1),
     ),
   );
 
   static final ThemeData darkStrawberry = ThemeData(
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
-      primary: Color.fromRGBO(136, 44, 42, 1),
-      onPrimary: Colors.white,
-      secondary: Color.fromRGBO(182, 65, 63, 1),
-      onSecondary: Colors.white,
-      background: Color.fromRGBO(58, 19, 18, 1),
-      onBackground: Colors.white,
-      surface: Color.fromRGBO(129, 91, 91, 1),
-      onSurface: Colors.white,
-    ),
+        primary: Color.fromRGBO(136, 44, 42, 1),
+        onPrimary: Colors.white,
+        secondary: Color.fromRGBO(182, 65, 63, 1),
+        onSecondary: Colors.white,
+        surface: Color.fromRGBO(58, 19, 18, 1),
+        onSurface: Colors.white,
+        surfaceContainer: Color.fromRGBO(75, 27, 26, 1)),
   );
 }

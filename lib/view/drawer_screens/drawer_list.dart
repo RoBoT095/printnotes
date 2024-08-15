@@ -43,7 +43,7 @@ class DrawerListView extends StatelessWidget {
           decoration:
               BoxDecoration(color: Theme.of(context).colorScheme.primary),
           child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

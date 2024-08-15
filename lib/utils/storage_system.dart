@@ -218,9 +218,11 @@ class StorageSystem {
       final file = File(filePath);
       if (await file.exists()) {
         String content = await file.readAsString();
-        // Trim whitespace and limit to previewLength
-        return content.trim().substring(
-            0, content.length < previewLength ? content.length : previewLength);
+        // Limit to previewLength then trim whitespace
+        return content
+            .substring(0,
+                content.length < previewLength ? content.length : previewLength)
+            .trim();
       }
     } catch (e) {
       debugPrint('Error reading file: $e');

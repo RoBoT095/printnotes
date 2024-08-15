@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataPath {
@@ -31,19 +30,8 @@ class DataPath {
       final prefs = await SharedPreferences.getInstance();
       _selectedDirectory = prefs.getString(_prefKey);
       if (_selectedDirectory == null) {
-        if (Platform.isAndroid || Platform.isIOS) {
-          final appDir = await getApplicationDocumentsDirectory();
-          _selectedDirectory = path.join(appDir.path, 'Print(Notes)');
-        } else {
-          // For desktop platforms, default to the user's home directory
-          _selectedDirectory = path.join(
-            Platform.environment['HOME'] ??
-                Platform.environment['USERPROFILE'] ??
-                '',
-            'Documents',
-            'Print(Notes)',
-          );
-        }
+        final appDir = await getApplicationDocumentsDirectory();
+        return _selectedDirectory = appDir.path;
       }
       final dir = Directory(_selectedDirectory!);
       if (!await dir.exists()) {

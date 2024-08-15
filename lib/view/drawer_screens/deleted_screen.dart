@@ -144,7 +144,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
             itemBuilder: (context) => <PopupMenuEntry>[
               const PopupMenuItem(
                 value: 'delAll',
-                child: Text("Delete Everything"),
+                child: Text("Empty Out Bin"),
               ),
             ],
           ),

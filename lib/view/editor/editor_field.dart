@@ -19,7 +19,10 @@ class EditorField extends StatelessWidget {
       autofocus: false,
       onChanged: onChanged,
       style: const TextStyle(fontSize: 16),
-      decoration: const InputDecoration(border: InputBorder.none),
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: 'Type something...',
+          hintStyle: TextStyle(color: Theme.of(context).hintColor)),
     );
   }
 }

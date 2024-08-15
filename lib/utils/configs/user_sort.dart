@@ -11,4 +11,3 @@ class UserSortPref {
     return prefs.getString('sortOrder') ?? 'default';
   }
 }
-// TODO: Link sort order to main.dart

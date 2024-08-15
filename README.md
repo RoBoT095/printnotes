@@ -2,6 +2,8 @@
 
 **Inspired by Google Keep and Obsidian**
 
+![All Themes](https://github.com/RoBoT095/printnotes/blob/main/image/AllThemes.png?raw=true)
+
 ## Features
 
 - Support Markdown... obviously
@@ -41,10 +43,10 @@ Make sure you have a working flutter sdk setup. If not installed, go to [Install
 
 Be sure to disable signing on build.gradle or change keystore to sign the app.
 
-For now the required flutter channel is master, so issue those two commands before starting building:
+Before you start building, run these commands:
 
 ```
-$ flutter channel master
+$ flutter channel stable
 ```
 
 ```

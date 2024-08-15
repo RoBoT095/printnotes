@@ -81,9 +81,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                  foregroundColor: MaterialStatePropertyAll<Color>(
+                  foregroundColor: WidgetStatePropertyAll<Color>(
                       Theme.of(context).colorScheme.onSecondary),
-                  backgroundColor: MaterialStatePropertyAll<Color>(
+                  backgroundColor: WidgetStatePropertyAll<Color>(
                       Theme.of(context).colorScheme.secondary)),
               onPressed: _pickDirectory,
               child: const Text('Change Folder'),

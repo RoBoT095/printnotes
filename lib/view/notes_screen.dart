@@ -11,6 +11,7 @@ import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 import 'package:printnotes/view/components/bottom_menu_popup.dart';
 import 'package:printnotes/view/components/speed_dial_fab.dart';
+import 'package:printnotes/view/components/markdown_checkbox.dart';
 
 class NotesDisplay extends StatefulWidget {
   const NotesDisplay({
@@ -103,6 +104,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
       onLongPress: () =>
           Menu.showBottomSheet(context, item, () => _loadItems(_currentPath)),
       child: Card(
+        color: Theme.of(context).colorScheme.surfaceContainer,
         child: isDirectory
             ? ListTile(
                 leading: Icon(
@@ -135,10 +137,12 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           return MarkdownBody(
-                            data: snapshot.data ?? 'No Preview available',
+                            data: snapshot.data ?? 'Preview not available',
                             softLineBreak: true,
                             styleSheet:
                                 MainMarkDownStyles.mainMDStyles(context),
+                            checkboxBuilder: (checked) =>
+                                markdownCheckBox(checked),
                           );
                         } else {
                           return const Text(
