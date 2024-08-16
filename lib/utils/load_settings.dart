@@ -44,20 +44,23 @@ class SettingsLoader {
 
   static Future<Map<String, dynamic>> loadItems({
     String? folderPath,
-    String sortOrder = 'default',
     required List<String> folderHistory,
     bool doReload = false,
   }) async {
     final mainPath = await DataPath.selectedDirectory;
     final directory = folderPath ?? mainPath;
+    String sortOrder = await UserSortPref.getSortOrder();
+    String currentFolderName;
 
     if (directory != null) {
       final items = await StorageSystem.listFolderContents(directory);
       final sortedItems = ItemSortHandler.sortItems(items, sortOrder);
 
-      final mainPathBasename =
-          mainPath != null ? path.basename(mainPath) : null;
-      final currentFolderName = path.basename(directory);
+      if (directory != mainPath) {
+        currentFolderName = path.basename(directory);
+      } else {
+        currentFolderName = 'All Notes';
+      }
 
       if (doReload) {
         folderPath = mainPath;
@@ -69,7 +72,6 @@ class SettingsLoader {
         'items': sortedItems,
         'currentPath': directory,
         'currentFolderName': currentFolderName,
-        'mainPath': mainPathBasename,
         'folderHistory': folderHistory,
       };
     }
@@ -78,7 +80,6 @@ class SettingsLoader {
       'items': <FileSystemEntity>[],
       'currentPath': null,
       'currentFolderName': 'All Notes',
-      'mainPath': null,
       'folderHistory': folderHistory,
     };
   }

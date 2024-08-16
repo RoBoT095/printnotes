@@ -3,7 +3,7 @@ import 'package:printnotes/utils/load_settings.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/themes/theme_provider.dart';
+import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/configs/user_layout.dart';
 
 class SettingsScreen extends StatefulWidget {

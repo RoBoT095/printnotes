@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/view/drawer_screens/archive_screen.dart';
-import 'package:printnotes/view/drawer_screens/deleted_screen.dart';
-import 'package:printnotes/view/drawer_screens/settings_screen.dart';
-import 'package:printnotes/view/drawer_screens/about_screen.dart';
+import 'package:printnotes/view/screens/archive_screen.dart';
+import 'package:printnotes/view/screens/deleted_screen.dart';
+import 'package:printnotes/view/screens/settings_screen.dart';
+import 'package:printnotes/view/screens/about_screen.dart';
 
-class DrawerListView extends StatelessWidget {
-  const DrawerListView({
+class DrawerView extends StatelessWidget {
+  const DrawerView({
     super.key,
     required this.onItemChanged,
   });

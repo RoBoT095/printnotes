@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:printnotes/view/note_editor.dart';
+import 'package:printnotes/view/screens/note_editor.dart';
 
 class ItemNavHandler {
   // For notes only, won't work with folders

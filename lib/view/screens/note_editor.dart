@@ -4,10 +4,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
-import 'package:printnotes/styles/md_styles.dart';
-import 'package:printnotes/view/editor/toolbar/markdown_toolbar.dart';
-import 'package:printnotes/view/editor/editor_field.dart';
-import 'package:printnotes/view/components/markdown_checkbox.dart';
+import 'package:printnotes/constants/styles/md_styles.dart';
+import 'package:printnotes/view/components/editor/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/view/components/editor/editor_field.dart';
+import 'package:printnotes/view/components/widgets/markdown_checkbox.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key, required this.filePath});

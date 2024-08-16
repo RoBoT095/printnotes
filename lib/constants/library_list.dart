@@ -11,6 +11,7 @@ class Library {
       required this.license});
 }
 
+// TODO: Add riverpod
 final List<Library> libraries = [
   Library(
     name: 'Cupertino Icons',

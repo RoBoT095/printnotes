@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:printnotes/themes/theme_data.dart';
+import 'package:printnotes/constants/themes/theme_color_data.dart';
 import 'package:printnotes/utils/configs/user_theming.dart';
 
 class ThemeProvider with ChangeNotifier {

@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import 'package:printnotes/styles/md_styles.dart';
+import 'package:printnotes/constants/styles/md_styles.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 import 'package:printnotes/view/components/bottom_menu_popup.dart';
-import 'package:printnotes/view/components/speed_dial_fab.dart';
-import 'package:printnotes/view/components/markdown_checkbox.dart';
+import 'package:printnotes/view/components/widgets/speed_dial_fab.dart';
+import 'package:printnotes/view/components/widgets/markdown_checkbox.dart';
 
 class NotesDisplay extends StatefulWidget {
   const NotesDisplay({
@@ -19,13 +19,11 @@ class NotesDisplay extends StatefulWidget {
     required this.isLayoutGrid,
     required this.currentDirectory,
     required this.onStateChanged,
-    required this.sortOrder,
   });
 
   final bool isLayoutGrid;
   final String? currentDirectory;
   final VoidCallback onStateChanged;
-  final String sortOrder;
 
   @override
   State<NotesDisplay> createState() => _NotesDisplayState();
@@ -34,7 +32,6 @@ class NotesDisplay extends StatefulWidget {
 class _NotesDisplayState extends State<NotesDisplay> {
   bool _mounted = true;
   List<FileSystemEntity> _items = [];
-  String? _mainPath;
   String? _currentPath;
   String _currentFolderName = 'All Notes';
   List<String> _folderHistory = [];
@@ -49,8 +46,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
   void didUpdateWidget(NotesDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.isLayoutGrid != widget.isLayoutGrid ||
-        oldWidget.currentDirectory != widget.currentDirectory ||
-        oldWidget.sortOrder != widget.sortOrder) {
+        oldWidget.currentDirectory != widget.currentDirectory) {
       _loadItems(widget.currentDirectory, doReload: true);
     } else {
       _loadItems(oldWidget.currentDirectory, doReload: true);
@@ -61,29 +57,19 @@ class _NotesDisplayState extends State<NotesDisplay> {
   // line, but like an impossible optical illusion of a spiral
 
   Future<void> _loadItems(String? folderPath, {bool doReload = false}) async {
-    final result = await SettingsLoader.loadItems(
+    final loadedItems = await SettingsLoader.loadItems(
       folderPath: folderPath,
-      sortOrder: widget.sortOrder,
       folderHistory: _folderHistory,
       doReload: doReload,
     );
 
     if (_mounted) {
       setState(() {
-        _items = result['items'];
-        _currentPath = result['currentPath'];
-        _currentFolderName = result['currentFolderName'];
-        _mainPath = result['mainPath'];
-        _folderHistory = result['folderHistory'];
+        _items = loadedItems['items'];
+        _currentPath = loadedItems['currentPath'];
+        _currentFolderName = loadedItems['currentFolderName'];
+        _folderHistory = loadedItems['folderHistory'];
       });
-    }
-  }
-
-  _getFolderName() {
-    if (_currentFolderName != _mainPath) {
-      return _currentFolderName;
-    } else {
-      return 'All Notes';
     }
   }
 
@@ -102,7 +88,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
         }
       },
       onLongPress: () =>
-          Menu.showBottomSheet(context, item, () => _loadItems(_currentPath)),
+          showBottomMenu(context, item, () => _loadItems(_currentPath)),
       child: Card(
         color: Theme.of(context).colorScheme.surfaceContainer,
         child: isDirectory
@@ -165,7 +151,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text(_getFolderName()),
+        title: Text(_currentFolderName),
         leading: _folderHistory.length > 1
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -205,9 +191,10 @@ class _NotesDisplayState extends State<NotesDisplay> {
           )
         ],
       ),
-      floatingActionButton: SpeedDialFAB(
-        onLoadItems: () => _loadItems(_currentPath),
+      floatingActionButton: speedDialFAB(
+        context,
         currentPath: _currentPath ?? '',
+        onLoadItems: () => _loadItems(_currentPath),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

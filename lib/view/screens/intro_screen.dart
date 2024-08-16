@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-import 'package:printnotes/themes/theme_provider.dart';
+import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
