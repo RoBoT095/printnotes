@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/view/screens/archive_screen.dart';
 import 'package:printnotes/view/screens/deleted_screen.dart';
 import 'package:printnotes/view/screens/settings_screen.dart';
+import 'package:printnotes/view/screens/sync_service_screen.dart';
 import 'package:printnotes/view/screens/about_screen.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({
     super.key,
+    required this.directory,
     required this.onItemChanged,
   });
 
+  final String directory;
   final VoidCallback onItemChanged;
 
   void _navigateToScreen(BuildContext context, {Widget? screen}) {
@@ -94,6 +97,15 @@ class DrawerView extends StatelessWidget {
               screen: SettingsScreen(
                 onSettingsChanged: onItemChanged,
               )),
+        ),
+        ListTile(
+          iconColor: Theme.of(context).colorScheme.secondary,
+          leading: const Icon(Icons.sync),
+          title: const Text('Sync'),
+          onTap: () => _navigateToScreen(
+            context,
+            screen: SyncServiceScreen(directory: directory),
+          ),
         ),
         ListTile(
           iconColor: Theme.of(context).colorScheme.secondary,

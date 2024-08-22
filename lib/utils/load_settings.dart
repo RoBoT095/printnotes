@@ -9,6 +9,7 @@ import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_layout.dart';
 import 'package:printnotes/utils/configs/user_theming.dart';
 import 'package:printnotes/utils/configs/user_sort.dart';
+import 'package:printnotes/utils/configs/user_sync.dart';
 
 class SettingsLoader {
   static Future<bool> getShowIntro() async {
@@ -81,6 +82,16 @@ class SettingsLoader {
       'currentPath': null,
       'currentFolderName': 'All Notes',
       'folderHistory': folderHistory,
+    };
+  }
+
+  static Future<Map<String, dynamic>> loadSyncSettings() async {
+    final syncService = await UserSyncPref.getSyncService();
+    final connectionType = await UserSyncPref.getConnectionType();
+
+    return {
+      'service': syncService,
+      'connection': connectionType,
     };
   }
 }

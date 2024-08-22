@@ -11,7 +11,6 @@ class Library {
       required this.license});
 }
 
-// TODO: Add riverpod
 final List<Library> libraries = [
   Library(
     name: 'Cupertino Icons',
@@ -119,5 +118,24 @@ final List<Library> libraries = [
     publisher: 'pyozer',
     url: 'https://github.com/pyozer/introduction_screen',
     license: 'MIT License',
+  ),
+  Library(
+    name: 'http',
+    publisher: 'dart.dev',
+    url: 'https://github.com/dart-lang/http/tree/master/pkgs/http',
+    license: 'BSD 3-Clause License',
+  ),
+  Library(
+    name: 'flutter_secure_storage',
+    publisher: 'steenbakker.dev',
+    url:
+        'https://github.com/mogol/flutter_secure_storage/tree/develop/flutter_secure_storage',
+    license: 'BSD 3-Clause License',
+  ),
+  Library(
+    name: 'nextcloud',
+    publisher: 'nextcloud',
+    url: 'https://github.com/nextcloud/neon/tree/main/packages/nextcloud',
+    license: 'AGPL 3 License',
   ),
 ];
