@@ -36,6 +36,10 @@
 <details close>
 <summary>Tap to show/hide the see changes history</summary>
 
+### (Sept 19, 2024)
+
+Added app icons to different devices but I still need to check if they all work. Fixed the search and sort order buttons not updating screen when pressed, which happened when I was restructuring everything and forgot to check them.
+
 ### (Aug 22, 2024)
 
 1. Added popup when you try to close app with back button.
