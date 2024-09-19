@@ -91,10 +91,9 @@ class _MainPageState extends State<MainPage> {
                   child: MainScaffold(
                     title: widget.title,
                     currentDirectory: currentDirectory,
+                    onChange: _loadSettings,
                     isGrid: () {
-                      setState(() {
-                        isGrid = !isGrid;
-                      });
+                      setState(() => isGrid = !isGrid);
                     },
                     body: NotesDisplay(
                       key: ValueKey(currentDirectory),

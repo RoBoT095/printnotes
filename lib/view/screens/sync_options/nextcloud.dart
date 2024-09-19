@@ -176,6 +176,22 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.secondary),
         ),
+        Card(
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ListTile(
+              leading: Icon(
+                Icons.dangerous_outlined,
+                size: 40,
+              ),
+              subtitle: Text(
+                "Currently only uploads manually, doesn't pull and compare changes just yet.\nHope I can fix this soon! 😓",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
         ListTile(
           leading: Image.asset(
             'assets/icons/nextcloud-icon.png',

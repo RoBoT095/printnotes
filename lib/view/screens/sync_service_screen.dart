@@ -55,7 +55,7 @@ class _SyncServiceScreenState extends State<SyncServiceScreen> {
               child: ListTile(
                 leading: Icon(Icons.info_outline),
                 subtitle: Text(
-                  'Syncing functionality is currently upload only.\nIt is experimental so you may encounter bugs.',
+                  'Syncing is currently very experimental.\nIt is in development so you will encounter bugs.',
                   textAlign: TextAlign.center,
                 ),
               ),

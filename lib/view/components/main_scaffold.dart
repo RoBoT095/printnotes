@@ -12,6 +12,7 @@ class MainScaffold extends StatefulWidget {
     super.key,
     required this.title,
     this.currentDirectory,
+    required this.onChange,
     required this.isGrid,
     required this.body,
     this.drawer,
@@ -19,6 +20,7 @@ class MainScaffold extends StatefulWidget {
 
   final String title;
   final String? currentDirectory;
+  final VoidCallback onChange;
   final VoidCallback isGrid;
   final Widget body;
   final Widget? drawer;
@@ -28,28 +30,32 @@ class MainScaffold extends StatefulWidget {
 }
 
 class _MainScaffoldState extends State<MainScaffold> {
+  bool isSearching = false;
+  List<FileSystemEntity> searchResults = [];
+
+  void performSearch(String query) async {
+    if (query.isEmpty) {
+      searchResults.clear();
+      isSearching = false;
+      return;
+    }
+
+    final results =
+        await StorageSystem.searchItems(query, widget.currentDirectory ?? '');
+
+    searchResults = results;
+    isSearching = true;
+
+    widget.onChange();
+  }
+
+  void sortItems(String order) {
+    UserSortPref.setSortOrder(order);
+    widget.onChange();
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isSearching = false;
-    List<FileSystemEntity> searchResults = [];
-
-    void performSearch(String query) async {
-      if (query.isEmpty) {
-        searchResults.clear();
-        isSearching = false;
-        return;
-      }
-
-      final results =
-          await StorageSystem.searchItems(query, widget.currentDirectory ?? '');
-      searchResults = results;
-      isSearching = true;
-    }
-
-    void sortItems(String order) {
-      UserSortPref.setSortOrder(order);
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -118,7 +124,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         ],
       ),
       drawer: widget.drawer,
-      body: isSearching && searchResults.isNotEmpty
+      body: isSearching
           ? buildSearchResults(searchResults, widget.currentDirectory)
           : widget.body,
     );

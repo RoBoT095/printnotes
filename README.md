@@ -24,14 +24,19 @@
 <summary>Tap to show/hide screenshots</summary>
 
 <p>
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneSettings.png?raw=true" alt="all themes" width=200 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneEditor.png?raw=true" alt="all themes" width=200 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/PhoneEditing.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneSettings.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditor.png?raw=true" alt="all themes" width=200 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditing.png?raw=true" alt="all themes" width=200 />
 </p>
 </details>
 
-## <u>Changelog</u> (Aug 22, 2024)
+## Changelog
+
+<details close>
+<summary>Tap to show/hide the see changes history</summary>
+
+### (Aug 22, 2024)
 
 1. Added popup when you try to close app with back button.
 2. Added Sync screen in drawer.
@@ -42,6 +47,8 @@
    it out as I will add it when I figure out notes comparing and merging with sync service.
 
    (need to figure out how to version app cuz I never done this before ┐(￣ヘ￣)┌ so version will remain till I get sync completed)
+
+</details>
 
 ## Future Features on the List
 
