@@ -23,6 +23,7 @@ class _MainPageState extends State<MainPage> {
   bool firstTimeUser = true;
   bool isGrid = true;
   late String currentDirectory;
+  bool _canPop = false;
 
   @override
   void initState() {
@@ -45,6 +46,12 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void _updateCanPop() {
+    setState(() {
+      _canPop = !_canPop;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -58,13 +65,15 @@ class _MainPageState extends State<MainPage> {
             });
           })
         : PopScope(
-            canPop: false,
+            canPop: _canPop,
             onPopInvokedWithResult: (didPop, result) async {
               if (didPop) return;
 
-              final canPop = await showExitPopup(context);
-              if (canPop && context.mounted) {
-                SystemNavigator.pop();
+              if (_canPop == true) {
+                final exitPopup = await showExitPopup(context);
+                if (exitPopup && context.mounted) {
+                  SystemNavigator.pop();
+                }
               }
             },
             child: Row(
@@ -100,6 +109,7 @@ class _MainPageState extends State<MainPage> {
                       isLayoutGrid: isGrid,
                       currentDirectory: currentDirectory,
                       onStateChanged: _loadSettings,
+                      updateCanPop: _updateCanPop,
                     ),
                     drawer: screenWidth < breakpoint
                         ? Drawer(

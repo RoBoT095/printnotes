@@ -19,11 +19,13 @@ class NotesDisplay extends StatefulWidget {
     required this.isLayoutGrid,
     required this.currentDirectory,
     required this.onStateChanged,
+    required this.updateCanPop,
   });
 
   final bool isLayoutGrid;
   final String? currentDirectory;
   final VoidCallback onStateChanged;
+  final VoidCallback updateCanPop;
 
   @override
   State<NotesDisplay> createState() => _NotesDisplayState();
@@ -71,6 +73,12 @@ class _NotesDisplayState extends State<NotesDisplay> {
         _folderHistory = loadedItems['folderHistory'];
       });
     }
+  }
+
+  void _navBack() {
+    setState(() {
+      ItemNavHandler.navigateBack(_folderHistory, _loadItems);
+    });
   }
 
   Widget _buildGridItem(BuildContext context, int index) {
@@ -147,56 +155,67 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text(_currentFolderName),
-        leading: _folderHistory.length > 1
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  setState(() {
-                    ItemNavHandler.navigateBack(_folderHistory, _loadItems);
-                  });
-                },
-              )
-            : null,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              _loadItems(_currentPath);
-            },
-          ),
-        ],
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.all(8),
-            sliver: SliverMasonryGrid.count(
-              crossAxisCount: _displayGridCount(widget.isLayoutGrid),
-              mainAxisSpacing: 4,
-              crossAxisSpacing: 4,
-              childCount: _items.length,
-              itemBuilder: (context, index) => _buildGridItem(context, index),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        debugPrint(_folderHistory.length.toString());
+        if (_folderHistory.length > 1) {
+          setState(() {
+            _navBack();
+          });
+        } else {
+          widget.updateCanPop();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          title: Text(_currentFolderName),
+          leading: _folderHistory.length > 1
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: _navBack,
+                )
+              : null,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                _loadItems(_currentPath);
+              },
             ),
-          ),
-          // Adds empty space at bottom, helps when in list view
-          const SliverToBoxAdapter(
-            child: SizedBox(
-              height: 200,
+          ],
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.all(8),
+              sliver: SliverMasonryGrid.count(
+                crossAxisCount: _displayGridCount(widget.isLayoutGrid),
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                childCount: _items.length,
+                itemBuilder: (context, index) => _buildGridItem(context, index),
+              ),
             ),
-          )
-        ],
+            // Adds empty space at bottom, helps when in list view
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 200,
+              ),
+            )
+          ],
+        ),
+        floatingActionButton: speedDialFAB(
+          context,
+          currentPath: _currentPath ?? '',
+          onLoadItems: () => _loadItems(_currentPath),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
-      floatingActionButton: speedDialFAB(
-        context,
-        currentPath: _currentPath ?? '',
-        onLoadItems: () => _loadItems(_currentPath),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
