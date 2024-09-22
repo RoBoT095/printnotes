@@ -103,12 +103,13 @@ class _NotesDisplayState extends State<NotesDisplay> {
             ? ListTile(
                 leading: Icon(
                   Icons.folder,
-                  size: 38,
+                  size: 34,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 title: Text(
                   name,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               )

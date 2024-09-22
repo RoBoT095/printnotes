@@ -20,6 +20,7 @@ class NoteEditorScreen extends StatefulWidget {
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late TextEditingController _controller;
+  final UndoHistoryController _undoHistoryController = UndoHistoryController();
   bool _isEditing = false;
   bool _isLoading = true;
   bool _isDirty = false;
@@ -166,6 +167,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         _isEditing = !_isEditing;
                       });
                     },
+                    undoController: _undoHistoryController,
                     toolbarBackground: Theme.of(context).colorScheme.surface)
                 : null,
             child: _isLoading
@@ -184,6 +186,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                           _controller.text != _originalContent;
                                     });
                                   },
+                                  undoController: _undoHistoryController,
                                 )
                               : GestureDetector(
                                   onDoubleTap: () {

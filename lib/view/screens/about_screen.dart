@@ -29,7 +29,8 @@ class AboutScreen extends StatelessWidget {
               Icons.info_outline,
             ),
             title: const Text('Version'),
-            subtitle: const Text('0.9.0'),
+            subtitle: const Text('0.9.1'),
+            // TODO: Don't forget to also change app version here
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,
@@ -61,8 +62,9 @@ class AboutScreen extends StatelessWidget {
             title: const Text('Support'),
             subtitle: const Text(
                 "I'm a solo dev working hard on this, \nMaybe buy me some Coffee?"),
-            // TODO: Add support link
-            onTap: () {},
+            onTap: () {
+              _launchUrl('https://liberapay.com/RoBoT_095/donate');
+            },
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,

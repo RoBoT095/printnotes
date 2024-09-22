@@ -9,16 +9,15 @@ class MarkdownToolbar extends StatelessWidget {
     super.key,
     required this.onPreviewChanged,
     required this.controller,
+    required this.undoController,
     this.onValueChange,
     this.toolbarBackground,
     this.expandableBackground,
-  }) : toolbar = Toolbar(
-          controller: controller,
-          onValueChange: onValueChange,
-        );
+  }) : toolbar = Toolbar(controller: controller, onValueChange: onValueChange);
 
   final VoidCallback onPreviewChanged;
   final TextEditingController controller;
+  final UndoHistoryController undoController;
   final Toolbar toolbar;
   final ValueChanged<bool>? onValueChange;
   final Color? toolbarBackground;
@@ -41,6 +40,31 @@ class MarkdownToolbar extends StatelessWidget {
               tooltip: 'Show/Hide markdown preview',
               onPressedButton: () {
                 onPreviewChanged.call();
+              },
+            ),
+            ValueListenableBuilder(
+              valueListenable: undoController,
+              builder: (context, value, child) {
+                return Row(
+                  children: [
+                    // undo
+                    ToolbarItem(
+                      key: const ValueKey<String>("toolbar_undo_action"),
+                      icon: FontAwesomeIcons.arrowRotateLeft,
+                      tooltip: 'Undo previous action',
+                      onPressedButton:
+                          value.canUndo ? () => undoController.undo() : null,
+                    ),
+                    // redo
+                    ToolbarItem(
+                      key: const ValueKey<String>("toolbar_redo_action"),
+                      icon: FontAwesomeIcons.arrowRotateRight,
+                      tooltip: 'Redo previous action',
+                      onPressedButton:
+                          value.canRedo ? () => undoController.redo() : null,
+                    ),
+                  ],
+                );
               },
             ),
             // select single line

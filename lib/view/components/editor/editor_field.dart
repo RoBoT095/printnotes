@@ -5,10 +5,12 @@ class EditorField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onChanged,
+    this.undoController,
   });
 
   final TextEditingController controller;
   final Function(String) onChanged;
+  final UndoHistoryController? undoController;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class EditorField extends StatelessWidget {
       keyboardType: TextInputType.multiline,
       autofocus: false,
       onChanged: onChanged,
+      undoController: undoController,
       style: const TextStyle(fontSize: 16),
       decoration: InputDecoration(
           border: InputBorder.none,

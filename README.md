@@ -1,6 +1,6 @@
 # Print(Notes) A Better way to take Notes
 
-[![GitHub](https://img.shields.io/github/license/RoBoT095/printnotes)](https://github.com/RoBoT095/printnotes/blob/main/LICENSE.md)
+[![GitHub](https://img.shields.io/github/license/RoBoT095/printnotes)](https://github.com/RoBoT095/printnotes/blob/main/LICENSE)
 
 **Inspired by Google Keep and Obsidian**
 
@@ -35,6 +35,10 @@
 
 <details close>
 <summary>Tap to show/hide the see changes history</summary>
+
+### (Sept 22, 2024)
+
+Added undo/redo buttons to text editor and on notes display screen made folder icon a little bit smaller with name maxlines extended from 1 to 2.
 
 ### (Sept 19, 2024)
 
@@ -114,3 +118,9 @@ $ flutter build platform-name
 ```
 
 </details>
+
+## Donations
+
+Feel free to support me and my work
+
+[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/RoBoT_095/donate)
