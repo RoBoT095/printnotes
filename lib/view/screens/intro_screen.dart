@@ -6,6 +6,7 @@ import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key, required this.onDone});
@@ -154,9 +155,7 @@ class _IntroScreenState extends State<IntroScreen> {
           widget.onDone();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text("Please select a folder for your notes.")),
-          );
+              customSnackBar('Please select a folder for your notes.'));
         }
       },
       dotsDecorator: DotsDecorator(

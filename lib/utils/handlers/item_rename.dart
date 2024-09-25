@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class ItemRenameHandler {
   static Future<void> showRenameDialog(
@@ -45,20 +46,14 @@ class ItemRenameHandler {
       loadItems();
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  '${item is Directory ? 'Folder' : 'Note'} renamed successfully')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+            '${item is Directory ? 'Folder' : 'Note'} renamed successfully'));
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error renaming ${item is Directory ? 'folder' : 'note'}: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+            'Error renaming ${item is Directory ? 'folder' : 'note'}: $e'));
       }
     }
   }

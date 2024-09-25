@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 
@@ -293,88 +292,7 @@ class StorageSystem {
     }
   }
 
-  // Methods to soft and hard delete items as well as expire items from .deleted
-
-  static Future<String> getDeletedPath() async {
-    final basDir = await DataPath.selectedDirectory;
-    return path.join(basDir!, '.deleted');
-  }
-
-  // Used to set the duration till items in .deleted folder get deleted
-  static Future<void> setDeletionDuration(int days) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('deletion_duration', days);
-  }
-
-  // Used to read the duration till items in .deleted folder get deleted
-  static Future<int> getDeletionDuration() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('deletion_duration') ?? 7;
-  }
-
-  static Future<void> softDeleteItem(String itemPath) async {
-    final baseDir = await DataPath.selectedDirectory;
-    final deleteDir = await getDeletedPath();
-    final relativePath = path.relative(itemPath, from: baseDir!);
-    final itemName = path.basename(itemPath);
-    final deletionTime = DateTime.now().millisecondsSinceEpoch;
-    final newItemName = '$itemName._deleted_$deletionTime';
-    final deletedPath =
-        path.join(deleteDir, path.dirname(relativePath), newItemName);
-
-    final sourceItem =
-        FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
-            ? Directory(itemPath)
-            : File(itemPath);
-
-    final deletedItem =
-        FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
-            ? Directory(deletedPath)
-            : File(deletedPath);
-
-    await deletedItem.parent.create(recursive: true);
-
-    if (sourceItem is Directory) {
-      await _copyDirectory(sourceItem, deletedItem as Directory);
-    } else {
-      await (sourceItem as File).copy(deletedItem.path);
-    }
-
-    // Delete the original item after moving to .deleted
-    await sourceItem.delete(recursive: true);
-  }
-
-  static Future<void> restoreDeletedItem(String deletedItemPath) async {
-    final baseDir = await DataPath.selectedDirectory;
-    final deleteDir = await getDeletedPath();
-    final itemName = path.basename(deletedItemPath);
-    final originalName = itemName.split('._deleted_')[0];
-    final relativePath =
-        path.relative(path.dirname(deletedItemPath), from: deleteDir);
-    final destinationPath = path.join(baseDir!, relativePath, originalName);
-
-    final deletedItem = FileSystemEntity.typeSync(deletedItemPath) ==
-            FileSystemEntityType.directory
-        ? Directory(deletedItemPath)
-        : File(deletedItemPath);
-
-    final destinationItem = FileSystemEntity.typeSync(deletedItemPath) ==
-            FileSystemEntityType.directory
-        ? Directory(destinationPath)
-        : File(destinationPath);
-
-    await destinationItem.parent.create(recursive: true);
-
-    if (deletedItem is Directory) {
-      await _copyDirectory(deletedItem, destinationItem as Directory);
-    } else {
-      await (deletedItem as File).copy(destinationItem.path);
-    }
-
-    // Remove the item from .deleted after restoring
-    await deletedItem.delete(recursive: true);
-  }
-
+  // Methods to delete
   static Future<void> permanentlyDeleteItem(String itemPath) async {
     final item =
         FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
@@ -383,38 +301,6 @@ class StorageSystem {
 
     if (await item.exists()) {
       await item.delete(recursive: true);
-    }
-  }
-
-  static Future<List<FileSystemEntity>> listDeletedItems() async {
-    final deleteDir = await getDeletedPath();
-    final deletedDirEntity = Directory(deleteDir);
-
-    if (await deletedDirEntity.exists()) {
-      final entities = await deletedDirEntity.list().toList();
-      return entities.where((entity) {
-        return !path.basename(entity.path).startsWith('.');
-      }).toList();
-    }
-    return [];
-  }
-
-  static Future<void> cleanupExpiredItems() async {
-    final deletedItems = await listDeletedItems();
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final durationInMilliseconds =
-        await getDeletionDuration() * 24 * 60 * 60 * 1000;
-
-    for (var item in deletedItems) {
-      final itemName = path.basename(item.path);
-      final parts = itemName.split('._deleted_');
-      if (parts.length == 2) {
-        final deletionTime = int.tryParse(parts[1]);
-        if (deletionTime != null &&
-            now - deletionTime > durationInMilliseconds) {
-          await permanentlyDeleteItem(item.path);
-        }
-      }
     }
   }
 

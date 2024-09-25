@@ -1,67 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class ItemDeletionHandler {
-  static Future<void> showSoftDeleteConfirmation(
+  static Future<void> showDeleteConfirmation(
       BuildContext context, FileSystemEntity item, Function loadItems) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: Text(
-            'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'}?'),
-        actions: [
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          TextButton(
-            child: const Text('Delete'),
-            onPressed: () {
-              Navigator.of(context).pop();
-              handleSoftItemDelete(context, item, loadItems);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future<void> handleSoftItemDelete(
-      BuildContext context, FileSystemEntity item, Function loadItems,
-      {int? daysForDeletion}) async {
-    try {
-      await StorageSystem.softDeleteItem(item.path);
-
-      loadItems();
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                '${item is Directory ? 'Folder' : 'Note'} was moved to deleted list, will be permanently deleted after ${daysForDeletion ?? 'some time'}'),
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error deleting ${item is Directory ? 'folder' : 'note'}: $e')),
-        );
-      }
-    }
-  }
-
-  static Future<void> showPermanentDeleteConfirmation(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Permanent Deletion'),
+        title: const Text('Confirm Deletion'),
         content: Text(
             'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'} forever?'),
         actions: [
@@ -73,7 +21,7 @@ class ItemDeletionHandler {
             child: const Text('Delete'),
             onPressed: () {
               Navigator.of(context).pop();
-              handlePermanentItemDelete(context, item, loadItems);
+              handleItemDelete(context, item, loadItems);
             },
           ),
         ],
@@ -81,49 +29,22 @@ class ItemDeletionHandler {
     );
   }
 
-  static Future<void> handlePermanentItemDelete(
+  static Future<void> handleItemDelete(
       BuildContext context, FileSystemEntity item, Function loadItems) async {
     try {
-      await StorageSystem.softDeleteItem(item.path);
+      await StorageSystem.permanentlyDeleteItem(item.path);
 
       loadItems();
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  '${item is Directory ? 'Folder' : 'Note'} was permanently deleted')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+            '${item is Directory ? 'Folder' : 'Note'} was permanently deleted'));
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error permanently deleting ${item is Directory ? 'folder' : 'note'}: $e')),
-        );
-      }
-    }
-  }
-
-  static Future<void> handleRestoringDeletedItem(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
-    try {
-      await StorageSystem.restoreDeletedItem(item.path);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Item was restored successfully')),
-        );
-      }
-      loadItems();
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error restoring deleted item: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+            'Error permanently deleting ${item is Directory ? 'folder' : 'note'}: $e'));
       }
     }
   }

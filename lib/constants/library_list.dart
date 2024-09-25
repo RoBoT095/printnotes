@@ -58,13 +58,6 @@ final List<Library> libraries = [
     license: 'BSD 3-Clause License',
   ),
   Library(
-    name: 'Flutter Markdown',
-    publisher: 'flutter.dev',
-    url:
-        'https://github.com/flutter/packages/tree/main/packages/flutter_markdown',
-    license: 'BSD 3-Clause License',
-  ),
-  Library(
     name: 'Shared Preferences',
     publisher: 'flutter.dev',
     url:
@@ -137,5 +130,36 @@ final List<Library> libraries = [
     publisher: 'nextcloud',
     url: 'https://github.com/nextcloud/neon/tree/main/packages/nextcloud',
     license: 'AGPL 3 License',
+  ),
+  Library(
+    name: 'markdown_widget',
+    publisher: 'morn.fun',
+    url: 'https://github.com/asjqkkkk/markdown_widget',
+    license: 'MIT License',
+  ),
+  Library(
+    name: 'flutter_highlight',
+    publisher: 'git-touch',
+    url: 'https://github.com/git-touch/highlight.dart',
+    license: 'MIT License',
+  ),
+  Library(
+    name: 'html',
+    publisher: 'tools.dart.dev',
+    url: 'https://github.com/dart-lang/html',
+    license: 'License Written by the Authors',
+  ),
+  Library(
+    name: 'Flutter Math Fork',
+    publisher: 'simpleclub.com',
+    url: 'https://github.com/simpleclub-extended/flutter_math_fork',
+    license: 'Apache 2.0 License',
+  ),
+  Library(
+    name: 'Flutter Widget from HTML (core)',
+    publisher: 'daohoangson.com',
+    url:
+        'https://github.com/daohoangson/flutter_widget_from_html/tree/master/packages/core',
+    license: 'MIT License',
   ),
 ];

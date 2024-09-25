@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class ItemArchiveHandler {
   static Future<void> handleArchiveItem(
@@ -24,19 +25,15 @@ class ItemArchiveHandler {
                 await StorageSystem.archiveItem(item.path);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(
-                            '${item is Directory ? 'Folder' : 'Note'} archived successfully')),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+                      '${item is Directory ? 'Folder' : 'Note'} archived successfully'));
                 }
                 loadItems();
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error archiving item: $e')),
-                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(customSnackBar('Error archiving item: $e'));
                 }
               }
             },
@@ -52,17 +49,15 @@ class ItemArchiveHandler {
       await StorageSystem.unarchiveItem(item.path);
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Item unarchived successfully')),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSnackBar('Item unarchived successfully'));
       }
       loadItems();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error unarchiving item: $e')),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(customSnackBar('Error unarchiving item: $e'));
       }
     }
   }

@@ -24,7 +24,7 @@ Widget buildSearchResults(
           if (isDirectory) {
             // TODO: Add a way to navigate to folders
           } else {
-            ItemNavHandler.handleNoteTap(context, item, () => currentDirectory);
+            ItemNavHandler.onNoteSelect(context, item, () => currentDirectory);
           }
         },
       );

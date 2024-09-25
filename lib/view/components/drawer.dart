@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/view/screens/archive_screen.dart';
-import 'package:printnotes/view/screens/deleted_screen.dart';
 import 'package:printnotes/view/screens/settings_screen.dart';
 import 'package:printnotes/view/screens/sync_service_screen.dart';
 import 'package:printnotes/view/screens/about_screen.dart';
+import 'package:printnotes/constants/constants.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({
@@ -39,80 +39,98 @@ class DrawerView extends StatelessWidget {
   Widget build(BuildContext context) {
     var brightness = Theme.of(context).brightness;
     bool isDarkMode = brightness == Brightness.dark;
-    return ListView(
-      padding: EdgeInsets.zero,
+    return Column(
       children: [
-        DrawerHeader(
-          decoration:
-              BoxDecoration(color: Theme.of(context).colorScheme.primary),
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.edit_document,
-                  size: 48,
-                  color: isDarkMode ? Colors.white : Colors.black,
-                ),
-                Text(
-                  'Menu',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDarkMode ? Colors.white : Colors.black,
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // DrawerHeader without bottom border
+              Container(
+                height: MediaQuery.paddingOf(context).top + 160.0,
+                decoration:
+                    BoxDecoration(color: Theme.of(context).colorScheme.primary),
+                child: AnimatedContainer(
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0).add(
+                      EdgeInsets.only(top: MediaQuery.paddingOf(context).top)),
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.fastOutSlowIn,
+                  child: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.edit_document,
+                          size: 48,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        ),
+                        Text(
+                          'Menu',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
+                ),
+              ),
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.article_outlined),
+                title: const Text('All Notes'),
+                onTap: () => _navigateToScreen(context),
+              ),
+              const Opacity(opacity: 0.2, child: Divider()),
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.archive_outlined),
+                title: const Text('Archive'),
+                onTap: () =>
+                    _navigateToScreen(context, screen: const ArchiveScreen()),
+              ),
+              const Opacity(opacity: 0.2, child: Divider()),
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.settings_outlined),
+                title: const Text('Settings'),
+                onTap: () => _navigateToScreen(context,
+                    screen: SettingsScreen(
+                      onSettingsChanged: onItemChanged,
+                    )),
+              ),
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.sync),
+                title: const Text('Sync'),
+                onTap: () => _navigateToScreen(
+                  context,
+                  screen: SyncServiceScreen(directory: directory),
+                ),
+              ),
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.info_outlined),
+                title: const Text('About'),
+                onTap: () =>
+                    _navigateToScreen(context, screen: const AboutScreen()),
+              ),
+            ],
+          ),
+        ),
+        const ListTile(
+          title: Opacity(
+            opacity: 0.5,
+            child: Text(
+              'Version: $appVersion',
+              textAlign: TextAlign.center,
             ),
           ),
-        ),
-        ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          leading: const Icon(Icons.article_outlined),
-          title: const Text('All Notes'),
-          onTap: () => _navigateToScreen(context),
-        ),
-        const Divider(),
-        ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          leading: const Icon(Icons.archive_outlined),
-          title: const Text('Archive'),
-          onTap: () =>
-              _navigateToScreen(context, screen: const ArchiveScreen()),
-        ),
-        ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          leading: const Icon(Icons.delete_outline),
-          title: const Text('Deleted'),
-          onTap: () =>
-              _navigateToScreen(context, screen: const DeletedScreen()),
-        ),
-        const Divider(),
-        ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          leading: const Icon(Icons.settings_outlined),
-          title: const Text('Settings'),
-          onTap: () => _navigateToScreen(context,
-              screen: SettingsScreen(
-                onSettingsChanged: onItemChanged,
-              )),
-        ),
-        ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          leading: const Icon(Icons.sync),
-          title: const Text('Sync'),
-          onTap: () => _navigateToScreen(
-            context,
-            screen: SyncServiceScreen(directory: directory),
-          ),
-        ),
-        ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          leading: const Icon(Icons.info_outlined),
-          title: const Text('About'),
-          onTap: () => _navigateToScreen(context, screen: const AboutScreen()),
-        ),
+        )
       ],
     );
   }

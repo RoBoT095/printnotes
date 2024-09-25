@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
-import 'package:printnotes/constants/styles/md_styles.dart';
-import 'package:printnotes/view/components/editor/toolbar/markdown_toolbar.dart';
-import 'package:printnotes/view/components/editor/editor_field.dart';
-import 'package:printnotes/view/components/widgets/markdown_checkbox.dart';
+import 'package:printnotes/view/components/markdown/build_markdown.dart';
+import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/view/components/markdown/editor_field.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key, required this.filePath});
@@ -18,8 +17,19 @@ class NoteEditorScreen extends StatefulWidget {
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
 }
 
+// For saving notes with ctrl-s
+class SaveIntent extends Intent {
+  const SaveIntent();
+}
+
+// For switching between preview and edit with ctrl-shift-v
+class SwitchModeIntent extends Intent {
+  const SwitchModeIntent();
+}
+
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late TextEditingController _controller;
+  final FocusNode _focusNode = FocusNode();
   final UndoHistoryController _undoHistoryController = UndoHistoryController();
   bool _isEditing = false;
   bool _isLoading = true;
@@ -61,9 +71,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       });
       if (context.mounted && quietSave == false) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Note saved successfully')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+          'Saved!',
+          width: MediaQuery.sizeOf(context).width * 0.3,
+          durationMil: 500,
+        ));
       }
       return true;
     } catch (e) {
@@ -71,7 +83,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error saving note')),
+          customSnackBar('Error saving note'),
         );
       }
       return false;
@@ -172,54 +184,70 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 : null,
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          _isEditing
-                              ? EditorField(
-                                  controller: _controller,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _isDirty = value != _originalContent ||
-                                          _controller.text != _originalContent;
-                                    });
-                                  },
-                                  undoController: _undoHistoryController,
+                : Shortcuts(
+                    shortcuts: <ShortcutActivator, Intent>{
+                      LogicalKeySet(LogicalKeyboardKey.control,
+                          LogicalKeyboardKey.keyS): const SaveIntent(),
+                      LogicalKeySet(
+                          LogicalKeyboardKey.control,
+                          LogicalKeyboardKey.shift,
+                          LogicalKeyboardKey.keyV): const SwitchModeIntent(),
+                    },
+                    child: Actions(
+                      actions: <Type, Action<Intent>>{
+                        SaveIntent: CallbackAction<SaveIntent>(
+                          onInvoke: (SaveIntent intent) =>
+                              _saveNoteContent(context),
+                        ),
+                        SwitchModeIntent: CallbackAction<SwitchModeIntent>(
+                          onInvoke: (SwitchModeIntent intent) => setState(() {
+                            _isEditing = !_isEditing;
+                          }),
+                        ),
+                      },
+                      child: Focus(
+                        autofocus: true,
+                        focusNode: _focusNode,
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                _isEditing
+                                    ? EditorField(
+                                        controller: _controller,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _isDirty =
+                                                value != _originalContent ||
+                                                    _controller.text !=
+                                                        _originalContent;
+                                          });
+                                        },
+                                        undoController: _undoHistoryController,
+                                      )
+                                    : GestureDetector(
+                                        onDoubleTap: () {
+                                          setState(() {
+                                            _isEditing = !_isEditing;
+                                          });
+                                        },
+                                        child: _controller.text.isEmpty
+                                            ? Text(
+                                                'Double click screen or hit the pencil icon in the top right corner to write!',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .hintColor),
+                                              )
+                                            : buildMarkdownView(context,
+                                                data: _controller.text)),
+                                const SizedBox(
+                                  height: 200,
                                 )
-                              : GestureDetector(
-                                  onDoubleTap: () {
-                                    setState(() {
-                                      _isEditing = !_isEditing;
-                                    });
-                                  },
-                                  child: _controller.text.isEmpty
-                                      ? Text(
-                                          'Double click screen or hit the pencil icon in the top right corner to write!',
-                                          style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor),
-                                        )
-                                      : MarkdownBody(
-                                          data: _controller.text,
-                                          selectable: true,
-                                          onTapLink: (text, href, title) {
-                                            href != null
-                                                ? launchUrl(Uri.parse(href))
-                                                : null;
-                                          },
-                                          styleSheet:
-                                              MainMarkDownStyles.mainMDStyles(
-                                                  context),
-                                          checkboxBuilder: (bool checked) =>
-                                              markdownCheckBox(checked),
-                                        ),
-                                ),
-                          const SizedBox(
-                            height: 200,
-                          )
-                        ],
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -232,6 +260,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }

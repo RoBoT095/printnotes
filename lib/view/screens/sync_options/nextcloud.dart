@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/syncing/nextcloud/nextcloud_credentials.dart';
 import 'package:printnotes/utils/syncing/nextcloud/nextcloud_sync.dart';
 import 'package:printnotes/utils/syncing/sync_timeline.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class NextcloudLogin extends StatefulWidget {
   const NextcloudLogin({
@@ -48,9 +49,8 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
     _loadSavedCredentialsAndSyncTimeline();
     if (mounted) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cleared Nextcloud credentials')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customSnackBar('Cleared Nextcloud credentials'));
     }
   }
 
@@ -96,14 +96,10 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
     if (_isSyncing == false) {
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
+        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
             response == SyncStatusCode.success
                 ? 'Sync completed successfully'
-                : 'Sync failed with ${response.name}',
-          )),
-        );
+                : 'Sync failed with ${response.name}'));
       }
     }
   }
@@ -186,7 +182,7 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
                 size: 40,
               ),
               subtitle: Text(
-                "Currently only uploads manually, doesn't pull and compare changes just yet.\nHope I can fix this soon! 😓",
+                "Currently only uploads manually, doesn't pull and compare changes just yet.\nSorry for the inconvenience 😓",
                 textAlign: TextAlign.center,
               ),
             ),

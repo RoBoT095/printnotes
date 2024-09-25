@@ -9,19 +9,19 @@
 ## Features
 
 - Supports Markdown... obviously
+- Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
 - Stores notes locally on device
 - Possible to create folders to store notes in
 - Has many colors to choose from
 - Simple search to find any note by name, even the ones deeper in a folder
-- Notes can be archived, soft deleted aka deleted after a set time, or completely wiped
 - Changeable layout and sort order
 - Toolbar for easy markdown editing (borrowed from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor))
 <!-- - Supports Windows, Mac, Linux, Android, and iOS -->
 
 ---
 
-<details open>
-<summary>Tap to show/hide screenshots</summary>
+<details close>
+<summary>Mobile screenshots</summary>
 
 <p>
     <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
@@ -29,12 +29,36 @@
     <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditor.png?raw=true" alt="all themes" width=200 />
     <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditing.png?raw=true" alt="all themes" width=200 />
 </p>
+
+</details>
+
+<details close>
+<summary>Desktop screenshots</summary>
+
+<p>
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopHome.png?raw=true" alt="all themes" width=500 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopEditor.png?raw=true" alt="all themes" width=500 />
+    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopSettings.png?raw=true" alt="all themes" width=500 />
+</p>
 </details>
 
 ## Changelog
 
 <details close>
 <summary>Tap to show/hide the see changes history</summary>
+
+### (Sept 24, 2024)
+
+1. Removed soft delete and bin expiration time and made permanent delete default option
+2. Made some styling changes to drawer
+3. Moved folder navigation from SettingsLoader to ItemNavHandler, this was meant to always happen, I just like quick and dirty implementations
+4. Replaced flutter_markdown with markdown_widget for better experience
+   1. Code blocks are now colored if you specify language by adding it after the first three backticks, example ` ```Dart `
+   2. App now supports LaTeX math notations
+   3. Desktop version support saving using ctrl-s and switching editor preview/edit modes with ctrl-shift-v
+5. On home page where all notes are displayed, the markdown images and links are now absorbed to only open note
+6. Changed Snackbar a custom one that has a floating behavior instead of fixed
+7. Changed out the screenshot to better reflect new look
 
 ### (Sept 22, 2024)
 
@@ -67,8 +91,8 @@ Added app icons to different devices but I still need to check if they all work.
 - - [ ] Share notes
 - Sync options (possible to use SyncThing on the notes folder)
   - - [ ] NextCloud (can upload, no file comparison or automatic sync option out yet)
-  - - [ ] Dropbox
-  - - [ ] Google Drive
+  - ~~Dropbox~~
+  - ~~Google Drive~~
   - - [ ] RSync
   - - [ ] FTP
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/view/components/libraries_dialog.dart';
+import 'package:printnotes/constants/constants.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -29,8 +30,7 @@ class AboutScreen extends StatelessWidget {
               Icons.info_outline,
             ),
             title: const Text('Version'),
-            subtitle: const Text('0.9.1'),
-            // TODO: Don't forget to also change app version here
+            subtitle: const Text(appVersion),
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:provider/provider.dart';
 
-import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/configs/user_layout.dart';
 
@@ -23,7 +22,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _currentLayout;
   String? _currentTheme;
   String? _currentColorScheme;
-  int? _currentDeletedDuration = 7;
 
   @override
   void initState() {
@@ -38,7 +36,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _currentLayout = settings['layout'];
       _currentTheme = settings['theme'];
       _currentColorScheme = settings['colorScheme'];
-      _currentDeletedDuration = settings['deletedDuration'];
     });
   }
 
@@ -183,35 +180,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
           ),
-          const Divider(),
-          sectionTitle(
-            'Other',
-            10,
-            Theme.of(context).colorScheme.primary,
-          ),
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            leading: const Icon(Icons.delete_outline),
-            title: const Text('Clear Bin duration'),
-            subtitle: const Opacity(
-                opacity: 0.6,
-                child: Text('Set when deleted notes get cleared')),
-            trailing: DropdownButton(
-              value: _currentDeletedDuration,
-              items: const [
-                DropdownMenuItem(value: 1, child: Text('1 Day')),
-                DropdownMenuItem(value: 7, child: Text('7 Days')),
-                DropdownMenuItem(value: 14, child: Text('2 Weeks')),
-                DropdownMenuItem(value: 30, child: Text('30 Days')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _currentDeletedDuration = value;
-                  StorageSystem.setDeletionDuration(value ?? 7);
-                });
-              },
-            ),
-          ),
+          // const Divider(),
+          // sectionTitle(
+          //   'Other',
+          //   10,
+          //   Theme.of(context).colorScheme.primary,
+          // ),
         ],
       ),
     );

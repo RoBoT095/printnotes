@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
+import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
@@ -22,7 +22,6 @@ class SettingsLoader {
     final layout = await UserLayoutPref.getLayoutView();
     final theme = await UserThemingPref.getThemeMode();
     final colorScheme = await UserThemingPref.getColorScheme();
-    final deletedDuration = await StorageSystem.getDeletionDuration();
     final sortOrder = await UserSortPref.getSortOrder();
 
     return {
@@ -30,7 +29,6 @@ class SettingsLoader {
       'layout': layout,
       'theme': theme,
       'colorScheme': colorScheme,
-      'deletedDuration': deletedDuration,
       'sortOrder': sortOrder,
     };
   }
@@ -45,7 +43,6 @@ class SettingsLoader {
 
   static Future<Map<String, dynamic>> loadItems({
     String? folderPath,
-    required List<String> folderHistory,
     bool doReload = false,
   }) async {
     final mainPath = await DataPath.selectedDirectory;
@@ -65,15 +62,13 @@ class SettingsLoader {
 
       if (doReload) {
         folderPath = mainPath;
-        folderHistory.clear();
+        ItemNavHandler.folderHistory.clear();
       }
-      ItemNavHandler.updateFolderHistory(directory, folderHistory);
 
       return {
         'items': sortedItems,
         'currentPath': directory,
         'currentFolderName': currentFolderName,
-        'folderHistory': folderHistory,
       };
     }
 
@@ -81,7 +76,6 @@ class SettingsLoader {
       'items': <FileSystemEntity>[],
       'currentPath': null,
       'currentFolderName': 'All Notes',
-      'folderHistory': folderHistory,
     };
   }
 

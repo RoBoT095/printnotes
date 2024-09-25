@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class ItemCreationHandler {
   static Future<void> handleCreateNewFolder(
@@ -14,17 +15,15 @@ class ItemCreationHandler {
             parentPath: currentPath);
         if (context.mounted) {
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Folder created: $newFolderPath')),
-          );
+          ScaffoldMessenger.of(context)
+              .showSnackBar(customSnackBar('Folder created: $newFolderPath'));
         }
         loadItems();
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error creating folder: $e')),
-          );
+          ScaffoldMessenger.of(context)
+              .showSnackBar(customSnackBar('Error creating folder: $e'));
         }
       }
     }
@@ -42,17 +41,15 @@ class ItemCreationHandler {
             await StorageSystem.saveNote(noteName, '', parentPath: currentPath);
         if (context.mounted) {
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Note created: $newNotePath')),
-          );
+          ScaffoldMessenger.of(context)
+              .showSnackBar(customSnackBar('Note created: $newNotePath'));
         }
         loadItems();
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error creating note: $e')),
-          );
+          ScaffoldMessenger.of(context)
+              .showSnackBar(customSnackBar('Error creating note: $e'));
         }
       }
     }

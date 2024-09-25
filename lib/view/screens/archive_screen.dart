@@ -35,7 +35,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       _currentPath = currentPath;
       _currentFolderName =
           _currentPath == archivePath ? 'Archive' : path.basename(currentPath);
-      ItemNavHandler.updateFolderHistory(currentPath, _folderHistory);
+      ItemNavHandler.addToFolderHistory(currentPath,
+          passHistory: _folderHistory);
     });
   }
 
@@ -60,14 +61,14 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.delete,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Colors.red,
                 ),
                 title: const Text('Delete'),
                 onTap: () {
                   Navigator.pop(context);
-                  ItemDeletionHandler.showSoftDeleteConfirmation(
+                  ItemDeletionHandler.showDeleteConfirmation(
                       context, item, () => _loadArchivedItems(_currentPath));
                 },
               ),
@@ -88,7 +89,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         if (isDirectory) {
           _loadArchivedItems(item.path);
         } else {
-          ItemNavHandler.handleNoteTap(
+          ItemNavHandler.onNoteSelect(
               context, item, () => _loadArchivedItems(_currentPath));
         }
       },
@@ -126,8 +127,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                 ),
                 onPressed: () {
                   setState(() {
-                    ItemNavHandler.navigateBack(
-                        _folderHistory, _loadArchivedItems);
+                    _loadArchivedItems(ItemNavHandler.navigateBack(
+                        passHistory: _folderHistory));
                   });
                 },
               )

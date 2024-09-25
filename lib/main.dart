@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
-
-import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
-
 import 'package:printnotes/view/screens/main_screen.dart';
 
 void main() async {
@@ -19,7 +16,6 @@ void main() async {
 
 Future<void> initializeApp() async {
   await DataPath.selectedDirectory;
-  await StorageSystem.cleanupExpiredItems();
 }
 
 class App extends StatelessWidget {
