@@ -76,6 +76,18 @@ class AboutScreen extends StatelessWidget {
                 const Text('Click to view third-party libraries and licenses.'),
             onTap: () => showLibrariesDialog(context),
           ),
+          ListTile(
+            iconColor: Theme.of(context).colorScheme.secondary,
+            leading: const Icon(
+              Icons.article,
+            ),
+            title: const Text('App License'),
+            subtitle:
+                const Text("This App is protected under the GPL 3 License"),
+            onTap: () {
+              _launchUrl('https://www.gnu.org/licenses/gpl-3.0.en.html');
+            },
+          ),
         ],
       ),
     );

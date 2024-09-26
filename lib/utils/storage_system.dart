@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import 'package:printnotes/utils/configs/data_path.dart';
 
 // The Abomination Folder that handles everything related to folders on the device
@@ -29,11 +27,11 @@ class StorageSystem {
               .any((part) => part.startsWith('.'))) {
             continue;
           }
-          // Find folders/Notes that match query, add to results
+          // Find notes that match query, add to results
           if (name.contains(query.toLowerCase())) {
-            results.add(entity);
+            if (entity is File) results.add(entity);
           }
-          // If it is a folder, search it
+          // If it is a folder, search inside it
           if (entity is Directory) {
             await searchDirectory(entity);
           }
@@ -309,14 +307,6 @@ class StorageSystem {
   ) async {
     final folder = Directory(folderPath);
     if (await folder.exists()) {
-      if (Platform.isAndroid) {
-        final status = await Permission.manageExternalStorage.request();
-        if (status.isDenied ||
-            status.isPermanentlyDenied ||
-            status.isRestricted) {
-          throw "Please allow storage permission to access files";
-        }
-      }
       final contents = await folder.list().toList();
       // Skips hidden folders
       final filteredContents = contents.where((item) {

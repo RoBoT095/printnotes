@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataPath {
@@ -9,6 +10,14 @@ class DataPath {
 
   static Future<String?> pickDirectory() async {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    if (Platform.isAndroid) {
+      final status = await Permission.manageExternalStorage.request();
+      if (status.isDenied ||
+          status.isPermanentlyDenied ||
+          status.isRestricted) {
+        throw "Please allow storage permission to access files";
+      }
+    }
     if (selectedDirectory != null) {
       await setSelectedDirectory(selectedDirectory);
     }

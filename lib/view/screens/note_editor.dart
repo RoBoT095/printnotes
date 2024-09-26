@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
+import 'package:printnotes/utils/handlers/item_rename.dart';
 import 'package:printnotes/view/components/markdown/build_markdown.dart';
 import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
 import 'package:printnotes/view/components/markdown/editor_field.dart';
@@ -27,18 +29,28 @@ class SwitchModeIntent extends Intent {
   const SwitchModeIntent();
 }
 
+bool isDesktop(BuildContext context) {
+  return MediaQuery.of(context).size.width >= 800;
+}
+
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
-  late TextEditingController _controller;
+  late TextEditingController _titleController;
+  late TextEditingController _notesController;
+  final TocController _tocController = TocController();
   final FocusNode _focusNode = FocusNode();
   final UndoHistoryController _undoHistoryController = UndoHistoryController();
-  bool _isEditing = false;
+
+  bool _isEditingName = false;
+  bool _isEditingNote = false;
   bool _isLoading = true;
   bool _isDirty = false;
+  String fileTitle = '';
   String _originalContent = '';
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    _titleController = TextEditingController();
+    _notesController = TextEditingController();
     _loadNoteContent();
     super.initState();
   }
@@ -48,7 +60,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       final file = File(widget.filePath);
       final content = await file.readAsString();
       setState(() {
-        _controller.text = content;
+        fileTitle = widget.filePath.split('/').last;
+        _titleController.text = fileTitle.replaceFirst('.md', '');
+        _notesController.text = content;
         _originalContent = content;
         _isLoading = false;
       });
@@ -60,14 +74,35 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
+  Future<bool> _saveTitleRename(BuildContext context, String newTitle) async {
+    try {
+      await ItemRenameHandler.handleItemRename(
+          context, File(widget.filePath), newTitle.replaceAll('.md', ''));
+      setState(() {
+        fileTitle = '$newTitle.md';
+        _isEditingName = false;
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error renaming note title: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          customSnackBar('Error renaming note title'),
+        );
+      }
+      return false;
+    }
+  }
+
   Future<bool> _saveNoteContent(BuildContext context,
       {bool quietSave = false}) async {
     try {
       final file = File(widget.filePath);
-      await file.writeAsString(_controller.text);
+      await file.writeAsString(_notesController.text);
       setState(() {
         _isDirty = false;
-        _originalContent = _controller.text;
+        _originalContent = _notesController.text;
       });
       if (context.mounted && quietSave == false) {
         ScaffoldMessenger.of(context).clearSnackBars();
@@ -141,14 +176,21 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.filePath.split('/').last),
+          title: GestureDetector(
+            onDoubleTap: () => setState(() => _isEditingName = true),
+            child: _isEditingName
+                ? TextField(
+                    controller: _titleController,
+                    onSubmitted: (value) => _saveTitleRename(context, value))
+                : Text(fileTitle),
+          ),
           actions: [
             IconButton(
-                icon: Icon(_isEditing ? Icons.visibility : Icons.mode_edit),
+                icon: Icon(_isEditingNote ? Icons.visibility : Icons.mode_edit),
                 tooltip: 'Preview/Edit Mode',
                 onPressed: () {
                   setState(() {
-                    _isEditing = !_isEditing;
+                    _isEditingNote = !_isEditingNote;
                   });
                 }),
             IconButton(
@@ -164,103 +206,139 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             ),
           ],
         ),
-        body: SafeArea(
-          child: FooterLayout(
-            footer: _isEditing
-                ? MarkdownToolbar(
-                    controller: _controller,
-                    onValueChange: (value) {
-                      setState(() {
-                        _isDirty = value;
-                      });
-                    },
-                    onPreviewChanged: () {
-                      setState(() {
-                        _isEditing = !_isEditing;
-                      });
-                    },
-                    undoController: _undoHistoryController,
-                    toolbarBackground: Theme.of(context).colorScheme.surface)
-                : null,
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Shortcuts(
-                    shortcuts: <ShortcutActivator, Intent>{
-                      LogicalKeySet(LogicalKeyboardKey.control,
-                          LogicalKeyboardKey.keyS): const SaveIntent(),
-                      LogicalKeySet(
-                          LogicalKeyboardKey.control,
-                          LogicalKeyboardKey.shift,
-                          LogicalKeyboardKey.keyV): const SwitchModeIntent(),
-                    },
-                    child: Actions(
-                      actions: <Type, Action<Intent>>{
-                        SaveIntent: CallbackAction<SaveIntent>(
-                          onInvoke: (SaveIntent intent) =>
-                              _saveNoteContent(context),
-                        ),
-                        SwitchModeIntent: CallbackAction<SwitchModeIntent>(
-                          onInvoke: (SwitchModeIntent intent) => setState(() {
-                            _isEditing = !_isEditing;
-                          }),
-                        ),
-                      },
-                      child: Focus(
-                        autofocus: true,
-                        focusNode: _focusNode,
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                _isEditing
-                                    ? EditorField(
-                                        controller: _controller,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _isDirty =
-                                                value != _originalContent ||
-                                                    _controller.text !=
-                                                        _originalContent;
-                                          });
-                                        },
-                                        undoController: _undoHistoryController,
-                                      )
-                                    : GestureDetector(
-                                        onDoubleTap: () {
-                                          setState(() {
-                                            _isEditing = !_isEditing;
-                                          });
-                                        },
-                                        child: _controller.text.isEmpty
-                                            ? Text(
-                                                'Double click screen or hit the pencil icon in the top right corner to write!',
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .hintColor),
-                                              )
-                                            : buildMarkdownView(context,
-                                                data: _controller.text)),
-                                const SizedBox(
-                                  height: 200,
-                                )
-                              ],
-                            ),
+        body: buildMarkdownView(),
+        floatingActionButton: _isEditingNote || isDesktop(context)
+            ? null
+            : FloatingActionButton(
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (ctx) => _tocController.tocList.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Table of Contents empty,\nUse headers to create ToC\nfor easier navigation!',
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                      ),
+                        )
+                      : buildTocList(),
+                ),
+                heroTag: 'Table of Contents List',
+                child: const Icon(Icons.format_list_bulleted),
+              ),
+      ),
+    );
+  }
+
+  Widget buildTocList() => Container(
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
+      child: TocWidget(controller: _tocController));
+
+  Widget buildMarkdownView() {
+    return SafeArea(
+      child: FooterLayout(
+        footer: _isEditingNote
+            ? MarkdownToolbar(
+                controller: _notesController,
+                onValueChange: (value) {
+                  setState(() => _isDirty = value);
+                },
+                onPreviewChanged: () {
+                  setState(() => _isEditingNote = !_isEditingNote);
+                },
+                undoController: _undoHistoryController,
+                toolbarBackground: Theme.of(context).colorScheme.surface)
+            : null,
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Shortcuts(
+                shortcuts: <ShortcutActivator, Intent>{
+                  LogicalKeySet(
+                          LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
+                      const SaveIntent(),
+                  LogicalKeySet(
+                      LogicalKeyboardKey.control,
+                      LogicalKeyboardKey.shift,
+                      LogicalKeyboardKey.keyV): const SwitchModeIntent(),
+                },
+                child: Actions(
+                  actions: <Type, Action<Intent>>{
+                    SaveIntent: CallbackAction<SaveIntent>(
+                      onInvoke: (SaveIntent intent) =>
+                          _saveNoteContent(context),
+                    ),
+                    SwitchModeIntent: CallbackAction<SwitchModeIntent>(
+                      onInvoke: (SwitchModeIntent intent) => setState(() {
+                        _isEditingNote = !_isEditingNote;
+                      }),
+                    ),
+                  },
+                  child: Focus(
+                    autofocus: true,
+                    focusNode: _focusNode,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: _isEditingNote
+                          ? EditorField(
+                              controller: _notesController,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isDirty = value != _originalContent ||
+                                      _notesController.text != _originalContent;
+                                });
+                              },
+                              undoController: _undoHistoryController,
+                            )
+                          : GestureDetector(
+                              onDoubleTap: () {
+                                setState(() {
+                                  _isEditingNote = !_isEditingNote;
+                                });
+                              },
+                              child: _notesController.text.isEmpty
+                                  ? SizedBox(
+                                      height: MediaQuery.sizeOf(context).height,
+                                      child: Text(
+                                        'Double click screen or hit the pencil icon in the top right corner to write!',
+                                        style: TextStyle(
+                                            color: Theme.of(context).hintColor),
+                                      ),
+                                    )
+                                  : isDesktop(context) &&
+                                          _notesController.text.contains('# ')
+                                      ? Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 3,
+                                              child: buildMarkdownWidget(
+                                                context,
+                                                data: _notesController.text,
+                                                tocController: _tocController,
+                                              ),
+                                            ),
+                                            Expanded(child: buildTocList())
+                                          ],
+                                        )
+                                      : buildMarkdownWidget(
+                                          context,
+                                          data: _notesController.text,
+                                          tocController: _tocController,
+                                        ),
+                            ),
                     ),
                   ),
-          ),
-        ),
+                ),
+              ),
       ),
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _titleController.dispose();
+    _notesController.dispose();
     _focusNode.dispose();
+    _tocController.dispose();
     super.dispose();
   }
 }

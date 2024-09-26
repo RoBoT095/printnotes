@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
@@ -8,8 +11,11 @@ class ItemCreationHandler {
     String currentPath,
     Function loadItems,
   ) async {
-    final folderName = await showNameInputDialog(context, 'Enter folder name');
-    if (folderName != null && folderName.isNotEmpty) {
+    final dialogResult =
+        await showNameInputDialog(context, 'Enter folder name');
+    String folderName = dialogResult['name'];
+    bool folderSubmitted = dialogResult['submitted'];
+    if (folderSubmitted == true && folderName.isNotEmpty) {
       try {
         final newFolderPath = await StorageSystem.createFolder(folderName,
             parentPath: currentPath);
@@ -34,15 +40,16 @@ class ItemCreationHandler {
     String currentPath,
     Function loadItems,
   ) async {
-    final noteName = await showNameInputDialog(context, 'Enter note name');
-    if (noteName != null && noteName.isNotEmpty) {
+    final dialogResult = await showNameInputDialog(context, 'Enter note name');
+    String noteName = dialogResult['name'];
+    bool noteSubmitted = dialogResult['submitted'];
+    if (noteSubmitted == true && noteName.isNotEmpty) {
       try {
         final newNotePath =
             await StorageSystem.saveNote(noteName, '', parentPath: currentPath);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(customSnackBar('Note created: $newNotePath'));
+          final item = File(newNotePath);
+          ItemNavHandler.onNoteSelect(context, item, loadItems);
         }
         loadItems();
       } catch (e) {
@@ -55,18 +62,20 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<String?> showNameInputDialog(
+  static Future<Map<String, dynamic>> showNameInputDialog(
       BuildContext context, String title) async {
-    String? name;
+    String name = '';
+    bool submitted = false;
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(title),
-        content: TextField(
+        content: TextFormField(
           autofocus: true,
           onChanged: (value) {
             name = value;
           },
+          onFieldSubmitted: (value) => Navigator.of(context).pop(value),
         ),
         actions: [
           TextButton(
@@ -79,17 +88,22 @@ class ItemCreationHandler {
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: Text(
-              'OK',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
-            ),
-            onPressed: () => Navigator.of(context).pop(name),
-          ),
+              onPressed: () {
+                Navigator.of(context).pop(name);
+                submitted = true;
+              }),
         ],
       ),
     );
-    return name;
+    return {
+      'name': name,
+      'submitted': submitted,
+    };
   }
 }

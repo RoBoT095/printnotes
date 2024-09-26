@@ -26,8 +26,9 @@ class ItemRenameHandler {
             child: const Text('Rename'),
             onPressed: () {
               Navigator.of(context).pop();
-              handleItemRename(context, item,
-                  controller.text.replaceAll('.md', ''), loadItems);
+              handleItemRename(
+                  context, item, controller.text.replaceAll('.md', ''),
+                  reload: loadItems);
             },
           ),
         ],
@@ -35,16 +36,17 @@ class ItemRenameHandler {
     );
   }
 
-  static Future<void> handleItemRename(BuildContext context,
-      FileSystemEntity item, String newName, Function loadItems) async {
+  static Future<void> handleItemRename(
+      BuildContext context, FileSystemEntity item, String newName,
+      {Function? reload, bool? showMessage = true}) async {
     try {
       if (item is Directory) {
         await StorageSystem.renameFolder(item.path, newName);
       } else {
         await StorageSystem.renameNote(item.path, newName);
       }
-      loadItems();
-      if (context.mounted) {
+      if (reload != null) reload();
+      if (context.mounted && showMessage == true) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
             '${item is Directory ? 'Folder' : 'Note'} renamed successfully'));

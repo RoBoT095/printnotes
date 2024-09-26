@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/load_settings.dart';
@@ -90,7 +91,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
         if (isDirectory) {
           _loadItems(item.path);
           ItemNavHandler.addToFolderHistory(item.path);
-        } else {
+        }
+        if (item is File && item.path.endsWith('.md')) {
           ItemNavHandler.onNoteSelect(
               context, item, () => _loadItems(_currentPath));
         }
@@ -134,11 +136,12 @@ class _NotesDisplayState extends State<NotesDisplay> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
-                            return buildMarkdownView(
-                              context,
+                            return MarkdownBlock(
                               selectable: false,
                               data: snapshot.data ?? 'Preview not available',
-                              previewMode: true,
+                              config: theMarkdownConfigs(context,
+                                  hideCodeButtons: true),
+                              generator: theMarkdownGenerators(),
                             );
                           } else {
                             return const Text(

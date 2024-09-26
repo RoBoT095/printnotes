@@ -12,13 +12,13 @@ class CodeWrapperWidget extends StatefulWidget {
     this.text,
     this.language, {
     super.key,
-    this.previewMode,
+    this.hideCodeButtons,
   });
 
   final Widget child;
   final String text;
   final String language;
-  final bool? previewMode;
+  final bool? hideCodeButtons;
 
   @override
   State<CodeWrapperWidget> createState() => _PreWrapperState();
@@ -44,7 +44,7 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
           alignment: Alignment.topRight,
           child: Container(
               padding: const EdgeInsets.all(16.0),
-              child: widget.previewMode ?? false
+              child: widget.hideCodeButtons ?? false
                   ? null
                   : Row(
                       mainAxisSize: MainAxisSize.min,

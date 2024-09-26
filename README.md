@@ -4,6 +4,8 @@
 
 **Inspired by Google Keep and Obsidian**
 
+\*I will make <a href='https://github.com/quillpad/quillpad'>QuillPad</a> cry for not going cross-platform, but they got me beat on checkboxes, jk nice app
+
 <img src="https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes.png?raw=true" alt="all themes" />
 
 ## Features
@@ -47,6 +49,13 @@
 <details close>
 <summary>Tap to show/hide the see changes history</summary>
 
+### (Sept 26, 2024)
+
+1. Moved android 'allow external storage access' popup check to when selecting folder instead of when listing folder contents
+2. You can now change file name from editor screen
+3. Creating new note immediately opens the note
+4. Added Table of Content for headers, on small display windows its a floating action button in the bottom right corner, on large displays its a side menu on the right if the note contains '# ' anywhere
+
 ### (Sept 24, 2024)
 
 1. Removed soft delete and bin expiration time and made permanent delete default option
@@ -82,14 +91,15 @@ Added app icons to different devices but I still need to check if they all work.
 
 </details>
 
-## Future Features on the List
+## Possible Future Features (not guaranteed)
 
 - - [ ] Custom theme maker with import/export capability
 - - [ ] Advanced search with filters
 - - [ ] Tags
 - - [ ] Upload and attach pictures
 - - [ ] Share notes
-- Sync options (possible to use SyncThing on the notes folder)
+- - [ ] Mobile Widgets 🤔?
+- Sync options (possible to use SyncThing or Nextcloud app on the notes folder directly)
   - - [ ] NextCloud (can upload, no file comparison or automatic sync option out yet)
   - ~~Dropbox~~
   - ~~Google Drive~~
@@ -98,7 +108,7 @@ Added app icons to different devices but I still need to check if they all work.
 
 ## Supported Platforms
 
-I will release apps when I feel like the app is more complete!
+I will release apps when I feel like the app is more complete! Also, ordered a mac mini which is coming soon so I can test on MacOS and iOS :D
 
 - [ ] Android `coming soon`
 - [ ] iOS `coming soon`

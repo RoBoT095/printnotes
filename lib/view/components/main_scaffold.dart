@@ -64,7 +64,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             ? TextField(
                 autofocus: true,
                 decoration: const InputDecoration(
-                  hintText: 'Search...',
+                  hintText: 'Search for note...',
                   border: InputBorder.none,
                 ),
                 onChanged: performSearch,
