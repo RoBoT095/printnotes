@@ -209,12 +209,11 @@ class StorageSystem {
     }
   }
 
-  static Future<String> getNotePreview(String filePath,
-      {int previewLength = 100}) async {
+  static String getNotePreview(String filePath, {int previewLength = 100}) {
     try {
       final file = File(filePath);
-      if (await file.exists()) {
-        String content = await file.readAsString();
+      if (file.existsSync()) {
+        String content = file.readAsStringSync();
         // Limit to previewLength then trim whitespace
         return content
             .substring(0,

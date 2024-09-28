@@ -24,11 +24,15 @@ class ItemNavHandler {
 
   // For notes only, won't work with folders
   static void onNoteSelect(
-      BuildContext context, FileSystemEntity item, Function loadItems) {
+      BuildContext context, FileSystemEntity item, Function loadItems,
+      {bool? latexSupport}) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => NoteEditorScreen(filePath: item.path),
+        builder: (context) => NoteEditorScreen(
+          filePath: item.path,
+          latexSupport: latexSupport,
+        ),
       ),
     ).then((value) => loadItems());
   }

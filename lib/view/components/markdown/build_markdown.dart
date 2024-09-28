@@ -43,26 +43,30 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
   ]);
 }
 
-MarkdownGenerator theMarkdownGenerators() {
+MarkdownGenerator theMarkdownGenerators(
+    {double? textScale, bool useLatex = false}) {
   return MarkdownGenerator(
-    generators: [latexGenerator],
-    inlineSyntaxList: [LatexSyntax()],
+    generators: useLatex ? [latexGenerator] : [],
+    inlineSyntaxList: useLatex ? [LatexSyntax()] : [],
     textGenerator: (node, config, visitor) =>
         CustomTextNode(node.textContent, config, visitor),
     richTextBuilder: (span) => Text.rich(
       span,
-      textScaler: const TextScaler.linear(1),
+      textScaler: TextScaler.linear(textScale ?? 1),
     ),
   );
 }
 
 Widget buildMarkdownWidget(BuildContext context,
-    {required String data, bool? selectable, TocController? tocController}) {
+    {required String data,
+    bool? selectable,
+    TocController? tocController,
+    bool? latexSupport}) {
   return MarkdownWidget(
     data: data,
     selectable: selectable ?? true,
     config: theMarkdownConfigs(context),
     tocController: tocController,
-    markdownGenerator: theMarkdownGenerators(),
+    markdownGenerator: theMarkdownGenerators(useLatex: latexSupport ?? false),
   );
 }

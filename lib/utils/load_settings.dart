@@ -6,9 +6,7 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
-import 'package:printnotes/utils/configs/user_layout.dart';
-import 'package:printnotes/utils/configs/user_theming.dart';
-import 'package:printnotes/utils/configs/user_sort.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/configs/user_sync.dart';
 
 class SettingsLoader {
@@ -23,6 +21,7 @@ class SettingsLoader {
     final theme = await UserThemingPref.getThemeMode();
     final colorScheme = await UserThemingPref.getColorScheme();
     final sortOrder = await UserSortPref.getSortOrder();
+    final useLatex = await UserLatexPref.getLatexSupport();
 
     return {
       'directory': directory,
@@ -30,6 +29,7 @@ class SettingsLoader {
       'theme': theme,
       'colorScheme': colorScheme,
       'sortOrder': sortOrder,
+      'useLatex': useLatex,
     };
   }
 

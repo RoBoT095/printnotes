@@ -11,9 +11,11 @@ import 'package:printnotes/view/components/markdown/editor_field.dart';
 import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen({super.key, required this.filePath});
+  const NoteEditorScreen(
+      {super.key, required this.filePath, this.latexSupport});
 
   final String filePath;
+  final bool? latexSupport;
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -59,6 +61,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     try {
       final file = File(widget.filePath);
       final content = await file.readAsString();
+
       setState(() {
         fileTitle = widget.filePath.split('/').last;
         _titleController.text = fileTitle.replaceFirst('.md', '');
@@ -182,7 +185,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 ? TextField(
                     controller: _titleController,
                     onSubmitted: (value) => _saveTitleRename(context, value))
-                : Text(fileTitle),
+                : Tooltip(
+                    preferBelow: true,
+                    message: 'Double tap title to rename it',
+                    child: Text(fileTitle)),
           ),
           actions: [
             IconButton(
@@ -323,6 +329,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                           context,
                                           data: _notesController.text,
                                           tocController: _tocController,
+                                          latexSupport: widget.latexSupport,
                                         ),
                             ),
                     ),

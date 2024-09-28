@@ -13,8 +13,8 @@
 - Supports Markdown... obviously
 - Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
 - Stores notes locally on device
-- Possible to create folders to store notes in
-- Has many colors to choose from
+- Possible to create folders to better organize notes
+- Has many colors to choose from by default
 - Simple search to find any note by name, even the ones deeper in a folder
 - Changeable layout and sort order
 - Toolbar for easy markdown editing (borrowed from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor))
@@ -48,6 +48,14 @@
 
 <details close>
 <summary>Tap to show/hide the see changes history</summary>
+
+### (Sept 28, 2024)
+
+1. Made text on home screen a little bit smaller and added last modified ascending and descending to sort list
+2. If a file that is not a markdown or txt file is attempted to be opened, message will pop up saying not supported
+3. Removed future builder for note preview as it cause stuttering effect when scrolling up as items got unloaded and loaded, note preview is now readAsStringSync
+4. Moved user preferences all into a single file, including: layout, theme/color, and sort order (now latex support too)
+5. Added option in settings to toggle latex support for those that need it.
 
 ### (Sept 26, 2024)
 
@@ -100,7 +108,7 @@ Added app icons to different devices but I still need to check if they all work.
 - - [ ] Share notes
 - - [ ] Mobile Widgets 🤔?
 - Sync options (possible to use SyncThing or Nextcloud app on the notes folder directly)
-  - - [ ] NextCloud (can upload, no file comparison or automatic sync option out yet)
+  - - [x] NextCloud (can upload, no file comparison or automatic sync option out yet)
   - ~~Dropbox~~
   - ~~Google Drive~~
   - - [ ] RSync
@@ -113,7 +121,7 @@ I will release apps when I feel like the app is more complete! Also, ordered a m
 - [ ] Android `coming soon`
 - [ ] iOS `coming soon`
 - [ ] Windows `coming soon`
-- [ ] macOS `coming soon`
+- [ ] MacOS `coming soon`
 - [ ] Linux `coming soon`
 
 ---
@@ -148,8 +156,25 @@ $ flutter run
 ```
 
 ```
-$ flutter build platform-name
+$ flutter build <target>
 ```
+
+## Targets available for flutter:
+
+- `aar`: Build a repository containing an AAR and a POM file.
+- `apk`: Build an Android APK file from app.
+- `appbundle`: Build an Android App Bundle file from app.
+- `bundle`: Build the Flutter assets directory from app.
+- `web`: Build a web application bundle. **(Won't work because app needs device storage access)**
+
+### Device host specific
+
+In other words, compiling can only be done on device you are compiling for (ex: `app.exe` requires windows)
+
+- `linux`: Build a Linux desktop application.
+- `windows`: Build a Windows desktop application.
+- `macos`: Build a MacOS desktop application.
+  - `ipa`: Build an iOS App Store Package from app.
 
 </details>
 

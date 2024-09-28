@@ -3,6 +3,8 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:printnotes/constants/constants.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/load_settings.dart';
@@ -10,6 +12,7 @@ import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 import 'package:printnotes/view/components/markdown/build_markdown.dart';
 import 'package:printnotes/view/components/bottom_menu_popup.dart';
+import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 import 'package:printnotes/view/components/widgets/speed_dial_fab.dart';
 
 class NotesDisplay extends StatefulWidget {
@@ -36,6 +39,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
   String? _currentPath;
   String _currentFolderName = 'All Notes';
   List<String> _folderHistory = [];
+  bool _useLatex = false;
 
   @override
   void initState() {
@@ -64,9 +68,11 @@ class _NotesDisplayState extends State<NotesDisplay> {
       folderPath: folderPath,
       doReload: doReload,
     );
+    bool userLatexPref = await UserLatexPref.getLatexSupport();
 
     if (_mounted) {
       setState(() {
+        _useLatex = userLatexPref;
         _items = loadedItems['items'];
         _currentPath = loadedItems['currentPath'];
         _currentFolderName = loadedItems['currentFolderName'];
@@ -92,9 +98,19 @@ class _NotesDisplayState extends State<NotesDisplay> {
           _loadItems(item.path);
           ItemNavHandler.addToFolderHistory(item.path);
         }
-        if (item is File && item.path.endsWith('.md')) {
-          ItemNavHandler.onNoteSelect(
-              context, item, () => _loadItems(_currentPath));
+        if (item is File) {
+          if (allowedNoteExtensions.any((ext) => item.path.endsWith(ext))) {
+            ItemNavHandler.onNoteSelect(
+              context,
+              item,
+              () => _loadItems(_currentPath),
+              latexSupport: _useLatex,
+            );
+          } else {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(customSnackBar('File format not supported!'));
+          }
         }
       },
       onLongPress: () =>
@@ -130,27 +146,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      FutureBuilder<String>(
-                        future: StorageSystem.getNotePreview(item.path,
-                            previewLength: 120),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return MarkdownBlock(
-                              selectable: false,
-                              data: snapshot.data ?? 'Preview not available',
-                              config: theMarkdownConfigs(context,
-                                  hideCodeButtons: true),
-                              generator: theMarkdownGenerators(),
-                            );
-                          } else {
-                            return const Text(
-                              'Loading preview...',
-                              style: TextStyle(
-                                  fontSize: 12, fontStyle: FontStyle.italic),
-                            );
-                          }
-                        },
+                      MarkdownBlock(
+                        selectable: false,
+                        data: StorageSystem.getNotePreview(item.path,
+                            previewLength: 150),
+                        config:
+                            theMarkdownConfigs(context, hideCodeButtons: true),
+                        generator: theMarkdownGenerators(
+                            textScale: 0.95, useLatex: _useLatex),
                       ),
                     ],
                   )),

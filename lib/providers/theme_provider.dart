@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printnotes/constants/themes/theme_color_data.dart';
-import 'package:printnotes/utils/configs/user_theming.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 
 class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;

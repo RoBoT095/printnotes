@@ -1,0 +1,68 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
+// For layout selection
+
+// Left it as a string in case I want to add more layouts
+class UserLayoutPref {
+  static Future<void> setLayoutView(String layoutView) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('layoutView', layoutView);
+  }
+
+  static Future<String> getLayoutView() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('layoutView') ?? 'grid';
+  }
+}
+
+// For styling of app
+
+class UserThemingPref {
+  static Future<void> setThemeMode(String themeMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('themeMode', themeMode);
+  }
+
+  static Future<String> getThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('themeMode') ?? 'system';
+  }
+
+  static Future<void> setColorScheme(String colorScheme) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('colorScheme', colorScheme);
+  }
+
+  static Future<String> getColorScheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('colorScheme') ?? 'default';
+  }
+}
+
+// For saving what order items should be displayed in
+
+class UserSortPref {
+  static Future<void> setSortOrder(String sortOrder) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('sortOrder', sortOrder);
+  }
+
+  static Future<String> getSortOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('sortOrder') ?? 'default';
+  }
+}
+
+// For having LaTeX rendered or not
+
+class UserLatexPref {
+  static Future<void> setLatexSupport(bool latexRendering) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('useLatex', latexRendering);
+  }
+
+  static Future<bool> getLatexSupport() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('useLatex') ?? false;
+  }
+}

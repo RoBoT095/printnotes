@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/utils/configs/user_layout.dart';
-import 'package:printnotes/utils/configs/user_sort.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/view/components/widgets/search.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -32,6 +31,13 @@ class MainScaffold extends StatefulWidget {
 class _MainScaffoldState extends State<MainScaffold> {
   bool isSearching = false;
   List<FileSystemEntity> searchResults = [];
+  String _selectedSort = 'default';
+
+  @override
+  void initState() {
+    getItemSort();
+    super.initState();
+  }
 
   void performSearch(String query) async {
     if (query.isEmpty) {
@@ -49,7 +55,13 @@ class _MainScaffoldState extends State<MainScaffold> {
     widget.onChange();
   }
 
-  void sortItems(String order) {
+  void getItemSort() async {
+    String order = await UserSortPref.getSortOrder();
+    setState(() => _selectedSort = order);
+  }
+
+  void setItemSort(String order) {
+    setState(() => _selectedSort = order);
     UserSortPref.setSortOrder(order);
     widget.onChange();
   }
@@ -84,19 +96,32 @@ class _MainScaffoldState extends State<MainScaffold> {
           ),
           PopupMenuButton(
             icon: const Icon(Icons.sort),
-            onSelected: sortItems,
-            itemBuilder: (context) => const [
-              PopupMenuItem(
+            onSelected: setItemSort,
+            itemBuilder: (context) => [
+              CheckedPopupMenuItem(
                 value: 'default',
-                child: Text('Default Order'),
+                checked: _selectedSort == 'default',
+                child: const Text('Default Order'),
               ),
-              PopupMenuItem(
+              CheckedPopupMenuItem(
                 value: 'titleAsc',
-                child: Text('Title (Ascending)'),
+                checked: _selectedSort == 'titleAsc',
+                child: const Text('Title (Ascending)'),
               ),
-              PopupMenuItem(
+              CheckedPopupMenuItem(
                 value: 'titleDsc',
-                child: Text('Title (Descending)'),
+                checked: _selectedSort == 'titleDsc',
+                child: const Text('Title (Descending)'),
+              ),
+              CheckedPopupMenuItem(
+                value: 'lastModAsc',
+                checked: _selectedSort == 'lastModAsc',
+                child: const Text('Last Modified (Ascending)'),
+              ),
+              CheckedPopupMenuItem(
+                value: 'lastModDsc',
+                checked: _selectedSort == 'lastModDsc',
+                child: const Text('Last Modified (Descending)'),
               ),
             ],
           ),
@@ -117,7 +142,9 @@ class _MainScaffoldState extends State<MainScaffold> {
             itemBuilder: (context) => <PopupMenuEntry>[
               const PopupMenuItem(
                 value: 'layoutSwitch',
-                child: Text("Switch Layout"),
+                child: ListTile(
+                    leading: Icon(Icons.grid_view),
+                    title: Text("Switch Layout")),
               ),
             ],
           ),
