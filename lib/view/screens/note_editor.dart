@@ -315,7 +315,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                       ? Row(
                                           children: <Widget>[
                                             Expanded(
-                                              flex: 3,
+                                              flex: 4,
                                               child: buildMarkdownWidget(
                                                 context,
                                                 data: _notesController.text,

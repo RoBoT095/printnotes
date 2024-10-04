@@ -47,7 +47,11 @@
 ## Changelog
 
 <details close>
-<summary>Tap to show/hide the see changes history</summary>
+<summary>Tap to show/hide the change history</summary>
+
+### (Oct 04, 2024)
+
+1. Added custom ==highlighting== text syntax as well as #Tags, search by tag not implemented yet
 
 ### (Sept 28, 2024)
 
@@ -103,12 +107,12 @@ Added app icons to different devices but I still need to check if they all work.
 
 - - [ ] Custom theme maker with import/export capability
 - - [ ] Advanced search with filters
-- - [ ] Tags
+- - [x] Tags
 - - [ ] Upload and attach pictures
 - - [ ] Share notes
 - - [ ] Mobile Widgets 🤔?
 - Sync options (possible to use SyncThing or Nextcloud app on the notes folder directly)
-  - - [x] NextCloud (can upload, no file comparison or automatic sync option out yet)
+  - - [x] NextCloud (can manually upload, no file comparison or automatic sync option out yet)
   - ~~Dropbox~~
   - ~~Google Drive~~
   - - [ ] RSync

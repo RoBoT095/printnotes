@@ -152,7 +152,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                             previewLength: 150),
                         config:
                             theMarkdownConfigs(context, hideCodeButtons: true),
-                        generator: theMarkdownGenerators(
+                        generator: theMarkdownGenerators(context,
                             textScale: 0.95, useLatex: _useLatex),
                       ),
                     ],

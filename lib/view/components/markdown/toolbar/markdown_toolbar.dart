@@ -94,6 +94,15 @@ class MarkdownToolbar extends StatelessWidget {
                 toolbar.action("_", "_");
               },
             ),
+            // highlighter
+            ToolbarItem(
+              key: const ValueKey<String>("toolbar_highlight_action"),
+              icon: FontAwesomeIcons.highlighter,
+              tooltip: 'Highlight text',
+              onPressedButton: () {
+                toolbar.action("==", "==");
+              },
+            ),
             // strikethrough
             ToolbarItem(
               key: const ValueKey<String>("toolbar_strikethrough_action"),
@@ -137,7 +146,7 @@ class MarkdownToolbar extends StatelessWidget {
               icon: FontAwesomeIcons.listUl,
               tooltip: 'Unordered list',
               onPressedButton: () {
-                toolbar.action("* ", "");
+                toolbar.action("- ", "");
               },
             ),
             // checkbox list
