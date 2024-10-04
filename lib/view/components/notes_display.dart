@@ -11,7 +11,7 @@ import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 import 'package:printnotes/view/components/markdown/build_markdown.dart';
-import 'package:printnotes/view/components/bottom_menu_popup.dart';
+import 'package:printnotes/view/components/popups/bottom_menu_popup.dart';
 import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 import 'package:printnotes/view/components/widgets/speed_dial_fab.dart';
 
@@ -58,9 +58,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
       _loadItems(oldWidget.currentDirectory, doReload: true);
     }
   }
-
-  // If you see unnecessary duplication of things, mind you I don't work in a straight
-  // line, but like an impossible optical illusion of a spiral
 
   Future<void> _loadItems(String? folderPath, {bool doReload = false}) async {
     ItemNavHandler.initializeFolderHistory();
