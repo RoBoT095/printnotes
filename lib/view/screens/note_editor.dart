@@ -35,6 +35,10 @@ bool isDesktop(BuildContext context) {
   return MediaQuery.of(context).size.width >= 800;
 }
 
+bool isMobile() {
+  return !Platform.isWindows && !Platform.isLinux && !Platform.isMacOS;
+}
+
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late TextEditingController _titleController;
   late TextEditingController _notesController;
@@ -79,6 +83,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         "open",
         [path],
         workingDirectory: path,
+      );
+    }
+
+    if (isMobile()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        customSnackBar('Currently not supported on mobile'),
       );
     }
 
@@ -240,9 +250,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             ),
             IconButton(
               icon: Icon(Icons.folder_open,
-                  color: Theme.of(context).colorScheme.onSurface),
+                  color: !isMobile()
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.5)),
               tooltip: 'Open Note Location',
-              onPressed: () async => await _openExplorer(),
+              onPressed: () async => !isMobile() ? await _openExplorer() : null,
             ),
           ],
         ),
