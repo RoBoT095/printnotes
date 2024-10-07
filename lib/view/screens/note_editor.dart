@@ -1,13 +1,13 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-
 import 'package:printnotes/utils/handlers/item_rename.dart';
 import 'package:printnotes/view/components/markdown/build_markdown.dart';
-import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
 import 'package:printnotes/view/components/markdown/editor_field.dart';
+import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
 import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
@@ -35,6 +35,10 @@ bool isDesktop(BuildContext context) {
   return MediaQuery.of(context).size.width >= 800;
 }
 
+bool isMobile() {
+  return !Platform.isWindows && !Platform.isLinux && !Platform.isMacOS;
+}
+
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late TextEditingController _titleController;
   late TextEditingController _notesController;
@@ -55,6 +59,40 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _notesController = TextEditingController();
     _loadNoteContent();
     super.initState();
+  }
+
+  Future<bool> _openExplorer() async {
+    final file = File(widget.filePath);
+    final path = file.parent.path;
+    if (Platform.isLinux) {
+      Process.run(
+        "xdg-open",
+        [path],
+        workingDirectory: path,
+      );
+    }
+    if (Platform.isWindows) {
+      Process.run(
+        "explorer",
+        [path],
+        workingDirectory: path,
+      );
+    }
+    if (Platform.isMacOS) {
+      Process.run(
+        "open",
+        [path],
+        workingDirectory: path,
+      );
+    }
+
+    if (isMobile()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        customSnackBar('Currently not supported on mobile'),
+      );
+    }
+
+    return true;
   }
 
   Future<void> _loadNoteContent() async {
@@ -209,6 +247,17 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               tooltip: 'Save Note',
               onPressed: () async =>
                   _isDirty ? await _saveNoteContent(context) : null,
+            ),
+            IconButton(
+              icon: Icon(Icons.folder_open,
+                  color: !isMobile()
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.5)),
+              tooltip: 'Open Note Location',
+              onPressed: () async => !isMobile() ? await _openExplorer() : null,
             ),
           ],
         ),
