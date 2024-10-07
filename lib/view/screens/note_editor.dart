@@ -1,13 +1,13 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-
 import 'package:printnotes/utils/handlers/item_rename.dart';
 import 'package:printnotes/view/components/markdown/build_markdown.dart';
-import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
 import 'package:printnotes/view/components/markdown/editor_field.dart';
+import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
 import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
@@ -55,6 +55,34 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _notesController = TextEditingController();
     _loadNoteContent();
     super.initState();
+  }
+
+  Future<bool> _openExplorer(BuildContext context) async {
+    final file = File(widget.filePath);
+    final path = file.parent.path;
+    if (Platform.isLinux) {
+      Process.run(
+        "xdg-open",
+        [path],
+        workingDirectory: path,
+      );
+    }
+    if (Platform.isWindows) {
+      Process.run(
+        "explorer",
+        [path],
+        workingDirectory: path,
+      );
+    }
+    if (Platform.isMacOS) {
+      Process.run(
+        "open",
+        [path],
+        workingDirectory: path,
+      );
+    }
+
+    return true;
   }
 
   Future<void> _loadNoteContent() async {
@@ -209,6 +237,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               tooltip: 'Save Note',
               onPressed: () async =>
                   _isDirty ? await _saveNoteContent(context) : null,
+            ),
+            IconButton(
+              icon: Icon(Icons.folder_open,
+                  color: Theme.of(context).colorScheme.onSurface),
+              tooltip: 'Open Note Location',
+              onPressed: () async => await _openExplorer(context),
             ),
           ],
         ),
