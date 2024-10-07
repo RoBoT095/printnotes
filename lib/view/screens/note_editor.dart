@@ -57,7 +57,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     super.initState();
   }
 
-  Future<bool> _openExplorer(BuildContext context) async {
+  Future<bool> _openExplorer() async {
     final file = File(widget.filePath);
     final path = file.parent.path;
     if (Platform.isLinux) {
@@ -242,7 +242,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               icon: Icon(Icons.folder_open,
                   color: Theme.of(context).colorScheme.onSurface),
               tooltip: 'Open Note Location',
-              onPressed: () async => await _openExplorer(context),
+              onPressed: () async => await _openExplorer(),
             ),
           ],
         ),
