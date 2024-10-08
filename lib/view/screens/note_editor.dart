@@ -31,7 +31,7 @@ class SwitchModeIntent extends Intent {
   const SwitchModeIntent();
 }
 
-bool isDesktop(BuildContext context) {
+bool isScreenLarge(BuildContext context) {
   return MediaQuery.of(context).size.width >= 800;
 }
 
@@ -65,31 +65,18 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     final file = File(widget.filePath);
     final path = file.parent.path;
     if (Platform.isLinux) {
-      Process.run(
-        "xdg-open",
-        [path],
-        workingDirectory: path,
-      );
+      Process.run("xdg-open", [path], workingDirectory: path);
     }
     if (Platform.isWindows) {
-      Process.run(
-        "explorer",
-        [path],
-        workingDirectory: path,
-      );
+      Process.run("explorer", [path], workingDirectory: path);
     }
     if (Platform.isMacOS) {
-      Process.run(
-        "open",
-        [path],
-        workingDirectory: path,
-      );
+      Process.run("open", [path], workingDirectory: path);
     }
 
     if (isMobile()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        customSnackBar('Currently not supported on mobile'),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(customSnackBar('Currently not supported on mobile'));
     }
 
     return true;
@@ -205,6 +192,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Color mobileNullColor = !isMobile()
+        ? Theme.of(context).colorScheme.onSurface
+        : Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -248,21 +238,24 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               onPressed: () async =>
                   _isDirty ? await _saveNoteContent(context) : null,
             ),
-            IconButton(
-              icon: Icon(Icons.folder_open,
-                  color: !isMobile()
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.5)),
-              tooltip: 'Open Note Location',
-              onPressed: () async => !isMobile() ? await _openExplorer() : null,
+            PopupMenuButton(
+              onSelected: (value) {},
+              itemBuilder: (context) => <PopupMenuEntry>[
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: const Icon(Icons.folder_open),
+                    title: const Text("Open Note Location"),
+                    iconColor: mobileNullColor,
+                    textColor: mobileNullColor,
+                  ),
+                  onTap: () async => !isMobile() ? await _openExplorer() : null,
+                ),
+              ],
             ),
           ],
         ),
         body: buildMarkdownView(),
-        floatingActionButton: _isEditingNote || isDesktop(context)
+        floatingActionButton: _isEditingNote || isScreenLarge(context)
             ? null
             : FloatingActionButton(
                 onPressed: () => showModalBottomSheet(
@@ -359,7 +352,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                             color: Theme.of(context).hintColor),
                                       ),
                                     )
-                                  : isDesktop(context) &&
+                                  : isScreenLarge(context) &&
                                           _notesController.text.contains('# ')
                                       ? Row(
                                           children: <Widget>[

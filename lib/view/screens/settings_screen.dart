@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/load_settings.dart';
+import 'package:printnotes/view/screens/custom_theme_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
+import 'package:printnotes/view/components/widgets/list_section_title.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
@@ -23,6 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _currentTheme;
   String? _currentColorScheme;
   bool? _useLatex;
+  bool _isCustomTheme = false;
 
   @override
   void initState() {
@@ -38,6 +41,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _currentTheme = settings['theme'];
       _currentColorScheme = settings['colorScheme'];
       _useLatex = settings['useLatex'];
+
+      _currentColorScheme == 'custom'
+          ? _isCustomTheme = true
+          : _isCustomTheme = false;
     });
   }
 
@@ -61,9 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           icon: const Icon(
             Icons.arrow_back,
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Settings'),
       ),
@@ -91,8 +96,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           sectionTitle(
             'View',
-            10,
             Theme.of(context).colorScheme.primary,
+            padding: 10,
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,
@@ -101,14 +106,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: DropdownButton(
                 value: _currentLayout ?? 'grid',
                 items: const [
-                  DropdownMenuItem(
-                    value: 'grid',
-                    child: Text('Grid View'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'list',
-                    child: Text('List View'),
-                  ),
+                  DropdownMenuItem(value: 'grid', child: Text('Grid View')),
+                  DropdownMenuItem(value: 'list', child: Text('List View')),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -123,8 +122,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           sectionTitle(
             'Style',
-            10,
             Theme.of(context).colorScheme.primary,
+            padding: 10,
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,
@@ -135,18 +134,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: DropdownButton(
               value: _currentTheme ?? 'system',
               items: const [
-                DropdownMenuItem(
-                  value: 'system',
-                  child: Text('System'),
-                ),
-                DropdownMenuItem(
-                  value: 'light',
-                  child: Text('Light'),
-                ),
-                DropdownMenuItem(
-                  value: 'dark',
-                  child: Text('Dark'),
-                ),
+                DropdownMenuItem(value: 'system', child: Text('System')),
+                DropdownMenuItem(value: 'light', child: Text('Light')),
+                DropdownMenuItem(value: 'dark', child: Text('Dark')),
               ],
               onChanged: (value) {
                 setState(() {
@@ -171,22 +161,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 DropdownMenuItem(value: 'lavender', child: Text('Lavender')),
                 DropdownMenuItem(
                     value: 'strawberry', child: Text('Strawberry')),
+                // DropdownMenuItem(value: 'custom', child: Text('Custom'))
               ],
               onChanged: (value) {
                 setState(() {
                   _currentColorScheme = value;
                   Provider.of<ThemeProvider>(context, listen: false)
                       .setColorScheme(value ?? 'default');
+                  if (value == 'custom') {
+                    _isCustomTheme = true;
+                  } else {
+                    _isCustomTheme = false;
+                  }
                   widget.onSettingsChanged();
                 });
               },
             ),
           ),
+          if (_isCustomTheme)
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.draw),
+              title: const Text('Custom Themes'),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const CustomThemePage())),
+            ),
           const Divider(),
           sectionTitle(
             'Other',
-            10,
             Theme.of(context).colorScheme.primary,
+            padding: 10,
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,
@@ -203,16 +208,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget sectionTitle(String title, double padding, Color color) {
-    return Padding(
-      padding: EdgeInsets.all(padding),
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 16, color: color),
       ),
     );
   }
