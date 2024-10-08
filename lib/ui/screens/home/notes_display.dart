@@ -10,10 +10,10 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
-import 'package:printnotes/view/components/markdown/build_markdown.dart';
-import 'package:printnotes/view/components/popups/bottom_menu_popup.dart';
-import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
-import 'package:printnotes/view/components/widgets/speed_dial_fab.dart';
+import 'package:printnotes/ui/components/markdown/build_markdown.dart';
+import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
+import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 
 class NotesDisplay extends StatefulWidget {
   const NotesDisplay({

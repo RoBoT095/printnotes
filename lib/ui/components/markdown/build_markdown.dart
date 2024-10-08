@@ -4,12 +4,12 @@ import 'package:markdown_widget/markdown_widget.dart';
 import 'package:flutter_highlight/themes/a11y-light.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 
-import 'package:printnotes/view/components/markdown/rendering/code_wrapper.dart';
-import 'package:printnotes/view/components/markdown/rendering/custom_node.dart';
-import 'package:printnotes/view/components/markdown/rendering/highlighter.dart';
-import 'package:printnotes/view/components/markdown/rendering/latex.dart';
-import 'package:printnotes/view/components/markdown/markdown_checkbox.dart';
-import 'package:printnotes/view/components/markdown/rendering/note_tags.dart';
+import 'package:printnotes/ui/components/markdown/rendering/code_wrapper.dart';
+import 'package:printnotes/ui/components/markdown/rendering/custom_node.dart';
+import 'package:printnotes/ui/components/markdown/rendering/highlighter.dart';
+import 'package:printnotes/ui/components/markdown/rendering/latex.dart';
+import 'package:printnotes/ui/components/markdown/markdown_checkbox.dart';
+import 'package:printnotes/ui/components/markdown/rendering/note_tags.dart';
 
 MarkdownConfig theMarkdownConfigs(BuildContext context,
     {bool? hideCodeButtons}) {

@@ -6,7 +6,7 @@ import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
-import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key, required this.onDone});

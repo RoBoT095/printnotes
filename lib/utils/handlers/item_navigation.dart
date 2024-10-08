@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
-import 'package:printnotes/view/screens/note_editor.dart';
+import 'package:printnotes/ui/screens/notes/note_editor.dart';
 
 class ItemNavHandler {
   static final List<String> _folderHistory = [];

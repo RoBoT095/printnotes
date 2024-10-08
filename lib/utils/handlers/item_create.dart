@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemCreationHandler {
   static Future<void> handleCreateNewFolder(

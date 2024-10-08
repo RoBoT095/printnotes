@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'package:printnotes/utils/load_settings.dart';
 
-import 'package:printnotes/view/components/main_scaffold.dart';
+import 'package:printnotes/ui/screens/home/main_scaffold.dart';
 
-import 'package:printnotes/view/screens/intro_screen.dart';
-import 'package:printnotes/view/components/notes_display.dart';
-import 'package:printnotes/view/components/drawer.dart';
-import 'package:printnotes/view/components/popups/exit_popup.dart';
+import 'package:printnotes/ui/screens/home/intro_screen.dart';
+import 'package:printnotes/ui/screens/home/notes_display.dart';
+import 'package:printnotes/ui/components/drawer.dart';
+import 'package:printnotes/ui/components/dialogs/exit_popup.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key, required this.title});

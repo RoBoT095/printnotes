@@ -8,7 +8,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:markdown/markdown.dart' as m;
 
-import './html_support.dart';
+import 'html_support.dart';
 
 class CustomTextNode extends ElementNode {
   final String text;

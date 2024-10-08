@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/syncing/nextcloud/nextcloud_credentials.dart';
 import 'package:printnotes/utils/syncing/nextcloud/nextcloud_sync.dart';
 import 'package:printnotes/utils/syncing/sync_timeline.dart';
-import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NextcloudLogin extends StatefulWidget {
   const NextcloudLogin({

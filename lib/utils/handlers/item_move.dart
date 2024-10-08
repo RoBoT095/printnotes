@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/view/components/popups/select_location.dart';
+import 'package:printnotes/ui/components/dialogs/select_location.dart';
 
 class ItemMoveHandler {
   static Future<void> showMoveDialog(

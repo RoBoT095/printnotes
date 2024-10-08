@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
-import 'package:printnotes/view/components/widgets/search.dart';
+import 'package:printnotes/ui/widgets/search.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({

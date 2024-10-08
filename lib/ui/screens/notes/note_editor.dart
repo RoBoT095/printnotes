@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:printnotes/utils/handlers/item_rename.dart';
-import 'package:printnotes/view/components/markdown/build_markdown.dart';
-import 'package:printnotes/view/components/markdown/editor_field.dart';
-import 'package:printnotes/view/components/markdown/toolbar/markdown_toolbar.dart';
-import 'package:printnotes/view/components/widgets/custom_snackbar.dart';
+import 'package:printnotes/ui/components/markdown/build_markdown.dart';
+import 'package:printnotes/ui/components/markdown/editor_field.dart';
+import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen(

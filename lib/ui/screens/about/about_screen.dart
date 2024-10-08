@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:printnotes/view/components/popups/libraries_dialog.dart';
+import 'package:printnotes/ui/components/dialogs/libraries_dialog.dart';
 import 'package:printnotes/constants/constants.dart';
 
 class AboutScreen extends StatelessWidget {

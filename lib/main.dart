@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
-import 'package:printnotes/view/screens/main_screen.dart';
+import 'package:printnotes/ui/screens/home/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

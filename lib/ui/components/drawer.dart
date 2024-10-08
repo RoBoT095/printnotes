@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/view/screens/archive_screen.dart';
-import 'package:printnotes/view/screens/settings_screen.dart';
-import 'package:printnotes/view/screens/sync_service_screen.dart';
-import 'package:printnotes/view/screens/about_screen.dart';
+import 'package:printnotes/ui/screens/archive/archive_screen.dart';
+import 'package:printnotes/ui/screens/settings/settings_screen.dart';
+import 'package:printnotes/ui/screens/settings/sync_service_screen.dart';
+import 'package:printnotes/ui/screens/about/about_screen.dart';
 import 'package:printnotes/constants/constants.dart';
 
 class DrawerView extends StatelessWidget {

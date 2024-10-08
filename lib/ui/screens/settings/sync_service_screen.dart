@@ -3,8 +3,8 @@ import 'package:printnotes/utils/configs/user_sync.dart';
 
 import 'package:printnotes/utils/load_settings.dart';
 
-import 'package:printnotes/view/components/popups/popup_list_dialog.dart';
-import 'package:printnotes/view/screens/sync_options/nextcloud.dart';
+import 'package:printnotes/ui/components/dialogs/popup_list_dialog.dart';
+import 'package:printnotes/ui/screens/settings/sync_options/nextcloud.dart';
 
 class SyncServiceScreen extends StatefulWidget {
   const SyncServiceScreen({super.key, required this.directory});

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/load_settings.dart';
-import 'package:printnotes/view/screens/custom_theme_page.dart';
+import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
-import 'package:printnotes/view/components/widgets/list_section_title.dart';
+import 'package:printnotes/ui/widgets/list_section_title.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
