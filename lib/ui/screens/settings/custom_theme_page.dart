@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:printnotes/utils/handlers/custom_themes/theme_validator.dart';
+// import 'package:printnotes/utils/handlers/custom_themes/theme_builder.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
 
@@ -14,6 +16,8 @@ class CustomThemePage extends StatefulWidget {
 
 class _CustomThemePageState extends State<CustomThemePage> {
   final _formKey = GlobalKey<FormState>();
+  final _themeName = TextEditingController();
+  final themeJsonString = TextEditingController();
   bool isCustomLightSelected = false;
   bool isCustomDarkSelected = false;
 
@@ -57,6 +61,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    controller: _themeName,
                     maxLines: 1,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
@@ -79,12 +84,13 @@ class _CustomThemePageState extends State<CustomThemePage> {
                     },
                   ),
                   TextFormField(
-                    maxLines: 2,
+                    controller: themeJsonString,
+                    maxLines: 1,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
                           borderRadius: BorderRadius.vertical(
                               bottom: Radius.circular(20))),
-                      hintText: 'Import theme string here...',
+                      hintText: 'Import json string for theme here...',
                       hintStyle: TextStyle(
                           color: Theme.of(context)
                               .colorScheme
@@ -93,9 +99,11 @@ class _CustomThemePageState extends State<CustomThemePage> {
                     ),
                     enableSuggestions: false,
                     validator: (theme) {
-                      //TODO: Check if theme is parsable
                       if (theme == null || theme.isEmpty) {
                         return 'Please input valid theme';
+                      }
+                      if (!validateCustomThemeJson(theme)) {
+                        return 'Json string is not valid';
                       }
                       return null;
                     },
@@ -110,9 +118,9 @@ class _CustomThemePageState extends State<CustomThemePage> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          FocusScope.of(context).unfocus();
                           ScaffoldMessenger.of(context).showSnackBar(
                               customSnackBar('Saved Successfully'));
+                          FocusScope.of(context).unfocus();
                         }
                       },
                       child: const Text('Import'),
@@ -124,7 +132,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
           ),
 
           const Divider(),
-          // List of light themes, ones with Brightness.light
+          // List of light themes, ones with int of 1
           sectionTitle(
             'Light Theme',
             Theme.of(context).colorScheme.primary,
@@ -147,7 +155,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
             ),
           ),
           const Divider(),
-          // List of dark themes, ones with Brightness.dark
+          // List of dark themes, ones with int of 0
           sectionTitle(
             'Dark Theme',
             Theme.of(context).colorScheme.primary,
@@ -165,4 +173,16 @@ class _CustomThemePageState extends State<CustomThemePage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _themeName.dispose();
+    themeJsonString.dispose();
+    super.dispose();
+  }
 }
+
+
+// TODO: Remove this later
+// Valid theme for testing
+// {"brightness": 1, "primary": 4294921554, "onPrimary": 4294967295, "secondary": 4294945948, "onSecondary": 4294967295, "surface": 4294834424, "onSurface": 4278190080, "surfaceContainer": 4294376191}
