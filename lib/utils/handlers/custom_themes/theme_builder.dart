@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-// Take json and build theme model from it
+// Take json and build ColorScheme from it
 ColorScheme customThemeBuilder(String jsonString) {
   Map<String, dynamic> json = jsonDecode(jsonString);
   return ColorScheme(

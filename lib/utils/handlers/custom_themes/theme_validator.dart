@@ -2,6 +2,25 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:printnotes/utils/configs/data_path.dart';
+
+bool validateCustomThemeName(String name) {
+  try {
+    final configFile = DataPath.loadJsonConfigFile();
+    if (configFile['UserCustomThemes'] != null) {
+      final themes = configFile['UserCustomThemes'] as List<dynamic>;
+      for (final theme in themes) {
+        if (theme['name'] == name) return false;
+      }
+    }
+
+    return true;
+  } catch (e) {
+    debugPrint('Error parsing JSON in validator for Custom Theme Name: $e');
+    return false;
+  }
+}
+
 bool validateCustomThemeJson(String jsonString) {
   try {
     // Parse string into json
@@ -54,7 +73,7 @@ bool validateCustomThemeJson(String jsonString) {
 
     return true;
   } catch (e) {
-    debugPrint('Error parsing JSON: $e');
+    debugPrint('Error parsing JSON in validator for Custom Theme Parser: $e');
     return false;
   }
 }

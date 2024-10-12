@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,5 +49,27 @@ class DataPath {
       }
     }
     return _selectedDirectory;
+  }
+
+  // Hidden app config file called .printnotes_config.json
+
+  // Create and load contents of config file
+  static Map<String, dynamic> loadJsonConfigFile() {
+    final configFile = File('$_selectedDirectory/.printnotes_config.json');
+    if (!configFile.existsSync()) configFile.createSync();
+    if (configFile.readAsStringSync().isEmpty) {
+      configFile.writeAsStringSync('{}');
+    }
+
+    final configJsonString = configFile.readAsStringSync();
+    return jsonDecode(configJsonString);
+  }
+
+  // Write to config file
+  static void saveJsonConfigFile(Map<String, dynamic> configData) async {
+    final configFile = File('$_selectedDirectory/.printnotes_config.json');
+
+    final configJsonString = jsonEncode(configData);
+    configFile.writeAsStringSync(configJsonString);
   }
 }
