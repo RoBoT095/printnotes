@@ -5,7 +5,7 @@ Widget sectionTitle(String title, Color color, {double? padding}) {
     padding: EdgeInsets.all(padding ?? 8),
     child: Text(
       title,
-      style: TextStyle(fontSize: 16, color: color),
+      style: TextStyle(fontSize: 16, color: color, fontWeight: FontWeight.bold),
     ),
   );
 }

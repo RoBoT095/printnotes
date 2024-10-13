@@ -83,20 +83,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                  foregroundColor: WidgetStatePropertyAll<Color>(
-                      Theme.of(context).colorScheme.onSecondary),
-                  backgroundColor: WidgetStatePropertyAll<Color>(
-                      Theme.of(context).colorScheme.secondary)),
-              onPressed: _pickDirectory,
-              child: const Text('Change Folder'),
+            child: Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    fixedSize: const Size(250, 40)),
+                onPressed: _pickDirectory,
+                child: const Text('Change Folder'),
+              ),
             ),
           ),
           const Divider(),
           sectionTitle(
             'View',
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.secondary,
             padding: 10,
           ),
           ListTile(
@@ -122,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           sectionTitle(
             'Style',
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.secondary,
             padding: 10,
           ),
           ListTile(
@@ -182,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ListTile(
               iconColor: Theme.of(context).colorScheme.secondary,
               leading: const Icon(Icons.draw),
-              title: const Text('Custom Themes'),
+              title: const Text('Custom Color Scheme'),
               trailing: const Icon(Icons.arrow_forward_ios_rounded),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const CustomThemePage())),
@@ -190,7 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           sectionTitle(
             'Other',
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.secondary,
             padding: 10,
           ),
           ListTile(

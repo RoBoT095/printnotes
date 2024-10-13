@@ -49,11 +49,11 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
-### (Oct 08-11, 2024)
+### (Oct 08-12, 2024)
 
 Adding custom themes page that allows user to import a json string of a theme you get from [printnotes_theme_maker](https://github.com/RoBoT095/printnotes_theme_maker) (will be a website to make your own themes, its to avoid bloating app, plus easier to use on pc), and add a name to it to be saved into a list in a hidden json file called `.printnotes_config.json`.
 
-All themes will be displayed on that screen split into light and dark, so user could pick one of each to be used when switching between brightness modes. Displaying, selecting, and usage of the custom themes is work in progress, the backend is mostly complete though, so not much left to do.
+All themes will be displayed on that screen split into light and dark, so user could pick one of each to be used when switching between brightness modes. Saving selected and usage of the custom themes is work in progress, the backend is mostly complete though, so not much left to do.
 
 ### (Oct 04, 2024)
 
