@@ -49,11 +49,11 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
-### (Oct 08-12, 2024)
+### (Oct 08-14, 2024)
 
 Adding custom themes page that allows user to import a json string of a theme you get from [printnotes_theme_maker](https://github.com/RoBoT095/printnotes_theme_maker) (will be a website to make your own themes, its to avoid bloating app, plus easier to use on pc), and add a name to it to be saved into a list in a hidden json file called `.printnotes_config.json`.
 
-All themes will be displayed on that screen split into light and dark, so user could pick one of each to be used when switching between brightness modes. Saving selected and usage of the custom themes is work in progress, the backend is mostly complete though, so not much left to do.
+All themes will be displayed on that screen split into light and dark, so user could pick one of each to be used when switching between brightness modes. If a selected color theme gets deleted, app uses the default for that brightness mode.
 
 ### (Oct 04, 2024)
 
@@ -105,13 +105,13 @@ Added app icons to different devices but I still need to check if they all work.
 6. <u>TODO</u>: Made option to switch WiFi only or WiFi+Cellular upload condition but commented
    it out as I will add it when I figure out notes comparing and merging with sync service.
 
-   (need to figure out how to version app cuz I never done this before ┐(￣ヘ￣)┌ so version will remain till I get sync completed)
+   (need to figure out how to version app cuz I never done this before ┐(￣ヘ￣)┌)
 
 </details>
 
 ## Possible Future Features (not guaranteed)
 
-- - [ ] Custom theme maker with import/export capability
+- - [x] Custom themes with import capability
 - - [ ] Advanced search with filters
 - - [x] Tags
 - - [ ] Upload and attach pictures
@@ -126,7 +126,7 @@ Added app icons to different devices but I still need to check if they all work.
 
 ## Supported Platforms
 
-I will release apps when I feel like the app is more complete! Also, ordered a mac mini which is coming soon so I can test on MacOS and iOS :D
+I will release apps when I feel like the app is more complete!
 
 - [ ] Android `coming soon`
 - [ ] iOS `coming soon`

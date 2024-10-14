@@ -107,7 +107,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             name,
             overflow: TextOverflow.ellipsis,
           ),
-          trailing: isDirectory ? const Icon(Icons.arrow_forward_ios) : null,
+          trailing:
+              isDirectory ? const Icon(Icons.arrow_forward_ios_rounded) : null,
         ),
       ),
     );

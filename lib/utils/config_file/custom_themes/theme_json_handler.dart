@@ -56,10 +56,30 @@ class CustomThemeJson {
   }
 }
 
+void saveSelectedThemeToConfig(Map<String, dynamic> selectedThemes) {
+  final configFileMap = DataPath.loadJsonConfigFile();
+
+// Object existence check for "SelectedCustomThemes", create if null
+  configFileMap['SelectedCustomThemes'] ??= {};
+
+  // Add the map of selected themes to config
+  configFileMap['SelectedCustomThemes'] = selectedThemes;
+
+  DataPath.saveJsonConfigFile(configFileMap);
+}
+
+Map<String, dynamic> loadSelectedThemeFromConfig() {
+  final configFileMap = DataPath.loadJsonConfigFile();
+  if (configFileMap['SelectedCustomThemes'] != null) {
+    return configFileMap['SelectedCustomThemes'];
+  }
+  return {"dark": "", "light": ""};
+}
+
 void addThemeToConfig(CustomThemeJson themeJson) {
   final configFileMap = DataPath.loadJsonConfigFile();
 
-  // Array existence check for "UserCustomThemes", create if not
+  // Array existence check for "UserCustomThemes", create if null
   configFileMap['UserCustomThemes'] ??= [];
 
   // // Add the new theme object to array
@@ -68,6 +88,7 @@ void addThemeToConfig(CustomThemeJson themeJson) {
   DataPath.saveJsonConfigFile(configFileMap);
 }
 
+// Identifies theme by name and deletes it
 void deleteCustomTheme(Map<String, dynamic> themeJson) {
   final configFileMap = DataPath.loadJsonConfigFile();
 
@@ -77,51 +98,54 @@ void deleteCustomTheme(Map<String, dynamic> themeJson) {
   DataPath.saveJsonConfigFile(configFileMap);
 }
 
-// Go through config file and return all dark themes
-List<dynamic> listDarkThemeFromConfig() {
+// TODO: Maybe merge into addThemeToConfig
+void restoreCustomTheme(Map<String, dynamic> themeJson) {
   final configFileMap = DataPath.loadJsonConfigFile();
-  final darkThemesList = [];
-  if (configFileMap['UserCustomThemes'] != null) {
-    final themes = configFileMap['UserCustomThemes'] as List<dynamic>;
-    for (final theme in themes) {
-      if (theme['brightness'] == 0) {
-        darkThemesList.add(theme);
-      }
-    }
-  }
-  return darkThemesList;
+
+  final themes = configFileMap['UserCustomThemes'] as List<dynamic>;
+  themes.add(themeJson);
+
+  DataPath.saveJsonConfigFile(configFileMap);
 }
 
-// Go through config file and return all light themes
-List<dynamic> listLightThemeFromConfig() {
+// Go through config file and return all themes that are either dark or light
+List<dynamic> listAllThemeFromConfig({required bool isDark}) {
   final configFileMap = DataPath.loadJsonConfigFile();
-  final lightThemesList = [];
+  final themesList = [];
   if (configFileMap['UserCustomThemes'] != null) {
     final themes = configFileMap['UserCustomThemes'] as List<dynamic>;
     for (final theme in themes) {
-      if (theme['brightness'] == 1) {
-        lightThemesList.add(theme);
+      if (isDark && theme['brightness'] == 0) {
+        themesList.add(theme);
+      }
+      if (!isDark && theme['brightness'] == 1) {
+        themesList.add(theme);
       }
     }
   }
-  return lightThemesList;
+  return themesList;
 }
 
 // Take json and build ColorScheme for app to use as theme
-ColorScheme customThemeBuilder(String jsonString) {
-  Map<String, dynamic> json = jsonDecode(jsonString);
-  return ColorScheme(
-    brightness: Brightness.values.firstWhere(
-      (e) => e.index == json['brightness'],
-    ),
-    primary: Color(json['primary']),
-    onPrimary: Color(json['onPrimary']),
-    secondary: Color(json['secondary']),
-    onSecondary: Color(json['onSecondary']),
-    surface: Color(json['surface']),
-    onSurface: Color(json['onSurface']),
-    surfaceContainer: Color(json['surfaceContainer']),
-    error: Colors.red,
-    onError: Colors.yellow,
-  );
+ColorScheme? customThemeBuilder(bool isDark) {
+  final selectedTheme = loadSelectedThemeFromConfig();
+  for (final theme in listAllThemeFromConfig(isDark: isDark)) {
+    if (theme['name'] == selectedTheme[isDark ? 'dark' : 'light']) {
+      return ColorScheme(
+        brightness: Brightness.values.firstWhere(
+          (e) => e.index == theme['brightness'],
+        ),
+        primary: Color(theme['primary']),
+        onPrimary: Color(theme['onPrimary']),
+        secondary: Color(theme['secondary']),
+        onSecondary: Color(theme['onSecondary']),
+        surface: Color(theme['surface']),
+        onSurface: Color(theme['onSurface']),
+        surfaceContainer: Color(theme['surfaceContainer']),
+        error: Colors.red,
+        onError: Colors.yellow,
+      );
+    }
+  }
+  return null;
 }

@@ -27,8 +27,7 @@ class App extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: themeProvider.getThemeData(context),
-          darkTheme: themeProvider.getThemeData(context),
+          theme: ThemeData(colorScheme: themeProvider.getThemeData(context)),
           themeMode: themeProvider.themeMode,
           title: 'Print(Notes)',
           home: const MainPage(

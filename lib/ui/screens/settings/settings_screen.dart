@@ -162,7 +162,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 DropdownMenuItem(value: 'lavender', child: Text('Lavender')),
                 DropdownMenuItem(
                     value: 'strawberry', child: Text('Strawberry')),
-                // DropdownMenuItem(value: 'custom', child: Text('Custom'))
+                DropdownMenuItem(value: 'custom', child: Text('Custom'))
               ],
               onChanged: (value) {
                 setState(() {

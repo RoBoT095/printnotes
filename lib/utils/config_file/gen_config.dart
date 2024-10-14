@@ -1,0 +1,1 @@
+// TODO: move certain settings to config file, and generate it on app launch

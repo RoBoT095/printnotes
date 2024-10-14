@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printnotes/constants/themes/theme_color_data.dart';
+import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 
 class ThemeProvider with ChangeNotifier {
@@ -42,52 +43,27 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ThemeData getThemeData(BuildContext context) {
+  ColorScheme getThemeData(BuildContext context) {
     final brightness = _themeMode == ThemeMode.system
         ? MediaQuery.of(context).platformBrightness
         : _themeMode == ThemeMode.light
             ? Brightness.light
             : Brightness.dark;
+    bool isDark = brightness == Brightness.dark;
     switch (_colorScheme) {
       case 'green_apple':
-        return brightness == Brightness.light
-            ? AppThemes.lightGreenApple
-            : AppThemes.darkGreenApple;
+        return !isDark ? AppThemes.lightGreenApple : AppThemes.darkGreenApple;
       case 'lavender':
-        return brightness == Brightness.light
-            ? AppThemes.lightLavender
-            : AppThemes.darkLavender;
+        return !isDark ? AppThemes.lightLavender : AppThemes.darkLavender;
       case 'strawberry':
-        return brightness == Brightness.light
-            ? AppThemes.lightStrawberry
-            : AppThemes.darkStrawberry;
+        return !isDark ? AppThemes.lightStrawberry : AppThemes.darkStrawberry;
+      case 'custom':
+        return customThemeBuilder(isDark) ??
+            (!isDark ? AppThemes.lightDefault : AppThemes.darkDefault);
       default:
         return brightness == Brightness.light
             ? AppThemes.lightDefault
             : AppThemes.darkDefault;
     }
   }
-
-  // From theme maker as reference
-
-  // void updateBrightness(Brightness brightness) {
-  //   _colorScheme = _colorScheme.copyWith(brightness: brightness);
-  //   notifyListeners();
-  // }
-
-  // void updateColor(String property, Color color) {
-  //   _colorScheme = _colorScheme.copyWith(
-  //     primary: property == 'primary' ? color : _colorScheme.primary,
-  //     onPrimary: property == 'onPrimary' ? color : _colorScheme.onPrimary,
-  //     secondary: property == 'secondary' ? color : _colorScheme.secondary,
-  //     onSecondary:
-  //         property == 'onSecondary' ? color : _customColorScheme.onSecondary,
-  //     surface: property == 'surface' ? color : _customColorScheme.surface,
-  //     onSurface: property == 'onSurface' ? color : _colorScheme.onSurface,
-  //     surfaceContainer: property == 'surfaceContainer'
-  //         ? color
-  //         : _colorScheme.surfaceContainer,
-  //   );
-  //   notifyListeners();
-  // }
 }

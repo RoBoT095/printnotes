@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:printnotes/utils/handlers/custom_themes/theme_validator.dart';
-import 'package:printnotes/utils/handlers/custom_themes/theme_json_handler.dart';
+import 'package:printnotes/providers/theme_provider.dart';
+import 'package:printnotes/utils/config_file/custom_themes/theme_validator.dart';
+import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
-import 'package:printnotes/ui/widgets/list_section_title.dart';
 
 class CustomThemePage extends StatefulWidget {
   const CustomThemePage({super.key});
@@ -18,22 +19,24 @@ class _CustomThemePageState extends State<CustomThemePage> {
   final _formKey = GlobalKey<FormState>();
   final _themeName = TextEditingController();
   final _themeJsonString = TextEditingController();
-  // Map for storing custom colors and its index for each theme mode
-  // TODO: Save selected color schemes to either config file or shared preference
-  Map<String, int> isCustomColorSelected = {"dark": -1, "light": -1};
   List darkThemes = [];
   List lightThemes = [];
+  // Map for storing custom colors and its name for each theme mode
+  Map<String, dynamic> isCustomColorSelected = {"dark": "", "light": ""};
   late Map<String, dynamic> copiedForUndo;
 
   @override
   void initState() {
+    isCustomColorSelected = loadSelectedThemeFromConfig();
     refreshThemeList();
     super.initState();
   }
 
   void refreshThemeList() {
-    darkThemes = listDarkThemeFromConfig();
-    lightThemes = listLightThemeFromConfig();
+    setState(() {
+      darkThemes = listAllThemeFromConfig(isDark: true);
+      lightThemes = listAllThemeFromConfig(isDark: false);
+    });
   }
 
   Future<void> _launchUrl(url) async {
@@ -44,7 +47,8 @@ class _CustomThemePageState extends State<CustomThemePage> {
   }
 
   void addItemBack() {
-    addThemeToConfig(CustomThemeJson.fromJson(copiedForUndo.toString()));
+    restoreCustomTheme(copiedForUndo);
+    refreshThemeList();
   }
 
   void removeItem(Map<String, dynamic> item) {
@@ -58,13 +62,10 @@ class _CustomThemePageState extends State<CustomThemePage> {
     ));
   }
 
-  Widget buildCustomThemeListTile(List<dynamic> list, int index) {
+  // TODO: Redo this all, it looks ugly
+  Widget buildCustomThemeListTile(List<dynamic> list, int index,
+      {required bool isDark}) {
     double circleRadius = 12;
-    var isDark = false;
-    bool isSelected = false;
-    if (0 == list[index]["brightness"]) isDark = true;
-
-    isSelected = isCustomColorSelected[isDark ? "dark" : "light"] == index;
 
     return Dismissible(
       key: ValueKey(list[index]),
@@ -73,11 +74,13 @@ class _CustomThemePageState extends State<CustomThemePage> {
         removeItem(list[index]);
         // if the custom color that got deleted is selected, reset those values
         setState(() {
-          if (isSelected == true) {
-            isSelected = false;
-            // TODO: don't forget to actually test this later
-            isCustomColorSelected[isDark ? "dark" : "light"] = -1;
+          if (list[index]["name"] ==
+              isCustomColorSelected[isDark ? 'dark' : 'light']) {
+            isCustomColorSelected[isDark ? 'dark' : 'light'] = "";
           }
+          refreshThemeList();
+          Provider.of<ThemeProvider>(context, listen: false)
+              .setColorScheme('custom');
         });
       },
       background: Container(
@@ -88,45 +91,62 @@ class _CustomThemePageState extends State<CustomThemePage> {
       ),
       child: ListTile(
         onTap: () {
-          setState(
-              () => isCustomColorSelected[isDark ? "dark" : "light"] = index);
+          setState(() {
+            isCustomColorSelected[isDark ? 'dark' : 'light'] =
+                list[index]["name"];
+            saveSelectedThemeToConfig(isCustomColorSelected);
+            Provider.of<ThemeProvider>(context, listen: false)
+                .setColorScheme('custom');
+          });
         },
-        trailing: isSelected ? const Icon(Icons.check) : null,
-        // TODO: add title overflow handling
-        title: Text(list[index]['name']),
-        subtitle: SizedBox(
+        leading: CircleAvatar(
+          backgroundColor: Color(list[index]['primary']),
+          child: isCustomColorSelected[isDark ? 'dark' : 'light'] ==
+                  list[index]["name"]
+              ? const Icon(Icons.check)
+              : const Icon(Icons.palette),
+        ),
+        title: Text(
+          list[index]["name"],
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 18),
+        ),
+        trailing: SizedBox(
           width: ((circleRadius * 2) * 7) + 20,
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundColor: Color(list[index]['primary']),
-                radius: circleRadius,
-              ),
-              CircleAvatar(
-                backgroundColor: Color(list[index]['onPrimary']),
-                radius: circleRadius,
-              ),
-              CircleAvatar(
-                backgroundColor: Color(list[index]['secondary']),
-                radius: circleRadius,
-              ),
-              CircleAvatar(
-                backgroundColor: Color(list[index]['onSecondary']),
-                radius: circleRadius,
-              ),
-              CircleAvatar(
-                backgroundColor: Color(list[index]['surface']),
-                radius: circleRadius,
-              ),
-              CircleAvatar(
-                backgroundColor: Color(list[index]['onSurface']),
-                radius: circleRadius,
-              ),
-              CircleAvatar(
-                backgroundColor: Color(list[index]['surfaceContainer']),
-                radius: circleRadius,
-              )
-            ],
+          child: Card.filled(
+            color: Color(list[index]['secondary']).withOpacity(0.2),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['primary']),
+                  radius: circleRadius,
+                ),
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['onPrimary']),
+                  radius: circleRadius,
+                ),
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['secondary']),
+                  radius: circleRadius,
+                ),
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['onSecondary']),
+                  radius: circleRadius,
+                ),
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['surface']),
+                  radius: circleRadius,
+                ),
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['onSurface']),
+                  radius: circleRadius,
+                ),
+                CircleAvatar(
+                  backgroundColor: Color(list[index]['surfaceContainer']),
+                  radius: circleRadius,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -136,149 +156,200 @@ class _CustomThemePageState extends State<CustomThemePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Custom Colors')),
-      body: ListView(
-        children: [
-          Center(
-            child: RichText(
-                text: TextSpan(children: [
-              TextSpan(
-                  text: 'Make and import your theme from ',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface)),
-              TextSpan(
-                  // TODO: Change title text
-                  text: 'www.example.com',
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
-                  recognizer: TapGestureRecognizer()
-                    // TODO: Change Url
-                    ..onTap = () => _launchUrl(
-                        'https://github.com/RoBoT095/printnotes_theme_maker'))
-            ])),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: _themeName,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20))),
-                      hintText: 'Name your new theme...',
-                      hintStyle: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.6)),
-                    ),
-                    enableSuggestions: false,
-                    validator: (name) {
-                      if (name == null || name.isEmpty) {
-                        return 'Please enter a name for theme';
-                      }
-                      if (!validateCustomThemeName(name)) {
-                        return 'Name is already in use';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _themeJsonString,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(20))),
-                      hintText: 'Import json string for theme here...',
-                      hintStyle: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.6)),
-                    ),
-                    enableSuggestions: false,
-                    validator: (theme) {
-                      if (theme == null || theme.isEmpty) {
-                        return 'Please input valid theme';
-                      }
-                      if (!validateCustomThemeJson(theme)) {
-                        return 'Json string is not valid';
-                      }
-                      return null;
-                    },
-                  ),
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          String newCustomTheme = _themeJsonString.text
-                              .replaceFirst(
-                                  '{', '{"name": "${_themeName.text}", ');
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: const Text('Custom Colors'),
+      ),
+      body: DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            TabBar(
+              labelColor: Theme.of(context).colorScheme.secondary,
+              indicatorColor: Theme.of(context).colorScheme.secondary,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorWeight: 5,
+              tabs: const <Tab>[
+                Tab(icon: Icon(Icons.download), text: 'Import Theme'),
+                Tab(icon: Icon(Icons.light_mode), text: 'Light Mode'),
+                Tab(icon: Icon(Icons.dark_mode), text: 'Dark Mode'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: RichText(
+                              textAlign: TextAlign.center,
+                              textScaler: const TextScaler.linear(1.2),
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                  children: [
+                                    const TextSpan(
+                                        text:
+                                            'Make and import your theme from\n'),
+                                    TextSpan(
+                                      // TODO: Change title text
+                                      text: 'The Theme Maker\n',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
+                                      recognizer: TapGestureRecognizer()
+                                        // TODO: Change Url
+                                        ..onTap = () => _launchUrl(
+                                            'https://github.com/RoBoT095/printnotes_theme_maker'),
+                                    ),
+                                    const TextSpan(text: '~Coming Soon~'),
+                                  ])),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  controller: _themeName,
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20))),
+                                    hintText: 'Name your new theme...',
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withOpacity(0.6)),
+                                  ),
+                                  enableSuggestions: false,
+                                  validator: (name) {
+                                    if (name == null || name.isEmpty) {
+                                      return 'Please enter a name for theme';
+                                    }
+                                    if (!validateCustomThemeName(name)) {
+                                      return 'Name is already in use';
+                                    }
+                                    // How long title should be, can't decide what is a good length
+                                    int titleLen = 35;
+                                    if (name.length > titleLen) {
+                                      return 'Name is too long, please keep it within $titleLen characters';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                TextFormField(
+                                  controller: _themeJsonString,
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            bottom: Radius.circular(20))),
+                                    hintText:
+                                        'Import json string for theme here...',
+                                    hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withOpacity(0.6)),
+                                  ),
+                                  enableSuggestions: false,
+                                  validator: (theme) {
+                                    if (theme == null || theme.isEmpty) {
+                                      return 'Please input valid theme';
+                                    }
+                                    if (!validateCustomThemeJson(theme)) {
+                                      return 'Json string is not valid';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Center(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        String newCustomTheme =
+                                            _themeJsonString.text.replaceFirst(
+                                                '{',
+                                                '{"name": "${_themeName.text}", ');
 
-                          addThemeToConfig(
-                              CustomThemeJson.fromJson(newCustomTheme));
+                                        addThemeToConfig(
+                                            CustomThemeJson.fromJson(
+                                                newCustomTheme));
 
-                          refreshThemeList();
-                          _themeName.clear();
-                          _themeJsonString.clear();
+                                        refreshThemeList();
+                                        _themeName.clear();
+                                        _themeJsonString.clear();
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              customSnackBar('Saved Successfully'));
-                          FocusScope.of(context).unfocus();
-                        }
-                      },
-                      child: const Text('Import'),
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(customSnackBar(
+                                                'Saved Successfully'));
+                                        FocusScope.of(context).unfocus();
+                                      }
+                                    },
+                                    child: const Text('Import'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Center(
+                            child: Text(
+                                'Switch theme mode on settings screen to see changes')),
+                      ],
                     ),
                   ),
+                  lightThemes.isEmpty
+                      ? const Center(
+                          child: Text('Import a Custom Light Theme'),
+                        )
+                      : ListView.builder(
+                          itemCount: lightThemes.length,
+                          itemBuilder: (context, index) {
+                            return buildCustomThemeListTile(
+                              lightThemes,
+                              index,
+                              isDark: false,
+                            );
+                          },
+                        ),
+                  darkThemes.isEmpty
+                      ? const Center(
+                          child: Text('Import a Custom Dark Theme'),
+                        )
+                      : ListView.builder(
+                          itemCount: darkThemes.length,
+                          itemBuilder: (context, index) {
+                            return buildCustomThemeListTile(
+                              darkThemes,
+                              index,
+                              isDark: true,
+                            );
+                          },
+                        )
                 ],
               ),
             ),
-          ),
-          const Center(
-              child:
-                  Text('Switch theme mode on settings screen to see changes')),
-          const Divider(),
-          // List of light themes, ones with int of 1
-          sectionTitle(
-            'Light Theme',
-            Theme.of(context).colorScheme.secondary,
-          ),
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              itemCount: lightThemes.length,
-              itemBuilder: (context, index) {
-                return buildCustomThemeListTile(lightThemes, index);
-              },
-            ),
-          ),
-          const Divider(),
-          // List of dark themes, ones with int of 0
-          sectionTitle(
-            'Dark Theme',
-            Theme.of(context).colorScheme.secondary,
-          ),
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              itemCount: darkThemes.length,
-              itemBuilder: (context, index) {
-                return buildCustomThemeListTile(darkThemes, index);
-              },
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -290,8 +361,3 @@ class _CustomThemePageState extends State<CustomThemePage> {
     super.dispose();
   }
 }
-
-
-// TODO: Remove this later
-// Valid theme for testing
-// {"brightness": 1, "primary": 4294921554, "onPrimary": 4294967295, "secondary": 4294945948, "onSecondary": 4294967295, "surface": 4294834424, "onSurface": 4278190080, "surfaceContainer": 4294376191}
