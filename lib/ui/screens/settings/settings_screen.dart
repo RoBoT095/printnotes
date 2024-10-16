@@ -22,6 +22,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _currentDirectory;
   String? _currentLayout;
+  int _currentPreviewLength = 100;
   String? _currentTheme;
   String? _currentColorScheme;
   bool? _useLatex;
@@ -38,6 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _currentDirectory = settings['directory'];
       _currentLayout = settings['layout'];
+      _currentPreviewLength = settings['previewLength'];
       _currentTheme = settings['theme'];
       _currentColorScheme = settings['colorScheme'];
       _useLatex = settings['useLatex'];
@@ -56,6 +58,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
       widget.onSettingsChanged();
     }
+  }
+
+  String sliderLabels(int value) {
+    String valString = value.toString();
+    if (value == 0) {
+      return 'Title Only: $valString';
+    }
+    if (value == 100) {
+      return 'Default: $valString';
+    }
+    return valString;
   }
 
   @override
@@ -119,6 +132,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     }
                   });
                 }),
+          ),
+          ListTile(
+            iconColor: Theme.of(context).colorScheme.secondary,
+            leading: const Icon(Icons.list_alt_rounded),
+            title: const Text('Note Preview amount'),
+            subtitle: Slider(
+              value: _currentPreviewLength.toDouble(),
+              min: 0,
+              max: 200,
+              divisions: 10,
+              label: sliderLabels(_currentPreviewLength),
+              onChanged: (value) {
+                setState(() {
+                  _currentPreviewLength = value.toInt();
+                  UserLayoutPref.setNotePreviewLength(value.toInt());
+                  widget.onSettingsChanged();
+                });
+              },
+            ),
           ),
           const Divider(),
           sectionTitle(

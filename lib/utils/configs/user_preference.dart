@@ -13,6 +13,18 @@ class UserLayoutPref {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('layoutView') ?? 'grid';
   }
+
+  // Note preview length is for how many characters are displayed for each note
+  // body on home screen before they get cut off
+  static Future<void> setNotePreviewLength(int viewLength) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('notePreview', viewLength);
+  }
+
+  static Future<int> getNotePreviewLength() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('notePreview') ?? 100;
+  }
 }
 
 // For styling of app

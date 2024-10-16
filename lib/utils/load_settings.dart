@@ -18,6 +18,7 @@ class SettingsLoader {
   static Future<Map<String, dynamic>> loadSettings() async {
     final directory = await DataPath.selectedDirectory;
     final layout = await UserLayoutPref.getLayoutView();
+    final previewLength = await UserLayoutPref.getNotePreviewLength();
     final theme = await UserThemingPref.getThemeMode();
     final colorScheme = await UserThemingPref.getColorScheme();
     final sortOrder = await UserSortPref.getSortOrder();
@@ -26,6 +27,7 @@ class SettingsLoader {
     return {
       'directory': directory,
       'layout': layout,
+      'previewLength': previewLength,
       'theme': theme,
       'colorScheme': colorScheme,
       'sortOrder': sortOrder,

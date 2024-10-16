@@ -49,6 +49,10 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
+### (Oct 16, 2024)
+
+Added a slider in settings to adjust how many characters are show for notes preview with option to do zero which will only display the title. Also, made the reload button on the scaffold of the note_display screen give user feedback by actually appearing to reload.
+
 ### (Oct 08-14, 2024)
 
 Adding custom themes page that allows user to import a json string of a theme you get from [printnotes_theme_maker](https://github.com/RoBoT095/printnotes_theme_maker) (will be a website to make your own themes, its to avoid bloating app, plus easier to use on pc), and add a name to it to be saved into a list in a hidden json file called `.printnotes_config.json`.

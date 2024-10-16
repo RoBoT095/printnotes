@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:async';
+
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -35,11 +37,13 @@ class NotesDisplay extends StatefulWidget {
 
 class _NotesDisplayState extends State<NotesDisplay> {
   bool _mounted = true;
+  bool _isLoading = false;
   List<FileSystemEntity> _items = [];
   String? _currentPath;
   String _currentFolderName = 'All Notes';
   List<String> _folderHistory = [];
   bool _useLatex = false;
+  int _previewLength = 100;
 
   @override
   void initState() {
@@ -66,10 +70,13 @@ class _NotesDisplayState extends State<NotesDisplay> {
       doReload: doReload,
     );
     bool userLatexPref = await UserLatexPref.getLatexSupport();
+    int userPreviewLength = await UserLayoutPref.getNotePreviewLength();
 
     if (_mounted) {
       setState(() {
         _useLatex = userLatexPref;
+        _previewLength = userPreviewLength;
+
         _items = loadedItems['items'];
         _currentPath = loadedItems['currentPath'];
         _currentFolderName = loadedItems['currentFolderName'];
@@ -146,7 +153,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       MarkdownBlock(
                         selectable: false,
                         data: StorageSystem.getNotePreview(item.path,
-                            previewLength: 150),
+                            previewLength: _previewLength),
                         config:
                             theMarkdownConfigs(context, hideCodeButtons: true),
                         generator: theMarkdownGenerators(context,
@@ -187,36 +194,42 @@ class _NotesDisplayState extends State<NotesDisplay> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
+                setState(() => _isLoading = true);
                 _loadItems(_currentPath);
+                Timer(const Duration(milliseconds: 300),
+                    () => setState(() => _isLoading = false));
               },
             ),
           ],
         ),
-        body: _items.isEmpty
-            ? const Center(
-                child: Text('Nothing here!'),
-              )
-            : CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.all(8),
-                    sliver: SliverMasonryGrid.count(
-                      crossAxisCount: _displayGridCount(widget.isLayoutGrid),
-                      mainAxisSpacing: 4,
-                      crossAxisSpacing: 4,
-                      childCount: _items.length,
-                      itemBuilder: (context, index) =>
-                          _buildGridItem(context, index),
-                    ),
-                  ),
-                  // Adds empty space at bottom, helps when in list view
-                  const SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 200,
-                    ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _items.isEmpty
+                ? const Center(
+                    child: Text('Nothing here!'),
                   )
-                ],
-              ),
+                : CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.all(8),
+                        sliver: SliverMasonryGrid.count(
+                          crossAxisCount:
+                              _displayGridCount(widget.isLayoutGrid),
+                          mainAxisSpacing: 4,
+                          crossAxisSpacing: 4,
+                          childCount: _items.length,
+                          itemBuilder: (context, index) =>
+                              _buildGridItem(context, index),
+                        ),
+                      ),
+                      // Adds empty space at bottom, helps when in list view
+                      const SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 200,
+                        ),
+                      )
+                    ],
+                  ),
         floatingActionButton: speedDialFAB(
           context,
           currentPath: _currentPath ?? '',
