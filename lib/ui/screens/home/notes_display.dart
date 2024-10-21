@@ -242,7 +242,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   int _displayGridCount(isLayoutGrid) {
     if (isLayoutGrid == false) return 1;
-    double displayWidth = MediaQuery.of(context).size.width;
+    double displayWidth = MediaQuery.sizeOf(context).width;
     if (displayWidth > 1200) {
       return 4;
     } else {

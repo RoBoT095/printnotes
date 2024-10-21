@@ -25,8 +25,9 @@ class ToolbarItem extends StatelessWidget {
     return !isExpandable
         ? IconButton(
             onPressed: onPressedButton,
-            splashColor: Colors.teal.withOpacity(0.4),
-            highlightColor: Colors.teal.withOpacity(0.4),
+            splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+            highlightColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.4),
             icon: icon is String
                 ? Text(
                     icon,

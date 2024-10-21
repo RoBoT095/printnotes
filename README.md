@@ -49,6 +49,10 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
+### (Oct 20, 2024)
+
+Made save button on mobile be a FAB above toolbar as it is harder to reach the save button on large phones, still in the same position on desktop. Also, some other minor changes.
+
 ### (Oct 16, 2024)
 
 Added a slider in settings to adjust how many characters are show for notes preview with option to do zero which will only display the title. Also, made the reload button on the scaffold of the note_display screen give user feedback by actually appearing to reload.
@@ -166,7 +170,7 @@ $ flutter pub get
 ```
 
 ```
-$ flutter run
+$ flutter run lib/main.dart
 ```
 
 ```
@@ -189,6 +193,17 @@ In other words, compiling can only be done on device you are compiling for (ex: 
 - `windows`: Build a Windows desktop application.
 - `macos`: Build a MacOS desktop application.
   - `ipa`: Build an iOS App Store Package from app.
+
+</details>
+
+### Known issues with running app as linux application on Linux Mint
+
+<details close>
+<summary>Tap to see issue details</summary>
+
+**<u>Note: This doesn't seem to affect other types of distros, or when running android emulator</u>**
+
+Running as linux application on flutter version _3.24.0-3.24.3_ causes any **TextFields** to <u>slows down</u> or <u>crash</u> the app (ex. editing note, creating note/folder, searching, etc), best workaround currently is to switch to version [3.22.3 following this link](https://docs.flutter.dev/release/upgrade#switching-to-a-specific-flutter-version) and changing all `onPopInvokedWithResult` to just `onPopInvoked` as it doesn't exist in this version, if you are still having issues, try running `flutter clean` then `flutter run lib/main.dart` again, let me know if you have any other issues or need a step-by-step guide.
 
 </details>
 

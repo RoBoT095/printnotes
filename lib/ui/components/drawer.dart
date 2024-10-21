@@ -17,7 +17,7 @@ class DrawerView extends StatelessWidget {
   final VoidCallback onItemChanged;
 
   void _navigateToScreen(BuildContext context, {Widget? screen}) {
-    final bool isDrawerPersistent = MediaQuery.of(context).size.width >= 800;
+    final bool isDrawerPersistent = MediaQuery.sizeOf(context).width >= 800;
     // On desktop, drawer is a side menu, trying to pop it causes issues
     // this stops it.
     if (!isDrawerPersistent) {

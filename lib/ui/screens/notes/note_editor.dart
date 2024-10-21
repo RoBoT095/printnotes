@@ -32,7 +32,7 @@ class SwitchModeIntent extends Intent {
 }
 
 bool isScreenLarge(BuildContext context) {
-  return MediaQuery.of(context).size.width >= 800;
+  return MediaQuery.sizeOf(context).width >= 800;
 }
 
 bool isMobile() {
@@ -75,8 +75,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
 
     if (isMobile()) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(customSnackBar('Currently not supported on mobile'));
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        customSnackBar('Currently not supported on mobile', durationMil: 3000),
+      );
     }
 
     return true;
@@ -223,21 +225,23 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 icon: Icon(_isEditingNote ? Icons.visibility : Icons.mode_edit),
                 tooltip: 'Preview/Edit Mode',
                 onPressed: () {
-                  setState(() {
-                    _isEditingNote = !_isEditingNote;
-                  });
+                  setState(() => _isEditingNote = !_isEditingNote);
                 }),
-            IconButton(
-              icon: Icon(
-                Icons.save,
-                color: _isDirty
-                    ? Theme.of(context).colorScheme.onSurface
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            if (!isMobile())
+              IconButton(
+                icon: Icon(
+                  Icons.save,
+                  color: _isDirty
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.5),
+                ),
+                tooltip: 'Save Note',
+                onPressed: () async =>
+                    _isDirty ? await _saveNoteContent(context) : null,
               ),
-              tooltip: 'Save Note',
-              onPressed: () async =>
-                  _isDirty ? await _saveNoteContent(context) : null,
-            ),
             PopupMenuButton(
               onSelected: (value) {},
               itemBuilder: (context) => <PopupMenuEntry>[
@@ -248,7 +252,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                     iconColor: mobileNullColor,
                     textColor: mobileNullColor,
                   ),
-                  onTap: () async => !isMobile() ? await _openExplorer() : null,
+                  onTap: () async => await _openExplorer(),
                 ),
               ],
             ),
@@ -256,7 +260,25 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ),
         body: buildMarkdownView(),
         floatingActionButton: _isEditingNote || isScreenLarge(context)
-            ? null
+            ? isMobile()
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: FloatingActionButton(
+                      tooltip: 'Save Note',
+                      foregroundColor: _isDirty
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.5),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainer,
+                      child: const Icon(Icons.save, size: 30),
+                      onPressed: () async =>
+                          _isDirty ? await _saveNoteContent(context) : null,
+                    ),
+                  )
+                : null
             : FloatingActionButton(
                 onPressed: () => showModalBottomSheet(
                   context: context,
@@ -295,7 +317,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   setState(() => _isEditingNote = !_isEditingNote);
                 },
                 undoController: _undoHistoryController,
-                toolbarBackground: Theme.of(context).colorScheme.surface)
+                toolbarBackground:
+                    Theme.of(context).colorScheme.surfaceContainer,
+              )
             : null,
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -325,7 +349,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                     autofocus: true,
                     focusNode: _focusNode,
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: _isEditingNote
                           ? EditorField(
                               controller: _notesController,
@@ -339,9 +363,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             )
                           : GestureDetector(
                               onDoubleTap: () {
-                                setState(() {
-                                  _isEditingNote = !_isEditingNote;
-                                });
+                                setState(
+                                    () => _isEditingNote = !_isEditingNote);
                               },
                               child: _notesController.text.isEmpty
                                   ? SizedBox(

@@ -17,7 +17,7 @@ class ModalInputUrl extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        bottom: MediaQuery.viewInsetsOf(context).bottom,
       ),
       padding: const EdgeInsets.all(30),
       width: double.infinity,

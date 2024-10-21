@@ -45,7 +45,7 @@ class ThemeProvider with ChangeNotifier {
 
   ColorScheme getThemeData(BuildContext context) {
     final brightness = _themeMode == ThemeMode.system
-        ? MediaQuery.of(context).platformBrightness
+        ? MediaQuery.platformBrightnessOf(context)
         : _themeMode == ThemeMode.light
             ? Brightness.light
             : Brightness.dark;
