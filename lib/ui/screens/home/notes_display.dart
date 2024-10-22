@@ -192,6 +192,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
               : null,
           actions: [
             IconButton(
+              tooltip: 'Reload List',
               icon: const Icon(Icons.refresh),
               onPressed: () {
                 setState(() => _isLoading = true);

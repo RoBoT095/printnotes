@@ -52,6 +52,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   bool _isDirty = false;
   String fileTitle = '';
   String _originalContent = '';
+  bool _showToCDesktop = true;
 
   @override
   void initState() {
@@ -197,6 +198,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     Color mobileNullColor = !isMobile()
         ? Theme.of(context).colorScheme.onSurface
         : Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
+    bool keyboardIsOpen = MediaQuery.viewInsetsOf(context).bottom != 0;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -222,13 +224,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           ),
           actions: [
             IconButton(
-                icon: Icon(_isEditingNote ? Icons.visibility : Icons.mode_edit),
                 tooltip: 'Preview/Edit Mode',
+                icon: Icon(_isEditingNote ? Icons.visibility : Icons.mode_edit),
                 onPressed: () {
                   setState(() => _isEditingNote = !_isEditingNote);
                 }),
             if (!isMobile())
               IconButton(
+                tooltip: 'Save Note',
                 icon: Icon(
                   Icons.save,
                   color: _isDirty
@@ -238,10 +241,19 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                           .onSurface
                           .withOpacity(0.5),
                 ),
-                tooltip: 'Save Note',
                 onPressed: () async =>
                     _isDirty ? await _saveNoteContent(context) : null,
               ),
+            if (!isMobile())
+              IconButton(
+                  tooltip: 'Show/Hide table of contents menu',
+                  onPressed: () => setState(() {
+                        _showToCDesktop = !_showToCDesktop;
+                      }),
+                  icon: Transform.flip(
+                    flipX: _showToCDesktop,
+                    child: const Icon(Icons.menu_open),
+                  )),
             PopupMenuButton(
               onSelected: (value) {},
               itemBuilder: (context) => <PopupMenuEntry>[
@@ -261,21 +273,24 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         body: buildMarkdownView(),
         floatingActionButton: _isEditingNote || isScreenLarge(context)
             ? isMobile()
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
-                    child: FloatingActionButton(
-                      tooltip: 'Save Note',
-                      foregroundColor: _isDirty
-                          ? Theme.of(context).colorScheme.onSurface
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.5),
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainer,
-                      child: const Icon(Icons.save, size: 30),
-                      onPressed: () async =>
-                          _isDirty ? await _saveNoteContent(context) : null,
+                ? Visibility(
+                    visible: !keyboardIsOpen,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 40),
+                      child: FloatingActionButton.small(
+                        tooltip: 'Save Note',
+                        foregroundColor: _isDirty
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.3),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.surfaceContainer,
+                        child: const Icon(Icons.save),
+                        onPressed: () async =>
+                            _isDirty ? await _saveNoteContent(context) : null,
+                      ),
                     ),
                   )
                 : null
@@ -376,7 +391,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                       ),
                                     )
                                   : isScreenLarge(context) &&
-                                          _notesController.text.contains('# ')
+                                          _notesController.text
+                                              .contains('# ') &&
+                                          _showToCDesktop
                                       ? Row(
                                           children: <Widget>[
                                             Expanded(

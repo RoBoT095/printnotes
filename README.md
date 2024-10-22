@@ -49,9 +49,9 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
-### (Oct 20, 2024)
+### (Oct 20-21, 2024)
 
-Made save button on mobile be a FAB above toolbar as it is harder to reach the save button on large phones, still in the same position on desktop. Also, some other minor changes.
+Made save button on mobile into FAB at the bottom of the screen (hides behind keyboard as well) as it is harder to reach the save button on large phones, still in the same position on desktop. Desktop got a button to hide side ToC panel, open by default. Also, some other minor changes.
 
 ### (Oct 16, 2024)
 

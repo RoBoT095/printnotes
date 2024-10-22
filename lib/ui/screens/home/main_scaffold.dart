@@ -84,6 +84,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             : Text(widget.title),
         actions: [
           IconButton(
+            tooltip: 'Search Notes',
             icon: Icon(isSearching ? Icons.close : Icons.search),
             onPressed: () {
               isSearching = !isSearching;
