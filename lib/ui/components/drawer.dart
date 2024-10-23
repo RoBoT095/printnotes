@@ -61,10 +61,9 @@ class DrawerView extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.edit_document,
-                          size: 48,
-                          color: isDarkMode ? Colors.white : Colors.black,
+                        Image.asset(
+                          "assets/app_icon_no-bg.png",
+                          height: 48,
                         ),
                         Text(
                           'Menu',

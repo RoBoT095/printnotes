@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -19,11 +20,6 @@ class NoteEditorScreen extends StatefulWidget {
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
-}
-
-// For saving notes with ctrl-s
-class SaveIntent extends Intent {
-  const SaveIntent();
 }
 
 // For switching between preview and edit with ctrl-shift-v
@@ -49,10 +45,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   bool _isEditingName = false;
   bool _isEditingNote = false;
   bool _isLoading = true;
-  bool _isDirty = false;
   String fileTitle = '';
-  String _originalContent = '';
-  bool _showToCDesktop = true;
+  bool _showToCDesktop = false;
 
   @override
   void initState() {
@@ -94,7 +88,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         fileTitle = widget.filePath.split('/').last;
         _titleController.text = fileTitle.replaceFirst('.md', '');
         _notesController.text = content;
-        _originalContent = content;
         _isLoading = false;
       });
     } catch (e) {
@@ -126,23 +119,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
-  Future<bool> _saveNoteContent(BuildContext context,
-      {bool quietSave = false}) async {
+  Future<bool> _saveNoteContent(BuildContext context) async {
     try {
       final file = File(widget.filePath);
       await file.writeAsString(_notesController.text);
-      setState(() {
-        _isDirty = false;
-        _originalContent = _notesController.text;
-      });
-      if (context.mounted && quietSave == false) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-          'Saved!',
-          width: MediaQuery.sizeOf(context).width * 0.3,
-          durationMil: 500,
-        ));
-      }
       return true;
     } catch (e) {
       debugPrint('Error saving note content: $e');
@@ -156,55 +136,18 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
-  Future<bool> _didYouSave() async {
-    if (!_isDirty) return true;
-
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Unsaved Changes'),
-        content: const Text('Do you want to save your changes?'),
-        actions: [
-          TextButton(
-            child: Text(
-              'Discard',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-          TextButton(
-            child: Text(
-              'Save',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-            onPressed: () async {
-              final saved = await _saveNoteContent(context);
-              if (context.mounted) Navigator.of(context).pop(saved);
-            },
-          ),
-        ],
-      ),
-    );
-
-    return result ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
     Color mobileNullColor = !isMobile()
         ? Theme.of(context).colorScheme.onSurface
         : Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
-    bool keyboardIsOpen = MediaQuery.viewInsetsOf(context).bottom != 0;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) return;
 
-        final canPop = await _didYouSave();
+        final canPop = await _saveNoteContent(context);
         if (canPop && context.mounted) {
           Navigator.of(context).pop();
         }
@@ -229,22 +172,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 onPressed: () {
                   setState(() => _isEditingNote = !_isEditingNote);
                 }),
-            if (!isMobile())
-              IconButton(
-                tooltip: 'Save Note',
-                icon: Icon(
-                  Icons.save,
-                  color: _isDirty
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.5),
-                ),
-                onPressed: () async =>
-                    _isDirty ? await _saveNoteContent(context) : null,
-              ),
-            if (!isMobile())
+            if (!isMobile() && _notesController.text.contains("# "))
               IconButton(
                   tooltip: 'Show/Hide table of contents menu',
                   onPressed: () => setState(() {
@@ -272,28 +200,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ),
         body: buildMarkdownView(),
         floatingActionButton: _isEditingNote || isScreenLarge(context)
-            ? isMobile()
-                ? Visibility(
-                    visible: !keyboardIsOpen,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 40),
-                      child: FloatingActionButton.small(
-                        tooltip: 'Save Note',
-                        foregroundColor: _isDirty
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.3),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.surfaceContainer,
-                        child: const Icon(Icons.save),
-                        onPressed: () async =>
-                            _isDirty ? await _saveNoteContent(context) : null,
-                      ),
-                    ),
-                  )
-                : null
+            ? null
             : FloatingActionButton(
                 onPressed: () => showModalBottomSheet(
                   context: context,
@@ -325,9 +232,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         footer: _isEditingNote
             ? MarkdownToolbar(
                 controller: _notesController,
-                onValueChange: (value) {
-                  setState(() => _isDirty = value);
-                },
+                onValueChange: (value) async => await _saveNoteContent(context),
                 onPreviewChanged: () {
                   setState(() => _isEditingNote = !_isEditingNote);
                 },
@@ -341,19 +246,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             : Shortcuts(
                 shortcuts: <ShortcutActivator, Intent>{
                   LogicalKeySet(
-                          LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
-                      const SaveIntent(),
-                  LogicalKeySet(
                       LogicalKeyboardKey.control,
                       LogicalKeyboardKey.shift,
                       LogicalKeyboardKey.keyV): const SwitchModeIntent(),
                 },
                 child: Actions(
                   actions: <Type, Action<Intent>>{
-                    SaveIntent: CallbackAction<SaveIntent>(
-                      onInvoke: (SaveIntent intent) =>
-                          _saveNoteContent(context),
-                    ),
                     SwitchModeIntent: CallbackAction<SwitchModeIntent>(
                       onInvoke: (SwitchModeIntent intent) => setState(() {
                         _isEditingNote = !_isEditingNote;
@@ -368,12 +266,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       child: _isEditingNote
                           ? EditorField(
                               controller: _notesController,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isDirty = value != _originalContent ||
-                                      _notesController.text != _originalContent;
-                                });
-                              },
+                              onChanged: (value) async =>
+                                  await _saveNoteContent(context),
                               undoController: _undoHistoryController,
                             )
                           : GestureDetector(

@@ -171,7 +171,12 @@ class _CustomThemePageState extends State<CustomThemePage> {
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorWeight: 5,
               tabs: const <Tab>[
-                Tab(icon: Icon(Icons.download), text: 'Import Theme'),
+                Tab(
+                    icon: Icon(Icons.download),
+                    child: Text(
+                      'Theme\n Management',
+                      textAlign: TextAlign.center,
+                    )),
                 Tab(icon: Icon(Icons.light_mode), text: 'Light Mode'),
                 Tab(icon: Icon(Icons.dark_mode), text: 'Dark Mode'),
               ],
