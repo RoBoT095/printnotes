@@ -49,6 +49,12 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
+### (Oct 27, 2024)
+
+Syncthing for android is being discontinued - read [here](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002?ref=news.itsfoss.com), which I personally use.
+
+I am starting a 'dev' branch while I work a bit more on syncing (been putting it off cuz its drains all my motivation), currently trying to implement FTP as there is a package for it, so I hope it will be easier then messing with Nextcloud webdav. I will probably need to add file encryption when syncing, but that is a thought for a later date.
+
 ### (Oct 20-21, 2024)
 
 Made save button on mobile into FAB at the bottom of the screen (hides behind keyboard as well) as it is harder to reach the save button on large phones, still in the same position on desktop. Desktop got a button to hide side ToC panel, open by default. Also, some other minor changes.
