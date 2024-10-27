@@ -53,7 +53,11 @@
 
 Syncthing for android is being discontinued - read [here](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002?ref=news.itsfoss.com), which I personally use.
 
-I am starting a 'dev' branch while I work a bit more on syncing (been putting it off cuz its drains all my motivation), currently trying to implement FTP as there is a package for it, so I hope it will be easier then messing with Nextcloud webdav. I will probably need to add file encryption when syncing, but that is a thought for a later date.
+I am starting a 'dev' branch while I work a bit more on syncing (been putting it off cuz it drains all my motivation), currently trying to implement FTP as there is a package for it, so I hope it will be easier then messing with Nextcloud webdav. I will probably need to add file encryption when syncing, but that is a thought for a later date.
+
+### (Oct 22, 2024)
+
+Removed manual saving of notes, decided it wasn't worth it as these are simple notes meaning saving on change is fine, this means that the shortcut ctrl+s on desktop is also removed. Changed drawer icon to logo as well. If people want it, I can make a toggle is settings to enable and disable auto saving, returning the keyboard shortcuts and save buttons.
 
 ### (Oct 20-21, 2024)
 
