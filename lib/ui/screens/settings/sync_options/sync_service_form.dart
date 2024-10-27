@@ -2,23 +2,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/syncing/nextcloud/nextcloud_credentials.dart';
-import 'package:printnotes/utils/syncing/nextcloud/nextcloud_sync.dart';
+// import 'package:printnotes/utils/syncing/nextcloud/nextcloud_sync.dart';
+import 'package:printnotes/utils/syncing/note_syncing.dart';
 import 'package:printnotes/utils/syncing/sync_timeline.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
-class NextcloudLogin extends StatefulWidget {
-  const NextcloudLogin({
+class SyncServiceLogin extends StatefulWidget {
+  const SyncServiceLogin({
     super.key,
     required this.directory,
+    required this.service,
   });
 
   final String directory;
+  final String service;
 
   @override
-  State<NextcloudLogin> createState() => _NextcloudLoginState();
+  State<SyncServiceLogin> createState() => _SyncServiceLoginState();
 }
 
-class _NextcloudLoginState extends State<NextcloudLogin> {
+class _SyncServiceLoginState extends State<SyncServiceLogin> {
+  Map<String, String?> credentials = {};
   final _formKey = GlobalKey<FormState>();
   final _serverUrlController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -29,12 +33,38 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
   @override
   void initState() {
     super.initState();
-    _loadSavedCredentialsAndSyncTimeline();
+    _loadSyncServiceData();
   }
 
-  Future<void> _loadSavedCredentialsAndSyncTimeline() async {
-    final credentials = await NextcloudCredentials.getCredentials();
+  Widget _getServiceIcon() {
+    String serviceIcon = '';
+    if (widget.service == "Nextcloud") {
+      serviceIcon = 'assets/icons/nextcloud-icon.png';
+    }
+    if (widget.service == "FTP") {
+      serviceIcon = 'assets/icons/ftp-icon.png';
+    }
+    if (widget.service == "RSync") {
+      serviceIcon = 'assets/icons/rsync-icon.png';
+    }
+    return serviceIcon.isNotEmpty
+        ? Image.asset(
+            serviceIcon,
+            color: IconTheme.of(context).color,
+            width: 30,
+            height: 30,
+          )
+        : const Icon(Icons.cloud);
+  }
+
+  Future<void> _loadSyncServiceData() async {
     final syncTimeline = await LastSyncTime.getLastSyncTimeString();
+    if (widget.service == "Nextcloud") {
+      credentials = await NextcloudCredentials.getCredentials();
+    }
+    if (widget.service == "FTP") {
+      credentials = {}; //TODO: Setup ftp credentials
+    }
     setState(() {
       _serverUrlController.text = credentials['serverUrl'] ?? '';
       _usernameController.text = credentials['username'] ?? '';
@@ -45,63 +75,47 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
   }
 
   Future<void> _deleteCredentials() async {
-    await NextcloudCredentials.deleteCredentials();
-    _loadSavedCredentialsAndSyncTimeline();
+    if (widget.service == "Nextcloud") {
+      await NextcloudCredentials.deleteCredentials();
+    }
+    _loadSyncServiceData();
     if (mounted) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(customSnackBar('Cleared Nextcloud credentials'));
+      ScaffoldMessenger.of(context).showSnackBar(
+          customSnackBar('Cleared ${widget.service} credentials'));
     }
   }
 
   Future<void> _syncFirstTime() async {
     if (_formKey.currentState!.validate()) {
-      await NextcloudCredentials.saveCredentials(
-        serverUrl: _serverUrlController.text,
-        username: _usernameController.text,
-        password: _passwordController.text,
-      );
+      if (widget.service == "Nextcloud") {
+        await NextcloudCredentials.saveCredentials(
+          serverUrl: _serverUrlController.text,
+          username: _usernameController.text,
+          password: _passwordController.text,
+        );
+      }
 
       if (mounted) {
         Navigator.of(context).pop();
       }
 
-      await _syncNotes();
+      syncNextcloud();
     }
   }
 
-  Future<void> _syncNotes() async {
-    final credentials = await NextcloudCredentials.getCredentials();
-
-    setState(() {
-      _isSyncing = true;
-    });
-
-    final nextcloudSync = NextcloudSync(
-      serverUrl: credentials['serverUrl'] ?? _serverUrlController.text,
-      username: credentials['username'] ?? _usernameController.text,
-      password: credentials['password'] ?? _passwordController.text,
+  // TODO: Test if this actually still works
+  void syncNextcloud() {
+    NoteSyncing.syncNextcloudNotes(
+      context,
+      directory: widget.directory,
+      isSyncing: () => setState(
+        () => _isSyncing = !_isSyncing,
+      ),
+      urlControllerText: _serverUrlController.text,
+      usernameControllerText: _usernameController.text,
+      passwordControllerText: _passwordController.text,
     );
-
-    final response = await nextcloudSync.syncNotes(widget.directory);
-    debugPrint(response.name);
-
-    LastSyncTime.setLastSyncTime();
-    String newSyncTime = await LastSyncTime.getLastSyncTimeString();
-    setState(() {
-      _isSyncing = false;
-      lastSyncTime = newSyncTime;
-    });
-
-    if (_isSyncing == false) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-            response == SyncStatusCode.success
-                ? 'Sync completed successfully'
-                : 'Sync failed with ${response.name}'));
-      }
-    }
   }
 
   void _loginDialog() {
@@ -121,7 +135,11 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
                   TextFormField(
                     controller: _serverUrlController,
                     decoration: const InputDecoration(
-                        labelText: 'Nextcloud Server URL'),
+                        labelText: 'Server URL',
+                        hintText: 'https://...',
+                        hintStyle: TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                        )),
                     validator: (value) =>
                         value!.isEmpty ? 'Please enter server URL' : null,
                   ),
@@ -166,36 +184,33 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
     return Column(
       children: [
         Text(
-          'Nextcloud',
+          widget.service,
           style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.secondary),
         ),
-        Card(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: ListTile(
-              leading: Icon(
-                Icons.dangerous_outlined,
-                size: 40,
-              ),
-              subtitle: Text(
-                "Currently only uploads manually, doesn't pull and compare changes just yet.\nSorry for the inconvenience 😓",
-                textAlign: TextAlign.center,
+        if (widget.service == "Nextcloud")
+          Card(
+            color: Theme.of(context).colorScheme.surfaceContainer,
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ListTile(
+                leading: Icon(
+                  Icons.dangerous_outlined,
+                  size: 40,
+                ),
+                subtitle: Text(
+                  "Currently only uploads manually, doesn't pull and compare changes just yet.\nSorry for the inconvenience 😓",
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
-        ),
+        //
         ListTile(
-          leading: Image.asset(
-            'assets/icons/nextcloud-icon.png',
-            color: IconTheme.of(context).color,
-            width: 30,
-            height: 30,
-          ),
-          title: const Text('Connect to Nextcloud server'),
+          leading: _getServiceIcon(),
+          title: Text('Connect to ${widget.service} server'),
           onTap: _loginDialog,
         ),
         ListTile(
@@ -203,7 +218,7 @@ class _NextcloudLoginState extends State<NextcloudLogin> {
           title: const Text('Last sync'),
           subtitle: Text(_isSyncing ? 'Syncing now...' : lastSyncTime),
           trailing: _isSyncing ? const CircularProgressIndicator() : null,
-          onTap: _isSyncing ? null : _syncNotes,
+          onTap: _isSyncing ? null : syncNextcloud,
         ),
         ListTile(
           leading: const Icon(Icons.delete),

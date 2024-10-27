@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:printnotes/utils/configs/user_sync.dart';
 
 import 'package:printnotes/utils/load_settings.dart';
+import 'package:printnotes/utils/configs/user_sync.dart';
 
+import 'package:printnotes/ui/screens/settings/sync_options/sync_service_form.dart';
 import 'package:printnotes/ui/components/dialogs/popup_list_dialog.dart';
-import 'package:printnotes/ui/screens/settings/sync_options/nextcloud.dart';
+// import 'package:printnotes/ui/screens/settings/sync_options/nextcloud.dart';
 
 class SyncServiceScreen extends StatefulWidget {
   const SyncServiceScreen({super.key, required this.directory});
@@ -76,7 +77,7 @@ class _SyncServiceScreenState extends State<SyncServiceScreen> {
                 'Disabled',
                 'Nextcloud',
                 // 'RSync',
-                // 'FTP',
+                'FTP',
                 // 'Google Drive',
                 // 'Dropbox'
               ],
@@ -115,10 +116,12 @@ class _SyncServiceScreenState extends State<SyncServiceScreen> {
             thickness: 2,
             color: Theme.of(context).dividerColor.withOpacity(0.2),
           ),
-          if (_selectedService == 'Nextcloud')
-            NextcloudLogin(
-              directory: widget.directory,
-            )
+          if (_selectedService != 'Disabled')
+            // NextcloudLogin(
+            //   directory: widget.directory,
+            // )
+            SyncServiceLogin(
+                directory: widget.directory, service: _selectedService)
         ],
       ),
     );

@@ -47,6 +47,7 @@ dependencies:
   html: ^0.15.4
   flutter_math_fork: ^0.7.2
   flutter_widget_from_html_core: ^0.15.2
+  ftpconnect: ^2.0.7
 
 dev_dependencies:
   flutter_test:
