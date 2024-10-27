@@ -6,12 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:nextcloud/nextcloud.dart';
 import 'package:nextcloud/webdav.dart';
 
-enum SyncStatusCode {
-  success,
-  folderCreationFailedError,
-  fileUploadFailedError,
-  error,
-}
+import 'package:printnotes/constants/sync_status_codes.dart';
 
 class NextcloudSync {
   NextcloudSync(

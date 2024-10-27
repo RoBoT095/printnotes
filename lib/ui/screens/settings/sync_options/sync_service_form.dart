@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/utils/syncing/nextcloud/nextcloud_credentials.dart';
-// import 'package:printnotes/utils/syncing/nextcloud/nextcloud_sync.dart';
-import 'package:printnotes/utils/syncing/note_syncing.dart';
+import 'package:printnotes/utils/syncing/server_credentials.dart';
+import 'package:printnotes/utils/syncing/run_sync.dart';
 import 'package:printnotes/utils/syncing/sync_timeline.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
@@ -22,13 +21,14 @@ class SyncServiceLogin extends StatefulWidget {
 }
 
 class _SyncServiceLoginState extends State<SyncServiceLogin> {
-  Map<String, String?> credentials = {};
+  late Map<String, String?> credentials;
   final _formKey = GlobalKey<FormState>();
   final _serverUrlController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isSyncing = false;
   String lastSyncTime = 'Never';
+  String syncStatusResponse = '';
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
     _loadSyncServiceData();
   }
 
-  Widget _getServiceIcon() {
+  Widget getServiceIcon() {
     String serviceIcon = '';
     if (widget.service == "Nextcloud") {
       serviceIcon = 'assets/icons/nextcloud-icon.png';
@@ -59,12 +59,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
 
   Future<void> _loadSyncServiceData() async {
     final syncTimeline = await LastSyncTime.getLastSyncTimeString();
-    if (widget.service == "Nextcloud") {
-      credentials = await NextcloudCredentials.getCredentials();
-    }
-    if (widget.service == "FTP") {
-      credentials = {}; //TODO: Setup ftp credentials
-    }
+    credentials = await ServerCredentials.getCredentials();
     setState(() {
       _serverUrlController.text = credentials['serverUrl'] ?? '';
       _usernameController.text = credentials['username'] ?? '';
@@ -75,9 +70,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
   }
 
   Future<void> _deleteCredentials() async {
-    if (widget.service == "Nextcloud") {
-      await NextcloudCredentials.deleteCredentials();
-    }
+    await ServerCredentials.deleteCredentials();
     _loadSyncServiceData();
     if (mounted) {
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -88,34 +81,37 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
 
   Future<void> _syncFirstTime() async {
     if (_formKey.currentState!.validate()) {
-      if (widget.service == "Nextcloud") {
-        await NextcloudCredentials.saveCredentials(
-          serverUrl: _serverUrlController.text,
-          username: _usernameController.text,
-          password: _passwordController.text,
-        );
-      }
+      await ServerCredentials.saveCredentials(
+        serverUrl: _serverUrlController.text,
+        username: _usernameController.text,
+        password: _passwordController.text,
+      );
 
       if (mounted) {
         Navigator.of(context).pop();
       }
 
-      syncNextcloud();
+      syncNotes();
     }
   }
 
-  // TODO: Test if this actually still works
-  void syncNextcloud() {
-    NoteSyncing.syncNextcloudNotes(
+  void syncNotes() {
+    runNotesSync(
       context,
       directory: widget.directory,
-      isSyncing: () => setState(
-        () => _isSyncing = !_isSyncing,
-      ),
+      isSyncing: () => setState(() => _isSyncing = !_isSyncing),
+      lastSyncTime: (value) => setState(() => lastSyncTime = value),
+      syncService: widget.service,
       urlControllerText: _serverUrlController.text,
       usernameControllerText: _usernameController.text,
       passwordControllerText: _passwordController.text,
+      syncResponse: (value) => setState(() => syncStatusResponse),
     );
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+        syncStatusResponse == 'success'
+            ? 'Sync completed successfully'
+            : 'Sync failed with $syncStatusResponse'));
   }
 
   void _loginDialog() {
@@ -136,7 +132,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
                     controller: _serverUrlController,
                     decoration: const InputDecoration(
                         labelText: 'Server URL',
-                        hintText: 'https://...',
+                        hintText: 'http://...',
                         hintStyle: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.5),
                         )),
@@ -209,7 +205,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
           ),
         //
         ListTile(
-          leading: _getServiceIcon(),
+          leading: getServiceIcon(),
           title: Text('Connect to ${widget.service} server'),
           onTap: _loginDialog,
         ),
@@ -218,7 +214,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
           title: const Text('Last sync'),
           subtitle: Text(_isSyncing ? 'Syncing now...' : lastSyncTime),
           trailing: _isSyncing ? const CircularProgressIndicator() : null,
-          onTap: _isSyncing ? null : syncNextcloud,
+          onTap: _isSyncing ? null : syncNotes,
         ),
         ListTile(
           leading: const Icon(Icons.delete),

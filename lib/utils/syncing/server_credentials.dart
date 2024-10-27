@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class NextcloudCredentials {
+class ServerCredentials {
   static const _storage = FlutterSecureStorage();
   static const _keyServerUrl = 'nextcloud_server_url';
   static const _keyUsername = 'nextcloud_username';
