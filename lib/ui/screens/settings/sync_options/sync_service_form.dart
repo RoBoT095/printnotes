@@ -38,15 +38,15 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
 
   Widget getServiceIcon() {
     String serviceIcon = '';
-    if (widget.service == "Nextcloud") {
-      serviceIcon = 'assets/icons/nextcloud-icon.png';
+    switch (widget.service) {
+      case 'Nextcloud':
+        serviceIcon = 'assets/icons/nextcloud-icon.png';
+      case 'FTP':
+        serviceIcon = 'assets/icons/ftp-icon.png';
+      case 'RSync':
+        serviceIcon = 'assets/icons/rsync-icon.png';
     }
-    if (widget.service == "FTP") {
-      serviceIcon = 'assets/icons/ftp-icon.png';
-    }
-    if (widget.service == "RSync") {
-      serviceIcon = 'assets/icons/rsync-icon.png';
-    }
+
     return serviceIcon.isNotEmpty
         ? Image.asset(
             serviceIcon,
