@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:printnotes/utils/syncing/ftp/ftp_sync.dart';
 
 import 'package:printnotes/utils/syncing/server_credentials.dart';
 import 'package:printnotes/utils/syncing/nextcloud/nextcloud_sync.dart';
@@ -32,7 +33,14 @@ Future<void> runNotesSync(
     syncResponse(response.name);
   }
   if (syncService == "FTP") {
-    // TODO
+    final ftpSync = FTPSync(
+      serverUrl: credentials['serverUrl'] ?? urlControllerText,
+      username: credentials['username'] ?? usernameControllerText,
+      password: credentials['password'] ?? passwordControllerText,
+    );
+
+    response = await ftpSync.syncNotes(directory);
+    syncResponse(response.name);
   }
   if (syncService == "RSync") {
     // TODO

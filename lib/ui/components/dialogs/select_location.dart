@@ -23,7 +23,7 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
 
   @override
   void initState() {
-    super.initState();
+    State();
     _currentDir = widget.baseDir;
     _loadDirectories();
   }

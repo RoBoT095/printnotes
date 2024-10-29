@@ -105,7 +105,7 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
       urlControllerText: _serverUrlController.text,
       usernameControllerText: _usernameController.text,
       passwordControllerText: _passwordController.text,
-      syncResponse: (value) => setState(() => syncStatusResponse),
+      syncResponse: (value) => setState(() => syncStatusResponse = value),
     );
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
@@ -139,18 +139,23 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
                     validator: (value) =>
                         value!.isEmpty ? 'Please enter server URL' : null,
                   ),
+                  // TODO: Add option for PORT and maybe directory location
                   TextFormField(
                     controller: _usernameController,
                     decoration: const InputDecoration(labelText: 'Username'),
                     validator: (value) =>
-                        value!.isEmpty ? 'Please enter your username' : null,
+                        value!.isEmpty && widget.service != "FTP"
+                            ? 'Please enter your username'
+                            : null,
                   ),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(labelText: 'Password'),
                     validator: (value) =>
-                        value!.isEmpty ? 'Please enter your password' : null,
+                        value!.isEmpty && widget.service != "FTP"
+                            ? 'Please enter your password'
+                            : null,
                   ),
                 ],
               ),
@@ -203,7 +208,14 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
               ),
             ),
           ),
-        //
+        if (widget.service == 'FTP')
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              "Leave username and password empty to sign in anonymously",
+              textAlign: TextAlign.center,
+            ),
+          ),
         ListTile(
           leading: getServiceIcon(),
           title: Text('Connect to ${widget.service} server'),

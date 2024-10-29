@@ -9,10 +9,11 @@ import 'package:nextcloud/webdav.dart';
 import 'package:printnotes/constants/sync_status_codes.dart';
 
 class NextcloudSync {
-  NextcloudSync(
-      {required this.serverUrl,
-      required this.username,
-      required this.password});
+  NextcloudSync({
+    required this.serverUrl,
+    required this.username,
+    required this.password,
+  });
 
   final String serverUrl;
   final String username;
