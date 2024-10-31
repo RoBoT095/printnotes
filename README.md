@@ -49,11 +49,21 @@
 <details close>
 <summary>Tap to show/hide the change history</summary>
 
+### (Oct 31, 2024)
+
+**Happy Halloween**, not so happy day, sync enthusiasts, I am hiding the Sync option on the drawer and will be working on 1 way (upload only) sync in the mean time. I didn't realize how hard 2 way (bi-directional) syncing is, but I have been doing research and I have decided to still add it, it will just be a package I will try to make myself to later add to the app.
+
+To explain why bi-directional sync is hard is that it would require creating a database that will log all changes of files and folders like creating, renaming, deleting, moving. A database is needed to prevent deleted files from infinity being added back to server by other devices, also, there is no good way to give files unique identifiers without adding something like '\_UniqueIdOfFile.md' to every file and removing it when displaying it on app to prevent the act of renaming a note creating duplicates on server or other connected devices.
+
 ### (Oct 27, 2024)
 
 Syncthing for android is being discontinued - read [here](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002?ref=news.itsfoss.com), which I personally use.
 
-I am starting a 'dev' branch while I work a bit more on syncing (been putting it off cuz its drains all my motivation), currently trying to implement FTP as there is a package for it, so I hope it will be easier then messing with Nextcloud webdav. I will probably need to add file encryption when syncing, but that is a thought for a later date.
+I am starting a 'dev' branch while I work a bit more on syncing (been putting it off cuz it drains all my motivation), currently trying to implement FTP as there is a package for it, so I hope it will be easier then messing with Nextcloud webdav. I will probably need to add file encryption when syncing, but that is a thought for a later date.
+
+### (Oct 22, 2024)
+
+Removed manual saving of notes, decided it wasn't worth it as these are simple notes meaning saving on change is fine, this means that the shortcut ctrl+s on desktop is also removed. Changed drawer icon to logo as well. If people want it, I can make a toggle is settings to enable and disable auto saving, returning the keyboard shortcuts and save buttons.
 
 ### (Oct 20-21, 2024)
 
