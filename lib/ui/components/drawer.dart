@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/ui/screens/archive/archive_screen.dart';
+import 'package:printnotes/ui/screens/trash/trash_screen.dart';
 import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/settings/sync_service_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
+
 import 'package:printnotes/constants/constants.dart';
 
 class DrawerView extends StatelessWidget {
@@ -91,6 +93,13 @@ class DrawerView extends StatelessWidget {
                 title: const Text('Archive'),
                 onTap: () =>
                     _navigateToScreen(context, screen: const ArchiveScreen()),
+              ),
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.delete_outlined),
+                title: const Text('Trash'),
+                onTap: () =>
+                    _navigateToScreen(context, screen: const DeletedScreen()),
               ),
               const Opacity(opacity: 0.2, child: Divider()),
               ListTile(

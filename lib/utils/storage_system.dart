@@ -226,7 +226,7 @@ class StorageSystem {
     return 'No preview available';
   }
 
-  // Method to duplicate Notes (only)
+  // Method to duplicate Notes (only, not folders)
   // adds _copy to end of name, continues adding a num if a copy already exists
   static Future<String> duplicateNote(String originalPath) async {
     final directory = path.dirname(originalPath);
@@ -289,7 +289,73 @@ class StorageSystem {
     }
   }
 
-  // Methods to delete
+  // Methods to soft and permanent delete
+
+  static Future<String> getDeletedPath() async {
+    final basDir = await DataPath.selectedDirectory;
+    return path.join(basDir!, '.trash');
+  }
+
+  static Future<void> softDeleteItem(String itemPath) async {
+    final baseDir = await DataPath.selectedDirectory;
+    final deleteDir = await getDeletedPath();
+    final relativePath = path.relative(itemPath, from: baseDir!);
+    final itemName = path.basename(itemPath);
+    final deletedPath =
+        path.join(deleteDir, path.dirname(relativePath), itemName);
+
+    final sourceItem =
+        FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
+            ? Directory(itemPath)
+            : File(itemPath);
+
+    final deletedItem =
+        FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
+            ? Directory(deletedPath)
+            : File(deletedPath);
+
+    await deletedItem.parent.create(recursive: true);
+
+    if (sourceItem is Directory) {
+      await _copyDirectory(sourceItem, deletedItem as Directory);
+    } else {
+      await (sourceItem as File).copy(deletedItem.path);
+    }
+
+    // Delete the original item after moving to .trash
+    await sourceItem.delete(recursive: true);
+  }
+
+  static Future<void> restoreDeletedItem(String deletedItemPath) async {
+    final baseDir = await DataPath.selectedDirectory;
+    final deleteDir = await getDeletedPath();
+    final itemName = path.basename(deletedItemPath);
+    final relativePath =
+        path.relative(path.dirname(deletedItemPath), from: deleteDir);
+    final destinationPath = path.join(baseDir!, relativePath, itemName);
+
+    final deletedItem = FileSystemEntity.typeSync(deletedItemPath) ==
+            FileSystemEntityType.directory
+        ? Directory(deletedItemPath)
+        : File(deletedItemPath);
+
+    final destinationItem = FileSystemEntity.typeSync(deletedItemPath) ==
+            FileSystemEntityType.directory
+        ? Directory(destinationPath)
+        : File(destinationPath);
+
+    await destinationItem.parent.create(recursive: true);
+
+    if (deletedItem is Directory) {
+      await _copyDirectory(deletedItem, destinationItem as Directory);
+    } else {
+      await (deletedItem as File).copy(destinationItem.path);
+    }
+
+    // Remove the item from .trash after restoring
+    await deletedItem.delete(recursive: true);
+  }
+
   static Future<void> permanentlyDeleteItem(String itemPath) async {
     final item =
         FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
@@ -300,6 +366,8 @@ class StorageSystem {
       await item.delete(recursive: true);
     }
   }
+
+  // Get files (and folders) of a folder
 
   static Future<List<FileSystemEntity>> listFolderContents(
     String folderPath,

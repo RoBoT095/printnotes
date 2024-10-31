@@ -1,40 +1,39 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:path/path.dart' as path;
 
 import 'package:printnotes/utils/handlers/item_navigation.dart';
-import 'package:printnotes/utils/handlers/item_archive.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 import 'package:printnotes/utils/storage_system.dart';
 
-class ArchiveScreen extends StatefulWidget {
-  const ArchiveScreen({super.key});
+class DeletedScreen extends StatefulWidget {
+  const DeletedScreen({super.key});
 
   @override
-  State<ArchiveScreen> createState() => _ArchiveScreenState();
+  State<DeletedScreen> createState() => _DeletedScreenState();
 }
 
-class _ArchiveScreenState extends State<ArchiveScreen> {
-  List<FileSystemEntity> _archivedItems = [];
+class _DeletedScreenState extends State<DeletedScreen> {
+  List<FileSystemEntity> _deletedItems = [];
   String _currentPath = '';
-  String _currentFolderName = 'Archive';
+  String _currentFolderName = 'Trash';
   final List<String> _folderHistory = [];
 
   @override
   void initState() {
     super.initState();
-    _loadArchivedItems();
+    _loadDeletedItems();
   }
 
-  Future<void> _loadArchivedItems([String? folderPath]) async {
-    final archivePath = await StorageSystem.getArchivePath();
-    final currentPath = folderPath ?? archivePath;
+  Future<void> _loadDeletedItems([String? folderPath]) async {
+    final deletePath = await StorageSystem.getDeletedPath();
+    final currentPath = folderPath ?? deletePath;
     final items = await StorageSystem.listFolderContents(currentPath);
     setState(() {
-      _archivedItems = items;
+      _deletedItems = items;
       _currentPath = currentPath;
       _currentFolderName =
-          _currentPath == archivePath ? 'Archive' : path.basename(currentPath);
+          _currentPath == deletePath ? 'Trash' : path.basename(currentPath);
       ItemNavHandler.addToFolderHistory(currentPath,
           dirHistory: _folderHistory);
     });
@@ -53,23 +52,23 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   Icons.unarchive,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
-                title: const Text('Unarchive'),
+                title: const Text('Restore'),
                 onTap: () {
                   Navigator.pop(context);
-                  ItemArchiveHandler.handleUnarchiveItem(
-                      context, item, () => _loadArchivedItems(_currentPath));
+                  ItemDeletionHandler.handleRestoringDeletedItem(
+                      context, item, () => _loadDeletedItems(_currentPath));
                 },
               ),
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.delete,
-                  color: Colors.red,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
-                title: const Text('Delete'),
+                title: const Text('Permanently Delete'),
                 onTap: () {
                   Navigator.pop(context);
                   ItemDeletionHandler.showPermanentDeleteConfirmation(
-                      context, item, () => _loadArchivedItems(_currentPath));
+                      context, item, () => _loadDeletedItems(_currentPath));
                 },
               ),
             ],
@@ -80,17 +79,17 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    final item = _archivedItems[index];
+    final item = _deletedItems[index];
     final isDirectory = item is Directory;
     final name = path.basename(item.path);
 
     return GestureDetector(
       onTap: () {
         if (isDirectory) {
-          _loadArchivedItems(item.path);
+          _loadDeletedItems(item.path);
         } else {
           ItemNavHandler.onNoteSelect(
-              context, item, () => _loadArchivedItems(_currentPath));
+              context, item, () => _loadDeletedItems(_currentPath));
         }
       },
       onLongPress: () => _showBottomSheet(context, item),
@@ -107,8 +106,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             name,
             overflow: TextOverflow.ellipsis,
           ),
-          trailing:
-              isDirectory ? const Icon(Icons.arrow_forward_ios_rounded) : null,
+          trailing: isDirectory ? const Icon(Icons.arrow_forward_ios) : null,
         ),
       ),
     );
@@ -127,18 +125,36 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   Icons.arrow_back,
                 ),
                 onPressed: () {
-                  setState(() => _loadArchivedItems(
+                  setState(() => _loadDeletedItems(
                       ItemNavHandler.navigateBack(dirHistory: _folderHistory)));
                 },
               )
             : null,
+        actions: [
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value == 'delAll') {
+                for (final item in _deletedItems) {
+                  ItemDeletionHandler.handlePermanentItemDelete(
+                      context, item, () => _loadDeletedItems());
+                }
+              }
+            },
+            itemBuilder: (context) => <PopupMenuEntry>[
+              const PopupMenuItem(
+                value: 'delAll',
+                child: Text("Empty Out Bin"),
+              ),
+            ],
+          ),
+        ],
       ),
-      body: _archivedItems.isEmpty
+      body: _deletedItems.isEmpty
           ? const Center(
               child: Text('This folder is empty'),
             )
           : ListView.builder(
-              itemCount: _archivedItems.length,
+              itemCount: _deletedItems.length,
               itemBuilder: (context, index) {
                 return _buildItem(context, index);
               },

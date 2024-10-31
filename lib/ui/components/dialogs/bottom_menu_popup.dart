@@ -67,14 +67,26 @@ void showBottomMenu(
               },
             ),
             ListTile(
+              leading: Icon(
+                Icons.delete_sweep,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: const Text('To Trash'),
+              onTap: () {
+                Navigator.pop(context);
+                ItemDeletionHandler.showSoftDeleteConfirmation(
+                    context, item, loadItems);
+              },
+            ),
+            ListTile(
               leading: const Icon(
-                Icons.delete,
+                Icons.delete_forever,
                 color: Colors.red,
               ),
               title: const Text('Delete'),
               onTap: () {
                 Navigator.pop(context);
-                ItemDeletionHandler.showDeleteConfirmation(
+                ItemDeletionHandler.showPermanentDeleteConfirmation(
                     context, item, loadItems);
               },
             ),

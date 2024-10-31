@@ -38,16 +38,16 @@ class ItemNavHandler {
   }
 
   static Future<void> addToFolderHistory(String newPath,
-      {List<String>? passHistory}) async {
-    final history = passHistory ?? _folderHistory;
+      {List<String>? dirHistory}) async {
+    final history = dirHistory ?? _folderHistory;
     if (history.isEmpty || history.last != newPath) {
       history.add(newPath);
     }
   }
 
   // Removes last entry in folder history then reloads items on page
-  static String? navigateBack({List<String>? passHistory}) {
-    final history = passHistory ?? _folderHistory;
+  static String? navigateBack({List<String>? dirHistory}) {
+    final history = dirHistory ?? _folderHistory;
     if (history.length > 1) {
       history.removeLast();
       String previousFolder = history.last;
