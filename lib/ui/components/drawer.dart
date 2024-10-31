@@ -102,15 +102,15 @@ class DrawerView extends StatelessWidget {
                       onSettingsChanged: onItemChanged,
                     )),
               ),
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.secondary,
-                leading: const Icon(Icons.sync),
-                title: const Text('Sync'),
-                onTap: () => _navigateToScreen(
-                  context,
-                  screen: SyncServiceScreen(directory: directory),
-                ),
-              ),
+              // ListTile(
+              //   iconColor: Theme.of(context).colorScheme.secondary,
+              //   leading: const Icon(Icons.sync),
+              //   title: const Text('Sync'),
+              //   onTap: () => _navigateToScreen(
+              //     context,
+              //     screen: SyncServiceScreen(directory: directory),
+              //   ),
+              // ),
               ListTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.info_outlined),
