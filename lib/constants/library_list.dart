@@ -162,4 +162,10 @@ final List<Library> libraries = [
         'https://github.com/daohoangson/flutter_widget_from_html/tree/master/packages/core',
     license: 'MIT License',
   ),
+  Library(
+    name: 'FTPConnect',
+    publisher: 'salimdev.ovh',
+    url: 'https://github.com/salim-lachdhaf/dartFTP',
+    license: 'MIT License',
+  ),
 ];

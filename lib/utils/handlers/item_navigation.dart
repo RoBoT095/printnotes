@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:printnotes/ui/screens/notes/image_viewer.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/screens/notes/note_editor.dart';
 
@@ -35,6 +36,16 @@ class ItemNavHandler {
         ),
       ),
     ).then((value) => loadItems());
+  }
+
+  static void onImageSelect(
+    BuildContext context,
+    File item,
+  ) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ImageViewScreen(imageFile: item)));
   }
 
   static Future<void> addToFolderHistory(String newPath,

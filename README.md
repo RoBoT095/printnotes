@@ -27,10 +27,10 @@
 <summary>Mobile screenshots</summary>
 
 <p>
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneSettings.png?raw=true" alt="all themes" width=200 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditor.png?raw=true" alt="all themes" width=200 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditing.png?raw=true" alt="all themes" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneSettings.png?raw=true" alt="all themes" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditor.png?raw=true" alt="all themes" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditing.png?raw=true" alt="all themes" width=200 />
 </p>
 
 </details>
@@ -40,8 +40,8 @@
 
 <p>
   <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopHome.png?raw=true" alt="all themes" width=500 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopEditor.png?raw=true" alt="all themes" width=500 />
-    <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopSettings.png?raw=true" alt="all themes" width=500 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopEditor.png?raw=true" alt="all themes" width=500 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopSettings.png?raw=true" alt="all themes" width=500 />
 </p>
 </details>
 

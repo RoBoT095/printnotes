@@ -105,11 +105,11 @@ class _NotesDisplayState extends State<NotesDisplay> {
         if (item is File) {
           if (allowedNoteExtensions.any((ext) => item.path.endsWith(ext))) {
             ItemNavHandler.onNoteSelect(
-              context,
-              item,
-              () => _loadItems(_currentPath),
-              latexSupport: _useLatex,
-            );
+                context, item, () => _loadItems(_currentPath),
+                latexSupport: _useLatex);
+          } else if (allowedImageExtensions
+              .any((ext) => item.path.endsWith(ext))) {
+            ItemNavHandler.onImageSelect(context, item);
           } else {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context)
@@ -138,29 +138,33 @@ class _NotesDisplayState extends State<NotesDisplay> {
                 )
               : Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name.replaceAll(".md", ''),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      MarkdownBlock(
-                        selectable: false,
-                        data: StorageSystem.getNotePreview(item.path,
-                            previewLength: _previewLength),
-                        config:
-                            theMarkdownConfigs(context, hideCodeButtons: true),
-                        generator: theMarkdownGenerators(context,
-                            textScale: 0.95, useLatex: _useLatex),
-                      ),
-                    ],
-                  )),
+                  child: (item is File &&
+                          allowedImageExtensions
+                              .any((ext) => item.path.endsWith(ext)))
+                      ? Image.file(item)
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name.replaceAll(".md", ''),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            MarkdownBlock(
+                              selectable: false,
+                              data: StorageSystem.getNotePreview(item.path,
+                                  previewLength: _previewLength),
+                              config: theMarkdownConfigs(context,
+                                  hideCodeButtons: true),
+                              generator: theMarkdownGenerators(context,
+                                  textScale: 0.95, useLatex: _useLatex),
+                            ),
+                          ],
+                        )),
         ),
       ),
     );
