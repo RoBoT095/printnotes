@@ -18,6 +18,7 @@
 - Simple search to find any note by name, even the ones deeper in a folder
 - Changeable layout and sort order
 - Toolbar for easy markdown editing (borrowed from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor))
+- Create your own custom color schemes to better personalize it to your liking
 <!-- - Supports Windows, Mac, Linux, Android, and iOS -->
 
 ---
@@ -46,7 +47,7 @@
 
 ## Changelog
 
-Moved to a separate file (here)[https://github.com/RoBoT095/printnotes/blob/main/CHANGELOG.md]
+Moved to a separate file [here](https://github.com/RoBoT095/printnotes/blob/main/CHANGELOG.md)
 
 ## Possible Future Features (not guaranteed)
 
