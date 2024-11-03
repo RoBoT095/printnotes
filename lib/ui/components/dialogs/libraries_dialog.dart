@@ -52,7 +52,10 @@ void showLibrariesDialog(BuildContext context) {
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Close'),
+            child: Text(
+              'Close',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },

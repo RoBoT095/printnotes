@@ -5,13 +5,14 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:printnotes/constants/constants.dart';
-import 'package:printnotes/utils/configs/user_preference.dart';
 
+import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
+import 'package:printnotes/ui/screens/home/tree_view.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
@@ -20,13 +21,13 @@ import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 class NotesDisplay extends StatefulWidget {
   const NotesDisplay({
     super.key,
-    required this.isLayoutGrid,
+    required this.currentLayout,
     required this.currentDirectory,
     required this.onStateChanged,
     required this.updateCanPop,
   });
 
-  final bool isLayoutGrid;
+  final String currentLayout;
   final String? currentDirectory;
   final VoidCallback onStateChanged;
   final VoidCallback updateCanPop;
@@ -55,7 +56,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
   @override
   void didUpdateWidget(NotesDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.isLayoutGrid != widget.isLayoutGrid ||
+    if (oldWidget.currentLayout != widget.currentLayout ||
         oldWidget.currentDirectory != widget.currentDirectory) {
       _loadItems(widget.currentDirectory, doReload: true);
     } else {
@@ -213,28 +214,32 @@ class _NotesDisplayState extends State<NotesDisplay> {
                 ? const Center(
                     child: Text('Nothing here!'),
                   )
-                : CustomScrollView(
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.all(8),
-                        sliver: SliverMasonryGrid.count(
-                          crossAxisCount:
-                              _displayGridCount(widget.isLayoutGrid),
-                          mainAxisSpacing: 4,
-                          crossAxisSpacing: 4,
-                          childCount: _items.length,
-                          itemBuilder: (context, index) =>
-                              _buildGridItem(context, index),
-                        ),
+                : widget.currentLayout == 'tree'
+                    ? TreeLayoutView(
+                        initDir: widget.currentDirectory ?? '',
+                        onChange: () => _loadItems(_currentPath))
+                    : CustomScrollView(
+                        slivers: [
+                          SliverPadding(
+                            padding: const EdgeInsets.all(8),
+                            sliver: SliverMasonryGrid.count(
+                              crossAxisCount:
+                                  _displayGridCount(widget.currentLayout),
+                              mainAxisSpacing: 4,
+                              crossAxisSpacing: 4,
+                              childCount: _items.length,
+                              itemBuilder: (context, index) =>
+                                  _buildGridItem(context, index),
+                            ),
+                          ),
+                          // Adds empty space at bottom, helps when in list view
+                          const SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 200,
+                            ),
+                          )
+                        ],
                       ),
-                      // Adds empty space at bottom, helps when in list view
-                      const SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 200,
-                        ),
-                      )
-                    ],
-                  ),
         floatingActionButton: speedDialFAB(
           context,
           currentPath: _currentPath ?? '',
@@ -245,13 +250,16 @@ class _NotesDisplayState extends State<NotesDisplay> {
     );
   }
 
-  int _displayGridCount(isLayoutGrid) {
-    if (isLayoutGrid == false) return 1;
-    double displayWidth = MediaQuery.sizeOf(context).width;
-    if (displayWidth > 1200) {
-      return 4;
+  int _displayGridCount(layout) {
+    if (layout == 'list') {
+      return 1;
     } else {
-      return 2;
+      double displayWidth = MediaQuery.sizeOf(context).width;
+      if (displayWidth > 1200) {
+        return 4;
+      } else {
+        return 2;
+      }
     }
   }
 

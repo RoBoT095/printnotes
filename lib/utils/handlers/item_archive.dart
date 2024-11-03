@@ -14,11 +14,17 @@ class ItemArchiveHandler {
             'Are you sure you want to archive this ${item is Directory ? 'folder' : 'note'}? It will be removed from its current location.'),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: const Text('Archive'),
+            child: Text(
+              'Archive',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () async {
               Navigator.of(context).pop();
               try {

@@ -21,7 +21,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool firstTimeUser = true;
-  bool isGrid = true;
+  String currentLayout = 'grid';
   late String currentDirectory;
   bool _canPop = false;
 
@@ -36,12 +36,7 @@ class _MainPageState extends State<MainPage> {
     final settings = await SettingsLoader.loadSettings();
     setState(() {
       firstTimeUser = showIntro;
-      switch (settings['layout']) {
-        case 'grid':
-          isGrid = true;
-        case 'list':
-          isGrid = false;
-      }
+      currentLayout = settings['layout'];
       currentDirectory = settings['directory'];
     });
   }
@@ -101,12 +96,11 @@ class _MainPageState extends State<MainPage> {
                     title: widget.title,
                     currentDirectory: currentDirectory,
                     onChange: _loadSettings,
-                    isGrid: () {
-                      setState(() => isGrid = !isGrid);
-                    },
+                    layoutChange: (value) =>
+                        setState(() => currentLayout = value),
                     body: NotesDisplay(
                       key: ValueKey(currentDirectory),
-                      isLayoutGrid: isGrid,
+                      currentLayout: currentLayout,
                       currentDirectory: currentDirectory,
                       onStateChanged: _loadSettings,
                       updateCanPop: _updateCanPop,

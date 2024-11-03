@@ -12,7 +12,7 @@ class MainScaffold extends StatefulWidget {
     required this.title,
     this.currentDirectory,
     required this.onChange,
-    required this.isGrid,
+    required this.layoutChange,
     required this.body,
     this.drawer,
   });
@@ -20,7 +20,7 @@ class MainScaffold extends StatefulWidget {
   final String title;
   final String? currentDirectory;
   final VoidCallback onChange;
-  final VoidCallback isGrid;
+  final ValueSetter layoutChange;
   final Widget body;
   final Widget? drawer;
 
@@ -133,10 +133,15 @@ class _MainScaffoldState extends State<MainScaffold> {
                 setState(() {
                   if (currentLayout == 'grid') {
                     UserLayoutPref.setLayoutView('list');
-                  } else {
+                  }
+                  if (currentLayout == 'list') {
+                    UserLayoutPref.setLayoutView('tree');
+                  }
+                  if (currentLayout == 'tree') {
                     UserLayoutPref.setLayoutView('grid');
                   }
-                  widget.isGrid();
+                  widget.layoutChange(currentLayout);
+                  widget.onChange();
                 });
               }
             },

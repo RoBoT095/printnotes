@@ -164,7 +164,11 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('close'),
+              child: Text(
+                'close',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+              ),
             ),
             ElevatedButton(
               onPressed: _isSyncing ? null : _syncFirstTime,
@@ -172,7 +176,11 @@ class _SyncServiceLoginState extends State<SyncServiceLogin> {
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 foregroundColor: Theme.of(context).colorScheme.onSecondary,
               ),
-              child: const Text('Sync Notes'),
+              child: Text(
+                'Sync Notes',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+              ),
             ),
           ],
         );

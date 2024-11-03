@@ -369,12 +369,12 @@ class StorageSystem {
 
   // Get files (and folders) of a folder
 
-  static Future<List<FileSystemEntity>> listFolderContents(
+  static List<FileSystemEntity> listFolderContents(
     String folderPath,
-  ) async {
+  ) {
     final folder = Directory(folderPath);
-    if (await folder.exists()) {
-      final contents = await folder.list().toList();
+    if (folder.existsSync()) {
+      final contents = folder.listSync().toList();
       // Skips hidden folders
       final filteredContents = contents.where((item) {
         return !item.path.split(Platform.pathSeparator).last.startsWith('.');

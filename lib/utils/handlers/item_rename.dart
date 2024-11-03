@@ -19,11 +19,17 @@ class ItemRenameHandler {
         ),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: const Text('Rename'),
+            child: Text(
+              'Rename',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
               handleItemRename(

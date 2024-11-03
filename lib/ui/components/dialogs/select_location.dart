@@ -28,8 +28,8 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
     _loadDirectories();
   }
 
-  Future<void> _loadDirectories() async {
-    final contents = await StorageSystem.listFolderContents(_currentDir);
+  void _loadDirectories() {
+    final contents = StorageSystem.listFolderContents(_currentDir);
     setState(() {
       _directories = contents.whereType<Directory>().toList();
       // Removes the current item if it's a directory to prevent moving into itself

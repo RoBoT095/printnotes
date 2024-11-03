@@ -28,7 +28,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
   Future<void> _loadDeletedItems([String? folderPath]) async {
     final deletePath = await StorageSystem.getDeletedPath();
     final currentPath = folderPath ?? deletePath;
-    final items = await StorageSystem.listFolderContents(currentPath);
+    final items = StorageSystem.listFolderContents(currentPath);
     setState(() {
       _deletedItems = items;
       _currentPath = currentPath;

@@ -168,4 +168,10 @@ final List<Library> libraries = [
     url: 'https://github.com/salim-lachdhaf/dartFTP',
     license: 'MIT License',
   ),
+  Library(
+    name: 'animated_tree_view',
+    publisher: 'cubivue.com',
+    url: 'https://github.com/embraceitmobile/animated_tree_view',
+    license: 'MIT License',
+  ),
 ];

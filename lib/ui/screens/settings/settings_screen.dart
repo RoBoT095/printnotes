@@ -122,6 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 items: const [
                   DropdownMenuItem(value: 'grid', child: Text('Grid View')),
                   DropdownMenuItem(value: 'list', child: Text('List View')),
+                  DropdownMenuItem(value: 'tree', child: Text('Tree View')),
                 ],
                 onChanged: (value) {
                   setState(() {

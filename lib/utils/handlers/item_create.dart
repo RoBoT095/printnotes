@@ -81,18 +81,15 @@ class ItemCreationHandler {
           TextButton(
             child: Text(
               'Cancel',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
               child: Text(
                 'OK',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
               onPressed: () {
                 Navigator.of(context).pop(name);

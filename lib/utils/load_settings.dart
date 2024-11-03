@@ -53,7 +53,7 @@ class SettingsLoader {
     String currentFolderName;
 
     if (directory != null) {
-      final items = await StorageSystem.listFolderContents(directory);
+      final items = StorageSystem.listFolderContents(directory);
       final sortedItems = ItemSortHandler.sortItems(items, sortOrder);
 
       if (directory != mainPath) {

@@ -13,11 +13,17 @@ class ItemDeletionHandler {
             'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'}?'),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: const Text('Delete'),
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
               handleSoftItemDelete(context, item, loadItems);
@@ -66,11 +72,17 @@ class ItemDeletionHandler {
             'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'} forever?'),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: const Text('Delete'),
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
               handlePermanentItemDelete(context, item, loadItems);

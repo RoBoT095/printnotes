@@ -29,7 +29,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   Future<void> _loadArchivedItems([String? folderPath]) async {
     final archivePath = await StorageSystem.getArchivePath();
     final currentPath = folderPath ?? archivePath;
-    final items = await StorageSystem.listFolderContents(currentPath);
+    final items = StorageSystem.listFolderContents(currentPath);
     setState(() {
       _archivedItems = items;
       _currentPath = currentPath;

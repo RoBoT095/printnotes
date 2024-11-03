@@ -4,6 +4,8 @@
 
 Added way to preview images from home screen and from a basic image viewer, this is in preparation to allow linking images in storage from inside notes
 
+Added third layout view "tree view"
+
 ### (Oct 31, 2024)
 
 **Happy Halloween**, not so happy day, sync enthusiasts, I am hiding the Sync option on the drawer and will be working on 1 way (upload only) sync in the mean time. I didn't realize how hard 2 way (bi-directional) syncing is, but I have been doing research and I have decided to still add it, it will just be a package I will try to make myself to later add to the app.
