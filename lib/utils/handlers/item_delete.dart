@@ -8,7 +8,7 @@ class ItemDeletionHandler {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
+        title: const Text('Move To Trash?'),
         content: Text(
             'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'}?'),
         actions: [
@@ -46,7 +46,7 @@ class ItemDeletionHandler {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                '${item is Directory ? 'Folder' : 'Note'} was moved to deleted list, will be permanently deleted after ${daysForDeletion ?? 'some time'}'),
+                '${item is Directory ? 'Folder' : 'Note'} was moved to the trash bin'),
           ),
         );
       }

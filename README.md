@@ -23,6 +23,8 @@
 
 ---
 
+## Images
+
 <details close>
 <summary>Mobile screenshots</summary>
 
@@ -45,24 +47,22 @@
 </p>
 </details>
 
-## Changelog
+## Changelog - [here](https://github.com/RoBoT095/printnotes/blob/main/CHANGELOG.md)
 
-Moved to a separate file [here](https://github.com/RoBoT095/printnotes/blob/main/CHANGELOG.md)
-
-## Possible Future Features (not guaranteed)
+<!-- ## Possible Future Features (not guaranteed)
 
 - - [x] Custom themes with import capability
 - - [ ] Advanced search with filters
 - - [x] Tags
 - - [ ] Upload and attach pictures
-- - [ ] Share notes
+- - [ ] Share files from app
 - - [ ] Mobile Widgets 🤔?
-- One Way Sync Options (Bi-Directional Sync will come in the distant future)
-  - - [ ] NextCloud
-  - - [ ] RSync
-  - - [ ] FTP
-  - ~~Dropbox~~
-  - ~~Google Drive~~
+  - One Way Sync Options (Bi-Directional Sync will come in the distant future)
+    - - [ ] NextCloud
+    - - [ ] RSync
+    - - [ ] FTP
+    - ~~Dropbox~~
+    - ~~Google Drive~~ -->
 
 ## Supported Platforms
 

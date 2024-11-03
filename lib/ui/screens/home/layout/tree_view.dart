@@ -50,6 +50,7 @@ class TreeLayoutView extends StatelessWidget {
             color: Colors.grey[700],
           );
         },
+        showRootNode: false,
         indentation: const Indentation(),
         builder: (context, node) => Padding(
           padding: const EdgeInsets.only(left: 16.0),
@@ -105,13 +106,15 @@ extension on ExplorableNode {
 
     if (this is FileNode) {
       final file = data as TFile;
-      if (file.type == Image) return const Icon(Icons.image_outlined);
+      if (file.type == Image) {
+        return Icon(
+          Icons.image_outlined,
+          color: Theme.of(context).colorScheme.primary,
+        );
+      }
     }
 
-    return Icon(
-      Icons.sticky_note_2_outlined,
-      color: Theme.of(context).colorScheme.onError,
-    );
+    return const Icon(Icons.sticky_note_2_outlined);
   }
 }
 

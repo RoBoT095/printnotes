@@ -1,10 +1,14 @@
 # Changelog
 
+## (Nov 3, 2024)
+
+Moved Grid/List views into a separate file, fixed up some functions in storage_system.dart to remove a few duplicate code, and changed some text like "Note" to "File" as app now supports images as well. Still need to fix archiving and soft deletion for images.
+
 ## (Nov 2, 2024)
 
-Added way to preview images from home screen and from a basic image viewer, this is in preparation to allow linking images in storage from inside notes
+Added way to preview images from home screen and from a basic image viewer, this is in preparation to allow linking images in storage from inside notes.
 
-Added third layout view "tree view"
+Added third layout view "tree view", option from home screen just cycles through them, while in settings you specifically choose which one you want.
 
 ### (Oct 31, 2024)
 
@@ -14,7 +18,7 @@ To explain why bi-directional sync is hard is that it would require creating a d
 
 ### (Oct 27, 2024)
 
-Syncthing for android is being discontinued - read [here](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002?ref=news.itsfoss.com), which I personally use.
+Syncthing for android is being discontinued - read [here](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002?ref=news.itsfoss.com), which is what I personally use.
 
 I am starting a 'dev' branch while I work a bit more on syncing (been putting it off cuz it drains all my motivation), currently trying to implement FTP as there is a package for it, so I hope it will be easier then messing with Nextcloud webdav. I will probably need to add file encryption when syncing, but that is a thought for a later date.
 

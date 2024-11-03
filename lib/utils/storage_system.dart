@@ -80,6 +80,7 @@ class StorageSystem {
     await archivedItem.delete(recursive: true);
   }
 
+  // TODO: figure out why archive doesn't work on images
   static Future<void> archiveItem(String itemPath) async {
     final baseDir = await DataPath.selectedDirectory;
     final archiveDir = await getArchivePath();
@@ -108,20 +109,6 @@ class StorageSystem {
     await sourceItem.delete(recursive: true);
   }
 
-  static Future<List<FileSystemEntity>> listArchivedItems(
-      [String? folderPath]) async {
-    final archiveDir = folderPath ?? await getArchivePath();
-    final archiveDirEntity = Directory(archiveDir);
-
-    if (await archiveDirEntity.exists()) {
-      final entities = await archiveDirEntity.list().toList();
-      return entities.where((entity) {
-        return !path.basename(entity.path).startsWith('.');
-      }).toList();
-    }
-    return [];
-  }
-
   static Future<void> _copyDirectory(
       Directory source, Directory destination) async {
     await destination.create(recursive: true);
@@ -147,7 +134,7 @@ class StorageSystem {
     return fileExists || folderExists;
   }
 
-  // Methods related to creating, renaming, and moving notes
+  // Methods related to creating notes, loading, and saving notes
 
   static Future<File> createNote(String fileName, {String? parentPath}) async {
     final baseDir = parentPath ?? await DataPath.selectedDirectory;
@@ -156,27 +143,6 @@ class StorageSystem {
     }
     final filePath = path.join(baseDir!, '$fileName.md');
     return File(filePath).create(recursive: true);
-  }
-
-  static Future<bool> renameNote(String oldPath, String newName) async {
-    try {
-      final file = File(oldPath);
-      if (await file.exists()) {
-        final directory = path.dirname(oldPath);
-        final newPath = path.join(directory, '$newName.md');
-
-        if (await nameExists(newName, parentPath: directory)) {
-          throw Exception('A note or folder with this name already exists.');
-        }
-
-        await file.rename(newPath);
-        return true;
-      }
-      return false;
-    } catch (e) {
-      debugPrint('Error renaming note: $e');
-      return false;
-    }
   }
 
   static Future<String> loadNote(String filePath) async {
@@ -192,21 +158,6 @@ class StorageSystem {
     final file = await createNote(fileName, parentPath: parentPath);
     await file.writeAsString(content);
     return file.path;
-  }
-
-  static Future<bool> moveNote(
-      String sourcePath, String destinationPath) async {
-    try {
-      final sourceFile = File(sourcePath);
-      if (await sourceFile.exists()) {
-        await sourceFile.rename(destinationPath);
-        return true;
-      }
-      return false;
-    } catch (e) {
-      debugPrint('Error moving note: $e');
-      return false;
-    }
   }
 
   static String getNotePreview(String filePath, {int previewLength = 100}) {
@@ -226,9 +177,9 @@ class StorageSystem {
     return 'No preview available';
   }
 
-  // Method to duplicate Notes (only, not folders)
+  // Method to duplicate Items (not folders)
   // adds _copy to end of name, continues adding a num if a copy already exists
-  static Future<String> duplicateNote(String originalPath) async {
+  static Future<String> duplicateItem(String originalPath) async {
     final directory = path.dirname(originalPath);
     final extension = path.extension(originalPath);
     final nameWithoutExtension = path.basenameWithoutExtension(originalPath);
@@ -252,7 +203,7 @@ class StorageSystem {
     return newPath;
   }
 
-  // Methods related to creating and renaming folders
+  // Methods related to creating folders
 
   static Future<String> createFolder(String folderName,
       {String? parentPath}) async {
@@ -265,28 +216,6 @@ class StorageSystem {
       await newFolder.create(recursive: true);
     }
     return newFolder.path;
-  }
-
-  static Future<bool> renameFolder(
-      String oldFolderPath, String newFolderName) async {
-    try {
-      final folder = Directory(oldFolderPath);
-      if (await folder.exists()) {
-        final parentPath = folder.parent.path;
-        final newFolderPath = path.join(parentPath, newFolderName);
-
-        if (await nameExists(newFolderName, parentPath: parentPath)) {
-          throw Exception('A note or folder with this name already exists.');
-        }
-
-        await folder.rename(newFolderPath);
-        return true;
-      }
-      return false;
-    } catch (e) {
-      debugPrint('Error renaming folder: $e');
-      return false;
-    }
   }
 
   // Methods to soft and permanent delete
@@ -394,6 +323,31 @@ class StorageSystem {
       await item.rename(newPath);
     } catch (e) {
       debugPrint('Error moving item: $e');
+    }
+  }
+
+  // For renaming files and folders (replaced old renameNote() and renameFolder())
+  static Future<bool> renameItem(String oldPath, String newName) async {
+    try {
+      final item =
+          FileSystemEntity.typeSync(oldPath) == FileSystemEntityType.file
+              ? File(oldPath)
+              : Directory(oldPath);
+      if (await item.exists()) {
+        final parentDir = path.dirname(oldPath);
+        final newPath = path.join(parentDir, newName);
+
+        if (await nameExists(newName, parentPath: parentDir)) {
+          throw Exception('A file or folder with this name already exists.');
+        }
+
+        await item.rename(newPath);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error renaming item: $e');
+      return false;
     }
   }
 }

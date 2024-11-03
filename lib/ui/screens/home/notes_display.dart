@@ -1,21 +1,14 @@
 import 'dart:io';
 import 'dart:async';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:markdown_widget/markdown_widget.dart';
 
-import 'package:printnotes/constants/constants.dart';
-import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/ui/screens/home/layout/grid_list_view.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
-import 'package:printnotes/ui/screens/home/tree_view.dart';
-import 'package:printnotes/ui/components/markdown/build_markdown.dart';
-import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
-import 'package:printnotes/ui/widgets/custom_snackbar.dart';
+import 'package:printnotes/ui/screens/home/layout/tree_view.dart';
 import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 
 class NotesDisplay extends StatefulWidget {
@@ -28,7 +21,7 @@ class NotesDisplay extends StatefulWidget {
   });
 
   final String currentLayout;
-  final String? currentDirectory;
+  final String currentDirectory;
   final VoidCallback onStateChanged;
   final VoidCallback updateCanPop;
 
@@ -37,10 +30,9 @@ class NotesDisplay extends StatefulWidget {
 }
 
 class _NotesDisplayState extends State<NotesDisplay> {
-  bool _mounted = true;
   bool _isLoading = false;
   List<FileSystemEntity> _items = [];
-  String? _currentPath;
+  String _currentPath = '';
   String _currentFolderName = 'All Notes';
   List<String> _folderHistory = [];
   bool _useLatex = false;
@@ -73,7 +65,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     bool userLatexPref = await UserLatexPref.getLatexSupport();
     int userPreviewLength = await UserLayoutPref.getNotePreviewLength();
 
-    if (_mounted) {
+    if (mounted) {
       setState(() {
         _useLatex = userLatexPref;
         _previewLength = userPreviewLength;
@@ -90,85 +82,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
     setState(() {
       _loadItems(ItemNavHandler.navigateBack());
     });
-  }
-
-  Widget _buildGridItem(BuildContext context, int index) {
-    final item = _items[index];
-    final isDirectory = item is Directory;
-    final name = path.basename(item.path);
-
-    return GestureDetector(
-      onTap: () {
-        if (isDirectory) {
-          _loadItems(item.path);
-          ItemNavHandler.addToFolderHistory(item.path);
-        }
-        if (item is File) {
-          if (allowedNoteExtensions.any((ext) => item.path.endsWith(ext))) {
-            ItemNavHandler.onNoteSelect(
-                context, item, () => _loadItems(_currentPath),
-                latexSupport: _useLatex);
-          } else if (allowedImageExtensions
-              .any((ext) => item.path.endsWith(ext))) {
-            ItemNavHandler.onImageSelect(context, item);
-          } else {
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(customSnackBar('File format not supported!'));
-          }
-        }
-      },
-      onLongPress: () =>
-          showBottomMenu(context, item, () => _loadItems(_currentPath)),
-      child: AbsorbPointer(
-        child: Card(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          child: isDirectory
-              ? ListTile(
-                  leading: Icon(
-                    Icons.folder,
-                    size: 34,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  title: Text(
-                    name,
-                    textAlign: TextAlign.start,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: (item is File &&
-                          allowedImageExtensions
-                              .any((ext) => item.path.endsWith(ext)))
-                      ? Image.file(item)
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name.replaceAll(".md", ''),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            MarkdownBlock(
-                              selectable: false,
-                              data: StorageSystem.getNotePreview(item.path,
-                                  previewLength: _previewLength),
-                              config: theMarkdownConfigs(context,
-                                  hideCodeButtons: true),
-                              generator: theMarkdownGenerators(context,
-                                  textScale: 0.95, useLatex: _useLatex),
-                            ),
-                          ],
-                        )),
-        ),
-      ),
-    );
   }
 
   @override
@@ -216,56 +129,24 @@ class _NotesDisplayState extends State<NotesDisplay> {
                   )
                 : widget.currentLayout == 'tree'
                     ? TreeLayoutView(
-                        initDir: widget.currentDirectory ?? '',
-                        onChange: () => _loadItems(_currentPath))
-                    : CustomScrollView(
-                        slivers: [
-                          SliverPadding(
-                            padding: const EdgeInsets.all(8),
-                            sliver: SliverMasonryGrid.count(
-                              crossAxisCount:
-                                  _displayGridCount(widget.currentLayout),
-                              mainAxisSpacing: 4,
-                              crossAxisSpacing: 4,
-                              childCount: _items.length,
-                              itemBuilder: (context, index) =>
-                                  _buildGridItem(context, index),
-                            ),
-                          ),
-                          // Adds empty space at bottom, helps when in list view
-                          const SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 200,
-                            ),
-                          )
-                        ],
+                        initDir: widget.currentDirectory,
+                        onChange: () => _loadItems(_currentPath),
+                      )
+                    : GridListView(
+                        items: _items,
+                        onChange: (value) => _loadItems(value),
+                        currentPath: _currentPath,
+                        currentLayout: widget.currentLayout,
+                        latexSupport: _useLatex,
+                        notePreviewLength: _previewLength,
                       ),
         floatingActionButton: speedDialFAB(
           context,
-          currentPath: _currentPath ?? '',
+          currentPath: _currentPath,
           onLoadItems: () => _loadItems(_currentPath),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
-  }
-
-  int _displayGridCount(layout) {
-    if (layout == 'list') {
-      return 1;
-    } else {
-      double displayWidth = MediaQuery.sizeOf(context).width;
-      if (displayWidth > 1200) {
-        return 4;
-      } else {
-        return 2;
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _mounted = false;
-    super.dispose();
   }
 }

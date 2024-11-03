@@ -19,7 +19,7 @@ class ItemDuplicationHandler {
     }
 
     try {
-      final newPath = await StorageSystem.duplicateNote(item.path);
+      final newPath = await StorageSystem.duplicateItem(item.path);
       final newFileName = path.basename(newPath);
 
       loadItems();
@@ -27,13 +27,13 @@ class ItemDuplicationHandler {
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('Note duplicated: $newFileName'));
+            .showSnackBar(customSnackBar('file duplicated: $newFileName'));
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('Error duplicating note: $e'));
+            .showSnackBar(customSnackBar('Error duplicating file: $e'));
       }
     }
   }

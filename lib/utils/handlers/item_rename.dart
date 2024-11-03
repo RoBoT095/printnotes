@@ -46,16 +46,12 @@ class ItemRenameHandler {
       BuildContext context, FileSystemEntity item, String newName,
       {Function? reload, bool? showMessage = true}) async {
     try {
-      if (item is Directory) {
-        await StorageSystem.renameFolder(item.path, newName);
-      } else {
-        await StorageSystem.renameNote(item.path, newName);
-      }
+      await StorageSystem.renameItem(item.path, newName);
       if (reload != null) reload();
       if (context.mounted && showMessage == true) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-            '${item is Directory ? 'Folder' : 'Note'} renamed successfully'));
+            '${item is Directory ? 'Folder' : 'File'} renamed successfully'));
       }
     } catch (e) {
       if (context.mounted) {
