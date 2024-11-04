@@ -1,5 +1,9 @@
 # Changelog
 
+## (Nov 4, 2024)
+
+Added advanced search for searching the contents of notes. Moved "sort by" button into the 3 dot "more" popup menu, as well as made "change layout" into a popup menu as well
+
 ## (Nov 3, 2024)
 
 Moved Grid/List views into a separate file, fixed up some functions in storage_system.dart to remove a few duplicate code, and changed some text like "Note" to "File" as app now supports images as well. Still need to fix archiving and soft deletion for images.

@@ -1,16 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
-import 'package:printnotes/ui/widgets/search.dart';
+import 'package:printnotes/ui/screens/home/search_view.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({
     super.key,
     required this.title,
-    this.currentDirectory,
+    required this.currentDirectory,
     required this.onChange,
     required this.layoutChange,
     required this.body,
@@ -18,7 +15,7 @@ class MainScaffold extends StatefulWidget {
   });
 
   final String title;
-  final String? currentDirectory;
+  final String currentDirectory;
   final VoidCallback onChange;
   final ValueSetter layoutChange;
   final Widget body;
@@ -30,29 +27,16 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   bool isSearching = false;
-  List<FileSystemEntity> searchResults = [];
+  TextEditingController searchController = TextEditingController();
+  bool isAdvancedSearch = false;
   String _selectedSort = 'default';
+  String _currentLayout = 'grid';
 
   @override
   void initState() {
     getItemSort();
+    getLayout();
     super.initState();
-  }
-
-  void performSearch(String query) async {
-    if (query.isEmpty) {
-      searchResults.clear();
-      isSearching = false;
-      return;
-    }
-
-    final results =
-        await StorageSystem.searchItems(query, widget.currentDirectory ?? '');
-
-    searchResults = results;
-    isSearching = true;
-
-    widget.onChange();
   }
 
   void getItemSort() async {
@@ -66,6 +50,18 @@ class _MainScaffoldState extends State<MainScaffold> {
     widget.onChange();
   }
 
+  void getLayout() async {
+    String layout = await UserLayoutPref.getLayoutView();
+    setState(() => _currentLayout = layout);
+  }
+
+  void setLayout(String layout) {
+    setState(() => _currentLayout = layout);
+    UserLayoutPref.setLayoutView(layout);
+    widget.layoutChange(layout);
+    widget.onChange();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,12 +70,17 @@ class _MainScaffoldState extends State<MainScaffold> {
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         title: isSearching
             ? TextField(
+                controller: searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search for note...',
+                decoration: InputDecoration(
+                  hintText: isAdvancedSearch
+                      ? 'Advanced Search for notes...'
+                      : 'Search for notes...',
                   border: InputBorder.none,
                 ),
-                onChanged: performSearch,
+                onChanged: (query) {
+                  setState(() => searchController.text = query);
+                },
               )
             : Text(widget.title),
         actions: [
@@ -89,76 +90,95 @@ class _MainScaffoldState extends State<MainScaffold> {
             onPressed: () {
               isSearching = !isSearching;
               setState(() {
-                if (!isSearching) {
-                  searchResults.clear();
-                }
+                if (!isSearching) searchController.clear();
               });
             },
           ),
-          PopupMenuButton(
-            icon: const Icon(Icons.sort),
-            onSelected: setItemSort,
-            itemBuilder: (context) => [
-              CheckedPopupMenuItem(
-                value: 'default',
-                checked: _selectedSort == 'default',
-                child: const Text('Default Order'),
-              ),
-              CheckedPopupMenuItem(
-                value: 'titleAsc',
-                checked: _selectedSort == 'titleAsc',
-                child: const Text('Title (Ascending)'),
-              ),
-              CheckedPopupMenuItem(
-                value: 'titleDsc',
-                checked: _selectedSort == 'titleDsc',
-                child: const Text('Title (Descending)'),
-              ),
-              CheckedPopupMenuItem(
-                value: 'lastModAsc',
-                checked: _selectedSort == 'lastModAsc',
-                child: const Text('Last Modified (Ascending)'),
-              ),
-              CheckedPopupMenuItem(
-                value: 'lastModDsc',
-                checked: _selectedSort == 'lastModDsc',
-                child: const Text('Last Modified (Descending)'),
-              ),
-            ],
-          ),
-          PopupMenuButton(
-            onSelected: (value) async {
-              if (value == 'layoutSwitch') {
-                String currentLayout = await UserLayoutPref.getLayoutView();
-                setState(() {
-                  if (currentLayout == 'grid') {
-                    UserLayoutPref.setLayoutView('list');
-                  }
-                  if (currentLayout == 'list') {
-                    UserLayoutPref.setLayoutView('tree');
-                  }
-                  if (currentLayout == 'tree') {
-                    UserLayoutPref.setLayoutView('grid');
-                  }
-                  widget.layoutChange(currentLayout);
-                  widget.onChange();
-                });
-              }
-            },
-            itemBuilder: (context) => <PopupMenuEntry>[
-              const PopupMenuItem(
-                value: 'layoutSwitch',
-                child: ListTile(
-                    leading: Icon(Icons.grid_view),
-                    title: Text("Switch Layout")),
-              ),
-            ],
-          ),
+          isSearching
+              ? IconButton(
+                  onPressed: () {
+                    setState(() => isAdvancedSearch = !isAdvancedSearch);
+                  },
+                  icon: Icon(
+                    isAdvancedSearch
+                        ? Icons.filter_alt_outlined
+                        : Icons.filter_alt_off_outlined,
+                  ),
+                )
+              : PopupMenuButton(
+                  icon: const Icon(Icons.more_vert),
+                  itemBuilder: (context) => <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: PopupMenuButton(
+                        onSelected: setLayout,
+                        itemBuilder: (context) => [
+                          CheckedPopupMenuItem(
+                            value: 'grid',
+                            checked: _currentLayout == 'grid',
+                            child: const Text('Grid View'),
+                          ),
+                          CheckedPopupMenuItem(
+                            value: 'list',
+                            checked: _currentLayout == 'list',
+                            child: const Text('List View'),
+                          ),
+                          CheckedPopupMenuItem(
+                            value: 'tree',
+                            checked: _currentLayout == 'tree',
+                            child: const Text('Tree View'),
+                          ),
+                        ],
+                        child: const ListTile(
+                            leading: Icon(Icons.grid_view),
+                            title: Text("Change Layout")),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: PopupMenuButton(
+                        onSelected: setItemSort,
+                        itemBuilder: (context) => [
+                          CheckedPopupMenuItem(
+                            value: 'default',
+                            checked: _selectedSort == 'default',
+                            child: const Text('Default Order'),
+                          ),
+                          CheckedPopupMenuItem(
+                            value: 'titleAsc',
+                            checked: _selectedSort == 'titleAsc',
+                            child: const Text('Title (Ascending)'),
+                          ),
+                          CheckedPopupMenuItem(
+                            value: 'titleDsc',
+                            checked: _selectedSort == 'titleDsc',
+                            child: const Text('Title (Descending)'),
+                          ),
+                          CheckedPopupMenuItem(
+                            value: 'lastModAsc',
+                            checked: _selectedSort == 'lastModAsc',
+                            child: const Text('Last Modified (Ascending)'),
+                          ),
+                          CheckedPopupMenuItem(
+                            value: 'lastModDsc',
+                            checked: _selectedSort == 'lastModDsc',
+                            child: const Text('Last Modified (Descending)'),
+                          ),
+                        ],
+                        child: const ListTile(
+                          leading: Icon(Icons.sort),
+                          title: Text('Sort By'),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
         ],
       ),
       drawer: widget.drawer,
       body: isSearching
-          ? buildSearchResults(searchResults, widget.currentDirectory)
+          ? SearchView(
+              searchQuery: searchController.text,
+              currentDir: widget.currentDirectory,
+              advancedSearch: isAdvancedSearch)
           : widget.body,
     );
   }

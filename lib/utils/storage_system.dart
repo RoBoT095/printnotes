@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
+
+import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 
 // The Abomination Folder that handles everything related to folders on the device
@@ -8,41 +10,30 @@ import 'package:printnotes/utils/configs/data_path.dart';
 class StorageSystem {
   // For searching
 
-  static Future<List<FileSystemEntity>> searchItems(
-    String query,
-    String currentDirectory,
-  ) async {
-    final results = <FileSystemEntity>[];
+  static List<FileSystemEntity> searchItems(
+      String query, String mainDir, bool advancedSearch) {
+    List<FileSystemEntity> allItems =
+        StorageSystem.listFolderContents(mainDir, recursive: true);
 
-    Future<void> searchDirectory(Directory dir) async {
-      try {
-        await for (var entity in dir.list()) {
-          final name = path.basename(entity.path).toLowerCase();
-          final relativePath =
-              path.relative(entity.path, from: currentDirectory);
+    final List<FileSystemEntity> filteredItems = allItems.where((item) {
+      return allowedNoteExtensions.any((ext) => item.path.endsWith(ext));
+    }).toList();
 
-          // Skip hidden folders and their contents
-          if (relativePath
-              .split(path.separator)
-              .any((part) => part.startsWith('.'))) {
-            continue;
-          }
-          // Find notes that match query, add to results
-          if (name.contains(query.toLowerCase())) {
-            if (entity is File) results.add(entity);
-          }
-          // If it is a folder, search inside it
-          if (entity is Directory) {
-            await searchDirectory(entity);
-          }
+    if (advancedSearch) {
+      List<FileSystemEntity> results = [];
+      for (var item in filteredItems) {
+        String fileText =
+            File(item.path).readAsStringSync().replaceAll('\n', ' ');
+        if (fileText.toLowerCase().contains(query.toLowerCase())) {
+          results.add(item);
         }
-      } catch (e) {
-        debugPrint('Error accessing directory: ${dir.path}');
       }
+      return results;
     }
-
-    await searchDirectory(Directory(currentDirectory));
-    return results;
+    // Return file that match by name
+    return filteredItems
+        .where((item) => path.basename(item.path).contains(query))
+        .toList();
   }
 
   // Methods for archiving
@@ -298,12 +289,11 @@ class StorageSystem {
 
   // Get files (and folders) of a folder
 
-  static List<FileSystemEntity> listFolderContents(
-    String folderPath,
-  ) {
+  static List<FileSystemEntity> listFolderContents(String folderPath,
+      {bool recursive = false}) {
     final folder = Directory(folderPath);
     if (folder.existsSync()) {
-      final contents = folder.listSync().toList();
+      final contents = folder.listSync(recursive: recursive).toList();
       // Skips hidden folders
       final filteredContents = contents.where((item) {
         return !item.path.split(Platform.pathSeparator).last.startsWith('.');
