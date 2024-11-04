@@ -162,7 +162,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             iconColor: Theme.of(context).colorScheme.secondary,
             leading: const Icon(
-              Icons.dark_mode_outlined,
+              Icons.light_mode_outlined,
             ),
             title: const Text('Theme Mode'),
             trailing: DropdownButton(
@@ -189,12 +189,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: DropdownButton(
               value: _currentColorScheme,
               items: const [
-                DropdownMenuItem(value: 'default', child: Text('Default')),
+                DropdownMenuItem(value: 'default', child: Text('Default Blue')),
+                DropdownMenuItem(value: 'nordic', child: Text('Nordic')),
                 DropdownMenuItem(
                     value: 'green_apple', child: Text('Green Apple')),
                 DropdownMenuItem(value: 'lavender', child: Text('Lavender')),
                 DropdownMenuItem(
                     value: 'strawberry', child: Text('Strawberry')),
+                // DropdownMenuItem(value: 'dracula', child: Text('Dracula')),
                 DropdownMenuItem(value: 'custom', child: Text('Custom'))
               ],
               onChanged: (value) {

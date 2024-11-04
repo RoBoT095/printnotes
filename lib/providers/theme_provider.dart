@@ -51,12 +51,15 @@ class ThemeProvider with ChangeNotifier {
             : Brightness.dark;
     bool isDark = brightness == Brightness.dark;
     switch (_colorScheme) {
+      case 'nordic':
+        return !isDark ? AppThemes.lightNordic : AppThemes.darkNordic;
       case 'green_apple':
         return !isDark ? AppThemes.lightGreenApple : AppThemes.darkGreenApple;
       case 'lavender':
         return !isDark ? AppThemes.lightLavender : AppThemes.darkLavender;
       case 'strawberry':
         return !isDark ? AppThemes.lightStrawberry : AppThemes.darkStrawberry;
+      // case 'dracula': return !isDark ? AppThemes.lightDracula : AppThemes.darkDracula;
       case 'custom':
         return customThemeBuilder(isDark) ??
             (!isDark ? AppThemes.lightDefault : AppThemes.darkDefault);

@@ -16,9 +16,9 @@ class HighlighterNode extends SpanNode {
   InlineSpan build() => TextSpan(
         text: highlightId,
         style: parentStyle?.copyWith(
-                backgroundColor: const Color.fromARGB(150, 255, 214, 64)) ??
+                backgroundColor: const Color.fromARGB(148, 255, 225, 118)) ??
             config.p.textStyle.copyWith(
-                backgroundColor: const Color.fromARGB(150, 255, 214, 64)),
+                backgroundColor: const Color.fromARGB(148, 255, 225, 118)),
       );
 }
 

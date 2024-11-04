@@ -27,28 +27,54 @@ class AppThemes {
     onError: Colors.yellow,
   );
 
+  static const ColorScheme lightNordic = ColorScheme(
+    brightness: Brightness.light,
+    primary: Color.fromRGBO(126, 177, 192, 1),
+    onPrimary: Colors.white,
+    secondary: Color.fromRGBO(136, 192, 208, 1),
+    onSecondary: Colors.white,
+    surface: Color.fromRGBO(236, 239, 244, 1),
+    onSurface: Colors.black,
+    surfaceContainer: Color.fromRGBO(229, 233, 240, 1),
+    error: Colors.red,
+    onError: Colors.yellow,
+  );
+
+  static const ColorScheme darkNordic = ColorScheme(
+    brightness: Brightness.dark,
+    primary: Color.fromRGBO(76, 107, 141, 1),
+    onPrimary: Colors.white,
+    secondary: Color.fromRGBO(135, 192, 208, 1),
+    onSecondary: Colors.black,
+    surface: Color.fromRGBO(45, 51, 63, 1),
+    onSurface: Colors.white,
+    surfaceContainer: Color.fromRGBO(66, 74, 94, 1),
+    error: Colors.red,
+    onError: Colors.yellow,
+  );
+
   static const ColorScheme lightGreenApple = ColorScheme(
     brightness: Brightness.light,
     primary: Color.fromRGBO(90, 191, 95, 1),
     onPrimary: Colors.black,
     secondary: Color.fromRGBO(127, 205, 131, 1),
     onSecondary: Colors.black,
-    surface: Color.fromRGBO(237, 248, 237, 1),
+    surface: Color.fromRGBO(233, 240, 233, 1),
     onSurface: Colors.black,
-    surfaceContainer: Color.fromRGBO(227, 241, 227, 1),
+    surfaceContainer: Color.fromRGBO(233, 245, 233, 1),
     error: Colors.red,
     onError: Colors.yellow,
   );
 
   static const ColorScheme darkGreenApple = ColorScheme(
     brightness: Brightness.dark,
-    primary: Color.fromRGBO(50, 128, 54, 1),
+    primary: Color.fromRGBO(38, 95, 41, 1),
     onPrimary: Colors.white,
-    secondary: Color.fromRGBO(137, 195, 85, 1),
+    secondary: Color.fromRGBO(134, 199, 77, 1),
     onSecondary: Colors.white,
-    surface: Color.fromRGBO(26, 47, 26, 1),
+    surface: Color.fromRGBO(29, 34, 29, 1),
     onSurface: Colors.white,
-    surfaceContainer: Color.fromRGBO(32, 61, 32, 1),
+    surfaceContainer: Color.fromRGBO(30, 51, 30, 1),
     error: Colors.red,
     onError: Colors.yellow,
   );
@@ -59,9 +85,9 @@ class AppThemes {
     onPrimary: Colors.white,
     secondary: Color.fromRGBO(134, 134, 219, 1),
     onSecondary: Colors.white,
-    surface: Color.fromRGBO(224, 224, 253, 1),
+    surface: Color.fromRGBO(231, 231, 236, 1),
     onSurface: Colors.black,
-    surfaceContainer: Color.fromRGBO(214, 214, 252, 1),
+    surfaceContainer: Color.fromRGBO(221, 221, 238, 1),
     error: Colors.red,
     onError: Colors.yellow,
   );
@@ -72,9 +98,9 @@ class AppThemes {
     onPrimary: Colors.white,
     secondary: Color.fromRGBO(151, 74, 206, 1),
     onSecondary: Colors.white,
-    surface: Color.fromRGBO(42, 16, 60, 1),
+    surface: Color.fromRGBO(31, 18, 41, 1),
     onSurface: Color.fromRGBO(222, 232, 255, 1),
-    surfaceContainer: Color.fromRGBO(54, 23, 77, 1),
+    surfaceContainer: Color.fromRGBO(47, 19, 68, 1),
     error: Colors.red,
     onError: Colors.yellow,
   );
@@ -85,9 +111,9 @@ class AppThemes {
     onPrimary: Colors.white,
     secondary: Color.fromRGBO(213, 120, 119, 1),
     onSecondary: Colors.black,
-    surface: Color.fromRGBO(249, 236, 236, 1),
+    surface: Color.fromRGBO(247, 238, 238, 1),
     onSurface: Colors.black,
-    surfaceContainer: Color.fromRGBO(247, 228, 228, 1),
+    surfaceContainer: Color.fromRGBO(248, 231, 231, 1),
     error: Colors.red,
     onError: Colors.yellow,
   );
@@ -98,10 +124,38 @@ class AppThemes {
     onPrimary: Colors.white,
     secondary: Color.fromRGBO(182, 65, 63, 1),
     onSecondary: Colors.white,
-    surface: Color.fromRGBO(58, 19, 18, 1),
+    surface: Color.fromRGBO(48, 10, 8, 1),
     onSurface: Colors.white,
-    surfaceContainer: Color.fromRGBO(75, 27, 26, 1),
+    surfaceContainer: Color.fromRGBO(77, 25, 25, 1),
     error: Colors.red,
     onError: Colors.yellow,
   );
+
+  // Work in Progress
+  // ====================
+  // static const ColorScheme lightDracula = ColorScheme(
+  //   brightness: Brightness.light,
+  //   primary: Color.fromRGBO(158, 93, 188, 1),
+  //   onPrimary: Colors.white,
+  //   secondary: Color.fromRGBO(238, 130, 191, 1),
+  //   onSecondary: Colors.white,
+  //   surface: Color.fromRGBO(240, 237, 241, 1),
+  //   onSurface: Colors.black,
+  //   surfaceContainer: Color.fromRGBO(243, 237, 245, 1),
+  //   error: Colors.red,
+  //   onError: Color.fromRGBO(241, 250, 140, 1),
+  // );
+
+  // static const ColorScheme darkDracula = ColorScheme(
+  //   brightness: Brightness.dark,
+  //   primary: Color.fromRGBO(55, 58, 88, 1),
+  //   onPrimary: Colors.white,
+  //   secondary: Color.fromRGBO(189, 145, 249, 1),
+  //   onSecondary: Colors.black,
+  //   surface: Color.fromRGBO(40, 42, 53, 1),
+  //   onSurface: Colors.white,
+  //   surfaceContainer: Color.fromRGBO(68, 71, 90, 1),
+  //   error: Colors.red,
+  //   onError: Color.fromRGBO(241, 250, 140, 1),
+  // );
 }
