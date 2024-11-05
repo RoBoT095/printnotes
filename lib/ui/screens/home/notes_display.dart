@@ -3,12 +3,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/ui/screens/home/layout/grid_list_view.dart';
+import 'package:printnotes/ui/components/layout/grid_list_view.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
-import 'package:printnotes/ui/screens/home/layout/tree_view.dart';
+import 'package:printnotes/ui/components/layout/tree_view.dart';
 import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 
 class NotesDisplay extends StatefulWidget {

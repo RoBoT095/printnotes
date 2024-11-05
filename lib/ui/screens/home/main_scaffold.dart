@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/configs/user_preference.dart';
-import 'package:printnotes/ui/screens/home/search_view.dart';
+import 'package:printnotes/ui/components/search_view.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({
@@ -145,22 +145,22 @@ class _MainScaffoldState extends State<MainScaffold> {
                           CheckedPopupMenuItem(
                             value: 'titleAsc',
                             checked: _selectedSort == 'titleAsc',
-                            child: const Text('Title (Ascending)'),
+                            child: const Text('Title (Asc)'),
                           ),
                           CheckedPopupMenuItem(
                             value: 'titleDsc',
                             checked: _selectedSort == 'titleDsc',
-                            child: const Text('Title (Descending)'),
+                            child: const Text('Title (Desc)'),
                           ),
                           CheckedPopupMenuItem(
                             value: 'lastModAsc',
                             checked: _selectedSort == 'lastModAsc',
-                            child: const Text('Last Modified (Ascending)'),
+                            child: const Text('Last Mod (Asc)'),
                           ),
                           CheckedPopupMenuItem(
                             value: 'lastModDsc',
                             checked: _selectedSort == 'lastModDsc',
-                            child: const Text('Last Modified (Descending)'),
+                            child: const Text('Last Mod (Desc)'),
                           ),
                         ],
                         child: const ListTile(

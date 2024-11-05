@@ -22,26 +22,43 @@ class NoteTagNode extends SpanNode {
     return WidgetSpan(
       alignment: PlaceholderAlignment.middle,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        margin: const EdgeInsets.symmetric(horizontal: 2),
-        decoration: BoxDecoration(
-          color: tagBackgroundColor ?? defaultBackgroundColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          noteTagId,
-          style: parentStyle?.copyWith(
-                color: tagTextColor ?? defaultTextColor,
-                decoration: TextDecoration.underline,
-                decorationColor: tagTextColor ?? defaultTextColor,
-              ) ??
-              config.p.textStyle.copyWith(
-                color: tagTextColor ?? defaultTextColor,
-                decoration: TextDecoration.underline,
-                decorationColor: tagTextColor ?? defaultTextColor,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          margin: const EdgeInsets.symmetric(horizontal: 2),
+          decoration: BoxDecoration(
+            color: tagBackgroundColor ?? defaultBackgroundColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Stack(
+            children: [
+              Text(
+                noteTagId,
+                style: parentStyle?.copyWith(
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 1.2
+                        ..color = tagTextColor ?? defaultTextColor,
+                    ) ??
+                    config.p.textStyle.copyWith(
+                      color: tagTextColor ?? defaultTextColor,
+                      decoration: TextDecoration.underline,
+                      decorationColor: tagTextColor ?? defaultTextColor,
+                    ),
               ),
-        ),
-      ),
+              Text(
+                noteTagId,
+                style: parentStyle?.copyWith(
+                      color: tagTextColor ?? defaultTextColor,
+                      decoration: TextDecoration.underline,
+                      decorationColor: tagTextColor ?? defaultTextColor,
+                    ) ??
+                    config.p.textStyle.copyWith(
+                      // color: tagTextColor ?? defaultTextColor,
+                      decoration: TextDecoration.underline,
+                      decorationColor: tagTextColor ?? defaultTextColor,
+                    ),
+              ),
+            ],
+          )),
     );
   }
 }

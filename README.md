@@ -6,7 +6,7 @@
 
 \*I will make <a href='https://github.com/quillpad/quillpad'>QuillPad</a> cry for not going cross-platform, but they got me beat on checkboxes, jk nice app
 
-<img src="https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes.png?raw=true" alt="all themes" />
+<img src="https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes2-smaller.png?raw=true" alt="all themes" />
 
 ## Features
 
@@ -29,10 +29,13 @@
 <summary>Mobile screenshots</summary>
 
 <p>
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneDrawer.png?raw=true" alt="all themes" width=200 />
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneSettings.png?raw=true" alt="all themes" width=200 />
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditor.png?raw=true" alt="all themes" width=200 />
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditing.png?raw=true" alt="all themes" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneGridView.png?raw=true" alt="phone grid view" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneListView.png?raw=true" alt="phone list view" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneTreeView.png?raw=true" alt="phone tree view" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditor.png?raw=true" alt="phone editor preview" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneEditing.png?raw=true" alt="phone editor edit" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneSettings.png?raw=true" alt="phone settings" width=200 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Phone/PhoneAdvancedSearch.png?raw=true" alt="phone tag search" width=200 />
 </p>
 
 </details>
@@ -41,9 +44,10 @@
 <summary>Desktop screenshots</summary>
 
 <p>
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopHome.png?raw=true" alt="all themes" width=500 />
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopEditor.png?raw=true" alt="all themes" width=500 />
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopSettings.png?raw=true" alt="all themes" width=500 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopGridView.png?raw=true" alt="desktop grid view" width=500 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopListView.png?raw=true" alt="desktop list view" width=500 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopTreeView.png?raw=true" alt="desktop tree view" width=500 />
+  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopEditor.png?raw=true" alt="desktop editor" width=500 />
 </p>
 </details>
 
@@ -52,7 +56,7 @@
 <!-- ## Possible Future Features (not guaranteed)
 
 - - [x] Custom themes with import capability
-- - [ ] Advanced search with filters
+- - [x] Advanced search with filters
 - - [x] Tags
 - - [ ] Upload and attach pictures
 - - [ ] Share files from app

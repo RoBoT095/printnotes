@@ -19,21 +19,46 @@ class StorageSystem {
       return allowedNoteExtensions.any((ext) => item.path.endsWith(ext));
     }).toList();
 
+    List<FileSystemEntity> results = [];
+    query = query.toLowerCase();
+
     if (advancedSearch) {
-      List<FileSystemEntity> results = [];
       for (var item in filteredItems) {
-        String fileText =
-            File(item.path).readAsStringSync().replaceAll('\n', ' ');
-        if (fileText.toLowerCase().contains(query.toLowerCase())) {
+        String fileText = File(item.path)
+            .readAsStringSync()
+            .replaceAll('\n', ' ')
+            .toLowerCase();
+        // Files that match by their contents
+        if (fileText.contains(query)) {
           results.add(item);
         }
+        // Files that have tags
+        // TODO: Display file multiple times if multiple tags inside and correctly display it in subtitle
+        if (query.contains('tags:')) {
+          List<RegExpMatch> tags =
+              RegExp(r'#\w+').allMatches(fileText).toList();
+          String cleanQuery = query.replaceFirst('tags:', '').trim();
+          if (tags.isNotEmpty) {
+            // Display all files with tags
+            if (cleanQuery.isEmpty) {
+              results.add(item);
+            } else {
+              // Display searched files with tags
+              if (tags.any((e) =>
+                  fileText.substring(e.start, e.end).contains(cleanQuery))) {
+                results.add(item);
+              }
+            }
+          }
+        }
       }
-      return results;
     }
     // Return file that match by name
-    return filteredItems
+    results.addAll(filteredItems
         .where((item) => path.basename(item.path).contains(query))
-        .toList();
+        .toList());
+
+    return results;
   }
 
   // Methods for archiving

@@ -1,5 +1,9 @@
 # Changelog
 
+## (Nov 5, 2024)
+
+Search can now find tags if you click on filter icon to toggle advanced search and type "tags:" and then enter the name of the tag you want to find. Changed how tags look like as they can me a bit too light or dark depending on theme, still not the best fix, but is better. Changed available images to reflect the changes
+
 ## (Nov 4, 2024)
 
 Added advanced search for searching the contents of notes. Moved "sort by" button into the 3 dot "more" popup menu, as well as made "change layout" into a popup menu as well
