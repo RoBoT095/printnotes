@@ -32,8 +32,7 @@ class ItemRenameHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleItemRename(
-                  context, item, controller.text.replaceAll('.md', ''),
+              handleItemRename(context, item, controller.text,
                   reload: loadItems);
             },
           ),

@@ -350,8 +350,7 @@ class StorageSystem {
               : Directory(oldPath);
       if (await item.exists()) {
         final parentDir = path.dirname(oldPath);
-        final newPath = path.join(parentDir,
-            item is File ? '$newName${path.extension(oldPath)}' : newName);
+        final newPath = path.join(parentDir, newName);
 
         if (await nameExists(newName, parentPath: parentDir)) {
           throw Exception('A file or folder with this name already exists.');
