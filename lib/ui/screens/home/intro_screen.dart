@@ -76,7 +76,9 @@ class _IntroScreenState extends State<IntroScreen> {
               DropdownButton<String>(
                 value: selectedColorScheme,
                 items: const [
-                  DropdownMenuItem(value: 'default', child: Text('Default')),
+                  DropdownMenuItem(
+                      value: 'default', child: Text('Default Blue')),
+                  DropdownMenuItem(value: 'nordic', child: Text('Nordic')),
                   DropdownMenuItem(
                       value: 'green_apple', child: Text('Green Apple')),
                   DropdownMenuItem(value: 'lavender', child: Text('Lavender')),

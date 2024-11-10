@@ -198,21 +198,32 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ),
         body: buildMarkdownView(),
         endDrawer: Drawer(
-          child: Column(
-            children: [
-              const Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  'Table of Contents',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                  textAlign: TextAlign.center,
+          child: SafeArea(
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    'Table of Contents',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              const Divider(
-                thickness: 0.3,
-              ),
-              Expanded(child: buildTocList()),
-            ],
+                const Divider(
+                  thickness: 0.3,
+                ),
+                Expanded(
+                  child: _notesController.text.contains("# ")
+                      ? buildTocList()
+                      : const Center(
+                          child: Text(
+                            'Add headers using "#" to populate\n the table of contents',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton:
