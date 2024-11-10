@@ -32,8 +32,6 @@ class SearchView extends StatelessWidget {
           RegExp(r'#\w+').allMatches(text.toLowerCase()).toList();
       if (regexAllMatches.isNotEmpty) {
         RegExpMatch regexMatch = regexAllMatches.first;
-
-        // TODO: Logic to reduce what tags are shown based on text after 'tags:'
         String tagText = text.substring(regexMatch.start, regexMatch.end);
         return Align(
           // IDK how to constrain container any other way

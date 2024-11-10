@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:printnotes/utils/handlers/item_rename.dart';
+import 'package:keyboard_attachable/keyboard_attachable.dart';
+
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/markdown/editor_field.dart';
 import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
@@ -36,21 +36,18 @@ bool isMobile() {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
-  late TextEditingController _titleController;
   late TextEditingController _notesController;
   final TocController _tocController = TocController();
   final FocusNode _focusNode = FocusNode();
   final UndoHistoryController _undoHistoryController = UndoHistoryController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _isEditingName = false;
   bool _isEditingNote = false;
   bool _isLoading = true;
   String fileTitle = '';
 
   @override
   void initState() {
-    _titleController = TextEditingController();
     _notesController = TextEditingController();
     _loadNoteContent();
     super.initState();
@@ -86,7 +83,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
       setState(() {
         fileTitle = widget.filePath.split('/').last;
-        _titleController.text = fileTitle.replaceFirst('.md', '');
         _notesController.text = content;
         _isLoading = false;
       });
@@ -95,27 +91,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       setState(() {
         _isLoading = false;
       });
-    }
-  }
-
-  Future<bool> _saveTitleRename(BuildContext context, String newTitle) async {
-    try {
-      await ItemRenameHandler.handleItemRename(
-          context, File(widget.filePath), newTitle.replaceAll('.md', ''));
-      setState(() {
-        fileTitle = '$newTitle.md';
-        _isEditingName = false;
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Error renaming note title: $e');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackBar('Error renaming note title'),
-        );
-      }
-      return false;
     }
   }
 
@@ -141,7 +116,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     Color mobileNullColor = !isMobile()
         ? Theme.of(context).colorScheme.onSurface
         : Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -156,17 +130,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         key: _scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
         appBar: AppBar(
-          title: GestureDetector(
-            onDoubleTap: () => setState(() => _isEditingName = true),
-            child: _isEditingName
-                ? TextField(
-                    controller: _titleController,
-                    onSubmitted: (value) => _saveTitleRename(context, value))
-                : Tooltip(
-                    preferBelow: true,
-                    message: 'Double tap title to rename it',
-                    child: Text(fileTitle)),
-          ),
+          title: Text(fileTitle),
           actions: [
             IconButton(
                 tooltip: 'Preview/Edit Mode',
@@ -341,7 +305,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   @override
   void dispose() {
-    _titleController.dispose();
     _notesController.dispose();
     _focusNode.dispose();
     _tocController.dispose();
