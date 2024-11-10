@@ -7,7 +7,6 @@ import 'package:printnotes/utils/handlers/item_sort.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
-import 'package:printnotes/utils/configs/user_sync.dart';
 
 class SettingsLoader {
   static Future<bool> getShowIntro() async {
@@ -78,16 +77,6 @@ class SettingsLoader {
       'items': <FileSystemEntity>[],
       'currentPath': null,
       'currentFolderName': 'All Notes',
-    };
-  }
-
-  static Future<Map<String, dynamic>> loadSyncSettings() async {
-    final syncService = await UserSyncPref.getSyncService();
-    final connectionType = await UserSyncPref.getConnectionType();
-
-    return {
-      'service': syncService,
-      'connection': connectionType,
     };
   }
 }

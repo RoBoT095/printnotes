@@ -14,6 +14,9 @@ class ImageViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+    bool isScreenLarge = screenWidth >= 600;
+
     bool isMobile() =>
         !Platform.isWindows && !Platform.isLinux && !Platform.isMacOS;
 
@@ -76,16 +79,21 @@ class ImageViewScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.file(imageFile),
-            statListTile('File Size: ',
-                getFileSizeString(bytes: imageFile.statSync().size)),
-            statListTile('Last Modified: ',
-                getFormattedDate(date: imageFile.statSync().modified)),
-            statListTile('Location: ', imageFile.path),
-            const SizedBox(height: 100)
-          ],
+        child: Container(
+          margin: isScreenLarge
+              ? EdgeInsets.symmetric(horizontal: (screenWidth - 600) / 2)
+              : null,
+          child: Column(
+            children: [
+              Image.file(imageFile),
+              statListTile('File Size: ',
+                  getFileSizeString(bytes: imageFile.statSync().size)),
+              statListTile('Last Modified: ',
+                  getFormattedDate(date: imageFile.statSync().modified)),
+              statListTile('Location: ', imageFile.path),
+              const SizedBox(height: 100)
+            ],
+          ),
         ),
       ),
     );

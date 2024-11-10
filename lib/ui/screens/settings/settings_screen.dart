@@ -73,6 +73,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+    bool isScreenLarge = screenWidth >= 600;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -85,165 +88,172 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         title: const Text('Settings'),
       ),
-      body: ListView(
-        children: [
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            title: const Text('Notes Storage Location'),
-            subtitle: Text(_currentDirectory ?? 'Not set'),
-            trailing: const Icon(Icons.folder),
-            onTap: _pickDirectory,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    fixedSize: const Size(250, 40)),
-                onPressed: _pickDirectory,
-                child: const Text('Change Folder'),
+      body: Container(
+        margin: isScreenLarge
+            ? EdgeInsets.symmetric(
+                horizontal: (MediaQuery.sizeOf(context).width - 600) / 2)
+            : null,
+        child: ListView(
+          children: [
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              title: const Text('Notes Storage Location'),
+              subtitle: Text(_currentDirectory ?? 'Not set'),
+              trailing: const Icon(Icons.folder),
+              onTap: _pickDirectory,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      fixedSize: const Size(250, 40)),
+                  onPressed: _pickDirectory,
+                  child: const Text('Change Folder'),
+                ),
               ),
             ),
-          ),
-          const Divider(),
-          sectionTitle(
-            'View',
-            Theme.of(context).colorScheme.secondary,
-            padding: 10,
-          ),
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            leading: const Icon(Icons.view_module),
-            title: const Text('Layout Mode'),
-            trailing: DropdownButton(
-                value: _currentLayout ?? 'grid',
+            const Divider(),
+            sectionTitle(
+              'View',
+              Theme.of(context).colorScheme.secondary,
+              padding: 10,
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.view_module),
+              title: const Text('Layout Mode'),
+              trailing: DropdownButton(
+                  value: _currentLayout ?? 'grid',
+                  items: const [
+                    DropdownMenuItem(value: 'grid', child: Text('Grid View')),
+                    DropdownMenuItem(value: 'list', child: Text('List View')),
+                    DropdownMenuItem(value: 'tree', child: Text('Tree View')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _currentLayout = value;
+                      if (value != null) {
+                        UserLayoutPref.setLayoutView(value);
+                        widget.onSettingsChanged();
+                      }
+                    });
+                  }),
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.list_alt_rounded),
+              title: const Text('Note Preview amount'),
+              subtitle: Slider(
+                value: _currentPreviewLength.toDouble(),
+                min: 0,
+                max: 200,
+                divisions: 10,
+                label: sliderLabels(_currentPreviewLength),
+                onChanged: (value) {
+                  setState(() {
+                    _currentPreviewLength = value.toInt();
+                    UserLayoutPref.setNotePreviewLength(value.toInt());
+                    widget.onSettingsChanged();
+                  });
+                },
+              ),
+            ),
+            const Divider(),
+            sectionTitle(
+              'Style',
+              Theme.of(context).colorScheme.secondary,
+              padding: 10,
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(
+                Icons.light_mode_outlined,
+              ),
+              title: const Text('Theme Mode'),
+              trailing: DropdownButton(
+                value: _currentTheme ?? 'system',
                 items: const [
-                  DropdownMenuItem(value: 'grid', child: Text('Grid View')),
-                  DropdownMenuItem(value: 'list', child: Text('List View')),
-                  DropdownMenuItem(value: 'tree', child: Text('Tree View')),
+                  DropdownMenuItem(value: 'system', child: Text('System')),
+                  DropdownMenuItem(value: 'light', child: Text('Light')),
+                  DropdownMenuItem(value: 'dark', child: Text('Dark')),
                 ],
                 onChanged: (value) {
                   setState(() {
-                    _currentLayout = value;
-                    if (value != null) {
-                      UserLayoutPref.setLayoutView(value);
-                      widget.onSettingsChanged();
-                    }
+                    _currentTheme = value;
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .setThemeMode(value ?? 'system');
+                    widget.onSettingsChanged();
                   });
-                }),
-          ),
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            leading: const Icon(Icons.list_alt_rounded),
-            title: const Text('Note Preview amount'),
-            subtitle: Slider(
-              value: _currentPreviewLength.toDouble(),
-              min: 0,
-              max: 200,
-              divisions: 10,
-              label: sliderLabels(_currentPreviewLength),
-              onChanged: (value) {
-                setState(() {
-                  _currentPreviewLength = value.toInt();
-                  UserLayoutPref.setNotePreviewLength(value.toInt());
-                  widget.onSettingsChanged();
-                });
-              },
+                },
+              ),
             ),
-          ),
-          const Divider(),
-          sectionTitle(
-            'Style',
-            Theme.of(context).colorScheme.secondary,
-            padding: 10,
-          ),
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            leading: const Icon(
-              Icons.light_mode_outlined,
-            ),
-            title: const Text('Theme Mode'),
-            trailing: DropdownButton(
-              value: _currentTheme ?? 'system',
-              items: const [
-                DropdownMenuItem(value: 'system', child: Text('System')),
-                DropdownMenuItem(value: 'light', child: Text('Light')),
-                DropdownMenuItem(value: 'dark', child: Text('Dark')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _currentTheme = value;
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .setThemeMode(value ?? 'system');
-                  widget.onSettingsChanged();
-                });
-              },
-            ),
-          ),
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            leading: const Icon(Icons.color_lens_outlined),
-            title: const Text('Color Scheme'),
-            trailing: DropdownButton(
-              value: _currentColorScheme,
-              items: const [
-                DropdownMenuItem(value: 'default', child: Text('Default Blue')),
-                DropdownMenuItem(value: 'nordic', child: Text('Nordic')),
-                DropdownMenuItem(
-                    value: 'green_apple', child: Text('Green Apple')),
-                DropdownMenuItem(value: 'lavender', child: Text('Lavender')),
-                DropdownMenuItem(
-                    value: 'strawberry', child: Text('Strawberry')),
-                // DropdownMenuItem(value: 'dracula', child: Text('Dracula')),
-                DropdownMenuItem(value: 'custom', child: Text('Custom'))
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _currentColorScheme = value;
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .setColorScheme(value ?? 'default');
-                  if (value == 'custom') {
-                    _isCustomTheme = true;
-                  } else {
-                    _isCustomTheme = false;
-                  }
-                  widget.onSettingsChanged();
-                });
-              },
-            ),
-          ),
-          if (_isCustomTheme)
             ListTile(
               iconColor: Theme.of(context).colorScheme.secondary,
-              leading: const Icon(Icons.draw),
-              title: const Text('Custom Color Scheme'),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CustomThemePage())),
-            ),
-          const Divider(),
-          sectionTitle(
-            'Other',
-            Theme.of(context).colorScheme.secondary,
-            padding: 10,
-          ),
-          ListTile(
-            iconColor: Theme.of(context).colorScheme.secondary,
-            leading: const Icon(Icons.functions),
-            title: const Text('LaTeX Support'),
-            subtitle: const Text('Markup for mathematical symbols'),
-            trailing: Switch(
-                value: _useLatex ?? false,
+              leading: const Icon(Icons.color_lens_outlined),
+              title: const Text('Color Scheme'),
+              trailing: DropdownButton(
+                value: _currentColorScheme,
+                items: const [
+                  DropdownMenuItem(
+                      value: 'default', child: Text('Default Blue')),
+                  DropdownMenuItem(value: 'nordic', child: Text('Nordic')),
+                  DropdownMenuItem(
+                      value: 'green_apple', child: Text('Green Apple')),
+                  DropdownMenuItem(value: 'lavender', child: Text('Lavender')),
+                  DropdownMenuItem(
+                      value: 'strawberry', child: Text('Strawberry')),
+                  // DropdownMenuItem(value: 'dracula', child: Text('Dracula')),
+                  DropdownMenuItem(value: 'custom', child: Text('Custom'))
+                ],
                 onChanged: (value) {
                   setState(() {
-                    _useLatex = value;
-                    UserLatexPref.setLatexSupport(value);
+                    _currentColorScheme = value;
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .setColorScheme(value ?? 'default');
+                    if (value == 'custom') {
+                      _isCustomTheme = true;
+                    } else {
+                      _isCustomTheme = false;
+                    }
+                    widget.onSettingsChanged();
                   });
-                }),
-          ),
-        ],
+                },
+              ),
+            ),
+            if (_isCustomTheme)
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.draw),
+                title: const Text('Custom Color Scheme'),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const CustomThemePage())),
+              ),
+            const Divider(),
+            sectionTitle(
+              'Other',
+              Theme.of(context).colorScheme.secondary,
+              padding: 10,
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.functions),
+              title: const Text('LaTeX Support'),
+              subtitle: const Text('Markup for mathematical symbols'),
+              trailing: Switch(
+                  value: _useLatex ?? false,
+                  onChanged: (value) {
+                    setState(() {
+                      _useLatex = value;
+                      UserLatexPref.setLatexSupport(value);
+                    });
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }

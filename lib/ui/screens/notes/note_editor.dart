@@ -28,7 +28,7 @@ class SwitchModeIntent extends Intent {
 }
 
 bool isScreenLarge(BuildContext context) {
-  return MediaQuery.sizeOf(context).width >= 800;
+  return MediaQuery.sizeOf(context).width >= 1000;
 }
 
 bool isMobile() {
@@ -41,12 +41,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   final TocController _tocController = TocController();
   final FocusNode _focusNode = FocusNode();
   final UndoHistoryController _undoHistoryController = UndoHistoryController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _isEditingName = false;
   bool _isEditingNote = false;
   bool _isLoading = true;
   String fileTitle = '';
-  bool _showToCDesktop = false;
 
   @override
   void initState() {
@@ -153,6 +153,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         }
       },
       child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
         appBar: AppBar(
           title: GestureDetector(
             onDoubleTap: () => setState(() => _isEditingName = true),
@@ -172,16 +174,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 onPressed: () {
                   setState(() => _isEditingNote = !_isEditingNote);
                 }),
-            if (!isMobile() && _notesController.text.contains("# "))
+            if (isScreenLarge(context) && _notesController.text.contains("# "))
               IconButton(
-                  tooltip: 'Show/Hide table of contents menu',
-                  onPressed: () => setState(() {
-                        _showToCDesktop = !_showToCDesktop;
-                      }),
-                  icon: Transform.flip(
-                    flipX: _showToCDesktop,
-                    child: const Icon(Icons.menu_open),
-                  )),
+                tooltip: 'Table of Contents',
+                onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
+                icon: const Icon(Icons.toc_rounded),
+              ),
             PopupMenuButton(
               onSelected: (value) {},
               itemBuilder: (context) => <PopupMenuEntry>[
@@ -199,119 +197,133 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           ],
         ),
         body: buildMarkdownView(),
-        floatingActionButton: _isEditingNote || isScreenLarge(context)
-            ? null
-            : FloatingActionButton(
-                onPressed: () => showModalBottomSheet(
-                  context: context,
-                  builder: (ctx) => _tocController.tocList.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'Table of Contents empty,\nUse headers to create ToC\nfor easier navigation!',
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      : buildTocList(),
+        endDrawer: Drawer(
+          child: Column(
+            children: [
+              const Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  'Table of Contents',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  textAlign: TextAlign.center,
                 ),
-                heroTag: 'Table of Contents List',
-                child: const Icon(Icons.format_list_bulleted),
               ),
+              const Divider(
+                thickness: 0.3,
+              ),
+              Expanded(child: buildTocList()),
+            ],
+          ),
+        ),
+        floatingActionButton:
+            !isScreenLarge(context) && _notesController.text.contains("# ")
+                ? FloatingActionButton(
+                    onPressed: _scaffoldKey.currentState!.openEndDrawer,
+                    heroTag: 'Table of Contents',
+                    child: const Icon(Icons.format_list_bulleted),
+                  )
+                : null,
       ),
     );
   }
 
   Widget buildTocList() => Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: const BorderRadius.all(Radius.circular(10))),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(20)),
       child: TocWidget(controller: _tocController));
 
   Widget buildMarkdownView() {
     return SafeArea(
-      child: FooterLayout(
-        footer: _isEditingNote
-            ? MarkdownToolbar(
-                controller: _notesController,
-                onValueChange: (value) async => await _saveNoteContent(context),
-                onPreviewChanged: () {
-                  setState(() => _isEditingNote = !_isEditingNote);
-                },
-                undoController: _undoHistoryController,
-                toolbarBackground:
-                    Theme.of(context).colorScheme.surfaceContainer,
-              )
+      child: Container(
+        margin: isScreenLarge(context)
+            ? EdgeInsets.symmetric(
+                horizontal: (MediaQuery.sizeOf(context).width - 1000) / 2,
+                vertical: 15)
             : null,
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Shortcuts(
-                shortcuts: <ShortcutActivator, Intent>{
-                  LogicalKeySet(
-                      LogicalKeyboardKey.control,
-                      LogicalKeyboardKey.shift,
-                      LogicalKeyboardKey.keyV): const SwitchModeIntent(),
-                },
-                child: Actions(
-                  actions: <Type, Action<Intent>>{
-                    SwitchModeIntent: CallbackAction<SwitchModeIntent>(
-                      onInvoke: (SwitchModeIntent intent) => setState(() {
-                        _isEditingNote = !_isEditingNote;
-                      }),
-                    ),
+        width: 1000,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3)),
+          ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: FooterLayout(
+          footer: _isEditingNote
+              ? MarkdownToolbar(
+                  controller: _notesController,
+                  onValueChange: (value) async =>
+                      await _saveNoteContent(context),
+                  onPreviewChanged: () {
+                    setState(() => _isEditingNote = !_isEditingNote);
                   },
-                  child: Focus(
-                    autofocus: true,
-                    focusNode: _focusNode,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: _isEditingNote
-                          ? EditorField(
-                              controller: _notesController,
-                              onChanged: (value) async =>
-                                  await _saveNoteContent(context),
-                              undoController: _undoHistoryController,
-                            )
-                          : GestureDetector(
-                              onDoubleTap: () {
-                                setState(
-                                    () => _isEditingNote = !_isEditingNote);
-                              },
-                              child: _notesController.text.isEmpty
-                                  ? SizedBox(
-                                      height: MediaQuery.sizeOf(context).height,
-                                      child: Text(
-                                        'Double click screen or hit the pencil icon in the top right corner to write!',
-                                        style: TextStyle(
-                                            color: Theme.of(context).hintColor),
-                                      ),
-                                    )
-                                  : isScreenLarge(context) &&
-                                          _notesController.text
-                                              .contains('# ') &&
-                                          _showToCDesktop
-                                      ? Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              flex: 4,
-                                              child: buildMarkdownWidget(
-                                                context,
-                                                data: _notesController.text,
-                                                tocController: _tocController,
-                                              ),
-                                            ),
-                                            Expanded(child: buildTocList())
-                                          ],
-                                        )
-                                      : buildMarkdownWidget(
-                                          context,
-                                          data: _notesController.text,
-                                          tocController: _tocController,
-                                          latexSupport: widget.latexSupport,
+                  undoController: _undoHistoryController,
+                  toolbarBackground:
+                      Theme.of(context).colorScheme.surfaceContainer,
+                )
+              : null,
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Shortcuts(
+                  shortcuts: <ShortcutActivator, Intent>{
+                    LogicalKeySet(
+                        LogicalKeyboardKey.control,
+                        LogicalKeyboardKey.shift,
+                        LogicalKeyboardKey.keyV): const SwitchModeIntent(),
+                  },
+                  child: Actions(
+                    actions: <Type, Action<Intent>>{
+                      SwitchModeIntent: CallbackAction<SwitchModeIntent>(
+                        onInvoke: (SwitchModeIntent intent) => setState(() {
+                          _isEditingNote = !_isEditingNote;
+                        }),
+                      ),
+                    },
+                    child: Focus(
+                      autofocus: true,
+                      focusNode: _focusNode,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: _isEditingNote
+                            ? EditorField(
+                                controller: _notesController,
+                                onChanged: (value) async =>
+                                    await _saveNoteContent(context),
+                                undoController: _undoHistoryController,
+                              )
+                            : GestureDetector(
+                                onDoubleTap: () {
+                                  setState(
+                                      () => _isEditingNote = !_isEditingNote);
+                                },
+                                child: _notesController.text.isEmpty
+                                    ? SizedBox(
+                                        height:
+                                            MediaQuery.sizeOf(context).height,
+                                        child: Text(
+                                          'Double click screen or hit the pencil icon in the top right corner to write!',
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).hintColor),
                                         ),
-                            ),
+                                      )
+                                    : buildMarkdownWidget(
+                                        context,
+                                        data: _notesController.text,
+                                        tocController: _tocController,
+                                        latexSupport: widget.latexSupport,
+                                      ),
+                              ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }

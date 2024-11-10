@@ -55,9 +55,9 @@ class CustomTextNode extends ElementNode {
       ),
       parentStyle: parentStyle,
     );
-    spans.forEach((element) {
+    for (var element in spans) {
       isTable = false;
       accept(element);
-    });
+    }
   }
 }

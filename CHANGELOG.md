@@ -1,5 +1,11 @@
 # Changelog
 
+## (Nov 9, 2024)
+
+Made table of contents into a end drawer (drawer that opens from right side instead) and made content center on large screens for note editor, image viewer, settings, about, and custom colors screen, debating if other screens also need it.
+
+Removed all files related to syncing, will keep them on `dev` branch instead.
+
 ## (Nov 5, 2024)
 
 Search can now find tags if you click on filter icon to toggle advanced search and type "tags:" and then enter the name of the tag you want to find. Changed how tags look like as they can me a bit too light or dark depending on theme, still not the best fix, but is better. Changed available images to reflect the changes

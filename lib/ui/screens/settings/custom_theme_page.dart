@@ -155,6 +155,9 @@ class _CustomThemePageState extends State<CustomThemePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.sizeOf(context).width;
+    bool isScreenLarge = screenWidth >= 600;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -185,170 +188,190 @@ class _CustomThemePageState extends State<CustomThemePage> {
               child: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: RichText(
-                              textAlign: TextAlign.center,
-                              textScaler: const TextScaler.linear(1.2),
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                  ),
-                                  children: [
-                                    const TextSpan(
-                                        text:
-                                            'Make and import your theme from\n'),
-                                    TextSpan(
-                                      // TODO: Change title text
-                                      text: 'The Theme Maker\n',
-                                      style: TextStyle(
+                  Container(
+                    margin: isScreenLarge
+                        ? EdgeInsets.symmetric(
+                            horizontal: (screenWidth - 600) / 2)
+                        : null,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: RichText(
+                                textAlign: TextAlign.center,
+                                textScaler: const TextScaler.linear(1.2),
+                                text: TextSpan(
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                    children: [
+                                      const TextSpan(
+                                          text:
+                                              'Make and import your theme from\n'),
+                                      TextSpan(
+                                        // TODO: Change title text
+                                        text: 'The Theme Maker\n',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary),
+                                        recognizer: TapGestureRecognizer()
+                                          // TODO: Change Url
+                                          ..onTap = () => _launchUrl(
+                                              'https://github.com/RoBoT095/printnotes_theme_maker'),
+                                      ),
+                                      const TextSpan(text: '~Coming Soon~'),
+                                    ])),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                children: <Widget>[
+                                  TextFormField(
+                                    controller: _themeName,
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20))),
+                                      hintText: 'Name your new theme...',
+                                      hintStyle: TextStyle(
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .secondary),
-                                      recognizer: TapGestureRecognizer()
-                                        // TODO: Change Url
-                                        ..onTap = () => _launchUrl(
-                                            'https://github.com/RoBoT095/printnotes_theme_maker'),
+                                              .onSurface
+                                              .withOpacity(0.6)),
                                     ),
-                                    const TextSpan(text: '~Coming Soon~'),
-                                  ])),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: _themeName,
-                                  maxLines: 1,
-                                  decoration: InputDecoration(
-                                    border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20))),
-                                    hintText: 'Name your new theme...',
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withOpacity(0.6)),
-                                  ),
-                                  enableSuggestions: false,
-                                  validator: (name) {
-                                    if (name == null || name.isEmpty) {
-                                      return 'Please enter a name for theme';
-                                    }
-                                    if (!validateCustomThemeName(name)) {
-                                      return 'Name is already in use';
-                                    }
-                                    // How long title should be, can't decide what is a good length
-                                    int titleLen = 35;
-                                    if (name.length > titleLen) {
-                                      return 'Name is too long, please keep it within $titleLen characters';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                TextFormField(
-                                  controller: _themeJsonString,
-                                  maxLines: 1,
-                                  decoration: InputDecoration(
-                                    border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            bottom: Radius.circular(20))),
-                                    hintText:
-                                        'Import json string for theme here...',
-                                    hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withOpacity(0.6)),
-                                  ),
-                                  enableSuggestions: false,
-                                  validator: (theme) {
-                                    if (theme == null || theme.isEmpty) {
-                                      return 'Please input valid theme';
-                                    }
-                                    if (!validateCustomThemeJson(theme)) {
-                                      return 'Json string is not valid';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                Center(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      backgroundColor:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        String newCustomTheme =
-                                            _themeJsonString.text.replaceFirst(
-                                                '{',
-                                                '{"name": "${_themeName.text}", ');
-
-                                        addThemeToConfig(
-                                            CustomThemeJson.fromJson(
-                                                newCustomTheme));
-
-                                        refreshThemeList();
-                                        _themeName.clear();
-                                        _themeJsonString.clear();
-
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(customSnackBar(
-                                                'Saved Successfully'));
-                                        FocusScope.of(context).unfocus();
+                                    enableSuggestions: false,
+                                    validator: (name) {
+                                      if (name == null || name.isEmpty) {
+                                        return 'Please enter a name for theme';
                                       }
+                                      if (!validateCustomThemeName(name)) {
+                                        return 'Name is already in use';
+                                      }
+                                      // How long title should be, can't decide what is a good length
+                                      int titleLen = 35;
+                                      if (name.length > titleLen) {
+                                        return 'Name is too long, please keep it within $titleLen characters';
+                                      }
+                                      return null;
                                     },
-                                    child: const Text('Import'),
                                   ),
-                                ),
-                              ],
+                                  TextFormField(
+                                    controller: _themeJsonString,
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              bottom: Radius.circular(20))),
+                                      hintText:
+                                          'Import json string for theme here...',
+                                      hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withOpacity(0.6)),
+                                    ),
+                                    enableSuggestions: false,
+                                    validator: (theme) {
+                                      if (theme == null || theme.isEmpty) {
+                                        return 'Please input valid theme';
+                                      }
+                                      if (!validateCustomThemeJson(theme)) {
+                                        return 'Json string is not valid';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          String newCustomTheme =
+                                              _themeJsonString.text.replaceFirst(
+                                                  '{',
+                                                  '{"name": "${_themeName.text}", ');
+
+                                          addThemeToConfig(
+                                              CustomThemeJson.fromJson(
+                                                  newCustomTheme));
+
+                                          refreshThemeList();
+                                          _themeName.clear();
+                                          _themeJsonString.clear();
+
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(customSnackBar(
+                                                  'Saved Successfully'));
+                                          FocusScope.of(context).unfocus();
+                                        }
+                                      },
+                                      child: const Text('Import'),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Center(
-                            child: Text(
-                                'Switch theme mode on settings screen to see changes')),
-                      ],
+                          const Center(
+                              child: Text(
+                                  'Switch theme mode on settings screen to see changes')),
+                        ],
+                      ),
                     ),
                   ),
                   lightThemes.isEmpty
                       ? const Center(
                           child: Text('Import a Custom Light Theme'),
                         )
-                      : ListView.builder(
-                          itemCount: lightThemes.length,
-                          itemBuilder: (context, index) {
-                            return buildCustomThemeListTile(
-                              lightThemes,
-                              index,
-                              isDark: false,
-                            );
-                          },
+                      : Container(
+                          margin: isScreenLarge
+                              ? EdgeInsets.symmetric(
+                                  horizontal: (screenWidth - 600) / 2)
+                              : null,
+                          child: ListView.builder(
+                            itemCount: lightThemes.length,
+                            itemBuilder: (context, index) {
+                              return buildCustomThemeListTile(
+                                lightThemes,
+                                index,
+                                isDark: false,
+                              );
+                            },
+                          ),
                         ),
                   darkThemes.isEmpty
                       ? const Center(
                           child: Text('Import a Custom Dark Theme'),
                         )
-                      : ListView.builder(
-                          itemCount: darkThemes.length,
-                          itemBuilder: (context, index) {
-                            return buildCustomThemeListTile(
-                              darkThemes,
-                              index,
-                              isDark: true,
-                            );
-                          },
+                      : Container(
+                          margin: isScreenLarge
+                              ? EdgeInsets.symmetric(
+                                  horizontal: (screenWidth - 600) / 2)
+                              : null,
+                          child: ListView.builder(
+                            itemCount: darkThemes.length,
+                            itemBuilder: (context, index) {
+                              return buildCustomThemeListTile(
+                                darkThemes,
+                                index,
+                                isDark: true,
+                              );
+                            },
+                          ),
                         )
                 ],
               ),
