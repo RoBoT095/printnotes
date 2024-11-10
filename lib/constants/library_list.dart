@@ -119,19 +119,6 @@ final List<Library> libraries = [
     license: 'BSD 3-Clause License',
   ),
   Library(
-    name: 'flutter_secure_storage',
-    publisher: 'steenbakker.dev',
-    url:
-        'https://github.com/mogol/flutter_secure_storage/tree/develop/flutter_secure_storage',
-    license: 'BSD 3-Clause License',
-  ),
-  Library(
-    name: 'nextcloud',
-    publisher: 'nextcloud',
-    url: 'https://github.com/nextcloud/neon/tree/main/packages/nextcloud',
-    license: 'AGPL 3 License',
-  ),
-  Library(
     name: 'markdown_widget',
     publisher: 'morn.fun',
     url: 'https://github.com/asjqkkkk/markdown_widget',
@@ -160,12 +147,6 @@ final List<Library> libraries = [
     publisher: 'daohoangson.com',
     url:
         'https://github.com/daohoangson/flutter_widget_from_html/tree/master/packages/core',
-    license: 'MIT License',
-  ),
-  Library(
-    name: 'FTPConnect',
-    publisher: 'salimdev.ovh',
-    url: 'https://github.com/salim-lachdhaf/dartFTP',
     license: 'MIT License',
   ),
   Library(
