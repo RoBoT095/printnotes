@@ -2,7 +2,7 @@
 
 ## (Nov 11, 2024)
 
-Added info pop up for notes like amount of characters, words, file size, file mod date, and file path/location. Fixed issue with expandedColor not set on toolbar white would default to white, so in dark mode made it impossible to see icons in most cases.
+Added info pop up for notes like amount of characters, words, the file size, file mod date, and file path/location. Fixed issue with `expandableBackground` not set on toolbar which would default to white, so in dark mode made it impossible to see icons in most cases.
 
 ## (Nov 9, 2024)
 
