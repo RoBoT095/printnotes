@@ -1,5 +1,9 @@
 # Changelog
 
+## (Nov 11, 2024)
+
+Added info pop up for notes like amount of characters, words, file size, file mod date, and file path/location. Fixed issue with expandedColor not set on toolbar white would default to white, so in dark mode made it impossible to see icons in most cases.
+
 ## (Nov 9, 2024)
 
 Made table of contents into a end drawer (drawer that opens from right side instead) and made content center on large screens for note editor, image viewer, settings, about, and custom colors screen, debating if other screens also need it.

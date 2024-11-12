@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
+import 'package:printnotes/utils/file_info.dart';
+import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/markdown/editor_field.dart';
 import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
@@ -31,10 +33,6 @@ bool isScreenLarge(BuildContext context) {
   return MediaQuery.sizeOf(context).width >= 1000;
 }
 
-bool isMobile() {
-  return !Platform.isWindows && !Platform.isLinux && !Platform.isMacOS;
-}
-
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late TextEditingController _notesController;
   final TocController _tocController = TocController();
@@ -51,29 +49,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _notesController = TextEditingController();
     _loadNoteContent();
     super.initState();
-  }
-
-  Future<bool> _openExplorer() async {
-    final file = File(widget.filePath);
-    final path = file.parent.path;
-    if (Platform.isLinux) {
-      Process.run("xdg-open", [path], workingDirectory: path);
-    }
-    if (Platform.isWindows) {
-      Process.run("explorer", [path], workingDirectory: path);
-    }
-    if (Platform.isMacOS) {
-      Process.run("open", [path], workingDirectory: path);
-    }
-
-    if (isMobile()) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        customSnackBar('Currently not supported on mobile', durationMil: 3000),
-      );
-    }
-
-    return true;
   }
 
   Future<void> _loadNoteContent() async {
@@ -113,9 +88,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color mobileNullColor = !isMobile()
-        ? Theme.of(context).colorScheme.onSurface
-        : Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -145,16 +117,23 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 icon: const Icon(Icons.toc_rounded),
               ),
             PopupMenuButton(
-              onSelected: (value) {},
               itemBuilder: (context) => <PopupMenuEntry>[
+                PopupMenuItem(
+                  child: const ListTile(
+                    leading: Icon(Icons.info_outline),
+                    title: Text('Info'),
+                  ),
+                  onTap: () => modalShowFileInfo(context, widget.filePath),
+                ),
                 PopupMenuItem(
                   child: ListTile(
                     leading: const Icon(Icons.folder_open),
-                    title: const Text("Open Note Location"),
-                    iconColor: mobileNullColor,
-                    textColor: mobileNullColor,
+                    title: const Text("Open Location"),
+                    iconColor: mobileNullColor(context),
+                    textColor: mobileNullColor(context),
                   ),
-                  onTap: () async => await _openExplorer(),
+                  onTap: () async =>
+                      await openExplorer(context, widget.filePath),
                 ),
               ],
             ),
@@ -240,6 +219,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   undoController: _undoHistoryController,
                   toolbarBackground:
                       Theme.of(context).colorScheme.surfaceContainer,
+                  expandableBackground: Theme.of(context).colorScheme.surface,
                 )
               : null,
           child: _isLoading
@@ -302,6 +282,37 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       ),
     );
   }
+
+  Future modalShowFileInfo(BuildContext context, String filePath) =>
+      showModalBottomSheet(
+        context: context,
+        useSafeArea: true,
+        isScrollControlled: true,
+        builder: (context) {
+          File file = File(filePath);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  'Info',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              statListTile('Character Count:', getCharacterCount(filePath)),
+              statListTile('Word Count:', getWordCount(filePath)),
+              statListTile('File Size: ',
+                  getFileSizeString(bytes: file.statSync().size)),
+              statListTile('Last Modified: ',
+                  getFormattedDate(date: file.statSync().modified)),
+              statListTile('Location: ', file.path),
+              const SizedBox(height: 50)
+            ],
+          );
+        },
+      );
 
   @override
   void dispose() {
