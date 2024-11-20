@@ -169,14 +169,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             ),
           ),
         ),
-        floatingActionButton:
-            !isScreenLarge(context) && _notesController.text.contains("# ")
-                ? FloatingActionButton(
-                    onPressed: _scaffoldKey.currentState!.openEndDrawer,
-                    heroTag: 'Table of Contents',
-                    child: const Icon(Icons.format_list_bulleted),
-                  )
-                : null,
+        floatingActionButton: !isScreenLarge(context) &&
+                _notesController.text.contains("# ") &&
+                !_isEditingNote
+            ? FloatingActionButton(
+                onPressed: _scaffoldKey.currentState!.openEndDrawer,
+                heroTag: 'Table of Contents',
+                child: const Icon(Icons.format_list_bulleted),
+              )
+            : null,
       ),
     );
   }
