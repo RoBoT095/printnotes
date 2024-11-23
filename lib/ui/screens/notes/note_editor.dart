@@ -206,7 +206,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 blurRadius: 7,
                 offset: const Offset(0, 3)),
           ],
-          borderRadius: BorderRadius.circular(10),
+          borderRadius:
+              isScreenLarge(context) ? BorderRadius.circular(10) : null,
         ),
         child: FooterLayout(
           footer: _isEditingNote
