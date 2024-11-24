@@ -13,13 +13,6 @@ class Library {
 
 final List<Library> libraries = [
   Library(
-    name: 'Cupertino Icons',
-    publisher: 'flutter.dev',
-    url:
-        'https://github.com/flutter/packages/tree/main/third_party/packages/cupertino_icons',
-    license: 'MIT License',
-  ),
-  Library(
     name: 'Flutter Speed Dial',
     publisher: 'prateek.sunal.in',
     url: 'https://github.com/darioielardi/flutter_speed_dial/',
