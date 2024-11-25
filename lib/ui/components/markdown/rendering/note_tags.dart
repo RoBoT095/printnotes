@@ -52,7 +52,6 @@ class NoteTagNode extends SpanNode {
                       decorationColor: tagTextColor ?? defaultTextColor,
                     ) ??
                     config.p.textStyle.copyWith(
-                      // color: tagTextColor ?? defaultTextColor,
                       decoration: TextDecoration.underline,
                       decorationColor: tagTextColor ?? defaultTextColor,
                     ),

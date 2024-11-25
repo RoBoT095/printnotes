@@ -69,7 +69,8 @@ class DataPath {
   static void saveJsonConfigFile(Map<String, dynamic> configData) async {
     final configFile = File('$_selectedDirectory/.printnotes/main_config.json');
 
-    final configJsonString = jsonEncode(configData);
+    final configJsonString =
+        const JsonEncoder.withIndent('  ').convert(configData);
     configFile.writeAsStringSync(configJsonString);
   }
 }

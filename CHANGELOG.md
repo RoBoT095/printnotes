@@ -1,5 +1,9 @@
 # Changelog
 
+## (Nov 25, 2024)
+
+Fixed minor bugs and visual discrepancies, config file for custom themes is now looks readable with indentation instead of all being on one line.
+
 ## (Nov 11, 2024)
 
 Added info pop up for notes like amount of characters, words, the file size, file mod date, and file path/location. Fixed issue with `expandableBackground` not set on toolbar which would default to white, so in dark mode made it impossible to see icons in most cases.

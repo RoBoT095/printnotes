@@ -4,7 +4,7 @@
 
 **Inspired by Google Keep and Obsidian**
 
-\*I will make <a href='https://github.com/quillpad/quillpad'>QuillPad</a> cry for not going cross-platform, but they got me beat on checkboxes, jk nice app
+> I will make <a href='https://github.com/quillpad/quillpad'>QuillPad</a> cry for not going cross-platform, but they got me beat on checkboxes, jk nice app
 
 <img src="https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes2-smaller.png?raw=true" alt="all themes" />
 

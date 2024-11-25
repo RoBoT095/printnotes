@@ -212,18 +212,15 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                           text:
                                               'Make and import your theme from\n'),
                                       TextSpan(
-                                        // TODO: Change title text
-                                        text: 'The Theme Maker\n',
+                                        text: 'https://design.printnotes.app',
                                         style: TextStyle(
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .secondary),
                                         recognizer: TapGestureRecognizer()
-                                          // TODO: Change Url
                                           ..onTap = () => _launchUrl(
-                                              'https://github.com/RoBoT095/printnotes_theme_maker'),
+                                              'https://design.printnotes.app'),
                                       ),
-                                      const TextSpan(text: '~Coming Soon~'),
                                     ])),
                           ),
                           Padding(
