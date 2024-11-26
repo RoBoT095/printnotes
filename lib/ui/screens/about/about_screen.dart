@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/ui/components/dialogs/libraries_dialog.dart';
@@ -7,10 +8,14 @@ import 'package:printnotes/constants/constants.dart';
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
-  Future<void> _launchUrl(url) async {
-    url = Uri.parse(url);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
+  Future<void> _urlHandler(url, {bool copyToClipboard = false}) async {
+    if (copyToClipboard) {
+      await Clipboard.setData(ClipboardData(text: url));
+    } else {
+      url = Uri.parse(url);
+      if (!await launchUrl(url)) {
+        throw Exception('Could not launch $url');
+      }
     }
   }
 
@@ -42,7 +47,11 @@ class AboutScreen extends StatelessWidget {
               leading: const Icon(Icons.code),
               title: const Text('Contribute'),
               subtitle: const Text('https://github.com/RoBoT095/printnotes'),
-              onTap: () => _launchUrl('https://github.com/RoBoT095/printnotes'),
+              onTap: () =>
+                  _urlHandler('https://github.com/RoBoT095/printnotes'),
+              onLongPress: () => _urlHandler(
+                  'https://github.com/RoBoT095/printnotes',
+                  copyToClipboard: true),
               trailing: const Icon(Icons.launch_rounded),
             ),
             ListTile(
@@ -50,7 +59,9 @@ class AboutScreen extends StatelessWidget {
               leading: const Icon(Icons.person),
               title: const Text('Developer'),
               subtitle: const Text('RoBoT_095 aka Rob'),
-              onTap: () => _launchUrl('https://github.com/RoBoT095'),
+              onTap: () => _urlHandler('https://github.com/RoBoT095'),
+              onLongPress: () => _urlHandler('https://github.com/RoBoT095',
+                  copyToClipboard: true),
               trailing: const Icon(Icons.launch_rounded),
             ),
             ListTile(
@@ -59,7 +70,11 @@ class AboutScreen extends StatelessWidget {
               title: const Text('Support'),
               subtitle: const Text(
                   "I'm a solo dev working hard on this, \nMaybe buy me some Coffee?"),
-              onTap: () => _launchUrl('https://liberapay.com/RoBoT_095/donate'),
+              onTap: () =>
+                  _urlHandler('https://liberapay.com/RoBoT_095/donate'),
+              onLongPress: () => _urlHandler(
+                  'https://liberapay.com/RoBoT_095/donate',
+                  copyToClipboard: true),
               trailing: const Icon(Icons.launch_rounded),
             ),
             ListTile(
@@ -78,7 +93,10 @@ class AboutScreen extends StatelessWidget {
               subtitle:
                   const Text("This App is protected under the GPL 3 License"),
               onTap: () =>
-                  _launchUrl('https://www.gnu.org/licenses/gpl-3.0.en.html'),
+                  _urlHandler('https://www.gnu.org/licenses/gpl-3.0.en.html'),
+              onLongPress: () => _urlHandler(
+                  'https://www.gnu.org/licenses/gpl-3.0.en.html',
+                  copyToClipboard: true),
               trailing: const Icon(Icons.launch_rounded),
             ),
           ],
