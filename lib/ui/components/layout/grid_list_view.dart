@@ -11,7 +11,6 @@ import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
-import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class GridListView extends StatelessWidget {
   const GridListView({
@@ -41,20 +40,9 @@ class GridListView extends StatelessWidget {
         if (isDirectory) {
           onChange(item.path);
           ItemNavHandler.addToFolderHistory(item.path);
-        }
-        if (item is File) {
-          if (allowedNoteExtensions.any((ext) => item.path.endsWith(ext))) {
-            ItemNavHandler.onNoteSelect(
-                context, item, () => onChange(currentPath),
-                latexSupport: latexSupport);
-          } else if (allowedImageExtensions
-              .any((ext) => item.path.endsWith(ext))) {
-            ItemNavHandler.onImageSelect(context, item);
-          } else {
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context)
-                .showSnackBar(customSnackBar('File format not supported!'));
-          }
+        } else if (item is File) {
+          ItemNavHandler.routeItemToPage(
+              context, item, () => onChange(currentPath));
         }
       },
       onLongPress: () =>

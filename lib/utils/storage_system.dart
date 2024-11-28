@@ -96,11 +96,10 @@ class StorageSystem {
     await archivedItem.delete(recursive: true);
   }
 
-  // TODO: figure out why archive doesn't work on images
   static Future<void> archiveItem(String itemPath) async {
     final baseDir = await DataPath.selectedDirectory;
     final archiveDir = await getArchivePath();
-    final relativePath = path.relative(itemPath, from: baseDir!);
+    final relativePath = path.relative(itemPath, from: baseDir);
     final archivePath = path.join(archiveDir, relativePath);
 
     final sourceItem =
@@ -116,9 +115,9 @@ class StorageSystem {
     await archiveItem.parent.create(recursive: true);
 
     if (sourceItem is Directory) {
-      await _copyDirectory(sourceItem, archiveItem as Directory);
+      await _copyDirectory(sourceItem, Directory(archiveItem.path));
     } else {
-      await (sourceItem as File).copy(archiveItem.path);
+      await File(sourceItem.path).copy(archiveItem.path);
     }
 
     // Delete the original item after archiving

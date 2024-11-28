@@ -57,13 +57,8 @@ class TreeLayoutView extends StatelessWidget {
           child: GestureDetector(
             onTap: node is FileNode
                 ? () {
-                    if (node.data!.type == File) {
-                      ItemNavHandler.onNoteSelect(
-                          context, File(node.data!.path), () {});
-                    } else if (node.data!.type == Image) {
-                      ItemNavHandler.onImageSelect(
-                          context, File(node.data!.path));
-                    }
+                    ItemNavHandler.routeItemToPage(
+                        context, File(node.data!.path), () {});
                   }
                 : null,
             onLongPress: () => showBottomMenu(

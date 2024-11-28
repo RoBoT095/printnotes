@@ -35,8 +35,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       _currentPath = currentPath;
       _currentFolderName =
           _currentPath == archivePath ? 'Archive' : path.basename(currentPath);
-      ItemNavHandler.addToFolderHistory(currentPath,
-          dirHistory: _folderHistory);
     });
   }
 
@@ -88,8 +86,10 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       onTap: () {
         if (isDirectory) {
           _loadArchivedItems(item.path);
+          ItemNavHandler.addToFolderHistory(_currentPath,
+              dirHistory: _folderHistory);
         } else {
-          ItemNavHandler.onNoteSelect(
+          ItemNavHandler.routeItemToPage(
               context, item, () => _loadArchivedItems(_currentPath));
         }
       },

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_rename.dart';
 import 'package:printnotes/utils/handlers/item_duplication.dart';
@@ -13,8 +12,6 @@ void showBottomMenu(
   FileSystemEntity item,
   Function loadItems,
 ) {
-  final isNote = allowedNoteExtensions.any((ext) => item.path.endsWith(ext));
-
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -57,32 +54,29 @@ void showBottomMenu(
                       context, item, loadItems);
                 },
               ),
-            if (isNote || item is Directory)
-              ListTile(
-                leading: Icon(
-                  Icons.archive_outlined,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                title: const Text('Archive'),
-                onTap: () {
-                  Navigator.pop(context);
-                  ItemArchiveHandler.handleArchiveItem(
-                      context, item, loadItems);
-                },
+            ListTile(
+              leading: Icon(
+                Icons.archive_outlined,
+                color: Theme.of(context).colorScheme.secondary,
               ),
-            if (isNote || item is Directory)
-              ListTile(
-                leading: Icon(
-                  Icons.delete_sweep,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                title: const Text('To Trash'),
-                onTap: () {
-                  Navigator.pop(context);
-                  ItemDeletionHandler.showSoftDeleteConfirmation(
-                      context, item, loadItems);
-                },
+              title: const Text('Archive'),
+              onTap: () {
+                Navigator.pop(context);
+                ItemArchiveHandler.handleArchiveItem(context, item, loadItems);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.delete_sweep,
+                color: Theme.of(context).colorScheme.secondary,
               ),
+              title: const Text('To Trash'),
+              onTap: () {
+                Navigator.pop(context);
+                ItemDeletionHandler.showSoftDeleteConfirmation(
+                    context, item, loadItems);
+              },
+            ),
             ListTile(
               leading: const Icon(
                 Icons.delete_forever,

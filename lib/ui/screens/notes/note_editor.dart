@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 
 import 'package:printnotes/utils/file_info.dart';
 import 'package:printnotes/utils/open_explorer.dart';
@@ -14,11 +15,9 @@ import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart'
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen(
-      {super.key, required this.filePath, this.latexSupport});
+  const NoteEditorScreen({super.key, required this.filePath});
 
   final String filePath;
-  final bool? latexSupport;
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -43,6 +42,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   bool _isEditingNote = false;
   bool _isLoading = true;
   String fileTitle = '';
+  bool _useLatexSyntax = false;
 
   @override
   void initState() {
@@ -55,11 +55,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     try {
       final file = File(widget.filePath);
       final content = await file.readAsString();
+      final getLatexPref = await UserLatexPref.getLatexSupport();
 
       setState(() {
         fileTitle = widget.filePath.split('/').last;
         _notesController.text = content;
         _isLoading = false;
+        _useLatexSyntax = getLatexPref;
       });
     } catch (e) {
       debugPrint('Error loading note content: $e');
@@ -273,7 +275,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                         context,
                                         data: _notesController.text,
                                         tocController: _tocController,
-                                        latexSupport: widget.latexSupport,
+                                        latexSupport: _useLatexSyntax,
                                       ),
                               ),
                       ),

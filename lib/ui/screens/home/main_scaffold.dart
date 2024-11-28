@@ -48,6 +48,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     setState(() => _selectedSort = order);
     UserSortPref.setSortOrder(order);
     widget.onChange();
+    Navigator.of(context).pop();
   }
 
   void getLayout() async {
@@ -60,6 +61,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     UserLayoutPref.setLayoutView(layout);
     widget.layoutChange(layout);
     widget.onChange();
+    Navigator.of(context).pop();
   }
 
   @override

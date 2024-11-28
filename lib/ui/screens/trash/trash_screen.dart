@@ -34,8 +34,6 @@ class _DeletedScreenState extends State<DeletedScreen> {
       _currentPath = currentPath;
       _currentFolderName =
           _currentPath == deletePath ? 'Trash' : path.basename(currentPath);
-      ItemNavHandler.addToFolderHistory(currentPath,
-          dirHistory: _folderHistory);
     });
   }
 
@@ -87,8 +85,10 @@ class _DeletedScreenState extends State<DeletedScreen> {
       onTap: () {
         if (isDirectory) {
           _loadDeletedItems(item.path);
+          ItemNavHandler.addToFolderHistory(_currentPath,
+              dirHistory: _folderHistory);
         } else {
-          ItemNavHandler.onNoteSelect(
+          ItemNavHandler.routeItemToPage(
               context, item, () => _loadDeletedItems(_currentPath));
         }
       },
