@@ -48,15 +48,17 @@ class ItemRenameHandler {
       await StorageSystem.renameItem(item.path, newName);
       if (reload != null) reload();
       if (context.mounted && showMessage == true) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-            '${item is Directory ? 'Folder' : 'File'} renamed successfully'));
+        customSnackBar(
+                '${item is Directory ? 'Folder' : 'File'} renamed successfully',
+                type: 'success')
+            .show(context);
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-            'Error renaming ${item is Directory ? 'folder' : 'note'}: $e'));
+        customSnackBar(
+                'Error renaming ${item is Directory ? 'folder' : 'note'}: $e',
+                type: 'error')
+            .show(context);
       }
     }
   }

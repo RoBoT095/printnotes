@@ -5,7 +5,7 @@ import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/ui/screens/notes/image_viewer.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/screens/notes/note_editor.dart';
-import 'package:printnotes/ui/widgets/custom_snackbar.dart';
+// import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemNavHandler {
   static final List<String> _mainFolderHistory = [];
@@ -36,8 +36,13 @@ class ItemNavHandler {
         onNoteSelect(context, item, loadItems);
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('File format not supported!'));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Not Supported File Format')));
+
+        // Does not appear unless UI is updated, will fix later
+
+        // customSnackBar('File format not supported!', type: 'info')
+        //     .show(context);
       }
     }
   }

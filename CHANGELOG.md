@@ -1,5 +1,9 @@
 # Changelog
 
+## (Nov 30, 2024)
+
+Made Snackbars prettier
+
 ## (Nov 25, 2024)
 
 Fixed minor bugs and visual discrepancies, config file for custom themes is now looks readable with indentation instead of all being on one line.

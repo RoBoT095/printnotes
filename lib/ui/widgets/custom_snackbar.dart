@@ -1,17 +1,29 @@
-import 'package:flutter/material.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 
-SnackBar customSnackBar(String text, {double? width, int? durationMil}) {
-  return SnackBar(
-    width: width ?? const SnackBarThemeData().width,
-    behavior: SnackBarBehavior.floating,
-    // backgroundColor: Theme.of(context).colorScheme.onSurface,
-    duration: Duration(milliseconds: durationMil ?? 800),
-    content: Text(
-      text,
-      textAlign: TextAlign.center,
-      // style: TextStyle(
-      //   color: Theme.of(context).colorScheme.surface,
-      // ),
-    ),
+AnimatedSnackBar customSnackBar(String text, {String? type, int? durationMil}) {
+  // To avoid importing animated_snack_bar into every file
+  AnimatedSnackBarType snackBarType;
+  switch (type) {
+    case "success":
+      snackBarType = AnimatedSnackBarType.success;
+      break;
+    case "info":
+      snackBarType = AnimatedSnackBarType.info;
+      break;
+    case "warning":
+      snackBarType = AnimatedSnackBarType.warning;
+      break;
+    case "error":
+      snackBarType = AnimatedSnackBarType.error;
+      break;
+    default:
+      snackBarType = AnimatedSnackBarType.info;
+  }
+  return AnimatedSnackBar.material(
+    text,
+    type: snackBarType,
+    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    desktopSnackBarPosition: DesktopSnackBarPosition.bottomRight,
+    duration: Duration(milliseconds: durationMil ?? 2000),
   );
 }

@@ -23,10 +23,9 @@ Future<bool> openExplorer(BuildContext context, String filePath) async {
   }
 
   if (isMobile()) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      customSnackBar('Currently not supported on mobile', durationMil: 3000),
-    );
+    customSnackBar('Currently not supported on mobile',
+            type: 'info', durationMil: 3000)
+        .show(context);
   }
 
   return true;

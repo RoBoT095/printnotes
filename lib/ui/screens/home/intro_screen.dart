@@ -156,8 +156,9 @@ class _IntroScreenState extends State<IntroScreen> {
           UserFirstTime.setShowIntro(false);
           widget.onDone();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              customSnackBar('Please select a folder for your notes.'));
+          customSnackBar('Please select a folder for your notes.',
+                  type: 'warning')
+              .show(context);
         }
       },
       dotsDecorator: DotsDecorator(

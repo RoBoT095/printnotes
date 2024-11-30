@@ -310,9 +310,9 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                           _themeName.clear();
                                           _themeJsonString.clear();
 
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(customSnackBar(
-                                                  'Saved Successfully'));
+                                          customSnackBar('Saved Successfully',
+                                                  type: 'success')
+                                              .show(context);
                                           FocusScope.of(context).unfocus();
                                         }
                                       },

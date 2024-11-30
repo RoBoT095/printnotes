@@ -148,4 +148,10 @@ final List<Library> libraries = [
     url: 'https://github.com/embraceitmobile/animated_tree_view',
     license: 'MIT License',
   ),
+  Library(
+    name: 'AnimatedSnackBar',
+    publisher: 'JulyWitch',
+    url: 'https://github.com/JulyWitch/animated_snack_bar',
+    license: 'GPL V3 License',
+  ),
 ];

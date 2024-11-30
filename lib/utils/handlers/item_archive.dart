@@ -30,16 +30,16 @@ class ItemArchiveHandler {
               try {
                 await StorageSystem.archiveItem(item.path);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
-                      '${item is Directory ? 'Folder' : 'Note'} archived successfully'));
+                  customSnackBar(
+                          '${item is Directory ? 'Folder' : 'Note'} archived successfully',
+                          type: 'success')
+                      .show(context);
                 }
                 loadItems();
               } catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(customSnackBar('Error archiving item: $e'));
+                  customSnackBar('Error archiving item: $e', type: 'error')
+                      .show(context);
                 }
               }
             },
@@ -54,16 +54,14 @@ class ItemArchiveHandler {
     try {
       await StorageSystem.unarchiveItem(item.path);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('Item unarchived successfully'));
+        customSnackBar('Item unarchived successfully', type: 'success')
+            .show(context);
       }
       loadItems();
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('Error unarchiving item: $e'));
+        customSnackBar('Error unarchiving item: $e', type: 'error')
+            .show(context);
       }
     }
   }

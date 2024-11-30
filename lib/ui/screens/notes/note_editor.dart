@@ -79,10 +79,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     } catch (e) {
       debugPrint('Error saving note content: $e');
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          customSnackBar('Error saving note'),
-        );
+        customSnackBar('Error saving note', type: 'error').show(context);
       }
       return false;
     }

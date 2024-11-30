@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemDeletionHandler {
   static Future<void> showSoftDeleteConfirmation(
@@ -42,22 +44,17 @@ class ItemDeletionHandler {
 
       loadItems();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                '${item is Directory ? 'Folder' : 'Note'} was moved to the trash bin'),
-          ),
-        );
+        customSnackBar(
+                '${item is Directory ? 'Folder' : 'Note'} was moved to the trash bin',
+                type: 'info')
+            .show(context);
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error deleting ${item is Directory ? 'folder' : 'note'}: $e')),
-        );
+        customSnackBar(
+                'Error deleting ${item is Directory ? 'folder' : 'note'}: $e',
+                type: 'error')
+            .show(context);
       }
     }
   }
@@ -100,21 +97,17 @@ class ItemDeletionHandler {
 
       loadItems();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  '${item is Directory ? 'Folder' : 'Note'} was permanently deleted')),
-        );
+        customSnackBar(
+                '${item is Directory ? 'Folder' : 'Note'} was permanently deleted',
+                type: 'info')
+            .show(context);
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error permanently deleting ${item is Directory ? 'folder' : 'note'}: $e')),
-        );
+        customSnackBar(
+                'Error permanently deleting ${item is Directory ? 'folder' : 'note'}: $e',
+                type: 'error')
+            .show(context);
       }
     }
   }
@@ -124,18 +117,14 @@ class ItemDeletionHandler {
     try {
       await StorageSystem.restoreDeletedItem(item.path);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Item was restored successfully')),
-        );
+        customSnackBar('Item was restored successfully', type: 'success')
+            .show(context);
       }
       loadItems();
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error restoring deleted item: $e')),
-        );
+        customSnackBar('Error restoring deleted item: $e', type: 'error')
+            .show(context);
       }
     }
   }

@@ -20,16 +20,14 @@ class ItemCreationHandler {
         final newFolderPath = await StorageSystem.createFolder(folderName,
             parentPath: currentPath);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(customSnackBar('Folder created: $newFolderPath'));
+          customSnackBar('Folder created: $newFolderPath', type: 'success')
+              .show(context);
         }
         loadItems();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(customSnackBar('Error creating folder: $e'));
+          customSnackBar('Error creating folder: $e', type: 'error')
+              .show(context);
         }
       }
     }
@@ -54,9 +52,8 @@ class ItemCreationHandler {
         loadItems();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(customSnackBar('Error creating note: $e'));
+          customSnackBar('Error creating note: $e', type: 'error')
+              .show(context);
         }
       }
     }
@@ -75,7 +72,10 @@ class ItemCreationHandler {
           onChanged: (value) {
             name = value;
           },
-          onFieldSubmitted: (value) => Navigator.of(context).pop(value),
+          onFieldSubmitted: (value) {
+            Navigator.of(context).pop(value);
+            submitted = true;
+          },
         ),
         actions: [
           TextButton(

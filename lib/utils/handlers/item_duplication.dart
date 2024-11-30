@@ -12,9 +12,8 @@ class ItemDuplicationHandler {
   ) async {
     // Fallback in case user somehow tries to duplicate a folder
     if (item is! File) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(customSnackBar('Only files can be duplicated.'));
+      customSnackBar('Only files can be duplicated.', type: 'warning')
+          .show(context);
       return;
     }
 
@@ -25,15 +24,13 @@ class ItemDuplicationHandler {
       loadItems();
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('file duplicated: $newFileName'));
+        customSnackBar('file duplicated: $newFileName', type: 'success')
+            .show(context);
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(customSnackBar('Error duplicating file: $e'));
+        customSnackBar('Error duplicating file: $e', type: 'error')
+            .show(context);
       }
     }
   }
