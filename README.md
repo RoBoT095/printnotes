@@ -147,4 +147,7 @@ Running as linux application on flutter version _3.24.0-3.24.3_ causes any **Tex
 
 Feel free to support me and my work
 
-[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/RoBoT_095/donate)
+<a href="https://liberapay.com/RoBoT_095/donate" target="_blank"><img src="https://liberapay.com/assets/widgets/donate.svg" height=30 /></a>
+<a href="https://ko-fi.com/robot095/donate" target="_blank"><img src="https://ko-fi.com/img/githubbutton_sm.svg" height=30 /></a>
+<a href="https://buymeacoffee.com/robot_095" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="30"></a>
+<a href="https://opencollective.com/webpack/donate" target="_blank"><img src="https://opencollective.com/webpack/donate/button@2x.png?color=blue" height=30 /></a>
