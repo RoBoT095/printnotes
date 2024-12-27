@@ -1,5 +1,9 @@
 # Changelog
 
+## (Dec 27, 2024)
+
+Fixed search and removed hidden folders from results
+
 ## (Nov 30, 2024)
 
 Made Snackbars prettier

@@ -55,7 +55,7 @@ class StorageSystem {
     }
     // Return file that match by name
     results.addAll(filteredItems
-        .where((item) => path.basename(item.path).contains(query))
+        .where((item) => path.basename(item.path.toLowerCase()).contains(query))
         .toList());
 
     return results;
@@ -318,9 +318,10 @@ class StorageSystem {
     final folder = Directory(folderPath);
     if (folder.existsSync()) {
       final contents = folder.listSync(recursive: recursive).toList();
-      // Skips hidden folders
+      // Filter out hidden folders and files
       final filteredContents = contents.where((item) {
-        return !item.path.split(Platform.pathSeparator).last.startsWith('.');
+        final pathSegments = item.path.split(Platform.pathSeparator);
+        return !pathSegments.any((segment) => segment.startsWith('.'));
       }).toList();
       return filteredContents;
     }
