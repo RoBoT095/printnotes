@@ -10,8 +10,7 @@ import 'package:printnotes/utils/configs/data_path.dart';
 class StorageSystem {
   // For searching
 
-  static List<FileSystemEntity> searchItems(
-      String query, String mainDir, bool advancedSearch) {
+  static List<FileSystemEntity> searchItems(String query, String mainDir) {
     List<FileSystemEntity> allItems =
         StorageSystem.listFolderContents(mainDir, recursive: true);
 
@@ -22,41 +21,40 @@ class StorageSystem {
     List<FileSystemEntity> results = [];
     query = query.toLowerCase();
 
-    if (advancedSearch) {
-      for (var item in filteredItems) {
-        String fileText = File(item.path)
-            .readAsStringSync()
-            .replaceAll('\n', ' ')
-            .toLowerCase();
-        // Files that match by their contents
-        if (fileText.contains(query)) {
-          results.add(item);
-        }
-        // Files that have tags
-        // TODO: Display file multiple times if multiple tags inside and correctly display it in subtitle
-        if (query.contains('tags:')) {
-          List<RegExpMatch> tags =
-              RegExp(r'#\w+').allMatches(fileText).toList();
-          String cleanQuery = query.replaceFirst('tags:', '').trim();
-          if (tags.isNotEmpty) {
-            // Display all files with tags
-            if (cleanQuery.isEmpty) {
+    // First match by name
+    results.addAll(filteredItems
+        .where((item) => path.basename(item.path.toLowerCase()).contains(query))
+        .toList());
+
+    // Then by characters in note
+    for (var item in filteredItems) {
+      String fileText = File(item.path)
+          .readAsStringSync()
+          .replaceAll('\n', ' ')
+          .toLowerCase();
+      // Files that match by their contents
+      if (fileText.contains(query)) {
+        results.add(item);
+      }
+      // Files that have tags
+      // TODO: Display file multiple times if multiple tags inside and correctly display it in subtitle
+      if (query.contains('tags:')) {
+        List<RegExpMatch> tags = RegExp(r'#\w+').allMatches(fileText).toList();
+        String cleanQuery = query.replaceFirst('tags:', '').trim();
+        if (tags.isNotEmpty) {
+          // Display all files with tags
+          if (cleanQuery.isEmpty) {
+            results.add(item);
+          } else {
+            // Display searched files with tags
+            if (tags.any((e) =>
+                fileText.substring(e.start, e.end).contains(cleanQuery))) {
               results.add(item);
-            } else {
-              // Display searched files with tags
-              if (tags.any((e) =>
-                  fileText.substring(e.start, e.end).contains(cleanQuery))) {
-                results.add(item);
-              }
             }
           }
         }
       }
     }
-    // Return file that match by name
-    results.addAll(filteredItems
-        .where((item) => path.basename(item.path.toLowerCase()).contains(query))
-        .toList());
 
     return results;
   }
