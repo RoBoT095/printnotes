@@ -55,7 +55,8 @@ class DataPath {
 
   // Create and load contents of config file
   static Map<String, dynamic> loadJsonConfigFile() {
-    final configFile = File('$_selectedDirectory/.printnotes/main_config.json');
+    final configFile = File(
+        '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
     if (!configFile.existsSync()) configFile.createSync(recursive: true);
     if (configFile.readAsStringSync().isEmpty) {
       configFile.writeAsStringSync('{}');
@@ -67,7 +68,8 @@ class DataPath {
 
   // Write to config file
   static void saveJsonConfigFile(Map<String, dynamic> configData) async {
-    final configFile = File('$_selectedDirectory/.printnotes/main_config.json');
+    final configFile = File(
+        '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
 
     final configJsonString =
         const JsonEncoder.withIndent('  ').convert(configData);
