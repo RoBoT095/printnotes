@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
-import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/utils/handlers/file_extensions.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
@@ -33,7 +33,6 @@ class GridListView extends StatelessWidget {
   Widget _buildGridItem(BuildContext context, int index) {
     final item = items[index];
     final isDirectory = item is Directory;
-    final name = path.basename(item.path);
 
     return GestureDetector(
       onTap: () {
@@ -58,43 +57,62 @@ class GridListView extends StatelessWidget {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                   title: Text(
-                    name,
+                    path.basename(item.path),
                     textAlign: TextAlign.start,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 )
               : Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: (item is File &&
-                          allowedImageExtensions
-                              .any((ext) => item.path.endsWith(ext)))
-                      ? Image.file(item)
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name.replaceAll(".md", ''),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            MarkdownBlock(
-                              selectable: false,
-                              data: StorageSystem.getNotePreview(item.path,
-                                  previewLength: notePreviewLength),
-                              config: theMarkdownConfigs(context,
-                                  hideCodeButtons: true),
-                              generator: theMarkdownGenerators(context,
-                                  textScale: 0.95, useLatex: latexSupport),
-                            ),
-                          ],
-                        )),
+                  child: fileItem(context, item)),
         ),
       ),
+    );
+  }
+
+  Widget fileItem(BuildContext context, item) {
+    if (item is File) {
+      if (fileTypeChecker(item) == FileType.image) {
+        return Image.file(item);
+      }
+      if (fileTypeChecker(item) == FileType.pdf) {
+        return ListTile(
+          leading: Icon(
+            Icons.picture_as_pdf,
+            size: 34,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          title: Text(
+            path.basename(item.path),
+            textAlign: TextAlign.start,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      }
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          path.basename(item.path).replaceAll(".md", ''),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(height: 4),
+        MarkdownBlock(
+          selectable: false,
+          data: StorageSystem.getNotePreview(item.path,
+              previewLength: notePreviewLength),
+          config: theMarkdownConfigs(context, hideCodeButtons: true),
+          generator: theMarkdownGenerators(context,
+              textScale: 0.95, useLatex: latexSupport),
+        ),
+      ],
     );
   }
 

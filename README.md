@@ -72,7 +72,8 @@
 
 I will release apps when I feel like the app is more complete!
 
-- [ ] Android `coming soon`
+- [ ] Android
+  - Can't get past Google Play review due to the use of All File Access permission
 - [ ] iOS `coming soon`
 - [ ] Windows `coming soon`
 - [ ] MacOS `coming soon`

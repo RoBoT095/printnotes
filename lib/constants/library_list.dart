@@ -154,4 +154,9 @@ final List<Library> libraries = [
     url: 'https://github.com/JulyWitch/animated_snack_bar',
     license: 'GPL V3 License',
   ),
+  Library(
+      name: 'pdf',
+      publisher: 'nfet.net',
+      url: 'https://github.com/DavBfr/dart_pdf',
+      license: 'Apache-2.0'),
 ];

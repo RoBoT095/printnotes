@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/constants/constants.dart';
-import 'package:printnotes/ui/screens/notes/image_viewer.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
+import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/ui/screens/notes/note_editor.dart';
+import 'package:printnotes/ui/screens/notes/image_viewer.dart';
+import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
 // import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemNavHandler {
@@ -30,10 +31,12 @@ class ItemNavHandler {
       BuildContext context, FileSystemEntity item, Function loadItems,
       {List<String>? customDirHistory}) {
     if (item is File) {
-      if (allowedImageExtensions.any((ext) => item.path.endsWith(ext))) {
-        onImageSelect(context, item);
-      } else if (allowedNoteExtensions.any((ext) => item.path.endsWith(ext))) {
+      if (fileTypeChecker(item) == FileType.note) {
         onNoteSelect(context, item, loadItems);
+      } else if (fileTypeChecker(item) == FileType.image) {
+        onImageSelect(context, item);
+      } else if (fileTypeChecker(item) == FileType.pdf) {
+        onPdfSelect(context, item);
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -68,6 +71,14 @@ class ItemNavHandler {
         context,
         MaterialPageRoute(
             builder: (context) => ImageViewScreen(imageFile: item)));
+  }
+
+  static void onPdfSelect(
+    BuildContext context,
+    File item,
+  ) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => PdfViewScreen(pdfFile: item)));
   }
 
   static Future<void> addToFolderHistory(String newPath,

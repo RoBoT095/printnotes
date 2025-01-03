@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -107,6 +109,21 @@ class _IntroScreenState extends State<IntroScreen> {
           bodyWidget: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              if (Platform.isAndroid)
+                Card(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainer
+                      .withOpacity(0.6),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "If you change folder location, you will be prompted to allow \"All File Access\" as it is needed for app to function properly!",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              if (Platform.isAndroid) const SizedBox(height: 20),
               const Text("Select a folder to store your notes:"),
               ListTile(
                 title: const Center(child: Text('Notes Location')),

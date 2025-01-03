@@ -2,7 +2,7 @@ name: printnotes
 description: "A Markdown Notes app made with Flutter"
 publish_to: 'none'
 
-version: 0.9.10+2
+version: 0.9.11+3
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
@@ -34,6 +34,7 @@ dependencies:
   flutter_widget_from_html_core: ^0.15.2
   animated_tree_view: ^2.3.0
   animated_snack_bar: ^0.4.0
+  pdfrx: ^1.0.94
 
 dev_dependencies:
   flutter_test:

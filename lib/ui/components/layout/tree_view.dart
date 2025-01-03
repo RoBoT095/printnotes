@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
 
-import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
@@ -29,10 +29,7 @@ class TreeLayoutView extends StatelessWidget {
         else if (item is File)
           FileNode(
               data: TFile(item.path.split('/').last, item.path,
-                  type: allowedImageExtensions
-                          .any((ext) => item.path.endsWith(ext))
-                      ? Image
-                      : File))
+                  type: fileTypeChecker(item) == FileType.image ? Image : File))
     ];
   }
 
@@ -106,6 +103,9 @@ extension on ExplorableNode {
           Icons.image_outlined,
           color: Theme.of(context).colorScheme.primary,
         );
+      }
+      if (fileTypeChecker(File(file.path)) == FileType.pdf) {
+        return const Icon(Icons.picture_as_pdf);
       }
     }
 

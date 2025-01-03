@@ -1,5 +1,11 @@
 # Changelog
 
+## (Jan 2, 2025)
+
+Added PDF Viewer to the app (I didn't have one on my phones, so I decided, why not add to my notes app)
+
+Tired publishing app to Google Play Store, got to closed testing, but when trying to release to production got rejected multiple times for using MANAGE_EXTERNAL_STORAGE permission on android, they didn't like any of my reasons, so I might need to figure out how to use ACTION_OPEN_DOCUMENT_TREE or something like it without breaking or rewriting the entire app. Couldn't find a good library that wasn't outdated or was too complex, so I might actually need to learn some Kotlin for this.
+
 ## (Dec 27, 2024)
 
 Fixed search and removed hidden folders from results

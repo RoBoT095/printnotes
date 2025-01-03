@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 
-import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
+import 'package:printnotes/utils/handlers/file_extensions.dart';
 
 // The Abomination Folder that handles everything related to folders on the device
 // better to rewrite and clean up everything but this sand castle is already held by hot glue
@@ -15,7 +15,7 @@ class StorageSystem {
         StorageSystem.listFolderContents(mainDir, recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
-      return allowedNoteExtensions.any((ext) => item.path.endsWith(ext));
+      return fileTypeChecker(item) == FileType.note;
     }).toList();
 
     List<FileSystemEntity> results = [];

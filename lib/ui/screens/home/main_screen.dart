@@ -8,7 +8,7 @@ import 'package:printnotes/ui/screens/home/main_scaffold.dart';
 import 'package:printnotes/ui/screens/home/intro_screen.dart';
 import 'package:printnotes/ui/screens/home/notes_display.dart';
 import 'package:printnotes/ui/components/drawer.dart';
-import 'package:printnotes/ui/components/dialogs/exit_popup.dart';
+import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key, required this.title});
@@ -65,7 +65,8 @@ class _MainPageState extends State<MainPage> {
               if (didPop) return;
 
               if (_canPop == true) {
-                final exitPopup = await showExitPopup(context);
+                final exitPopup = await showBasicPopup(
+                    context, 'Exit App', 'Do you want to exit Print(Notes)?');
                 if (exitPopup && context.mounted) {
                   SystemNavigator.pop();
                 }

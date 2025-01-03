@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-Future<bool> showExitPopup(BuildContext context) async {
+Future<bool> showBasicPopup(
+    BuildContext context, String title, String content) async {
   return await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Exit App'),
-          content: const Text('Do you want to exit Print(Notes)?'),
+          title: Text(title),
+          content: Text(content),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
