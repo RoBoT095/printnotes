@@ -14,8 +14,8 @@
 - Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
 - Stores notes locally on device
 - Possible to create folders to better organize notes
+- Can view images and pdf files found in selected directory and in external folders
 - Has many colors to choose from by default
-- Simple search to find any note by name, even the ones deeper in a folder
 - Changeable layout and sort order
 - Toolbar for easy markdown editing (borrowed from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor))
 - Create your own custom color schemes to better personalize it to your liking
@@ -73,7 +73,7 @@
 I will release apps when I feel like the app is more complete!
 
 - [ ] Android
-  - Can't get past Google Play review due to the use of All File Access permission
+  - Can't get past GooglePlay review due to the use of All File Access permission
 - [ ] iOS `coming soon`
 - [ ] Windows `coming soon`
 - [ ] MacOS `coming soon`
