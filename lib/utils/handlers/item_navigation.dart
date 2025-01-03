@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
@@ -31,11 +33,11 @@ class ItemNavHandler {
       BuildContext context, FileSystemEntity item, Function loadItems,
       {List<String>? customDirHistory}) {
     if (item is File) {
-      if (fileTypeChecker(item) == FileType.note) {
+      if (fileTypeChecker(item) == CFileType.note) {
         onNoteSelect(context, item, loadItems);
-      } else if (fileTypeChecker(item) == FileType.image) {
+      } else if (fileTypeChecker(item) == CFileType.image) {
         onImageSelect(context, item);
-      } else if (fileTypeChecker(item) == FileType.pdf) {
+      } else if (fileTypeChecker(item) == CFileType.pdf) {
         onPdfSelect(context, item);
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
@@ -98,5 +100,19 @@ class ItemNavHandler {
       return previousFolder;
     }
     return null;
+  }
+
+  // Open files outside selected app directory
+  static Future<void> openExternalFile(
+      BuildContext context, Function loadItems) async {
+    FilePickerResult? selectedFile = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+    );
+    if (selectedFile != null) {
+      File item = File(selectedFile.files.single.path!);
+      routeItemToPage(context, item, loadItems);
+    }
   }
 }

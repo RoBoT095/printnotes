@@ -73,10 +73,10 @@ class GridListView extends StatelessWidget {
 
   Widget fileItem(BuildContext context, item) {
     if (item is File) {
-      if (fileTypeChecker(item) == FileType.image) {
+      if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
       }
-      if (fileTypeChecker(item) == FileType.pdf) {
+      if (fileTypeChecker(item) == CFileType.pdf) {
         return ListTile(
           leading: Icon(
             Icons.picture_as_pdf,

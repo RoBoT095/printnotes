@@ -29,7 +29,8 @@ class TreeLayoutView extends StatelessWidget {
         else if (item is File)
           FileNode(
               data: TFile(item.path.split('/').last, item.path,
-                  type: fileTypeChecker(item) == FileType.image ? Image : File))
+                  type:
+                      fileTypeChecker(item) == CFileType.image ? Image : File))
     ];
   }
 
@@ -104,7 +105,7 @@ extension on ExplorableNode {
           color: Theme.of(context).colorScheme.primary,
         );
       }
-      if (fileTypeChecker(File(file.path)) == FileType.pdf) {
+      if (fileTypeChecker(File(file.path)) == CFileType.pdf) {
         return const Icon(Icons.picture_as_pdf);
       }
     }

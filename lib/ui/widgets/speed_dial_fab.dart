@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/item_create.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -29,6 +30,12 @@ Widget speedDialFAB(BuildContext context,
           () => onLoadItems(),
         ),
       ),
+      SpeedDialChild(
+        child: const Icon(Icons.folder_copy),
+        label: 'Open External File',
+        onTap: () =>
+            ItemNavHandler.openExternalFile(context, () => onLoadItems()),
+      )
     ],
   );
 }

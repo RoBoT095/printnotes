@@ -15,7 +15,7 @@ class StorageSystem {
         StorageSystem.listFolderContents(mainDir, recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
-      return fileTypeChecker(item) == FileType.note;
+      return fileTypeChecker(item) == CFileType.note;
     }).toList();
 
     List<FileSystemEntity> results = [];

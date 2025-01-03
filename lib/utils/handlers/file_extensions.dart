@@ -1,21 +1,21 @@
 import 'dart:io';
 import 'package:printnotes/constants/constants.dart';
 
-enum FileType {
+enum CFileType {
   note,
   image,
   pdf,
   unknown,
 }
 
-FileType fileTypeChecker(FileSystemEntity file) {
+CFileType fileTypeChecker(FileSystemEntity file) {
   if (allowedNoteExtensions.any((ext) => file.path.endsWith(ext))) {
-    return FileType.note;
+    return CFileType.note;
   } else if (allowedImageExtensions.any((ext) => file.path.endsWith(ext))) {
-    return FileType.image;
+    return CFileType.image;
   } else if (allowedPdfExtensions.any((ext) => file.path.endsWith(ext))) {
-    return FileType.pdf;
+    return CFileType.pdf;
   } else {
-    return FileType.unknown;
+    return CFileType.unknown;
   }
 }
