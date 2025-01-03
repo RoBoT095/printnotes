@@ -53,31 +53,18 @@
 
 ## Changelog - [here](https://github.com/RoBoT095/printnotes/blob/main/CHANGELOG.md)
 
-<!-- ## Possible Future Features (not guaranteed)
-
-- - [x] Custom themes with import capability
-- - [x] Advanced search with filters
-- - [x] Tags
-- - [ ] Upload and attach pictures
-- - [ ] Share files from app
-- - [ ] Mobile Widgets 🤔?
-  - One Way Sync Options (Bi-Directional Sync will come in the distant future)
-    - - [ ] NextCloud
-    - - [ ] RSync
-    - - [ ] FTP
-    - ~~Dropbox~~
-    - ~~Google Drive~~ -->
-
 ## Supported Platforms
 
 I will release apps when I feel like the app is more complete!
 
-- [ ] Android
+- [x] Android
+  - APKs in [Releases](https://github.com/RoBoT095/printnotes/releases)
   - Can't get past GooglePlay review due to the use of All File Access permission
 - [ ] iOS `coming soon`
 - [ ] Windows `coming soon`
 - [ ] MacOS `coming soon`
-- [ ] Linux `coming soon`
+- [x] Linux
+  - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases)
 
 ---
 
