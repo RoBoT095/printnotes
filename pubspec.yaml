@@ -24,7 +24,10 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   expandable: ^5.0.1
   markdown: ^7.2.2
-  keyboard_attachable: ^2.2.0
+  keyboard_attachable: 
+    git:
+      url: https://github.com/RoBoT095/keyboard_attachable
+      ref: master
   introduction_screen: ^3.1.12
   http: ^1.2.2
   markdown_widget: ^2.3.2+6
