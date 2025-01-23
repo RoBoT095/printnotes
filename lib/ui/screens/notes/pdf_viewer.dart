@@ -55,7 +55,8 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
     }
   }
 
-  Widget pdfSpeedDial() => SpeedDial(
+  Widget pdfSpeedDial({bool? isOpen}) => SpeedDial(
+        isOpenOnStart: isOpen ?? false,
         icon: Icons.add,
         activeIcon: Icons.close,
         tooltip: 'PDF Controls',
@@ -254,7 +255,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
             // Side thumb with page number
             PdfViewerScrollThumb(
               controller: pdfController,
-              orientation: ScrollbarOrientation.right,
+              orientation: ScrollbarOrientation.left,
               thumbSize: const Size(40, 25),
               thumbBuilder: (context, thumbSize, pageNumber, controller) =>
                   Container(
@@ -289,7 +290,8 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
           ],
         ),
       ),
-      floatingActionButton: pdfSpeedDial(),
+      floatingActionButton:
+          pdfSpeedDial(isOpen: MediaQuery.sizeOf(context).width >= 800),
     );
   }
 }
