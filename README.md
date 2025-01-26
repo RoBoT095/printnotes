@@ -60,11 +60,12 @@ I will release apps when I feel like the app is more complete!
 - [x] Android
   - APKs in [Releases](https://github.com/RoBoT095/printnotes/releases)
   - Can't get past GooglePlay review due to the use of All File Access permission
-- [ ] iOS `coming soon`
+- [x] iOS - [App Store](https://apps.apple.com/us/app/print-notes/id6740996365)
 - [ ] Windows `coming soon`
 - [ ] MacOS `coming soon`
 - [x] Linux
   - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases)
+  - Other options `coming later`
 
 ---
 
