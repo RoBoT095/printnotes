@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataPath {
-  static String _selectedDirectory = '';
+  static String? _selectedDirectory;
   static const String _prefKey = 'selected_directory';
 
   static Future<String?> pickDirectory() async {
@@ -35,7 +35,7 @@ class DataPath {
 
   static Future<void> setSelectedDirectory(String dirPath) async {
     _selectedDirectory = dirPath;
-    final dir = Directory(_selectedDirectory);
+    final dir = Directory(_selectedDirectory!);
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }
@@ -44,14 +44,14 @@ class DataPath {
   }
 
   static Future<String?> get selectedDirectory async {
-    if (_selectedDirectory.isNotEmpty) {
+    if (_selectedDirectory == null) {
       final prefs = await SharedPreferences.getInstance();
-      _selectedDirectory = prefs.getString(_prefKey) ?? 'mainSelectedDirectory';
-      if (_selectedDirectory.isNotEmpty) {
+      _selectedDirectory = prefs.getString(_prefKey);
+      if (_selectedDirectory == null) {
         final appDir = await getApplicationDocumentsDirectory();
         return _selectedDirectory = appDir.path;
       }
-      final dir = Directory(_selectedDirectory);
+      final dir = Directory(_selectedDirectory!);
       if (!await dir.exists()) {
         await dir.create(recursive: true);
       }

@@ -228,8 +228,7 @@ class StorageSystem {
     if (!await newFolder.exists()) {
       await newFolder.create(recursive: true);
     }
-    return path.relative(newFolder.path,
-        from: await DataPath.selectedDirectory);
+    return newFolder.path;
   }
 
   // Methods to soft and permanent delete

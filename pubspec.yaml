@@ -2,7 +2,7 @@ name: printnotes
 description: "A Markdown Notes app made with Flutter"
 publish_to: 'none'
 
-version: 0.9.11+3
+version: 0.9.12+4
 
 environment:
   sdk: '>=3.3.4 <4.0.0'

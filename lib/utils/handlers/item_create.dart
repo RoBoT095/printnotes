@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+
 import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
@@ -20,7 +23,9 @@ class ItemCreationHandler {
         final newFolderPath = await StorageSystem.createFolder(folderName,
             parentPath: currentPath);
         if (context.mounted) {
-          customSnackBar('Folder created: $newFolderPath', type: 'success')
+          customSnackBar(
+                  'Folder created: ${path.relative(newFolderPath, from: await DataPath.selectedDirectory)}',
+                  type: 'success')
               .show(context);
         }
         loadItems();
