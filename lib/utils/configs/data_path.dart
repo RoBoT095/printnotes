@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataPath {
-  static String mainSelectedDirectory = '';
+  static String _selectedDirectory = '';
   static const String _prefKey = 'selected_directory';
 
   static Future<String?> pickDirectory() async {
@@ -34,8 +34,8 @@ class DataPath {
   }
 
   static Future<void> setSelectedDirectory(String dirPath) async {
-    mainSelectedDirectory = dirPath;
-    final dir = Directory(mainSelectedDirectory!);
+    _selectedDirectory = dirPath;
+    final dir = Directory(_selectedDirectory);
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }
@@ -44,20 +44,19 @@ class DataPath {
   }
 
   static Future<String?> get selectedDirectory async {
-    if (mainSelectedDirectory.isNotEmpty) {
+    if (_selectedDirectory.isNotEmpty) {
       final prefs = await SharedPreferences.getInstance();
-      mainSelectedDirectory =
-          prefs.getString(_prefKey) ?? 'mainSelectedDirectory';
-      if (mainSelectedDirectory.isNotEmpty) {
+      _selectedDirectory = prefs.getString(_prefKey) ?? 'mainSelectedDirectory';
+      if (_selectedDirectory.isNotEmpty) {
         final appDir = await getApplicationDocumentsDirectory();
-        return mainSelectedDirectory = appDir.path;
+        return _selectedDirectory = appDir.path;
       }
-      final dir = Directory(mainSelectedDirectory);
+      final dir = Directory(_selectedDirectory);
       if (!await dir.exists()) {
         await dir.create(recursive: true);
       }
     }
-    return mainSelectedDirectory;
+    return _selectedDirectory;
   }
 
   // Hidden app config file called .main_config.json
@@ -65,7 +64,7 @@ class DataPath {
   // Create and load contents of config file
   static Map<String, dynamic> loadJsonConfigFile() {
     final configFile = File(
-        '$mainSelectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
+        '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
     if (!configFile.existsSync()) configFile.createSync(recursive: true);
     if (configFile.readAsStringSync().isEmpty) {
       configFile.writeAsStringSync('{}');
@@ -78,7 +77,7 @@ class DataPath {
   // Write to config file
   static void saveJsonConfigFile(Map<String, dynamic> configData) async {
     final configFile = File(
-        '$mainSelectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
+        '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
 
     final configJsonString =
         const JsonEncoder.withIndent('  ').convert(configData);
