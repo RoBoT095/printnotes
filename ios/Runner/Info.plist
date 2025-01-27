@@ -28,6 +28,10 @@
 	<true/>
 	<key>NSDocumentsUsageDescription</key>
 	<string>This app needs access to documents for storing and managing notes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs access to the photo library to save files.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
