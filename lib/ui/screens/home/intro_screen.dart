@@ -104,56 +104,57 @@ class _IntroScreenState extends State<IntroScreen> {
             color: Theme.of(context).colorScheme.secondary,
           )),
         ),
-        PageViewModel(
-          title: "Choose Your Notes Folder",
-          bodyWidget: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (Platform.isAndroid)
-                Card(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainer
-                      .withOpacity(0.6),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "If you change folder location, you will be prompted to allow \"All File Access\" as it is needed for app to function properly!",
-                      textAlign: TextAlign.center,
+        if (!Platform.isIOS)
+          PageViewModel(
+            title: "Choose Your Notes Folder",
+            bodyWidget: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (Platform.isAndroid)
+                  Card(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surfaceContainer
+                        .withOpacity(0.6),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "If you change folder location, you will be prompted to allow \"All File Access\" as it is needed for app to function properly!",
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
+                if (Platform.isAndroid) const SizedBox(height: 20),
+                const Text("Select a folder to store your notes:"),
+                ListTile(
+                  title: const Center(child: Text('Notes Location')),
+                  subtitle: Center(child: Text(selectedDirectory ?? 'Not Set')),
                 ),
-              if (Platform.isAndroid) const SizedBox(height: 20),
-              const Text("Select a folder to store your notes:"),
-              ListTile(
-                title: const Center(child: Text('Notes Location')),
-                subtitle: Center(child: Text(selectedDirectory ?? 'Not Set')),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final pickedDirectory = await DataPath.pickDirectory();
-                  if (pickedDirectory != null) {
-                    setState(() {
-                      selectedDirectory = pickedDirectory;
-                    });
-                    await DataPath.setSelectedDirectory(pickedDirectory);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                ElevatedButton(
+                  onPressed: () async {
+                    final pickedDirectory = await DataPath.pickDirectory();
+                    if (pickedDirectory != null) {
+                      setState(() {
+                        selectedDirectory = pickedDirectory;
+                      });
+                      await DataPath.setSelectedDirectory(pickedDirectory);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                  child: const Text("Select Folder"),
                 ),
-                child: const Text("Select Folder"),
-              ),
-            ],
+              ],
+            ),
+            image: Center(
+                child: Icon(
+              Icons.folder,
+              size: 150.0,
+              color: Theme.of(context).colorScheme.secondary,
+            )),
           ),
-          image: Center(
-              child: Icon(
-            Icons.folder,
-            size: 150.0,
-            color: Theme.of(context).colorScheme.secondary,
-          )),
-        ),
       ],
       showSkipButton: false,
       showNextButton: true,

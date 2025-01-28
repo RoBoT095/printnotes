@@ -11,19 +11,14 @@ class DataPath {
   static const String _prefKey = 'selected_directory';
 
   static Future<String?> pickDirectory() async {
+    if (Platform.isIOS) {
+      final appDir = await getApplicationDocumentsDirectory();
+      return appDir.path;
+    }
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
     if (Platform.isAndroid) {
       final status = await Permission.manageExternalStorage.request();
-      if (status.isDenied ||
-          status.isPermanentlyDenied ||
-          status.isRestricted) {
-        throw "Please allow storage permission to access files";
-      }
-    } else if (Platform.isIOS) {
-      final status = await Permission.storage.request();
-      if (status.isDenied ||
-          status.isPermanentlyDenied ||
-          status.isRestricted) {
+      if (!status.isGranted) {
         throw "Please allow storage permission to access files";
       }
     }

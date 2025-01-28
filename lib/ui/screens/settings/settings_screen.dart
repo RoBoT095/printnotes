@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
@@ -95,27 +97,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
             : null,
         child: ListView(
           children: [
-            ListTile(
-              iconColor: Theme.of(context).colorScheme.secondary,
-              title: const Text('Notes Storage Location'),
-              subtitle: Text(_currentDirectory ?? 'Not set'),
-              trailing: const Icon(Icons.folder),
-              onTap: _pickDirectory,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      fixedSize: const Size(250, 40)),
-                  onPressed: _pickDirectory,
-                  child: const Text('Change Folder'),
+            if (!Platform.isIOS)
+              ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                title: const Text('Notes Storage Location'),
+                subtitle: Text(_currentDirectory ?? 'Not set'),
+                trailing: const Icon(Icons.folder),
+                onTap: _pickDirectory,
+              ),
+            if (!Platform.isIOS)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        fixedSize: const Size(250, 40)),
+                    onPressed: _pickDirectory,
+                    child: const Text('Change Folder'),
+                  ),
                 ),
               ),
-            ),
-            const Divider(),
+            if (!Platform.isIOS) const Divider(),
             sectionTitle(
               'View',
               Theme.of(context).colorScheme.secondary,

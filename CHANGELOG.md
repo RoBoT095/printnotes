@@ -1,5 +1,9 @@
 # Changelog
 
+# (Jan 24-27, 2025)
+
+Started working on releasing app to the Apple App Store but due to insufficient testing outside of iOS emulator, ended up learning more about how permissions are handled for iOS. To make the app work for ios, I hide the folder selection buttons and instead made the Apps documents directory visible in the Files app.
+
 ## (Jan 2-3, 2025)
 
 - Added PDF Viewer to the app (I didn't have one on my phones, so I decided, why not add to my notes app)
