@@ -140,6 +140,24 @@ class MarkdownToolbar extends StatelessWidget {
                 ),
               ],
             ),
+            // indent
+            ToolbarItem(
+              key: const ValueKey<String>("toolbar_indent_action"),
+              icon: Icons.format_indent_increase,
+              tooltip: 'Indent',
+              onPressedButton: () {
+                toolbar.action("\t", "");
+              },
+            ),
+            // unindent
+            ToolbarItem(
+              key: const ValueKey<String>("toolbar_unindent_action"),
+              icon: Icons.format_indent_decrease,
+              tooltip: 'Unindent',
+              onPressedButton: () {
+                toolbar.action("", "\t");
+              },
+            ),
             // unordered list
             ToolbarItem(
               key: const ValueKey<String>("toolbar_unordered_list_action"),

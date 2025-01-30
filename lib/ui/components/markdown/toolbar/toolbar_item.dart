@@ -38,7 +38,7 @@ class ToolbarItem extends StatelessWidget {
                   )
                 : Icon(
                     icon,
-                    size: 16,
+                    size: 20,
                   ),
             tooltip: tooltip,
           )
