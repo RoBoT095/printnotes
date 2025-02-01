@@ -12,7 +12,7 @@ import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
-class GridListView extends StatelessWidget {
+class GridListView extends StatefulWidget {
   const GridListView({
     super.key,
     required this.items,
@@ -21,6 +21,8 @@ class GridListView extends StatelessWidget {
     required this.currentLayout,
     required this.latexSupport,
     required this.notePreviewLength,
+    required this.isSelecting,
+    required this.selectedItems,
   });
 
   final List<FileSystemEntity> items;
@@ -29,32 +31,60 @@ class GridListView extends StatelessWidget {
   final String currentLayout;
   final bool latexSupport;
   final int notePreviewLength;
+  final bool isSelecting;
+  final Set<dynamic> selectedItems;
 
-  Widget _buildGridItem(BuildContext context, int index) {
-    final item = items[index];
+  @override
+  State<GridListView> createState() => _GridListViewState();
+}
+
+class _GridListViewState extends State<GridListView> {
+  Widget _buildItem(BuildContext context, int index) {
+    final item = widget.items[index];
     final isDirectory = item is Directory;
+    final isSelected = widget.selectedItems.contains(item);
 
     return GestureDetector(
       onTap: () {
-        if (isDirectory) {
-          onChange(item.path);
-          ItemNavHandler.addToFolderHistory(item.path);
-        } else if (item is File) {
-          ItemNavHandler.routeItemToPage(
-              context, item, () => onChange(currentPath));
+        if (widget.isSelecting) {
+          if (!isDirectory) {
+            if (isSelected) {
+              setState(() => widget.selectedItems.remove(item));
+            } else {
+              setState(() => widget.selectedItems.add(item));
+            }
+          }
+        } else {
+          if (isDirectory) {
+            widget.onChange(item.path);
+            ItemNavHandler.addToFolderHistory(item.path);
+          } else if (item is File) {
+            ItemNavHandler.routeItemToPage(
+                context, item, () => widget.onChange(widget.currentPath));
+          }
         }
       },
-      onLongPress: () =>
-          showBottomMenu(context, item, () => onChange(currentPath)),
+      onLongPress: () => showBottomMenu(
+          context, item, () => widget.onChange(widget.currentPath)),
       child: AbsorbPointer(
         child: Card(
-          color: Theme.of(context).colorScheme.surfaceContainer,
+          color: (isDirectory && widget.isSelecting)
+              ? Theme.of(context).disabledColor.withOpacity(0.1)
+              : Theme.of(context).colorScheme.surfaceContainer,
+          shape: isSelected
+              ? RoundedRectangleBorder(
+                  side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary, width: 5),
+                  borderRadius: BorderRadius.circular(12))
+              : null,
           child: isDirectory
               ? ListTile(
                   leading: Icon(
                     Icons.folder,
                     size: 34,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: widget.isSelecting
+                        ? Theme.of(context).disabledColor
+                        : Theme.of(context).colorScheme.secondary,
                   ),
                   title: Text(
                     path.basename(item.path),
@@ -107,10 +137,10 @@ class GridListView extends StatelessWidget {
         MarkdownBlock(
           selectable: false,
           data: StorageSystem.getNotePreview(item.path,
-              previewLength: notePreviewLength),
+              previewLength: widget.notePreviewLength),
           config: theMarkdownConfigs(context, hideCodeButtons: true),
           generator: theMarkdownGenerators(context,
-              textScale: 0.95, useLatex: latexSupport),
+              textScale: 0.95, useLatex: widget.latexSupport),
         ),
       ],
     );
@@ -118,16 +148,17 @@ class GridListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isSelecting == false) widget.selectedItems.clear();
     return CustomScrollView(
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.all(8),
           sliver: SliverMasonryGrid.count(
-            crossAxisCount: _displayGridCount(context, currentLayout),
+            crossAxisCount: _displayGridCount(context, widget.currentLayout),
             mainAxisSpacing: 4,
             crossAxisSpacing: 4,
-            childCount: items.length,
-            itemBuilder: (context, index) => _buildGridItem(context, index),
+            childCount: widget.items.length,
+            itemBuilder: (context, index) => _buildItem(context, index),
           ),
         ),
         // Adds empty space at bottom, helps when in list view

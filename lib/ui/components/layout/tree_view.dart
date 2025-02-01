@@ -10,12 +10,38 @@ import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
 // Good luck to future me to understanding all this again if I need to change something later
 
-class TreeLayoutView extends StatelessWidget {
-  const TreeLayoutView(
-      {super.key, required this.initDir, required this.onChange});
+class TreeLayoutView extends StatefulWidget {
+  const TreeLayoutView({
+    super.key,
+    required this.initDir,
+    required this.onChange,
+    required this.isSelecting,
+    required this.selectedItems,
+  });
 
   final String initDir;
   final VoidCallback onChange;
+  final bool isSelecting;
+  final Set<dynamic> selectedItems;
+
+  @override
+  State<TreeLayoutView> createState() => _TreeLayoutViewState();
+}
+
+class _TreeLayoutViewState extends State<TreeLayoutView> {
+  late TreeNode<Explorable> _rootNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildTree();
+  }
+
+  void _buildTree() {
+    _rootNode = TreeNode.root(
+        data: TFolder(widget.initDir.split('/').last, widget.initDir));
+    _rootNode.addAll(getTree(widget.initDir));
+  }
 
   List<Node> getTree(String directory) {
     final List<FileSystemEntity> items =
@@ -36,10 +62,11 @@ class TreeLayoutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isSelecting == false) widget.selectedItems.clear();
+
     return SafeArea(
       child: TreeView.simpleTyped<Explorable, TreeNode<Explorable>>(
-        tree: TreeNode.root(data: TFolder(initDir.split('/').last, initDir))
-          ..addAll(getTree(initDir)),
+        tree: _rootNode,
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         expansionIndicatorBuilder: (context, node) {
           return ChevronIndicator.rightDown(
@@ -50,31 +77,46 @@ class TreeLayoutView extends StatelessWidget {
         },
         showRootNode: false,
         indentation: const Indentation(),
-        builder: (context, node) => Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: GestureDetector(
-            onTap: node is FileNode
-                ? () {
-                    ItemNavHandler.routeItemToPage(
-                        context, File(node.data!.path), () {});
-                  }
-                : null,
-            onLongPress: () => showBottomMenu(
-              context,
-              node is FileNode
-                  ? File(node.data!.path)
-                  : Directory(node.data!.path),
-              onChange,
-            ),
-            child: ListTile(
-              title: Text(node.data?.name ?? 'N/A'),
-              leading: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: node.icon(context),
+        builder: (context, node) {
+          final isSelected = widget.selectedItems.contains(node);
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: GestureDetector(
+              onTap: node is FileNode
+                  ? () {
+                      if (widget.isSelecting) {
+                        if (isSelected) {
+                          setState(() => widget.selectedItems.remove(node));
+                        } else {
+                          setState(() => widget.selectedItems.add(node));
+                        }
+                      } else {
+                        ItemNavHandler.routeItemToPage(
+                            context, File(node.data!.path), () {});
+                      }
+                    }
+                  : null,
+              onLongPress: () => showBottomMenu(
+                context,
+                node is FileNode
+                    ? File(node.data!.path)
+                    : Directory(node.data!.path),
+                widget.onChange,
+              ),
+              child: ListTile(
+                selected: isSelected,
+                selectedColor: Theme.of(context).colorScheme.onSecondary,
+                selectedTileColor:
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                title: Text(node.data?.name ?? 'N/A'),
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: node.icon(context),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

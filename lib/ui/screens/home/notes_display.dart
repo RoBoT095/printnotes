@@ -30,13 +30,17 @@ class NotesDisplay extends StatefulWidget {
 }
 
 class _NotesDisplayState extends State<NotesDisplay> {
-  bool _isLoading = false;
   List<FileSystemEntity> _items = [];
   String _currentPath = '';
   String _currentFolderName = 'All Notes';
   List<String> _folderHistory = [];
+
+  bool _isLoading = false;
   bool _useLatex = false;
   int _previewLength = 100;
+  bool _isSelecting = false;
+
+  Set<dynamic> selectedItems = <dynamic>{};
 
   @override
   void initState() {
@@ -51,6 +55,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     if (oldWidget.currentLayout != widget.currentLayout ||
         oldWidget.currentDirectory != widget.currentDirectory) {
       _loadItems(widget.currentDirectory, doReload: true);
+      _isSelecting = false;
     } else {
       _loadItems(oldWidget.currentDirectory, doReload: true);
     }
@@ -78,11 +83,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     }
   }
 
-  void _navBack() {
-    setState(() {
-      _loadItems(ItemNavHandler.navigateBack());
-    });
-  }
+  void _navBack() => setState(() => _loadItems(ItemNavHandler.navigateBack()));
 
   @override
   Widget build(BuildContext context) {
@@ -102,24 +103,46 @@ class _NotesDisplayState extends State<NotesDisplay> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           title: Text(_currentFolderName),
-          leading: _folderHistory.length > 1
+          leading: _isSelecting
               ? IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: _navBack,
-                )
-              : null,
-          actions: [
-            IconButton(
-              tooltip: 'Reload List',
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                setState(() => _isLoading = true);
-                _loadItems(_currentPath);
-                Timer(const Duration(milliseconds: 300),
-                    () => setState(() => _isLoading = false));
-              },
-            ),
-          ],
+                  onPressed: () => setState(() => _isSelecting = !_isSelecting),
+                  icon: const Icon(Icons.close))
+              : _folderHistory.length > 1
+                  ? IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: _navBack,
+                    )
+                  : null,
+          actions: _isSelecting
+              ? [
+                  IconButton(
+                    tooltip: 'Select All',
+                    onPressed: () {},
+                    icon: const Icon(Icons.select_all),
+                  ),
+                  IconButton(
+                    tooltip: 'Move Selected',
+                    onPressed: () {},
+                    icon: const Icon(Icons.drive_file_move),
+                  ),
+                  IconButton(
+                    tooltip: 'Delete Selected',
+                    onPressed: () {},
+                    icon: const Icon(Icons.delete),
+                  ),
+                ]
+              : [
+                  IconButton(
+                    tooltip: 'Reload List',
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      setState(() => _isLoading = true);
+                      _loadItems(_currentPath);
+                      Timer(const Duration(milliseconds: 300),
+                          () => setState(() => _isLoading = false));
+                    },
+                  ),
+                ],
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -131,6 +154,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     ? TreeLayoutView(
                         initDir: widget.currentDirectory,
                         onChange: () => _loadItems(_currentPath),
+                        isSelecting: _isSelecting,
+                        selectedItems: selectedItems,
                       )
                     : GridListView(
                         items: _items,
@@ -139,6 +164,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
                         currentLayout: widget.currentLayout,
                         latexSupport: _useLatex,
                         notePreviewLength: _previewLength,
+                        isSelecting: _isSelecting,
+                        selectedItems: selectedItems,
                       ),
         floatingActionButton: speedDialFAB(
           context,

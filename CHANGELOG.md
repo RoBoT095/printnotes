@@ -1,5 +1,13 @@
 # Changelog
 
+# (Feb 1, 2025)
+
+**~Work in Progress~**
+
+Working on adding a item selection feature to perform bulk actions on notes like moving or deleting all selected items.
+
+Will be part of 0.9.13, also version 0.9.12 doesn't have a release outside of iOS due to needing to fix permissions issue and how you can't release app with same version number even if build number is different on apple app store.
+
 # (Jan 24-27, 2025)
 
 Started working on releasing app to the Apple App Store but due to insufficient testing outside of iOS emulator, ended up learning more about how permissions are handled for iOS. To make the app work for ios, I hide the folder selection buttons and instead made the Apps documents directory visible in the Files app.

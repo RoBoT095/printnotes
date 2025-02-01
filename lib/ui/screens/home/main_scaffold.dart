@@ -94,6 +94,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             },
           ),
           PopupMenuButton(
+            tooltip: 'More',
             icon: const Icon(Icons.more_vert),
             enabled: !isSearching,
             itemBuilder: (context) => <PopupMenuEntry>[

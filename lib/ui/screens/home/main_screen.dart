@@ -41,11 +41,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  void _updateCanPop() {
-    setState(() {
-      _canPop = !_canPop;
-    });
-  }
+  void _updateCanPop() => setState(() => _canPop = !_canPop);
 
   @override
   Widget build(BuildContext context) {
