@@ -312,16 +312,20 @@ class StorageSystem {
   // Get files (and folders) of a folder
 
   static List<FileSystemEntity> listFolderContents(String folderPath,
-      {bool recursive = false}) {
+      {bool recursive = false, bool showHidden = false}) {
     final folder = Directory(folderPath);
     if (folder.existsSync()) {
       final contents = folder.listSync(recursive: recursive).toList();
-      // Filter out hidden folders and files
-      final filteredContents = contents.where((item) {
-        final pathSegments = item.path.split(Platform.pathSeparator);
-        return !pathSegments.any((segment) => segment.startsWith('.'));
-      }).toList();
-      return filteredContents;
+      if (showHidden) {
+        return contents;
+      } else {
+        // Filter out hidden folders and files
+        final filteredContents = contents.where((item) {
+          final pathSegments = item.path.split(Platform.pathSeparator);
+          return !pathSegments.any((segment) => segment.startsWith('.'));
+        }).toList();
+        return filteredContents;
+      }
     }
     return [];
   }
