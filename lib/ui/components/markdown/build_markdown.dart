@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
 
 import 'package:flutter_highlight/themes/a11y-light.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
@@ -45,8 +48,8 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
   ]);
 }
 
-MarkdownGenerator theMarkdownGenerators(context,
-    {double? textScale, bool useLatex = false}) {
+MarkdownGenerator theMarkdownGenerators(BuildContext context,
+    {double? textScale}) {
   // Not an elegant way to customize, but it works
   final isDark = Theme.of(context).brightness == Brightness.dark;
   SpanNodeGeneratorWithTag noteTagGenerator = SpanNodeGeneratorWithTag(
@@ -63,12 +66,12 @@ MarkdownGenerator theMarkdownGenerators(context,
 
   return MarkdownGenerator(
     generators: [
-      if (useLatex) latexGenerator,
+      if (context.watch<SettingsProvider>().useLatex) latexGenerator,
       highlighterGeneratorWithTag,
       noteTagGenerator,
     ],
     inlineSyntaxList: [
-      if (useLatex) LatexSyntax(),
+      if (context.watch<SettingsProvider>().useLatex) LatexSyntax(),
       HighlighterSyntax(),
       NoteTagSyntax()
     ],
@@ -82,16 +85,12 @@ MarkdownGenerator theMarkdownGenerators(context,
 }
 
 Widget buildMarkdownWidget(BuildContext context,
-    {required String data,
-    bool? selectable,
-    TocController? tocController,
-    bool? latexSupport}) {
+    {required String data, bool? selectable, TocController? tocController}) {
   return MarkdownWidget(
     data: data,
     selectable: selectable ?? true,
     config: theMarkdownConfigs(context),
     tocController: tocController,
-    markdownGenerator:
-        theMarkdownGenerators(context, useLatex: latexSupport ?? false),
+    markdownGenerator: theMarkdownGenerators(context),
   );
 }

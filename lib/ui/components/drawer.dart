@@ -8,14 +8,7 @@ import 'package:printnotes/ui/screens/about/about_screen.dart';
 import 'package:printnotes/constants/constants.dart';
 
 class DrawerView extends StatelessWidget {
-  const DrawerView({
-    super.key,
-    required this.directory,
-    required this.onItemChanged,
-  });
-
-  final String directory;
-  final VoidCallback onItemChanged;
+  const DrawerView({super.key});
 
   void _navigateToScreen(BuildContext context, {Widget? screen}) {
     final bool isDrawerPersistent = MediaQuery.sizeOf(context).width >= 800;
@@ -26,13 +19,9 @@ class DrawerView extends StatelessWidget {
     }
 
     if (screen != null) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(
-            builder: (context) => screen,
-          ))
-          .then((_) => onItemChanged());
-    } else {
-      onItemChanged();
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => screen,
+      ));
     }
   }
 
@@ -105,10 +94,8 @@ class DrawerView extends StatelessWidget {
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.settings_outlined),
                 title: const Text('Settings'),
-                onTap: () => _navigateToScreen(context,
-                    screen: SettingsScreen(
-                      onSettingsChanged: onItemChanged,
-                    )),
+                onTap: () =>
+                    _navigateToScreen(context, screen: const SettingsScreen()),
               ),
               ListTile(
                 iconColor: Theme.of(context).colorScheme.secondary,

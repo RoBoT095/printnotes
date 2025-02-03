@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'package:printnotes/utils/configs/user_preference.dart';
+import 'package:printnotes/providers/settings_provider.dart';
+
 import 'package:printnotes/ui/components/search_view.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({
     super.key,
     required this.title,
-    required this.currentDirectory,
-    required this.onChange,
-    required this.layoutChange,
     required this.body,
     this.drawer,
   });
 
   final String title;
-  final String currentDirectory;
-  final VoidCallback onChange;
-  final ValueSetter layoutChange;
   final Widget body;
   final Widget? drawer;
 
@@ -28,43 +24,12 @@ class MainScaffold extends StatefulWidget {
 class _MainScaffoldState extends State<MainScaffold> {
   bool isSearching = false;
   TextEditingController searchController = TextEditingController();
-  String _selectedSort = 'default';
-  String _currentLayout = 'grid';
-
-  @override
-  void initState() {
-    getItemSort();
-    getLayout();
-    super.initState();
-  }
-
-  void getItemSort() async {
-    String order = await UserSortPref.getSortOrder();
-    setState(() => _selectedSort = order);
-  }
-
-  void setItemSort(String order) {
-    setState(() => _selectedSort = order);
-    UserSortPref.setSortOrder(order);
-    widget.onChange();
-    Navigator.of(context).pop();
-  }
-
-  void getLayout() async {
-    String layout = await UserLayoutPref.getLayoutView();
-    setState(() => _currentLayout = layout);
-  }
-
-  void setLayout(String layout) {
-    setState(() => _currentLayout = layout);
-    UserLayoutPref.setLayoutView(layout);
-    widget.layoutChange(layout);
-    widget.onChange();
-    Navigator.of(context).pop();
-  }
 
   @override
   Widget build(BuildContext context) {
+    String currentSort = context.watch<SettingsProvider>().sortOrder;
+    String currentLayout = context.watch<SettingsProvider>().layout;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -100,21 +65,24 @@ class _MainScaffoldState extends State<MainScaffold> {
             itemBuilder: (context) => <PopupMenuEntry>[
               PopupMenuItem(
                 child: PopupMenuButton(
-                  onSelected: setLayout,
+                  onSelected: (value) {
+                    context.read<SettingsProvider>().setLayout(value);
+                    Navigator.pop(context);
+                  },
                   itemBuilder: (context) => [
                     CheckedPopupMenuItem(
                       value: 'grid',
-                      checked: _currentLayout == 'grid',
+                      checked: currentLayout == 'grid',
                       child: const Text('Grid View'),
                     ),
                     CheckedPopupMenuItem(
                       value: 'list',
-                      checked: _currentLayout == 'list',
+                      checked: currentLayout == 'list',
                       child: const Text('List View'),
                     ),
                     CheckedPopupMenuItem(
                       value: 'tree',
-                      checked: _currentLayout == 'tree',
+                      checked: currentLayout == 'tree',
                       child: const Text('Tree View'),
                     ),
                   ],
@@ -125,31 +93,34 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
               PopupMenuItem(
                 child: PopupMenuButton(
-                  onSelected: setItemSort,
+                  onSelected: (value) {
+                    context.read<SettingsProvider>().setSortOrder(value);
+                    Navigator.pop(context);
+                  },
                   itemBuilder: (context) => [
                     CheckedPopupMenuItem(
                       value: 'default',
-                      checked: _selectedSort == 'default',
+                      checked: currentSort == 'default',
                       child: const Text('Default Order'),
                     ),
                     CheckedPopupMenuItem(
                       value: 'titleAsc',
-                      checked: _selectedSort == 'titleAsc',
+                      checked: currentSort == 'titleAsc',
                       child: const Text('Title (Asc)'),
                     ),
                     CheckedPopupMenuItem(
                       value: 'titleDsc',
-                      checked: _selectedSort == 'titleDsc',
+                      checked: currentSort == 'titleDsc',
                       child: const Text('Title (Desc)'),
                     ),
                     CheckedPopupMenuItem(
                       value: 'lastModAsc',
-                      checked: _selectedSort == 'lastModAsc',
+                      checked: currentSort == 'lastModAsc',
                       child: const Text('Last Mod (Asc)'),
                     ),
                     CheckedPopupMenuItem(
                       value: 'lastModDsc',
-                      checked: _selectedSort == 'lastModDsc',
+                      checked: currentSort == 'lastModDsc',
                       child: const Text('Last Mod (Desc)'),
                     ),
                   ],
@@ -165,10 +136,14 @@ class _MainScaffoldState extends State<MainScaffold> {
       ),
       drawer: widget.drawer,
       body: isSearching
-          ? SearchView(
-              searchQuery: searchController.text,
-              currentDir: widget.currentDirectory)
+          ? SearchView(searchQuery: searchController.text)
           : widget.body,
     );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }

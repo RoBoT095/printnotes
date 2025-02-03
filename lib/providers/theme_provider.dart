@@ -6,12 +6,41 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   String _colorScheme = 'default';
+  bool _useCustomTheme = false;
 
   ThemeMode get themeMode => _themeMode;
+  String get themeModeString => _themeModeToString(_themeMode);
   String get colorScheme => _colorScheme;
+  bool get useCustomTheme => _useCustomTheme;
 
   ThemeProvider() {
     loadPreferences();
+  }
+
+  String _themeModeToString(ThemeMode theme) {
+    switch (theme) {
+      case ThemeMode.light:
+        return 'light';
+      case ThemeMode.dark:
+        return 'dark';
+      default:
+        return 'system';
+    }
+  }
+
+  ThemeMode _stringToThemeMode(String theme) {
+    switch (theme) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
+
+  bool isThemeCustom(String colorScheme) {
+    return colorScheme == 'custom' ? true : false;
   }
 
   void loadPreferences() async {
@@ -20,19 +49,11 @@ class ThemeProvider with ChangeNotifier {
 
     setThemeMode(savedTheme);
     setColorScheme(savedColorScheme);
+    setUseCustomTheme(isThemeCustom(colorScheme));
   }
 
   void setThemeMode(String theme) {
-    switch (theme) {
-      case 'light':
-        _themeMode = ThemeMode.light;
-        break;
-      case 'dark':
-        _themeMode = ThemeMode.dark;
-        break;
-      default:
-        _themeMode = ThemeMode.system;
-    }
+    _themeMode = _stringToThemeMode(theme);
     UserThemingPref.setThemeMode(theme);
     notifyListeners();
   }
@@ -40,6 +61,13 @@ class ThemeProvider with ChangeNotifier {
   void setColorScheme(String colorScheme) {
     _colorScheme = colorScheme;
     UserThemingPref.setColorScheme(colorScheme);
+
+    setUseCustomTheme(isThemeCustom(colorScheme));
+    notifyListeners();
+  }
+
+  void setUseCustomTheme(bool useCustomTheme) {
+    _useCustomTheme = useCustomTheme;
     notifyListeners();
   }
 

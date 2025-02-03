@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
@@ -17,20 +19,12 @@ class GridListView extends StatefulWidget {
     super.key,
     required this.items,
     required this.onChange,
-    required this.currentPath,
-    required this.currentLayout,
-    required this.latexSupport,
-    required this.notePreviewLength,
     required this.isSelecting,
     required this.selectedItems,
   });
 
   final List<FileSystemEntity> items;
   final ValueSetter<String> onChange;
-  final String currentPath;
-  final String currentLayout;
-  final bool latexSupport;
-  final int notePreviewLength;
   final bool isSelecting;
   final Set<dynamic> selectedItems;
 
@@ -60,12 +54,15 @@ class _GridListViewState extends State<GridListView> {
             ItemNavHandler.addToFolderHistory(item.path);
           } else if (item is File) {
             ItemNavHandler.routeItemToPage(
-                context, item, () => widget.onChange(widget.currentPath));
+                context,
+                item,
+                () =>
+                    widget.onChange(context.read<SettingsProvider>().mainDir));
           }
         }
       },
-      onLongPress: () => showBottomMenu(
-          context, item, () => widget.onChange(widget.currentPath)),
+      onLongPress: () => showBottomMenu(context, item,
+          () => widget.onChange(context.read<SettingsProvider>().mainDir)),
       child: AbsorbPointer(
         child: Card(
           color: (isDirectory && widget.isSelecting)
@@ -137,10 +134,9 @@ class _GridListViewState extends State<GridListView> {
         MarkdownBlock(
           selectable: false,
           data: StorageSystem.getNotePreview(item.path,
-              previewLength: widget.notePreviewLength),
+              previewLength: context.watch<SettingsProvider>().previewLength),
           config: theMarkdownConfigs(context, hideCodeButtons: true),
-          generator: theMarkdownGenerators(context,
-              textScale: 0.95, useLatex: widget.latexSupport),
+          generator: theMarkdownGenerators(context, textScale: 0.95),
         ),
       ],
     );
@@ -154,7 +150,8 @@ class _GridListViewState extends State<GridListView> {
         SliverPadding(
           padding: const EdgeInsets.all(8),
           sliver: SliverMasonryGrid.count(
-            crossAxisCount: _displayGridCount(context, widget.currentLayout),
+            crossAxisCount: _displayGridCount(
+                context, context.watch<SettingsProvider>().layout),
             mainAxisSpacing: 4,
             crossAxisSpacing: 4,
             childCount: widget.items.length,

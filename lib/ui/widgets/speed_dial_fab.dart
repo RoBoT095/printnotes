@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:printnotes/utils/handlers/item_navigation.dart';
-import 'package:printnotes/utils/handlers/item_create.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-Widget speedDialFAB(BuildContext context,
-    {required String currentPath, required VoidCallback onLoadItems}) {
+import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/utils/handlers/item_create.dart';
+
+Widget speedDialFAB(BuildContext context, {required VoidCallback onLoadItems}) {
   return SpeedDial(
     icon: Icons.add,
     activeIcon: Icons.close,
@@ -17,7 +18,7 @@ Widget speedDialFAB(BuildContext context,
         label: 'Create Folder',
         onTap: () => ItemCreationHandler.handleCreateNewFolder(
           context,
-          currentPath,
+          context.watch<SettingsProvider>().mainDir,
           () => onLoadItems(),
         ),
       ),
@@ -26,7 +27,7 @@ Widget speedDialFAB(BuildContext context,
         label: 'Create Note',
         onTap: () => ItemCreationHandler.handleCreateNewNote(
           context,
-          currentPath,
+          context.watch<SettingsProvider>().mainDir,
           () => onLoadItems(),
         ),
       ),

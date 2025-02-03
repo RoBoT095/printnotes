@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 
@@ -10,14 +12,13 @@ class SearchView extends StatelessWidget {
   const SearchView({
     super.key,
     required this.searchQuery,
-    required this.currentDir,
   });
 
   final String searchQuery;
-  final String currentDir;
 
   Widget? _buildSubtitle(BuildContext context, File item) {
-    final relativePath = path.relative(item.path, from: currentDir);
+    final relativePath = path.relative(item.path,
+        from: context.watch<SettingsProvider>().mainDir);
     String text = File(item.path).readAsStringSync().replaceAll('\n', ' ');
     int maxChar = 40;
 
@@ -107,7 +108,8 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foundItemsList = StorageSystem.searchItems(searchQuery, currentDir);
+    final foundItemsList = StorageSystem.searchItems(
+        searchQuery, context.watch<SettingsProvider>().mainDir);
 
     return ListView.builder(
       itemCount: foundItemsList.length,
@@ -124,7 +126,8 @@ class SearchView extends StatelessWidget {
           onTap: () {
             // Should never be a folder but it is just a backup check unless I messed something up
             if (item is File) {
-              ItemNavHandler.onNoteSelect(context, item, () => currentDir);
+              ItemNavHandler.onNoteSelect(context, item,
+                  () => context.watch<SettingsProvider>().mainDir);
             }
           },
         );

@@ -1,6 +1,12 @@
-# Changelog
+# Changelog + Dev Log
 
-# (Feb 1, 2025)
+### (Feb 3, 2025)
+
+Done something I should have done in the very beginning, using Provider for settings state management, changes should be imperceptible, but it will help keep code clean and make my life simpler with adding feature to perform bulk actions by selecting.
+
+Need to completely remove SettingsLoader once I move out loadItems(), want to save work while it seems to all still be working normally.
+
+### (Feb 1, 2025)
 
 **~Work in Progress~**
 
@@ -8,52 +14,52 @@ Working on adding a item selection feature to perform bulk actions on notes like
 
 Will be part of 0.9.13, also version 0.9.12 doesn't have a release outside of iOS due to needing to fix permissions issue and how you can't release app with same version number even if build number is different on apple app store.
 
-# (Jan 24-27, 2025)
+### (Jan 24-27, 2025)
 
 Started working on releasing app to the Apple App Store but due to insufficient testing outside of iOS emulator, ended up learning more about how permissions are handled for iOS. To make the app work for ios, I hide the folder selection buttons and instead made the Apps documents directory visible in the Files app.
 
-## (Jan 2-3, 2025)
+### (Jan 2-3, 2025)
 
 - Added PDF Viewer to the app (I didn't have one on my phones, so I decided, why not add to my notes app)
 - Added button home screen floating action button to open external images and PDF files from storage
 
 Tried publishing app to Google Play Store, got passed closed testing, but when trying to release to production I got rejected multiple times for using MANAGE_EXTERNAL_STORAGE permission on android, they didn't like any of my reasons. I might need to figure out how to use ACTION_OPEN_DOCUMENT_TREE or something like it without breaking or rewriting the entire app. Couldn't find a good library that wasn't outdated or was too complex, so I might actually need to learn some Kotlin for this.
 
-## (Dec 27, 2024)
+### (Dec 27, 2024)
 
 Fixed search and removed hidden folders from results
 
-## (Nov 30, 2024)
+### (Nov 30, 2024)
 
 Made Snackbars prettier
 
-## (Nov 25, 2024)
+### (Nov 25, 2024)
 
 Fixed minor bugs and visual discrepancies, config file for custom themes is now looks readable with indentation instead of all being on one line.
 
-## (Nov 11, 2024)
+### (Nov 11, 2024)
 
 Added info pop up for notes like amount of characters, words, the file size, file mod date, and file path/location. Fixed issue with `expandableBackground` not set on toolbar which would default to white, so in dark mode made it impossible to see icons in most cases.
 
-## (Nov 9, 2024)
+### (Nov 9, 2024)
 
 Made table of contents into a end drawer (drawer that opens from right side instead) and made content center on large screens for note editor, image viewer, settings, about, and custom colors screen, debating if other screens also need it.
 
 Removed all files related to syncing, will keep them on `dev` branch instead.
 
-## (Nov 5, 2024)
+### (Nov 5, 2024)
 
 Search can now find tags if you click on filter icon to toggle advanced search and type "tags:" and then enter the name of the tag you want to find. Changed how tags look like as they can me a bit too light or dark depending on theme, still not the best fix, but is better. Changed available images to reflect the changes
 
-## (Nov 4, 2024)
+### (Nov 4, 2024)
 
 Added advanced search for searching the contents of notes. Moved "sort by" button into the 3 dot "more" popup menu, as well as made "change layout" into a popup menu as well
 
-## (Nov 3, 2024)
+### (Nov 3, 2024)
 
 Moved Grid/List views into a separate file, fixed up some functions in storage_system.dart to remove a few duplicate code, and changed some text like "Note" to "File" as app now supports images as well. Still need to fix archiving and soft deletion for images.
 
-## (Nov 2, 2024)
+### (Nov 2, 2024)
 
 Added way to preview images from home screen and from a basic image viewer, this is in preparation to allow linking images in storage from inside notes.
 

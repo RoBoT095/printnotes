@@ -4,40 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/theme_provider.dart';
-import 'package:printnotes/utils/load_settings.dart';
-import 'package:printnotes/utils/configs/user_intro.dart';
+
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
-class IntroScreen extends StatefulWidget {
-  const IntroScreen({super.key, required this.onDone});
-
-  final VoidCallback onDone;
-
-  @override
-  State<IntroScreen> createState() => _IntroScreenState();
-}
-
-class _IntroScreenState extends State<IntroScreen> {
-  String selectedThemeMode = 'system';
-  String selectedColorScheme = 'default';
-  String? selectedDirectory;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    final settings = await SettingsLoader.loadSettings();
-    setState(() {
-      selectedThemeMode = settings['theme'];
-      selectedColorScheme = settings['colorScheme'];
-      selectedDirectory = settings['directory'];
-    });
-  }
+class IntroScreen extends StatelessWidget {
+  const IntroScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,24 +33,20 @@ class _IntroScreenState extends State<IntroScreen> {
             children: [
               const Text("Select a theme mode:"),
               DropdownButton<String>(
-                value: selectedThemeMode,
+                value: context.watch<ThemeProvider>().themeModeString,
                 items: const [
                   DropdownMenuItem(value: 'system', child: Text('System')),
                   DropdownMenuItem(value: 'light', child: Text('Light')),
                   DropdownMenuItem(value: 'dark', child: Text('Dark')),
                 ],
                 onChanged: (value) {
-                  setState(() {
-                    selectedThemeMode = value!;
-                  });
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .setThemeMode(value ?? 'system');
+                  context.read<ThemeProvider>().setThemeMode(value ?? 'system');
                 },
               ),
               const SizedBox(height: 20),
               const Text("Select a color scheme for your app:"),
               DropdownButton<String>(
-                value: selectedColorScheme,
+                value: context.watch<ThemeProvider>().colorScheme,
                 items: const [
                   DropdownMenuItem(
                       value: 'default', child: Text('Default Blue')),
@@ -88,10 +58,8 @@ class _IntroScreenState extends State<IntroScreen> {
                       value: 'strawberry', child: Text('Strawberry')),
                 ],
                 onChanged: (value) {
-                  setState(() {
-                    selectedColorScheme = value!;
-                  });
-                  Provider.of<ThemeProvider>(context, listen: false)
+                  context
+                      .read<ThemeProvider>()
                       .setColorScheme(value ?? 'default');
                 },
               ),
@@ -127,17 +95,17 @@ class _IntroScreenState extends State<IntroScreen> {
                 if (Platform.isAndroid) const SizedBox(height: 20),
                 const Text("Select a folder to store your notes:"),
                 ListTile(
-                  title: const Center(child: Text('Notes Location')),
-                  subtitle: Center(child: Text(selectedDirectory ?? 'Not Set')),
+                  title: const Center(child: Text('Notes Location:')),
+                  subtitle: Center(
+                      child: Text(context.watch<SettingsProvider>().mainDir)),
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final pickedDirectory = await DataPath.pickDirectory();
-                    if (pickedDirectory != null) {
-                      setState(() {
-                        selectedDirectory = pickedDirectory;
-                      });
-                      await DataPath.setSelectedDirectory(pickedDirectory);
+                    String? selectedDirectory = await DataPath.pickDirectory();
+                    if (selectedDirectory != null && context.mounted) {
+                      context
+                          .read<SettingsProvider>()
+                          .setMainDir(selectedDirectory);
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -170,9 +138,8 @@ class _IntroScreenState extends State<IntroScreen> {
             color: Theme.of(context).colorScheme.secondary,
           )),
       onDone: () {
-        if (selectedDirectory != null) {
-          UserFirstTime.setShowIntro(false);
-          widget.onDone();
+        if (context.read<SettingsProvider>().mainDir != 'Not Set') {
+          context.read<SettingsProvider>().setShowIntro(false);
         } else {
           customSnackBar('Please select a folder for your notes.',
                   type: 'warning')

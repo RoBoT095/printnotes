@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
+import 'package:printnotes/providers/settings_provider.dart';
+
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/screens/home/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeApp();
-  runApp(ChangeNotifierProvider(
-    create: (context) => ThemeProvider(),
-    child: const App(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+      ],
+      child: const App(),
+    ),
+  );
 }
 
 Future<void> initializeApp() async {

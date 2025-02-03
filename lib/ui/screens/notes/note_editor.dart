@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
-import 'package:printnotes/utils/configs/user_preference.dart';
 
 import 'package:printnotes/utils/file_info.dart';
 import 'package:printnotes/utils/open_explorer.dart';
@@ -42,7 +41,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   bool _isEditingNote = false;
   bool _isLoading = true;
   String fileTitle = '';
-  bool _useLatexSyntax = false;
 
   @override
   void initState() {
@@ -55,13 +53,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     try {
       final file = File(widget.filePath);
       final content = await file.readAsString();
-      final getLatexPref = await UserLatexPref.getLatexSupport();
 
       setState(() {
         fileTitle = widget.filePath.split('/').last;
         _notesController.text = content;
         _isLoading = false;
-        _useLatexSyntax = getLatexPref;
       });
     } catch (e) {
       debugPrint('Error loading note content: $e');
@@ -272,7 +268,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                         context,
                                         data: _notesController.text,
                                         tocController: _tocController,
-                                        latexSupport: _useLatexSyntax,
                                       ),
                               ),
                       ),
