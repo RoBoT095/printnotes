@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/utils/handlers/item_move.dart';
+import 'package:printnotes/utils/handlers/item_delete.dart';
 
 import 'package:printnotes/ui/components/layout/grid_list_view.dart';
 import 'package:printnotes/ui/components/layout/tree_view.dart';
@@ -31,9 +34,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
   List<String> _folderHistory = [];
 
   bool _isLoading = false;
-  bool _isSelecting = false;
-
-  Set<dynamic> selectedItems = <dynamic>{};
 
   @override
   void initState() {
@@ -58,7 +58,20 @@ class _NotesDisplayState extends State<NotesDisplay> {
     }
   }
 
+  void onChange(value) {
+    _loadItems(value);
+    _folderHistory.clear();
+  }
+
   void _navBack() => _loadItems(ItemNavHandler.navigateBack());
+
+  List<FileSystemEntity> selectedItemsToFileEntity() {
+    List<FileSystemEntity> fileList = [];
+    for (var item in context.read<SelectingProvider>().selectedItems) {
+      fileList.add(File(item));
+    }
+    return fileList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +91,10 @@ class _NotesDisplayState extends State<NotesDisplay> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           title: Text(_currentFolderName),
-          leading: _isSelecting
+          leading: context.watch<SelectingProvider>().selectingMode
               ? IconButton(
-                  onPressed: () => setState(() => _isSelecting = !_isSelecting),
+                  onPressed: () =>
+                      context.read<SelectingProvider>().setSelectingMode(),
                   icon: const Icon(Icons.close))
               : _folderHistory.length > 1
                   ? IconButton(
@@ -88,21 +102,41 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       onPressed: _navBack,
                     )
                   : null,
-          actions: _isSelecting
+          actions: context.watch<SelectingProvider>().selectingMode
               ? [
                   IconButton(
                     tooltip: 'Select All',
-                    onPressed: () {},
+                    onPressed: () {
+                      context
+                          .read<SelectingProvider>()
+                          .selectAll(_currentPath!);
+                    },
                     icon: const Icon(Icons.select_all),
                   ),
                   IconButton(
                     tooltip: 'Move Selected',
-                    onPressed: () {},
+                    onPressed: () {
+                      ItemMoveHandler.showMoveDialog(
+                          context,
+                          selectedItemsToFileEntity(),
+                          () => _loadItems(_currentPath));
+                      context
+                          .read<SelectingProvider>()
+                          .setSelectingMode(mode: false);
+                    },
                     icon: const Icon(Icons.drive_file_move),
                   ),
                   IconButton(
                     tooltip: 'Delete Selected',
-                    onPressed: () {},
+                    onPressed: () {
+                      ItemDeletionHandler.showSoftDeleteManyConfirmation(
+                          context,
+                          selectedItemsToFileEntity(),
+                          () => _loadItems(_currentPath));
+                      context
+                          .read<SelectingProvider>()
+                          .setSelectingMode(mode: false);
+                    },
                     icon: const Icon(Icons.delete),
                   ),
                 ]
@@ -128,16 +162,9 @@ class _NotesDisplayState extends State<NotesDisplay> {
                 : context.watch<SettingsProvider>().layout == 'tree'
                     ? TreeLayoutView(
                         initDir: context.watch<SettingsProvider>().mainDir,
-                        onChange: () => _loadItems(_currentPath),
-                        isSelecting: _isSelecting,
-                        selectedItems: selectedItems,
+                        onChange: onChange,
                       )
-                    : GridListView(
-                        items: _items,
-                        onChange: (value) => _loadItems(value),
-                        isSelecting: _isSelecting,
-                        selectedItems: selectedItems,
-                      ),
+                    : GridListView(items: _items, onChange: onChange),
         floatingActionButton: speedDialFAB(
           context,
           onLoadItems: () => _loadItems(_currentPath),

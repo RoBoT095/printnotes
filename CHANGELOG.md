@@ -1,5 +1,24 @@
 # Changelog + Dev Log
 
+### (Feb 5, 2025)
+
+**v0.9.13**
+
+**Note**: This only applies to grid and list views as tree view requires a different approach
+
+- Added option to select many notes and perform bulk actions like
+  - moving
+  - deleting
+
+**Changes:**
+
+- Added SelectingProvider to deal with selected items more easily.
+- Fixed speed dial as accidentally put `.watch()` instead of `.read()` on a onTap.
+- Fixed tree view using hardcoded backslash instead of platform path separator.
+- Made dialog for selecting where to move items say main folder path location as I found it confusing being unsure where I was at first glance.
+- Disabled sort options for tree view as they didn't work either way.
+- Changed wording in item delete handler for soft delete from 'delete' to 'trash' to not confuse users.
+
 ### (Feb 3, 2025)
 
 Done something I should have done in the very beginning, using Provider for settings state management, changes should be imperceptible, but it will help keep code clean and make my life simpler with adding feature to perform bulk actions by selecting.

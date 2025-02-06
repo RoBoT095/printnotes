@@ -9,7 +9,7 @@ import 'package:printnotes/ui/components/dialogs/select_location.dart';
 class ItemMoveHandler {
   static Future<void> showMoveDialog(
     BuildContext context,
-    FileSystemEntity item,
+    List<FileSystemEntity> items,
     Function loadItems,
   ) async {
     final String? baseDir = await DataPath.selectedDirectory;
@@ -21,13 +21,17 @@ class ItemMoveHandler {
         builder: (BuildContext context) {
           return SelectLocationDialog(
             baseDir: baseDir,
-            currentItem: item,
+            items: items,
           );
         },
       );
 
       if (newLocation != null) {
-        await StorageSystem.moveItem(item, newLocation);
+        if (items.length == 1) {
+          await StorageSystem.moveItem(items.first, newLocation);
+        } else {
+          await StorageSystem.moveManyItems(items, newLocation);
+        }
         loadItems();
       }
     }

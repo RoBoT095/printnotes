@@ -343,6 +343,19 @@ class StorageSystem {
     }
   }
 
+  static Future<void> moveManyItems(
+      List<FileSystemEntity> items, String newLocation) async {
+    for (var item in items) {
+      final String itemName = path.basename(item.path);
+      final String newPath = path.join(newLocation, itemName);
+      try {
+        await item.rename(newPath);
+      } catch (e) {
+        debugPrint('Error moving item: $e');
+      }
+    }
+  }
+
   // For renaming files and folders (replaced old renameNote() and renameFolder())
   static Future<bool> renameItem(String oldPath, String newName) async {
     try {

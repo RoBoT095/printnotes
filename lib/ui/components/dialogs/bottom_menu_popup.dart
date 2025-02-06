@@ -1,5 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_rename.dart';
@@ -15,10 +19,31 @@ void showBottomMenu(
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
+      bool isTreeView = context.read<SettingsProvider>().layout == 'tree';
       return SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            if (item is! Directory)
+              ListTile(
+                textColor: isTreeView ? Theme.of(context).disabledColor : null,
+                iconColor: isTreeView
+                    ? Theme.of(context).disabledColor
+                    : Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.check),
+                title: const Text('Select'),
+                onTap: isTreeView
+                    ? null
+                    : () {
+                        Navigator.pop(context);
+                        context
+                            .read<SelectingProvider>()
+                            .setSelectingMode(mode: true);
+                        context
+                            .read<SelectingProvider>()
+                            .updateSelectedList(item);
+                      },
+              ),
             ListTile(
               leading: Icon(
                 Icons.drive_file_move_outline,
@@ -27,7 +52,7 @@ void showBottomMenu(
               title: const Text('Move'),
               onTap: () {
                 Navigator.pop(context);
-                ItemMoveHandler.showMoveDialog(context, item, loadItems);
+                ItemMoveHandler.showMoveDialog(context, [item], loadItems);
               },
             ),
             ListTile(

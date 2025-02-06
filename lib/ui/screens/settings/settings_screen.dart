@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/providers/theme_provider.dart';
@@ -105,6 +106,9 @@ class SettingsScreen extends StatelessWidget {
                   onChanged: (value) {
                     if (value != null) {
                       context.read<SettingsProvider>().setLayout(value);
+                      context
+                          .read<SelectingProvider>()
+                          .setSelectingMode(mode: false);
                     }
                   }),
             ),

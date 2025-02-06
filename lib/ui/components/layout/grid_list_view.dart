@@ -7,6 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
@@ -19,14 +20,10 @@ class GridListView extends StatefulWidget {
     super.key,
     required this.items,
     required this.onChange,
-    required this.isSelecting,
-    required this.selectedItems,
   });
 
   final List<FileSystemEntity> items;
   final ValueSetter<String> onChange;
-  final bool isSelecting;
-  final Set<dynamic> selectedItems;
 
   @override
   State<GridListView> createState() => _GridListViewState();
@@ -36,17 +33,14 @@ class _GridListViewState extends State<GridListView> {
   Widget _buildItem(BuildContext context, int index) {
     final item = widget.items[index];
     final isDirectory = item is Directory;
-    final isSelected = widget.selectedItems.contains(item);
+    final isSelected =
+        context.read<SelectingProvider>().selectedItems.contains(item.path);
 
     return GestureDetector(
       onTap: () {
-        if (widget.isSelecting) {
+        if (context.read<SelectingProvider>().selectingMode) {
           if (!isDirectory) {
-            if (isSelected) {
-              setState(() => widget.selectedItems.remove(item));
-            } else {
-              setState(() => widget.selectedItems.add(item));
-            }
+            context.read<SelectingProvider>().updateSelectedList(item);
           }
         } else {
           if (isDirectory) {
@@ -65,9 +59,10 @@ class _GridListViewState extends State<GridListView> {
           () => widget.onChange(context.read<SettingsProvider>().mainDir)),
       child: AbsorbPointer(
         child: Card(
-          color: (isDirectory && widget.isSelecting)
-              ? Theme.of(context).disabledColor.withOpacity(0.1)
-              : Theme.of(context).colorScheme.surfaceContainer,
+          color:
+              (isDirectory && context.watch<SelectingProvider>().selectingMode)
+                  ? Theme.of(context).disabledColor.withOpacity(0.1)
+                  : Theme.of(context).colorScheme.surfaceContainer,
           shape: isSelected
               ? RoundedRectangleBorder(
                   side: BorderSide(
@@ -79,7 +74,7 @@ class _GridListViewState extends State<GridListView> {
                   leading: Icon(
                     Icons.folder,
                     size: 34,
-                    color: widget.isSelecting
+                    color: context.watch<SelectingProvider>().selectingMode
                         ? Theme.of(context).disabledColor
                         : Theme.of(context).colorScheme.secondary,
                   ),
@@ -98,7 +93,7 @@ class _GridListViewState extends State<GridListView> {
     );
   }
 
-  Widget fileItem(BuildContext context, item) {
+  Widget fileItem(BuildContext context, FileSystemEntity item) {
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
@@ -144,7 +139,9 @@ class _GridListViewState extends State<GridListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isSelecting == false) widget.selectedItems.clear();
+    if (!context.watch<SelectingProvider>().selectingMode) {
+      context.read<SelectingProvider>().selectedItems.clear();
+    }
     return CustomScrollView(
       slivers: [
         SliverPadding(

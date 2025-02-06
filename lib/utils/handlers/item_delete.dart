@@ -12,7 +12,7 @@ class ItemDeletionHandler {
       builder: (context) => AlertDialog(
         title: const Text('Move To Trash?'),
         content: Text(
-            'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'}?'),
+            'Are you sure you want to trash this ${item is Directory ? 'folder' : 'file'}?'),
         actions: [
           TextButton(
             child: Text(
@@ -23,7 +23,7 @@ class ItemDeletionHandler {
           ),
           TextButton(
             child: Text(
-              'Delete',
+              'Trash',
               style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
             onPressed: () {
@@ -52,7 +52,7 @@ class ItemDeletionHandler {
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error deleting ${item is Directory ? 'folder' : 'note'}: $e',
+                'Error deleting ${item is Directory ? 'folder' : 'file'}: $e',
                 type: 'error')
             .show(context);
       }
@@ -66,7 +66,7 @@ class ItemDeletionHandler {
       builder: (context) => AlertDialog(
         title: const Text('Confirm Permanent Deletion'),
         content: Text(
-            'Are you sure you want to delete this ${item is Directory ? 'folder' : 'note'} forever?'),
+            'Are you sure you want to delete this ${item is Directory ? 'folder' : 'file'} forever?'),
         actions: [
           TextButton(
             child: Text(
@@ -98,14 +98,14 @@ class ItemDeletionHandler {
       loadItems();
       if (context.mounted) {
         customSnackBar(
-                '${item is Directory ? 'Folder' : 'Note'} was permanently deleted',
+                '${item is Directory ? 'Folder' : 'File'} was permanently deleted',
                 type: 'info')
             .show(context);
       }
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error permanently deleting ${item is Directory ? 'folder' : 'note'}: $e',
+                'Error permanently deleting ${item is Directory ? 'folder' : 'file'}: $e',
                 type: 'error')
             .show(context);
       }
@@ -124,6 +124,58 @@ class ItemDeletionHandler {
     } catch (e) {
       if (context.mounted) {
         customSnackBar('Error restoring deleted item: $e', type: 'error')
+            .show(context);
+      }
+    }
+  }
+
+  static Future<void> showSoftDeleteManyConfirmation(BuildContext context,
+      List<FileSystemEntity> items, Function loadItems) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Move All Trash?'),
+        content: const Text(
+            'Are you sure you want to move selected files to trash?'),
+        actions: [
+          TextButton(
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: Text(
+              'Trash All',
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              handleManySoftItemDelete(context, items, loadItems);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Future<void> handleManySoftItemDelete(
+      BuildContext context, List<FileSystemEntity> items, Function loadItems,
+      {int? daysForDeletion}) async {
+    try {
+      for (var item in items) {
+        await StorageSystem.softDeleteItem(item.path);
+      }
+
+      loadItems();
+      if (context.mounted) {
+        customSnackBar('All items were moved to the trash bin', type: 'info')
+            .show(context);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        customSnackBar('Error deleting selected items: $e', type: 'error')
             .show(context);
       }
     }

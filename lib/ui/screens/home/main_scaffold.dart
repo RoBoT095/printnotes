@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/ui/components/search_view.dart';
 
@@ -52,6 +53,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             tooltip: 'Search Notes',
             icon: Icon(isSearching ? Icons.close : Icons.search),
             onPressed: () {
+              context.read<SelectingProvider>().setSelectingMode(mode: false);
               isSearching = !isSearching;
               setState(() {
                 if (!isSearching) searchController.clear();
@@ -67,6 +69,9 @@ class _MainScaffoldState extends State<MainScaffold> {
                 child: PopupMenuButton(
                   onSelected: (value) {
                     context.read<SettingsProvider>().setLayout(value);
+                    context
+                        .read<SelectingProvider>()
+                        .setSelectingMode(mode: false);
                     Navigator.pop(context);
                   },
                   itemBuilder: (context) => [
@@ -92,11 +97,15 @@ class _MainScaffoldState extends State<MainScaffold> {
                 ),
               ),
               PopupMenuItem(
+                enabled: !context.read<SelectingProvider>().selectingMode &&
+                    context.read<SettingsProvider>().layout != 'tree',
                 child: PopupMenuButton(
                   onSelected: (value) {
                     context.read<SettingsProvider>().setSortOrder(value);
                     Navigator.pop(context);
                   },
+                  enabled: !context.read<SelectingProvider>().selectingMode &&
+                      context.read<SettingsProvider>().layout != 'tree',
                   itemBuilder: (context) => [
                     CheckedPopupMenuItem(
                       value: 'default',

@@ -7,11 +7,11 @@ class SelectLocationDialog extends StatefulWidget {
   const SelectLocationDialog({
     super.key,
     required this.baseDir,
-    required this.currentItem,
+    required this.items,
   });
 
   final String baseDir;
-  final FileSystemEntity currentItem;
+  final List<FileSystemEntity> items;
 
   @override
   State<SelectLocationDialog> createState() => _SelectLocationDialogState();
@@ -32,9 +32,12 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
     final contents = StorageSystem.listFolderContents(_currentDir);
     setState(() {
       _directories = contents.whereType<Directory>().toList();
-      // Removes the current item if it's a directory to prevent moving into itself
-      if (widget.currentItem is Directory) {
-        _directories.removeWhere((dir) => dir.path == widget.currentItem.path);
+      // Removes the item if it's a directory to prevent moving into itself
+      if (widget.items.length == 1) {
+        var item = widget.items.first;
+        if (item is Directory) {
+          _directories.removeWhere((dir) => dir.path == item.path);
+        }
       }
     });
   }
@@ -58,12 +61,17 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Select destination'),
+      title: const Text('Select destination:'),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (_currentDir == widget.baseDir)
+              ListTile(
+                leading: const Icon(Icons.arrow_forward),
+                title: Text('./${path.basename(_currentDir)}'),
+              ),
             // When entering a folder, shows '../folder_name' button to return
             if (_currentDir != widget.baseDir)
               ListTile(
@@ -90,8 +98,7 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
             // If no folders in directory, show message
             if (_directories.isEmpty)
               const Expanded(
-                child: Text(
-                    'No folders here to move into, maybe create one first?'),
+                child: Text('No further folders here!'),
               ),
           ],
         ),

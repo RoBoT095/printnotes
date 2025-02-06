@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
 
+import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
+
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
 // Good luck to future me to understanding all this again if I need to change something later
@@ -15,14 +18,10 @@ class TreeLayoutView extends StatefulWidget {
     super.key,
     required this.initDir,
     required this.onChange,
-    required this.isSelecting,
-    required this.selectedItems,
   });
 
   final String initDir;
-  final VoidCallback onChange;
-  final bool isSelecting;
-  final Set<dynamic> selectedItems;
+  final ValueSetter<String> onChange;
 
   @override
   State<TreeLayoutView> createState() => _TreeLayoutViewState();
@@ -39,7 +38,8 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
 
   void _buildTree() {
     _rootNode = TreeNode.root(
-        data: TFolder(widget.initDir.split('/').last, widget.initDir));
+        data: TFolder(
+            widget.initDir.split(Platform.pathSeparator).last, widget.initDir));
     _rootNode.addAll(getTree(widget.initDir));
   }
 
@@ -50,11 +50,14 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
     return [
       for (var item in items)
         if (item is Directory)
-          FolderNode(data: TFolder(item.path.split('/').last, item.path))
+          FolderNode(
+              data: TFolder(
+                  item.path.split(Platform.pathSeparator).last, item.path))
             ..addAll(getTree(item.path))
         else if (item is File)
           FileNode(
-              data: TFile(item.path.split('/').last, item.path,
+              data: TFile(
+                  item.path.split(Platform.pathSeparator).last, item.path,
                   type:
                       fileTypeChecker(item) == CFileType.image ? Image : File))
     ];
@@ -62,7 +65,9 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isSelecting == false) widget.selectedItems.clear();
+    if (!context.watch<SelectingProvider>().selectingMode) {
+      context.read<SelectingProvider>().selectedItems.clear();
+    }
 
     return SafeArea(
       child: TreeView.simpleTyped<Explorable, TreeNode<Explorable>>(
@@ -78,36 +83,21 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
         showRootNode: false,
         indentation: const Indentation(),
         builder: (context, node) {
-          final isSelected = widget.selectedItems.contains(node);
           return Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: GestureDetector(
               onTap: node is FileNode
-                  ? () {
-                      if (widget.isSelecting) {
-                        if (isSelected) {
-                          setState(() => widget.selectedItems.remove(node));
-                        } else {
-                          setState(() => widget.selectedItems.add(node));
-                        }
-                      } else {
-                        ItemNavHandler.routeItemToPage(
-                            context, File(node.data!.path), () {});
-                      }
-                    }
+                  ? () => ItemNavHandler.routeItemToPage(
+                      context, File(node.data!.path), () {})
                   : null,
               onLongPress: () => showBottomMenu(
                 context,
                 node is FileNode
                     ? File(node.data!.path)
                     : Directory(node.data!.path),
-                widget.onChange,
+                () => widget.onChange(widget.initDir),
               ),
               child: ListTile(
-                selected: isSelected,
-                selectedColor: Theme.of(context).colorScheme.onSecondary,
-                selectedTileColor:
-                    Theme.of(context).colorScheme.secondary.withOpacity(0.8),
                 title: Text(node.data?.name ?? 'N/A'),
                 leading: Padding(
                   padding: const EdgeInsets.only(top: 8.0),

@@ -18,7 +18,7 @@ Widget speedDialFAB(BuildContext context, {required VoidCallback onLoadItems}) {
         label: 'Create Folder',
         onTap: () => ItemCreationHandler.handleCreateNewFolder(
           context,
-          context.watch<SettingsProvider>().mainDir,
+          context.read<SettingsProvider>().mainDir,
           () => onLoadItems(),
         ),
       ),
@@ -27,7 +27,7 @@ Widget speedDialFAB(BuildContext context, {required VoidCallback onLoadItems}) {
         label: 'Create Note',
         onTap: () => ItemCreationHandler.handleCreateNewNote(
           context,
-          context.watch<SettingsProvider>().mainDir,
+          context.read<SettingsProvider>().mainDir,
           () => onLoadItems(),
         ),
       ),
