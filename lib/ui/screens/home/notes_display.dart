@@ -44,7 +44,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
       _currentFolderName = loadedItems['currentFolderName'];
       _folderHistory = ItemNavHandler.folderHistory(
           context.read<SettingsProvider>().mainDir);
-      debugPrint("length: ${_folderHistory.length} history: $_folderHistory");
     });
   }
 
