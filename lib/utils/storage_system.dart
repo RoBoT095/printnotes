@@ -61,6 +61,7 @@ class StorageSystem {
 
   // Methods for archiving
 
+  // TODO: Fully integrate with SettingsProvider
   static Future<String> getArchivePath() async {
     final basDir = await DataPath.selectedDirectory;
     return path.join(basDir!, '.archive');
@@ -231,16 +232,17 @@ class StorageSystem {
     return newFolder.path;
   }
 
-  // Methods to soft and permanent delete
+  // Methods to trash and permanent delete
 
-  static Future<String> getDeletedPath() async {
+  // TODO: Fully integrate with SettingsProvider
+  static Future<String> getTrashPath() async {
     final basDir = await DataPath.selectedDirectory;
     return path.join(basDir!, '.trash');
   }
 
-  static Future<void> softDeleteItem(String itemPath) async {
+  static Future<void> trashItem(String itemPath) async {
     final baseDir = await DataPath.selectedDirectory;
-    final deleteDir = await getDeletedPath();
+    final deleteDir = await getTrashPath();
     final relativePath = path.relative(itemPath, from: baseDir!);
     final itemName = path.basename(itemPath);
     final deletedPath =
@@ -270,7 +272,7 @@ class StorageSystem {
 
   static Future<void> restoreDeletedItem(String deletedItemPath) async {
     final baseDir = await DataPath.selectedDirectory;
-    final deleteDir = await getDeletedPath();
+    final deleteDir = await getTrashPath();
     final itemName = path.basename(deletedItemPath);
     final relativePath =
         path.relative(path.dirname(deletedItemPath), from: deleteDir);

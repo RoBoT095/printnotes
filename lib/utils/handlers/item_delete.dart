@@ -5,7 +5,7 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemDeletionHandler {
-  static Future<void> showSoftDeleteConfirmation(
+  static Future<void> showTrashConfirmation(
       BuildContext context, FileSystemEntity item, Function loadItems) async {
     showDialog(
       context: context,
@@ -28,7 +28,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleSoftItemDelete(context, item, loadItems);
+              handleItemTrashing(context, item, loadItems);
             },
           ),
         ],
@@ -36,11 +36,11 @@ class ItemDeletionHandler {
     );
   }
 
-  static Future<void> handleSoftItemDelete(
+  static Future<void> handleItemTrashing(
       BuildContext context, FileSystemEntity item, Function loadItems,
       {int? daysForDeletion}) async {
     try {
-      await StorageSystem.softDeleteItem(item.path);
+      await StorageSystem.trashItem(item.path);
 
       loadItems();
       if (context.mounted) {
@@ -93,7 +93,7 @@ class ItemDeletionHandler {
   static Future<void> handlePermanentItemDelete(
       BuildContext context, FileSystemEntity item, Function loadItems) async {
     try {
-      await StorageSystem.softDeleteItem(item.path);
+      await StorageSystem.trashItem(item.path);
 
       loadItems();
       if (context.mounted) {
@@ -129,7 +129,7 @@ class ItemDeletionHandler {
     }
   }
 
-  static Future<void> showSoftDeleteManyConfirmation(BuildContext context,
+  static Future<void> showTrashManyConfirmation(BuildContext context,
       List<FileSystemEntity> items, Function loadItems) async {
     showDialog(
       context: context,
@@ -152,7 +152,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleManySoftItemDelete(context, items, loadItems);
+              handleManyItemTrashing(context, items, loadItems);
             },
           ),
         ],
@@ -160,12 +160,12 @@ class ItemDeletionHandler {
     );
   }
 
-  static Future<void> handleManySoftItemDelete(
+  static Future<void> handleManyItemTrashing(
       BuildContext context, List<FileSystemEntity> items, Function loadItems,
       {int? daysForDeletion}) async {
     try {
       for (var item in items) {
-        await StorageSystem.softDeleteItem(item.path);
+        await StorageSystem.trashItem(item.path);
       }
 
       loadItems();

@@ -17,7 +17,6 @@ class SelectingProvider with ChangeNotifier {
     } else {
       _selectedItems.add(item.path);
     }
-    debugPrint("Selected $_selectedItems"); // TODO: Remove later
     notifyListeners();
   }
 

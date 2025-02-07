@@ -1,7 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/item_archive.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
@@ -18,7 +21,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   List<FileSystemEntity> _archivedItems = [];
   String _currentPath = '';
   String _currentFolderName = 'Archive';
-  final List<String> _folderHistory = [];
+  List<String> _folderHistory = [];
 
   @override
   void initState() {
@@ -26,8 +29,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     _loadArchivedItems();
   }
 
-  Future<void> _loadArchivedItems([String? folderPath]) async {
-    final archivePath = await StorageSystem.getArchivePath();
+  void _loadArchivedItems([String? folderPath]) {
+    final archivePath = context.read<SettingsProvider>().archivePath;
     final currentPath = folderPath ?? archivePath;
     final items =
         StorageSystem.listFolderContents(currentPath, showHidden: true);
@@ -36,6 +39,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       _currentPath = currentPath;
       _currentFolderName =
           _currentPath == archivePath ? 'Archive' : path.basename(currentPath);
+      _folderHistory = ItemNavHandler.folderHistory(archivePath);
     });
   }
 

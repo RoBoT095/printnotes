@@ -98,7 +98,7 @@ void showBottomMenu(
               title: const Text('To Trash'),
               onTap: () {
                 Navigator.pop(context);
-                ItemDeletionHandler.showSoftDeleteConfirmation(
+                ItemDeletionHandler.showTrashConfirmation(
                     context, item, loadItems);
               },
             ),

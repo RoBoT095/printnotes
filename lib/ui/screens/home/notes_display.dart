@@ -35,7 +35,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
   bool _isLoading = false;
 
   void _loadItems(String? path) {
-    ItemNavHandler.initializeFolderHistory();
     final loadedItems =
         context.read<SettingsProvider>().loadItems(context, folderPath: path);
 
@@ -43,14 +42,13 @@ class _NotesDisplayState extends State<NotesDisplay> {
       _items = loadedItems['items'];
       _currentPath = loadedItems['currentPath'];
       _currentFolderName = loadedItems['currentFolderName'];
-      _folderHistory = ItemNavHandler.folderHistory;
+      _folderHistory = ItemNavHandler.folderHistory(
+          context.read<SettingsProvider>().mainDir);
+      debugPrint("length: ${_folderHistory.length} history: $_folderHistory");
     });
   }
 
-  void onChange(value) {
-    _loadItems(value);
-    _folderHistory.clear();
-  }
+  void onChange(value) => _loadItems(value);
 
   void _navBack() => _loadItems(ItemNavHandler.navigateBack());
 
@@ -120,7 +118,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                   IconButton(
                     tooltip: 'Delete Selected',
                     onPressed: () {
-                      ItemDeletionHandler.showSoftDeleteManyConfirmation(
+                      ItemDeletionHandler.showTrashManyConfirmation(
                           context,
                           selectedItemsToFileEntity(),
                           () => _loadItems(_currentPath));

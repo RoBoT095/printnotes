@@ -11,6 +11,8 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 class SettingsProvider with ChangeNotifier {
   bool _showIntro = true;
   String _mainDir = '';
+  String _archivePath = '';
+  String _trashPath = '';
   String _layout = 'grid';
   int _previewLength = 100;
   String _sortOrder = 'default';
@@ -18,6 +20,8 @@ class SettingsProvider with ChangeNotifier {
 
   bool get showIntro => _showIntro;
   String get mainDir => _mainDir;
+  String get archivePath => _archivePath;
+  String get trashPath => _trashPath;
   String get layout => _layout;
   int get previewLength => _previewLength;
   String get sortOrder => _sortOrder;
@@ -40,13 +44,19 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void loadSettings() async {
-    final directory = await DataPath.selectedDirectory;
+    final mainDir = await DataPath.selectedDirectory;
+
     final layout = await UserLayoutPref.getLayoutView();
     final previewLength = await UserLayoutPref.getNotePreviewLength();
     final sortOrder = await UserSortPref.getSortOrder();
     final useLatex = await UserLatexPref.getLatexSupport();
 
-    setMainDir(directory ?? '');
+    if (mainDir != null) {
+      _archivePath = path.join(mainDir, '.archive');
+      _trashPath = path.join(mainDir, '.trash');
+    }
+
+    setMainDir(mainDir ?? '');
     setLayout(layout);
     setPreviewLength(previewLength);
     setSortOrder(sortOrder);

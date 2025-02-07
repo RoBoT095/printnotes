@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:path/path.dart' as path;
 
+import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 import 'package:printnotes/utils/storage_system.dart';
@@ -17,7 +20,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
   List<FileSystemEntity> _deletedItems = [];
   String _currentPath = '';
   String _currentFolderName = 'Trash';
-  final List<String> _folderHistory = [];
+  List<String> _folderHistory = [];
 
   @override
   void initState() {
@@ -25,8 +28,8 @@ class _DeletedScreenState extends State<DeletedScreen> {
     _loadDeletedItems();
   }
 
-  Future<void> _loadDeletedItems([String? folderPath]) async {
-    final deletePath = await StorageSystem.getDeletedPath();
+  void _loadDeletedItems([String? folderPath]) {
+    final deletePath = context.read<SettingsProvider>().trashPath;
     final currentPath = folderPath ?? deletePath;
     final items =
         StorageSystem.listFolderContents(currentPath, showHidden: true);
@@ -35,6 +38,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
       _currentPath = currentPath;
       _currentFolderName =
           _currentPath == deletePath ? 'Trash' : path.basename(currentPath);
+      _folderHistory = ItemNavHandler.folderHistory(deletePath);
     });
   }
 
