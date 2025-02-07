@@ -88,7 +88,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
       onTap: () {
         if (isDirectory) {
           _loadDeletedItems(item.path);
-          context.read<NavigationProvider>().addToRouteHistory(_currentPath);
+          context.read<NavigationProvider>().addToRouteHistory(item.path);
         } else {
           context.read<NavigationProvider>().routeItemToPage(context, item);
         }
@@ -120,17 +120,20 @@ class _DeletedScreenState extends State<DeletedScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: Text(_currentFolderName),
-        leading: context.read<NavigationProvider>().routeHistory.length > 2
-            ? IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                ),
-                onPressed: () {
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: context.read<NavigationProvider>().routeHistory.length > 2
+              ? () {
                   setState(() => _loadDeletedItems(
                       context.read<NavigationProvider>().navigateBack()));
+                }
+              : () {
+                  context.read<NavigationProvider>().navigateBack();
+                  Navigator.pop(context);
                 },
-              )
-            : null,
+        ),
         actions: [
           PopupMenuButton(
             onSelected: (value) {

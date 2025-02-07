@@ -122,17 +122,20 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: Text(_currentFolderName),
-        leading: context.read<NavigationProvider>().routeHistory.length > 2
-            ? IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                ),
-                onPressed: () {
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: context.read<NavigationProvider>().routeHistory.length > 2
+              ? () {
                   setState(() => _loadArchivedItems(
                       context.read<NavigationProvider>().navigateBack()));
+                }
+              : () {
+                  context.read<NavigationProvider>().navigateBack();
+                  Navigator.pop(context);
                 },
-              )
-            : null,
+        ),
       ),
       body: _archivedItems.isEmpty
           ? const Center(

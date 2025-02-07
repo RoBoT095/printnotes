@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
@@ -104,7 +106,7 @@ class SettingsProvider with ChangeNotifier {
     String currentFolderName = 'All Notes';
 
     // Check if path not a file, if so return to mainDir
-    if (path.extension(directory).isNotEmpty) {
+    if (!FileSystemEntity.isDirectorySync(directory)) {
       context.read<NavigationProvider>().routeHistory.clear();
       context.read<NavigationProvider>().routeHistory.add(mainPath);
       directory = mainPath;

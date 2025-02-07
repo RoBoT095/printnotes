@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class DrawerView extends StatelessWidget {
   const DrawerView({super.key});
 
-  void _navigateToScreen(BuildContext context, String path, {Widget? screen}) {
+  void _navigateToScreen(BuildContext context, {Widget? screen, String? path}) {
     final bool isDrawerPersistent = MediaQuery.sizeOf(context).width >= 800;
     // On desktop, drawer is a side menu, trying to pop it causes issues
     // this stops it.
@@ -22,11 +22,12 @@ class DrawerView extends StatelessWidget {
     }
 
     if (screen != null) {
-      context.read<NavigationProvider>().addToRouteHistory(path);
+      if (path != null) {
+        context.read<NavigationProvider>().addToRouteHistory(path);
+      }
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => screen,
       ));
-      context.read<NavigationProvider>().navigateBack();
     }
   }
 
@@ -77,24 +78,24 @@ class DrawerView extends StatelessWidget {
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.article_outlined),
                 title: const Text('All Notes'),
-                onTap: () => _navigateToScreen(
-                    context, context.read<SettingsProvider>().mainDir),
+                onTap: () => _navigateToScreen(context,
+                    path: context.read<SettingsProvider>().mainDir),
               ),
               const Opacity(opacity: 0.2, child: Divider()),
               ListTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.archive_outlined),
                 title: const Text('Archive'),
-                onTap: () => _navigateToScreen(
-                    context, context.read<SettingsProvider>().archivePath,
+                onTap: () => _navigateToScreen(context,
+                    path: context.read<SettingsProvider>().archivePath,
                     screen: const ArchiveScreen()),
               ),
               ListTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.delete_outlined),
                 title: const Text('Trash'),
-                onTap: () => _navigateToScreen(
-                    context, context.read<SettingsProvider>().trashPath,
+                onTap: () => _navigateToScreen(context,
+                    path: context.read<SettingsProvider>().trashPath,
                     screen: const DeletedScreen()),
               ),
               const Opacity(opacity: 0.2, child: Divider()),
@@ -102,15 +103,15 @@ class DrawerView extends StatelessWidget {
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.settings_outlined),
                 title: const Text('Settings'),
-                onTap: () => _navigateToScreen(context, 'settingsScreen',
-                    screen: const SettingsScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, screen: const SettingsScreen()),
               ),
               ListTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.info_outlined),
                 title: const Text('About'),
-                onTap: () => _navigateToScreen(context, 'aboutScreen',
-                    screen: const AboutScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, screen: const AboutScreen()),
               ),
             ],
           ),
