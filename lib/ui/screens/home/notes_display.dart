@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
-import 'package:printnotes/utils/load_settings.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
@@ -35,27 +34,17 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadItems(_currentPath);
-  }
-
-  Future<void> _loadItems(String? folderPath, {bool doReload = false}) async {
+  void _loadItems(String? path) {
     ItemNavHandler.initializeFolderHistory();
-    final loadedItems = await SettingsLoader.loadItems(
-      folderPath: folderPath,
-      doReload: doReload,
-    );
+    final loadedItems =
+        context.read<SettingsProvider>().loadItems(context, folderPath: path);
 
-    if (mounted) {
-      setState(() {
-        _items = loadedItems['items'];
-        _currentPath = loadedItems['currentPath'];
-        _currentFolderName = loadedItems['currentFolderName'];
-        _folderHistory = ItemNavHandler.folderHistory;
-      });
-    }
+    setState(() {
+      _items = loadedItems['items'];
+      _currentPath = loadedItems['currentPath'];
+      _currentFolderName = loadedItems['currentFolderName'];
+      _folderHistory = ItemNavHandler.folderHistory;
+    });
   }
 
   void onChange(value) {
@@ -75,6 +64,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    _loadItems(_currentPath);
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -160,10 +151,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     child: Text('Nothing here!'),
                   )
                 : context.watch<SettingsProvider>().layout == 'tree'
-                    ? TreeLayoutView(
-                        initDir: context.watch<SettingsProvider>().mainDir,
-                        onChange: onChange,
-                      )
+                    ? TreeLayoutView(onChange: onChange)
                     : GridListView(items: _items, onChange: onChange),
         floatingActionButton: speedDialFAB(
           context,

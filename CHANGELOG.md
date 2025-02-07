@@ -16,7 +16,7 @@
 - Fixed speed dial as accidentally put `.watch()` instead of `.read()` on a onTap.
 - Fixed tree view using hardcoded backslash instead of platform path separator.
 - Made dialog for selecting where to move items say main folder path location as I found it confusing being unsure where I was at first glance.
-- Disabled sort options for tree view as they didn't work either way.
+- ~~Disabled sort options for tree view as they didn't work either way.~~ Fixed (02/06/2025)
 - Changed wording in item delete handler for soft delete from 'delete' to 'trash' to not confuse users.
 
 ### (Feb 3, 2025)

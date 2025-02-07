@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
+import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/utils/handlers/item_sort.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
@@ -77,5 +81,30 @@ class SettingsProvider with ChangeNotifier {
     _useLatex = useLatex;
     UserLatexPref.setLatexSupport(useLatex);
     notifyListeners();
+  }
+
+  Map<String, dynamic> loadItems(
+    BuildContext context, {
+    String? folderPath,
+  }) {
+    final mainPath = context.read<SettingsProvider>().mainDir;
+    final directory = folderPath ?? mainPath;
+    String sortOrder = context.read<SettingsProvider>().sortOrder;
+    String currentFolderName = 'All Notes';
+
+    final items = StorageSystem.listFolderContents(directory);
+    final sortedItems = ItemSortHandler.sortItems(items, sortOrder);
+
+    if (directory != mainPath) {
+      currentFolderName = path.basename(directory);
+    } else {
+      currentFolderName;
+    }
+
+    return {
+      'items': sortedItems,
+      'currentPath': directory,
+      'currentFolderName': currentFolderName,
+    };
   }
 }

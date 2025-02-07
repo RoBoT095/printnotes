@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animated_tree_view/animated_tree_view.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/utils/handlers/item_sort.dart';
 
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
@@ -16,11 +18,9 @@ import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 class TreeLayoutView extends StatefulWidget {
   const TreeLayoutView({
     super.key,
-    required this.initDir,
     required this.onChange,
   });
 
-  final String initDir;
   final ValueSetter<String> onChange;
 
   @override
@@ -30,22 +30,18 @@ class TreeLayoutView extends StatefulWidget {
 class _TreeLayoutViewState extends State<TreeLayoutView> {
   late TreeNode<Explorable> _rootNode;
 
-  @override
-  void initState() {
-    super.initState();
-    _buildTree();
-  }
+  void _loadTree() {
+    String mainDir = context.read<SettingsProvider>().mainDir;
 
-  void _buildTree() {
     _rootNode = TreeNode.root(
-        data: TFolder(
-            widget.initDir.split(Platform.pathSeparator).last, widget.initDir));
-    _rootNode.addAll(getTree(widget.initDir));
+        data: TFolder(mainDir.split(Platform.pathSeparator).last, mainDir));
+    _rootNode.addAll(getTree(mainDir));
   }
 
-  List<Node> getTree(String directory) {
-    final List<FileSystemEntity> items =
-        StorageSystem.listFolderContents(directory);
+  List<Node> getTree(String dir) {
+    List<FileSystemEntity> items = StorageSystem.listFolderContents(dir);
+    items = ItemSortHandler.sortItems(
+        items, context.read<SettingsProvider>().sortOrder);
 
     return [
       for (var item in items)
@@ -65,6 +61,8 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
 
   @override
   Widget build(BuildContext context) {
+    _loadTree();
+
     if (!context.watch<SelectingProvider>().selectingMode) {
       context.read<SelectingProvider>().selectedItems.clear();
     }
@@ -95,7 +93,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
                 node is FileNode
                     ? File(node.data!.path)
                     : Directory(node.data!.path),
-                () => widget.onChange(widget.initDir),
+                () => widget.onChange(context.read<SettingsProvider>().mainDir),
               ),
               child: ListTile(
                 title: Text(node.data?.name ?? 'N/A'),

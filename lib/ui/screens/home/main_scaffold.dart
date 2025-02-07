@@ -97,15 +97,13 @@ class _MainScaffoldState extends State<MainScaffold> {
                 ),
               ),
               PopupMenuItem(
-                enabled: !context.read<SelectingProvider>().selectingMode &&
-                    context.read<SettingsProvider>().layout != 'tree',
+                enabled: !context.read<SelectingProvider>().selectingMode,
                 child: PopupMenuButton(
                   onSelected: (value) {
                     context.read<SettingsProvider>().setSortOrder(value);
                     Navigator.pop(context);
                   },
-                  enabled: !context.read<SelectingProvider>().selectingMode &&
-                      context.read<SettingsProvider>().layout != 'tree',
+                  enabled: !context.read<SelectingProvider>().selectingMode,
                   itemBuilder: (context) => [
                     CheckedPopupMenuItem(
                       value: 'default',
