@@ -35,6 +35,9 @@ class _MainScaffoldState extends State<MainScaffold> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
+        leading: isSearching
+            ? Icon(Icons.menu, color: Theme.of(context).disabledColor)
+            : null,
         title: isSearching
             ? TextField(
                 controller: searchController,

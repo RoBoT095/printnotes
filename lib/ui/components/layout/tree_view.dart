@@ -6,9 +6,9 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
-import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
 
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
@@ -21,7 +21,7 @@ class TreeLayoutView extends StatefulWidget {
     required this.onChange,
   });
 
-  final ValueSetter<String> onChange;
+  final VoidCallback onChange;
 
   @override
   State<TreeLayoutView> createState() => _TreeLayoutViewState();
@@ -85,15 +85,16 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
             padding: const EdgeInsets.only(left: 16.0),
             child: GestureDetector(
               onTap: node is FileNode
-                  ? () => ItemNavHandler.routeItemToPage(
-                      context, File(node.data!.path), () {})
+                  ? () => context
+                      .read<NavigationProvider>()
+                      .routeItemToPage(context, File(node.data!.path))
                   : null,
               onLongPress: () => showBottomMenu(
                 context,
                 node is FileNode
                     ? File(node.data!.path)
                     : Directory(node.data!.path),
-                () => widget.onChange(context.read<SettingsProvider>().mainDir),
+                widget.onChange,
               ),
               child: ListTile(
                 title: Text(node.data?.name ?? 'N/A'),

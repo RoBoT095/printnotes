@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
-import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 
@@ -30,26 +30,27 @@ class _NotesDisplayState extends State<NotesDisplay> {
   List<FileSystemEntity> _items = [];
   String? _currentPath;
   String _currentFolderName = 'All Notes';
-  List<String> _folderHistory = [];
 
   bool _isLoading = false;
 
-  void _loadItems(String? path) {
-    final loadedItems =
-        context.read<SettingsProvider>().loadItems(context, folderPath: path);
+  void _loadItems() {
+    context
+        .read<NavigationProvider>()
+        .initRouteHistory(context.read<SettingsProvider>().mainDir);
+    final loadedItems = context.read<SettingsProvider>().loadItems(
+        context, context.read<NavigationProvider>().routeHistory.last);
 
     setState(() {
       _items = loadedItems['items'];
       _currentPath = loadedItems['currentPath'];
       _currentFolderName = loadedItems['currentFolderName'];
-      _folderHistory = ItemNavHandler.folderHistory(
-          context.read<SettingsProvider>().mainDir);
     });
   }
 
-  void onChange(value) => _loadItems(value);
-
-  void _navBack() => _loadItems(ItemNavHandler.navigateBack());
+  void _navBack() {
+    context.read<NavigationProvider>().navigateBack();
+    _loadItems();
+  }
 
   List<FileSystemEntity> selectedItemsToFileEntity() {
     List<FileSystemEntity> fileList = [];
@@ -61,14 +62,17 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    _loadItems(_currentPath);
+    _loadItems();
+
+    List<String> routeHistory =
+        context.watch<NavigationProvider>().routeHistory;
 
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
 
-        if (_folderHistory.length > 1) {
+        if (routeHistory.length > 1) {
           _navBack();
         } else {
           widget.updateCanPop();
@@ -84,7 +88,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                   onPressed: () =>
                       context.read<SelectingProvider>().setSelectingMode(),
                   icon: const Icon(Icons.close))
-              : _folderHistory.length > 1
+              : routeHistory.length > 1
                   ? IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: _navBack,
@@ -105,9 +109,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     tooltip: 'Move Selected',
                     onPressed: () {
                       ItemMoveHandler.showMoveDialog(
-                          context,
-                          selectedItemsToFileEntity(),
-                          () => _loadItems(_currentPath));
+                          context, selectedItemsToFileEntity(), _loadItems);
                       context
                           .read<SelectingProvider>()
                           .setSelectingMode(mode: false);
@@ -118,9 +120,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     tooltip: 'Delete Selected',
                     onPressed: () {
                       ItemDeletionHandler.showTrashManyConfirmation(
-                          context,
-                          selectedItemsToFileEntity(),
-                          () => _loadItems(_currentPath));
+                          context, selectedItemsToFileEntity(), _loadItems);
                       context
                           .read<SelectingProvider>()
                           .setSelectingMode(mode: false);
@@ -134,7 +134,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     icon: const Icon(Icons.refresh),
                     onPressed: () {
                       setState(() => _isLoading = true);
-                      _loadItems(_currentPath);
+                      _loadItems();
                       Timer(const Duration(milliseconds: 300),
                           () => setState(() => _isLoading = false));
                     },
@@ -148,12 +148,12 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     child: Text('Nothing here!'),
                   )
                 : context.watch<SettingsProvider>().layout == 'tree'
-                    ? TreeLayoutView(onChange: onChange)
-                    : GridListView(items: _items, onChange: onChange),
+                    ? TreeLayoutView(onChange: _loadItems)
+                    : GridListView(items: _items, onChange: _loadItems),
         floatingActionButton: speedDialFAB(
-          context,
-          onLoadItems: () => _loadItems(_currentPath),
-        ),
+            context,
+            _currentPath ?? context.read<SettingsProvider>().mainDir,
+            _loadItems),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );

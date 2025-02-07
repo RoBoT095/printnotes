@@ -77,10 +77,10 @@ class AboutScreen extends StatelessWidget {
               title: const Text('Support'),
               subtitle: const Text(
                   "I'm a solo dev working hard on this, \nMaybe buy me some Coffee?"),
-              onTap: () => _urlHandler(
-                  context, 'https://liberapay.com/RoBoT_095/donate'),
+              onTap: () =>
+                  _urlHandler(context, 'https://buymeacoffee.com/robot_095'),
               onLongPress: () => _urlHandler(
-                  context, 'https://liberapay.com/RoBoT_095/donate',
+                  context, 'https://buymeacoffee.com/robot_095',
                   copyToClipboard: true),
               trailing: const Icon(Icons.launch_rounded),
             ),

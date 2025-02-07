@@ -8,8 +8,8 @@ import 'package:markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/utils/handlers/item_navigation.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
@@ -23,7 +23,7 @@ class GridListView extends StatefulWidget {
   });
 
   final List<FileSystemEntity> items;
-  final ValueSetter<String> onChange;
+  final VoidCallback onChange;
 
   @override
   State<GridListView> createState() => _GridListViewState();
@@ -44,19 +44,14 @@ class _GridListViewState extends State<GridListView> {
           }
         } else {
           if (isDirectory) {
-            widget.onChange(item.path);
-            ItemNavHandler.addToFolderHistory(item.path);
+            context.read<NavigationProvider>().addToRouteHistory(item.path);
+            widget.onChange();
           } else if (item is File) {
-            ItemNavHandler.routeItemToPage(
-                context,
-                item,
-                () =>
-                    widget.onChange(context.read<SettingsProvider>().mainDir));
+            context.read<NavigationProvider>().routeItemToPage(context, item);
           }
         }
       },
-      onLongPress: () => showBottomMenu(context, item,
-          () => widget.onChange(context.read<SettingsProvider>().mainDir)),
+      onLongPress: () => showBottomMenu(context, item, widget.onChange),
       child: AbsorbPointer(
         child: Card(
           color:

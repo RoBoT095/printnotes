@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
@@ -94,13 +95,20 @@ class SettingsProvider with ChangeNotifier {
   }
 
   Map<String, dynamic> loadItems(
-    BuildContext context, {
+    BuildContext context,
     String? folderPath,
-  }) {
+  ) {
     final mainPath = context.read<SettingsProvider>().mainDir;
-    final directory = folderPath ?? mainPath;
+    String directory = folderPath ?? mainPath;
     String sortOrder = context.read<SettingsProvider>().sortOrder;
     String currentFolderName = 'All Notes';
+
+    // Check if path not a file, if so return to mainDir
+    if (path.extension(directory).isNotEmpty) {
+      context.read<NavigationProvider>().routeHistory.clear();
+      context.read<NavigationProvider>().routeHistory.add(mainPath);
+      directory = mainPath;
+    }
 
     final items = StorageSystem.listFolderContents(directory);
     final sortedItems = ItemSortHandler.sortItems(items, sortOrder);

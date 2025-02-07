@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
-import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/handlers/item_archive.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 import 'package:printnotes/utils/storage_system.dart';
@@ -21,7 +21,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   List<FileSystemEntity> _archivedItems = [];
   String _currentPath = '';
   String _currentFolderName = 'Archive';
-  List<String> _folderHistory = [];
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       _currentPath = currentPath;
       _currentFolderName =
           _currentPath == archivePath ? 'Archive' : path.basename(currentPath);
-      _folderHistory = ItemNavHandler.folderHistory(archivePath);
     });
   }
 
@@ -91,11 +89,9 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       onTap: () {
         if (isDirectory) {
           _loadArchivedItems(item.path);
-          ItemNavHandler.addToFolderHistory(_currentPath,
-              dirHistory: _folderHistory);
+          context.read<NavigationProvider>().addToRouteHistory(_currentPath);
         } else {
-          ItemNavHandler.routeItemToPage(
-              context, item, () => _loadArchivedItems(_currentPath));
+          context.read<NavigationProvider>().routeItemToPage(context, item);
         }
       },
       onLongPress: () => _showBottomSheet(context, item),
@@ -126,14 +122,14 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: Text(_currentFolderName),
-        leading: _folderHistory.length > 1
+        leading: context.read<NavigationProvider>().routeHistory.length > 2
             ? IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
                 ),
                 onPressed: () {
                   setState(() => _loadArchivedItems(
-                      ItemNavHandler.navigateBack(dirHistory: _folderHistory)));
+                      context.read<NavigationProvider>().navigateBack()));
                 },
               )
             : null,

@@ -1,8 +1,21 @@
 # Changelog + Dev Log
 
+### (Feb 7, 2025)
+
+**Changes:**
+
+- Moved `ItemNavigation` into `NavigationProvider` and unified route history for notes, trash, and archive screens as well as expanded to include files as well
+- Fixed search throwing user to main folder even when in a different folder and not updating route history
+- Fixed file/folder creation not happening in current folder and not reloading page
+- Added check on launch if app hasn't lost `externalStoragePermissions` on android if not new user
+- Disabled drawer when searching
+- Changed link in about screen from liberapay.com to buymeacoffee.com
+
 ### (Feb 5, 2025)
 
-**v0.9.13**
+~~**v0.9.13**~~
+
+jumped the gun
 
 **Note**: This only applies to grid and list views as tree view requires a different approach
 
@@ -12,7 +25,7 @@
 
 **Changes:**
 
-- Added SelectingProvider to deal with selected items more easily.
+- Added `SelectingProvider` to deal with selected items more easily.
 - Fixed speed dial as accidentally put `.watch()` instead of `.read()` on a onTap.
 - Fixed tree view using hardcoded backslash instead of platform path separator.
 - Made dialog for selecting where to move items say main folder path location as I found it confusing being unsure where I was at first glance.
@@ -23,7 +36,7 @@
 
 Done something I should have done in the very beginning, using Provider for settings state management, changes should be imperceptible, but it will help keep code clean and make my life simpler with adding feature to perform bulk actions by selecting.
 
-Need to completely remove SettingsLoader once I move out loadItems(), want to save work while it seems to all still be working normally.
+Need to completely remove `SettingsLoader` once I move out `loadItems()`, want to save work while it seems to all still be working normally.
 
 ### (Feb 1, 2025)
 
@@ -35,7 +48,7 @@ Will be part of 0.9.13, also version 0.9.12 doesn't have a release outside of iO
 
 ### (Jan 24-27, 2025)
 
-Started working on releasing app to the Apple App Store but due to insufficient testing outside of iOS emulator, ended up learning more about how permissions are handled for iOS. To make the app work for ios, I hide the folder selection buttons and instead made the Apps documents directory visible in the Files app.
+Started working on releasing app to the Apple App Store but due to insufficient testing outside of iOS emulator, ended up learning more about how permissions are handled for iOS. To make the app work for ios, I hid the folder selection buttons and instead made the Apps documents directory visible in the Files app.
 
 ### (Jan 2-3, 2025)
 

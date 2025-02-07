@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
-import 'package:printnotes/utils/handlers/item_navigation.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
@@ -52,7 +53,7 @@ class ItemCreationHandler {
             await StorageSystem.saveNote(noteName, '', parentPath: currentPath);
         if (context.mounted) {
           final item = File(newNotePath);
-          ItemNavHandler.onNoteSelect(context, item, loadItems);
+          context.read<NavigationProvider>().routeItemToPage(context, item);
         }
         loadItems();
       } catch (e) {

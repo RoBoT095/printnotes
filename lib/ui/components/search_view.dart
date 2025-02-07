@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/utils/handlers/item_navigation.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({
@@ -126,8 +126,7 @@ class SearchView extends StatelessWidget {
           onTap: () {
             // Should never be a folder but it is just a backup check unless I messed something up
             if (item is File) {
-              ItemNavHandler.onNoteSelect(context, item,
-                  () => context.watch<SettingsProvider>().mainDir);
+              context.read<NavigationProvider>().routeItemToPage(context, item);
             }
           },
         );
