@@ -1,6 +1,8 @@
 # Print(Notes) A Better way to take Notes
 
 [![GitHub](https://img.shields.io/github/license/RoBoT095/printnotes)](https://github.com/RoBoT095/printnotes/blob/main/LICENSE)
+[![IzzyOnDroid](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.printnotes.printnotes)](https://apt.izzysoft.de/fdroid/index/apk/com.printnotes.printnotes)
+[![App Store](https://img.shields.io/badge/App_Store-0D96F6?logo=app-store&logoColor=white)](https://apps.apple.com/us/app/print-notes/id6740996365)
 
 **Inspired by Google Keep and Obsidian**
 
@@ -57,14 +59,15 @@
 
 I will release apps when I feel like the app is more complete!
 
-- [x] Android
+- [x] Android:
   - APKs in [Releases](https://github.com/RoBoT095/printnotes/releases)
+  - F-Droid through [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.printnotes.printnotes)
   - Can't get past GooglePlay review due to the use of All File Access permission
 - [x] iOS - [App Store](https://apps.apple.com/us/app/print-notes/id6740996365)
-- [ ] Windows `coming soon`
-- [ ] MacOS `coming soon`
-- [x] Linux
-  - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases)
+- [ ] Windows `coming later`
+- [ ] MacOS `coming later`
+- [x] Linux:
+  - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases) (currently for testing)
   - Other options `coming later`
 
 ---
@@ -110,7 +113,6 @@ $ flutter build <target>
 - `apk`: Build an Android APK file from app.
 - `appbundle`: Build an Android App Bundle file from app.
 - `bundle`: Build the Flutter assets directory from app.
-- `web`: Build a web application bundle. **(Won't work because app needs device storage access)**
 
 ### Device host specific
 
@@ -134,11 +136,11 @@ Running as linux application on flutter version _3.24.0-3.24.3_ causes any **Tex
 
 </details>
 
-## Donations
+## Donations & Support
 
-Feel free to support me and my work
+Feel free to support me and my work through any of these platforms:
 
-<a href="https://liberapay.com/RoBoT_095/donate" target="_blank"><img src="https://liberapay.com/assets/widgets/donate.svg" height=30 /></a>
-<a href="https://ko-fi.com/robot095/donate" target="_blank"><img src="https://ko-fi.com/img/githubbutton_sm.svg" height=30 /></a>
-<a href="https://buymeacoffee.com/robot_095" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="30"></a>
-<a href="https://opencollective.com/webpack/donate" target="_blank"><img src="https://opencollective.com/webpack/donate/button@2x.png?color=blue" height=30 /></a>
+[![Liberapay](https://img.shields.io/badge/Liberapay-F6C915?logo=liberapay&logoColor=black)](https://liberapay.com/RoBoT_095/donate)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/robot095/donate)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/robot_095)
+[![Open Collective](https://img.shields.io/badge/Open%20Collective-3385FF?logo=open-collective&logoColor=white)](https://opencollective.com/webpack/donate)
