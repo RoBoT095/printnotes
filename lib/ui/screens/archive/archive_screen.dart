@@ -126,7 +126,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
           icon: const Icon(
             Icons.arrow_back,
           ),
-          onPressed: context.read<NavigationProvider>().routeHistory.length > 2
+          onPressed: context.read<NavigationProvider>().routeHistory.last !=
+                  context.read<SettingsProvider>().archivePath
               ? () {
                   setState(() => _loadArchivedItems(
                       context.read<NavigationProvider>().navigateBack()));

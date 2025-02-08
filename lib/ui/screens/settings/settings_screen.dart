@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
@@ -61,6 +62,8 @@ class SettingsScreen extends StatelessWidget {
                     context
                         .read<SettingsProvider>()
                         .setMainDir(pickedDirectory);
+                    context.read<NavigationProvider>().initRouteHistory(
+                        context.read<SettingsProvider>().mainDir);
                   }
                 },
               ),

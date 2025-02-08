@@ -124,7 +124,8 @@ class _DeletedScreenState extends State<DeletedScreen> {
           icon: const Icon(
             Icons.arrow_back,
           ),
-          onPressed: context.read<NavigationProvider>().routeHistory.length > 2
+          onPressed: context.read<NavigationProvider>().routeHistory.last !=
+                  context.read<SettingsProvider>().trashPath
               ? () {
                   setState(() => _loadDeletedItems(
                       context.read<NavigationProvider>().navigateBack()));

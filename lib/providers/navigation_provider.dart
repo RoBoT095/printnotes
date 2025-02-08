@@ -18,6 +18,7 @@ class NavigationProvider with ChangeNotifier {
     if (_routeHistory.isEmpty) {
       _routeHistory.add(initDir);
     } else if (_routeHistory.first != initDir) {
+      _routeHistory.clear();
       _routeHistory.add(initDir);
     }
   }
