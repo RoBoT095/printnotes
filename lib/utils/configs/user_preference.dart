@@ -78,3 +78,17 @@ class UserLatexPref {
     return prefs.getBool('useLatex') ?? false;
   }
 }
+
+// For Editor settings
+
+class UserEditorConfig {
+  static Future<void> setFontSize(double fontSize) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('editorConfigFontSize', fontSize);
+  }
+
+  static Future<double> getFontSize() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('editorConfigFontSize') ?? 20;
+  }
+}

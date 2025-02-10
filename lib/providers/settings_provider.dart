@@ -48,7 +48,6 @@ class SettingsProvider with ChangeNotifier {
 
   void loadSettings() async {
     final mainDir = await DataPath.selectedDirectory;
-
     final layout = await UserLayoutPref.getLayoutView();
     final previewLength = await UserLayoutPref.getNotePreviewLength();
     final sortOrder = await UserSortPref.getSortOrder();

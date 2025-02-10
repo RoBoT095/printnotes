@@ -6,11 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
-import 'package:printnotes/utils/file_info.dart';
+import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
 import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/markdown/editor_field.dart';
 import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
@@ -119,6 +120,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                     title: Text('Info'),
                   ),
                   onTap: () => modalShowFileInfo(context, widget.filePath),
+                ),
+                PopupMenuItem(
+                  child: const ListTile(
+                    leading: Icon(Icons.tune),
+                    title: Text('Configure'),
+                  ),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const EditorConfigScreen())),
                 ),
                 PopupMenuItem(
                   child: ListTile(
@@ -278,37 +287,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       ),
     );
   }
-
-  Future modalShowFileInfo(BuildContext context, String filePath) =>
-      showModalBottomSheet(
-        context: context,
-        useSafeArea: true,
-        isScrollControlled: true,
-        builder: (context) {
-          File file = File(filePath);
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  'Info',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              statListTile('Character Count:', getCharacterCount(filePath)),
-              statListTile('Word Count:', getWordCount(filePath)),
-              statListTile('File Size: ',
-                  getFileSizeString(bytes: file.statSync().size)),
-              statListTile('Last Modified: ',
-                  getFormattedDate(date: file.statSync().modified)),
-              statListTile('Location: ', file.path),
-              const SizedBox(height: 50)
-            ],
-          );
-        },
-      );
 
   @override
   void dispose() {

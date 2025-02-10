@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-Widget markdownCheckBox(bool checked) {
+Widget markdownCheckBox(bool checked, double? size) {
   return SizedBox(
-    width: 20,
-    height: 20,
+    width: size ?? 20,
+    height: size ?? 20,
     child: Checkbox(
       value: checked,
       hoverColor: null,

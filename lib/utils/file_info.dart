@@ -33,13 +33,13 @@ Widget statListTile(titleText, subtitleText) {
   return ListTile(
     title: Text(
       titleText,
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
     ),
     subtitle: Text(
       subtitleText,
-      style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
+      style: const TextStyle(fontSize: 20, overflow: TextOverflow.ellipsis),
       softWrap: true,
-      maxLines: 2,
+      maxLines: 3,
     ),
   );
 }
