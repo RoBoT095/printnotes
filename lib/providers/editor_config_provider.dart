@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 
 class EditorConfigProvider with ChangeNotifier {
-  double _fontSize = 20;
+  double _fontSize = 16;
 
   double get fontSize => _fontSize;
 

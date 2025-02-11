@@ -43,6 +43,7 @@ class MarkdownToolbar extends StatelessWidget {
               },
             ),
             ValueListenableBuilder(
+              key: const ValueKey<String>("toolbar_undo_redo_actions"),
               valueListenable: undoController,
               builder: (context, value, child) {
                 return Row(
@@ -144,7 +145,7 @@ class MarkdownToolbar extends StatelessWidget {
             ToolbarItem(
               key: const ValueKey<String>("toolbar_indent_action"),
               icon: Icons.format_indent_increase,
-              tooltip: 'Indent',
+              tooltip: 'Indent line',
               onPressedButton: () {
                 toolbar.action("\t", "");
               },

@@ -89,6 +89,6 @@ class UserEditorConfig {
 
   static Future<double> getFontSize() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('editorConfigFontSize') ?? 20;
+    return prefs.getDouble('editorConfigFontSize') ?? 16;
   }
 }
