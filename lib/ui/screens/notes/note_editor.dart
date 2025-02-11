@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
-import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
+import 'package:printnotes/providers/editor_config_provider.dart';
 import 'package:printnotes/utils/open_explorer.dart';
+import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/markdown/editor_field.dart';
 import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
@@ -226,6 +228,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   toolbarBackground:
                       Theme.of(context).colorScheme.surfaceContainer,
                   expandableBackground: Theme.of(context).colorScheme.surface,
+                  userToolbarItemList:
+                      context.watch<EditorConfigProvider>().toolbarItemList,
                 )
               : null,
           child: _isLoading

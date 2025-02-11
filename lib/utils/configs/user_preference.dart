@@ -91,4 +91,14 @@ class UserEditorConfig {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble('editorConfigFontSize') ?? 16;
   }
+
+  static Future<void> setToolbarConfig(String config) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('toolbar_config', config);
+  }
+
+  static Future<String?> getToolbarConfig() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('toolbar_config');
+  }
 }

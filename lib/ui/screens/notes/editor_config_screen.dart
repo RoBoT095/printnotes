@@ -3,21 +3,15 @@ import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/editor_config_provider.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
-import 'package:printnotes/constants/toolbar_items_list.dart';
+import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
 
-class EditorConfigScreen extends StatefulWidget {
+class EditorConfigScreen extends StatelessWidget {
   const EditorConfigScreen({super.key});
-
-  @override
-  State<EditorConfigScreen> createState() => _EditorConfigScreenState();
-}
-
-class _EditorConfigScreenState extends State<EditorConfigScreen> {
-  bool isReorderToolbar = false;
 
   @override
   Widget build(BuildContext context) {
     double userFontSize = context.watch<EditorConfigProvider>().fontSize;
+    bool isEditingToolbar = context.watch<EditorConfigProvider>().isEditing;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,8 +19,8 @@ class _EditorConfigScreenState extends State<EditorConfigScreen> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text('Editor Configuration'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        primary: true,
         children: [
           sectionTitle(
             'Config',
@@ -65,42 +59,61 @@ class _EditorConfigScreenState extends State<EditorConfigScreen> {
             padding: 10,
           ),
           ListTile(
-            title: const Text('Reorder toolbar?'),
+            title: const Text('Edit Toolbar?'),
             trailing: Switch(
-              value: isReorderToolbar,
-              onChanged: (value) => setState(() => isReorderToolbar = value),
-            ),
+                value: isEditingToolbar,
+                onChanged: context.read<EditorConfigProvider>().setIsEditing),
           ),
-          Expanded(
-            child: ReorderableListView.builder(
+          const Divider(),
+          if (isEditingToolbar)
+            MarkdownToolbar(
+              controller: TextEditingController(),
+              onPreviewChanged: () {},
+              undoController: UndoHistoryController(),
+              toolbarBackground: Theme.of(context).colorScheme.surfaceContainer,
+              expandableBackground: Theme.of(context).colorScheme.surface,
+              userToolbarItemList:
+                  context.watch<EditorConfigProvider>().toolbarItemList,
+              absorbOnTap: true,
+            ),
+          if (isEditingToolbar)
+            const Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text('Include'), Text('Reorder')],
+              ),
+            ),
+          if (isEditingToolbar)
+            ReorderableListView.builder(
               primary: false,
-              itemCount: toolbarConfigList.length,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemCount:
+                  context.watch<EditorConfigProvider>().toolbarItemList.length,
               itemBuilder: (context, index) {
+                var toolbarList =
+                    context.watch<EditorConfigProvider>().toolbarItemList;
                 return ListTile(
-                  tileColor: Theme.of(context).colorScheme.surfaceContainer,
-                  key: ValueKey<String>(toolbarConfigList[index].key),
-                  leading: Icon(toolbarConfigList[index].icon),
-                  title: Text(toolbarConfigList[index].text),
-                  trailing: isReorderToolbar
-                      ? const Icon(Icons.drag_handle)
-                      : Checkbox(
-                          value: includedToolbarItems
-                              .contains(toolbarConfigList[index].key),
-                          onChanged: (value) {
-                            if (value == true) {
-                              setState(() => includedToolbarItems
-                                  .add(toolbarConfigList[index].key));
-                            } else {
-                              setState(() => includedToolbarItems
-                                  .remove(toolbarConfigList[index].key));
-                            }
-                          },
-                        ),
+                  key: ValueKey<String>(toolbarList[index].key),
+                  leading: isEditingToolbar
+                      ? Checkbox(
+                          value: toolbarList[index].visible,
+                          onChanged: null) // TODO
+                      : null,
+                  title: Row(
+                    children: [
+                      Icon(toolbarList[index].icon),
+                      const SizedBox(width: 15),
+                      Text(toolbarList[index].text),
+                    ],
+                  ),
+                  trailing:
+                      isEditingToolbar ? const Icon(Icons.drag_handle) : null,
                 );
               },
-              onReorder: (int oldIndex, int newIndex) {},
+              onReorder: context.read<EditorConfigProvider>().updateListOrder,
             ),
-          )
         ],
       ),
     );
