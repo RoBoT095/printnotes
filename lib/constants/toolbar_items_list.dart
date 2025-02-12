@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ToolbarConfigItem {
   final String key;
-  final bool visible;
+  bool visible;
   final IconData icon;
   final String iconFontFamily;
   final String text;

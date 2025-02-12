@@ -99,7 +99,14 @@ class EditorConfigScreen extends StatelessWidget {
                   leading: isEditingToolbar
                       ? Checkbox(
                           value: toolbarList[index].visible,
-                          onChanged: null) // TODO
+                          onChanged: (value) {
+                            if (value != null) {
+                              context
+                                  .read<EditorConfigProvider>()
+                                  .setToolbarItemVisibility(value, index);
+                            }
+                          },
+                        )
                       : null,
                   title: Row(
                     children: [

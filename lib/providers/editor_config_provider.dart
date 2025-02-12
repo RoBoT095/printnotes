@@ -7,7 +7,7 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 
 class EditorConfigProvider with ChangeNotifier {
   double _fontSize = 16;
-  bool _isEditing = true;
+  bool _isEditing = false;
   List<ToolbarConfigItem> _toolbarItemList = [];
 
   double get fontSize => _fontSize;
@@ -46,13 +46,15 @@ class EditorConfigProvider with ChangeNotifier {
           .toList();
       _toolbarItemList = decodedJsonList;
     }
-    String encodedList =
-        jsonEncode(_toolbarItemList.map((e) => e.toJson()).toList());
-    UserEditorConfig.setToolbarConfig(encodedList);
+    encodeToolbarJson();
     notifyListeners();
   }
 
-  void setToolbarItemVisibility() {} // TODO
+  void setToolbarItemVisibility(bool val, int index) {
+    _toolbarItemList[index].visible = val;
+    encodeToolbarJson();
+    notifyListeners();
+  }
 
   void updateListOrder(int oldIndex, int newIndex) {
     if (oldIndex < newIndex) {
@@ -61,9 +63,13 @@ class EditorConfigProvider with ChangeNotifier {
     final toolbarItem = _toolbarItemList.removeAt(oldIndex);
     _toolbarItemList.insert(newIndex, toolbarItem);
 
+    encodeToolbarJson();
+    notifyListeners();
+  }
+
+  void encodeToolbarJson() {
     String encodedList =
         jsonEncode(_toolbarItemList.map((e) => e.toJson()).toList());
     UserEditorConfig.setToolbarConfig(encodedList);
-    notifyListeners();
   }
 }

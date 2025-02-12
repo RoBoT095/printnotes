@@ -6,11 +6,13 @@ class EditorField extends StatelessWidget {
     required this.controller,
     required this.onChanged,
     this.undoController,
+    this.fontSize = 16,
   });
 
   final TextEditingController controller;
   final Function(String) onChanged;
   final UndoHistoryController? undoController;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class EditorField extends StatelessWidget {
       autofocus: false,
       onChanged: onChanged,
       undoController: undoController,
-      style: const TextStyle(fontSize: 16),
+      style: TextStyle(fontSize: fontSize),
       decoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Type something...',

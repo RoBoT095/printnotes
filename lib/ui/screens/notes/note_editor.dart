@@ -260,6 +260,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                 onChanged: (value) async =>
                                     await _saveNoteContent(context),
                                 undoController: _undoHistoryController,
+                                fontSize: context
+                                    .watch<EditorConfigProvider>()
+                                    .fontSize,
                               )
                             : GestureDetector(
                                 onDoubleTap: () {

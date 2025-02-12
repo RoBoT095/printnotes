@@ -254,7 +254,7 @@ class MarkdownToolbar extends StatelessWidget {
     if (userToolbarItemList != null) {
       for (ToolbarConfigItem item
           in userToolbarItemList! as List<ToolbarConfigItem>) {
-        returnedToolList.add(allToolbarItems[item.key]!);
+        if (item.visible) returnedToolList.add(allToolbarItems[item.key]!);
       }
     } else {
       returnedToolList =

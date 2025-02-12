@@ -1,5 +1,12 @@
 # Changelog + Dev Log
 
+### (Feb 9-11)
+
+- Added Editor Configuration page to the 'more' button in note editor
+  - Modify font size of markdown text
+  - Rearrange toolbar items
+  - Show/hide toolbar items
+
 ### (Feb 8, 2025)
 
 - Fixed files not displaying when the main selected folder is a hidden folder (aka starts with '.')
