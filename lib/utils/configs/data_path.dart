@@ -57,9 +57,10 @@ class DataPath {
   // Hidden app config file called .main_config.json
 
   // Create and load contents of config file
+  static final configFile = File(
+      '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
+
   static Map<String, dynamic> loadJsonConfigFile() {
-    final configFile = File(
-        '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
     if (!configFile.existsSync()) configFile.createSync(recursive: true);
     if (configFile.readAsStringSync().isEmpty) {
       configFile.writeAsStringSync('{}');
@@ -71,11 +72,14 @@ class DataPath {
 
   // Write to config file
   static void saveJsonConfigFile(Map<String, dynamic> configData) async {
-    final configFile = File(
-        '$_selectedDirectory${Platform.pathSeparator}.printnotes${Platform.pathSeparator}main_config.json');
-
     final configJsonString =
         const JsonEncoder.withIndent('  ').convert(configData);
     configFile.writeAsStringSync(configJsonString);
+  }
+
+  // Deletes and regenerates json file
+  static void deleteJsonConfigFile() async {
+    configFile.delete();
+    loadJsonConfigFile();
   }
 }

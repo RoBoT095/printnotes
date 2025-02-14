@@ -65,7 +65,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
   // TODO: Redo this all, it looks ugly
   Widget buildCustomThemeListTile(List<dynamic> list, int index,
       {required bool isDark}) {
-    double circleRadius = 12;
+    double circleRadius = 10;
 
     return Dismissible(
       key: ValueKey(list[index]),
@@ -100,19 +100,21 @@ class _CustomThemePageState extends State<CustomThemePage> {
           });
         },
         leading: CircleAvatar(
-          backgroundColor: Color(list[index]['primary']),
-          child: isCustomColorSelected[isDark ? 'dark' : 'light'] ==
-                  list[index]["name"]
-              ? const Icon(Icons.check)
-              : const Icon(Icons.palette),
-        ),
+            backgroundColor: Color(list[index]['primary']),
+            child: Icon(
+              isCustomColorSelected[isDark ? 'dark' : 'light'] ==
+                      list[index]["name"]
+                  ? Icons.check
+                  : Icons.palette,
+              color: Color(list[index]['onPrimary']),
+            )),
         title: Text(
           list[index]["name"],
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontSize: 18),
         ),
         trailing: SizedBox(
-          width: ((circleRadius * 2) * 7) + 20,
+          width: ((circleRadius * 2) * 7) + 8,
           child: Card.filled(
             color: Color(list[index]['secondary']).withOpacity(0.2),
             child: Row(

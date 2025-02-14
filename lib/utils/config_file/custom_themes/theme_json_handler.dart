@@ -59,7 +59,7 @@ class CustomThemeJson {
 void saveSelectedThemeToConfig(Map<String, dynamic> selectedThemes) {
   final configFileMap = DataPath.loadJsonConfigFile();
 
-// Object existence check for "SelectedCustomThemes", create if null
+  // Object existence check for "SelectedCustomThemes", create if null
   configFileMap['SelectedCustomThemes'] ??= {};
 
   // Add the map of selected themes to config
@@ -99,6 +99,7 @@ void deleteCustomTheme(Map<String, dynamic> themeJson) {
 }
 
 // TODO: Maybe merge into addThemeToConfig
+// Adds theme back to list if accidentally deleted, aka theme undo handler
 void restoreCustomTheme(Map<String, dynamic> themeJson) {
   final configFileMap = DataPath.loadJsonConfigFile();
 

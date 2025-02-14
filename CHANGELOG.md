@@ -1,6 +1,12 @@
 # Changelog + Dev Log
 
-### (Feb 9-11)
+### (Feb 14, 2025)
+
+- Moved toolbarConfig from `SharedPreference` into the `main_config.json` file
+- Made small modifications to custom color list tiles
+- Added option to delete and generate new config file from settings screen
+
+### (Feb 9-11, 2025)
 
 - Added Editor Configuration page to the 'more' button in note editor
   - Modify font size of markdown text
@@ -14,8 +20,6 @@
 - Fixed navigation history when you enter into trash or archive while not on main home screen
 
 ### (Feb 7, 2025)
-
-**Changes:**
 
 - Moved `ItemNavigation` into `NavigationProvider` and unified route history for notes, trash, and archive screens as well as expanded to include files as well
 - Fixed search throwing user to main folder even when in a different folder and not updating route history

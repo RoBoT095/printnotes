@@ -1,42 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ToolbarConfigItem {
-  final String key;
-  bool visible;
-  final IconData icon;
-  final String iconFontFamily;
-  final String text;
-
-  ToolbarConfigItem({
-    required this.key,
-    required this.visible,
-    required this.icon,
-    required this.iconFontFamily,
-    required this.text,
-  });
-
-  factory ToolbarConfigItem.fromJson(Map<String, dynamic> json) {
-    bool isMUIcon = json['iconFontFamily'] == 'MaterialIcons';
-    return ToolbarConfigItem(
-      key: json['key'],
-      visible: json['visible'],
-      icon: IconData(json['icon'],
-          fontFamily: json['iconFontFamily'],
-          fontPackage: isMUIcon ? null : 'font_awesome_flutter'),
-      iconFontFamily: json['iconFontFamily'],
-      text: json['text'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'key': key,
-        'visible': visible,
-        'icon': icon.codePoint,
-        'iconFontFamily': iconFontFamily,
-        'text': text,
-      };
-}
+import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
 
 List<ToolbarConfigItem> defaultToolbarList = [
   ToolbarConfigItem(

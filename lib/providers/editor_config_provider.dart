@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/constants/toolbar_items_list.dart';
+import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 
 class EditorConfigProvider with ChangeNotifier {
@@ -20,7 +19,7 @@ class EditorConfigProvider with ChangeNotifier {
 
   void loadEditorConfig() async {
     final fontSize = await UserEditorConfig.getFontSize();
-    final toolbarConfig = await UserEditorConfig.getToolbarConfig();
+    final toolbarConfig = loadToolbarLoadout();
 
     setFontSize(fontSize);
     setToolbarConfig(toolbarConfig);
@@ -37,22 +36,19 @@ class EditorConfigProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setToolbarConfig(String? config) {
-    if (config == null || config.isEmpty) {
+  void setToolbarConfig(List<ToolbarConfigItem>? configList) {
+    if (configList == null || configList.isEmpty) {
       _toolbarItemList = defaultToolbarList;
     } else {
-      List<ToolbarConfigItem> decodedJsonList = (jsonDecode(config) as List)
-          .map((e) => ToolbarConfigItem.fromJson(e))
-          .toList();
-      _toolbarItemList = decodedJsonList;
+      _toolbarItemList = configList;
     }
-    encodeToolbarJson();
+    saveToolbarLoadout(_toolbarItemList);
     notifyListeners();
   }
 
   void setToolbarItemVisibility(bool val, int index) {
     _toolbarItemList[index].visible = val;
-    encodeToolbarJson();
+    saveToolbarLoadout(_toolbarItemList);
     notifyListeners();
   }
 
@@ -63,13 +59,7 @@ class EditorConfigProvider with ChangeNotifier {
     final toolbarItem = _toolbarItemList.removeAt(oldIndex);
     _toolbarItemList.insert(newIndex, toolbarItem);
 
-    encodeToolbarJson();
+    saveToolbarLoadout(_toolbarItemList);
     notifyListeners();
-  }
-
-  void encodeToolbarJson() {
-    String encodedList =
-        jsonEncode(_toolbarItemList.map((e) => e.toJson()).toList());
-    UserEditorConfig.setToolbarConfig(encodedList);
   }
 }

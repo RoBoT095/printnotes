@@ -209,6 +209,17 @@ class SettingsScreen extends StatelessWidget {
                     context.read<SettingsProvider>().setLatexUse(value);
                   }),
             ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.data_array),
+              title: const Text('Delete main_config.json'),
+              subtitle: const Text(
+                  'Resets certain configs like custom theme and markdown toolbar'),
+              trailing: IconButton(
+                  onPressed: DataPath.deleteJsonConfigFile,
+                  icon: Icon(Icons.delete,
+                      color: Theme.of(context).colorScheme.error)),
+            ),
           ],
         ),
       ),

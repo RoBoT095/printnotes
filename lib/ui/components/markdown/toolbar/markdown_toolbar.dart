@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:printnotes/constants/toolbar_items_list.dart';
+
+import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
+
 import 'toolbar.dart';
 import 'modal_input_url.dart';
 import 'toolbar_item.dart';
