@@ -24,6 +24,12 @@ class NavigationProvider with ChangeNotifier {
   }
 
   void addToRouteHistory(String route) {
+    // if main route was passed, reset history to main route
+    if (_routeHistory.first == route) {
+      _routeHistory.clear();
+      _routeHistory.add(route);
+      notifyListeners();
+    }
     // Prevent the addition of the same route to list again
     if (_routeHistory.last != route) {
       _routeHistory.add(route);
@@ -34,6 +40,7 @@ class NavigationProvider with ChangeNotifier {
   String? navigateBack() {
     if (_routeHistory.length > 1) {
       _routeHistory.removeLast();
+      notifyListeners();
       return _routeHistory.last;
     }
 

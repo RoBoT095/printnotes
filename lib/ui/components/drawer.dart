@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 
@@ -21,10 +22,10 @@ class DrawerView extends StatelessWidget {
       Navigator.pop(context);
     }
 
+    if (path != null) {
+      context.read<NavigationProvider>().addToRouteHistory(path);
+    }
     if (screen != null) {
-      if (path != null) {
-        context.read<NavigationProvider>().addToRouteHistory(path);
-      }
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => screen,
       ));
@@ -75,12 +76,13 @@ class DrawerView extends StatelessWidget {
                 ),
               ),
               ListTile(
-                iconColor: Theme.of(context).colorScheme.secondary,
-                leading: const Icon(Icons.article_outlined),
-                title: const Text('All Notes'),
-                onTap: () => _navigateToScreen(context,
-                    path: context.read<SettingsProvider>().mainDir),
-              ),
+                  iconColor: Theme.of(context).colorScheme.secondary,
+                  leading: const Icon(Icons.article_outlined),
+                  title: const Text('All Notes'),
+                  onTap: () {
+                    _navigateToScreen(context,
+                        path: context.read<SettingsProvider>().mainDir);
+                  }),
               const Opacity(opacity: 0.2, child: Divider()),
               ListTile(
                 iconColor: Theme.of(context).colorScheme.secondary,

@@ -47,10 +47,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     });
   }
 
-  void _navBack() {
-    context.read<NavigationProvider>().navigateBack();
-    _loadItems();
-  }
+  void _navBack() => context.read<NavigationProvider>().navigateBack();
 
   List<FileSystemEntity> selectedItemsToFileEntity() {
     List<FileSystemEntity> fileList = [];

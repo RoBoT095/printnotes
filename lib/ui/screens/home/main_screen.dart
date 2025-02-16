@@ -28,7 +28,6 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     const breakpoint = 1000.0;
-
     return context.watch<SettingsProvider>().showIntro
         ? const IntroScreen()
         : PopScope(
