@@ -93,7 +93,7 @@ class ItemDeletionHandler {
   static Future<void> handlePermanentItemDelete(
       BuildContext context, FileSystemEntity item, Function loadItems) async {
     try {
-      await StorageSystem.trashItem(item.path);
+      await StorageSystem.permanentlyDeleteItem(item.path);
 
       loadItems();
       if (context.mounted) {
