@@ -26,7 +26,7 @@ class StorageSystem {
         .where((item) => path.basename(item.path.toLowerCase()).contains(query))
         .toList());
 
-    // Then by characters in note
+    // Then by characters in file
     for (var item in filteredItems) {
       String fileText = File(item.path)
           .readAsStringSync()
@@ -148,18 +148,22 @@ class StorageSystem {
     return fileExists || folderExists;
   }
 
-  // Methods related to creating notes, loading, and saving notes
+  // Methods related to creating, loading, and saving files
 
-  static Future<File> createNote(String fileName, {String? parentPath}) async {
+  static Future<String> createFile(String fileName,
+      {String? parentPath}) async {
     final baseDir = parentPath ?? await DataPath.selectedDirectory;
     if (await nameExists(fileName, parentPath: baseDir)) {
-      throw Exception('A note or folder with this name already exists.');
+      throw Exception('A file or folder with this name already exists.');
     }
-    final filePath = path.join(baseDir!, '$fileName.md');
-    return File(filePath).create(recursive: true);
+    String ext = path.extension(fileName);
+    final filePath =
+        path.join(baseDir!, ext.isEmpty ? '$fileName.md' : fileName);
+    File(filePath).create(recursive: true);
+    return filePath;
   }
 
-  static Future<String> loadNote(String filePath) async {
+  static Future<String> loadFile(String filePath) async {
     final file = File(filePath);
     if (await file.exists()) {
       return await file.readAsString();
@@ -167,14 +171,7 @@ class StorageSystem {
     return '';
   }
 
-  static Future<String> saveNote(fileName, String content,
-      {String? parentPath}) async {
-    final file = await createNote(fileName, parentPath: parentPath);
-    await file.writeAsString(content);
-    return file.path;
-  }
-
-  static String getNotePreview(String filePath, {int previewLength = 100}) {
+  static String getFilePreview(String filePath, {int previewLength = 100}) {
     try {
       final file = File(filePath);
       if (file.existsSync()) {
@@ -223,7 +220,7 @@ class StorageSystem {
       {String? parentPath}) async {
     final baseDir = parentPath ?? await DataPath.selectedDirectory;
     if (await nameExists(folderName, parentPath: baseDir)) {
-      throw Exception('A note or folder with this name already exists.');
+      throw Exception('A file or folder with this name already exists.');
     }
     final newFolder = Directory(path.join(baseDir!, folderName));
     if (!await newFolder.exists()) {

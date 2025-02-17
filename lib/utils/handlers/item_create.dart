@@ -47,10 +47,10 @@ class ItemCreationHandler {
     final dialogResult = await showNameInputDialog(context, 'Enter note name');
     String noteName = dialogResult['name'];
     bool noteSubmitted = dialogResult['submitted'];
-    if (noteSubmitted == true && noteName.isNotEmpty) {
+    if (noteSubmitted && noteName.isNotEmpty) {
       try {
         final newNotePath =
-            await StorageSystem.saveNote(noteName, '', parentPath: currentPath);
+            await StorageSystem.createFile(noteName, parentPath: currentPath);
         if (context.mounted) {
           final item = File(newNotePath);
           context.read<NavigationProvider>().routeItemToPage(context, item);
@@ -67,7 +67,7 @@ class ItemCreationHandler {
 
   static Future<Map<String, dynamic>> showNameInputDialog(
       BuildContext context, String title) async {
-    String name = '';
+    String? name;
     bool submitted = false;
     await showDialog(
       context: context,
@@ -75,9 +75,7 @@ class ItemCreationHandler {
         title: Text(title),
         content: TextFormField(
           autofocus: true,
-          onChanged: (value) {
-            name = value;
-          },
+          onChanged: (value) => name = value,
           onFieldSubmitted: (value) {
             Navigator.of(context).pop(value);
             submitted = true;

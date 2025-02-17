@@ -11,7 +11,7 @@ class ItemArchiveHandler {
       builder: (context) => AlertDialog(
         title: const Text('Confirm Archive'),
         content: Text(
-            'Are you sure you want to archive this ${item is Directory ? 'folder' : 'note'}? It will be removed from its current location.'),
+            'Are you sure you want to archive this ${item is Directory ? 'folder' : 'file'}? It will be removed from its current location.'),
         actions: [
           TextButton(
             child: Text(
@@ -31,7 +31,7 @@ class ItemArchiveHandler {
                 await StorageSystem.archiveItem(item.path);
                 if (context.mounted) {
                   customSnackBar(
-                          '${item is Directory ? 'Folder' : 'Note'} archived successfully',
+                          '${item is Directory ? 'Folder' : 'File'} archived successfully',
                           type: 'success')
                       .show(context);
                 }

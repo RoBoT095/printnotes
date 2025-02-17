@@ -1,5 +1,15 @@
 # Changelog + Dev Log
 
+### (Feb 16, 2025)
+
+- Fixed drawer "All Notes" button not redirecting user to homepage/main folder
+- Notes preview will reflect changes when you exit note editor
+- Fixed permanent delete was trashing instead of deleting
+- Changed when notes are created, if extension is added by user, will not add `.md` on top of it
+- Added Refresh on pull up for Grid/List view for mobile
+- Expanded access to allow all file extension types, will instead show error message if reading file is not possible
+- Renamed a lot of things from "note" to "file"
+
 ### (Feb 14, 2025)
 
 - Moved toolbarConfig from `SharedPreference` into the `main_config.json` file

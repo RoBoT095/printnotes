@@ -123,7 +123,7 @@ class _GridListViewState extends State<GridListView> {
         const SizedBox(height: 4),
         MarkdownBlock(
           selectable: false,
-          data: StorageSystem.getNotePreview(item.path,
+          data: StorageSystem.getFilePreview(item.path,
               previewLength: context.watch<SettingsProvider>().previewLength),
           config: theMarkdownConfigs(context, hideCodeButtons: true),
           generator: theMarkdownGenerators(context, textScale: 0.95),

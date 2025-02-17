@@ -12,7 +12,7 @@ class ItemRenameHandler {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Rename ${item is Directory ? 'Folder' : 'Note'}'),
+        title: Text('Rename ${item is Directory ? 'Folder' : 'File'}'),
         content: TextField(
           controller: controller,
           decoration: const InputDecoration(hintText: 'Enter new name'),
@@ -56,7 +56,7 @@ class ItemRenameHandler {
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error renaming ${item is Directory ? 'folder' : 'note'}: $e',
+                'Error renaming ${item is Directory ? 'folder' : 'file'}: $e',
                 type: 'error')
             .show(context);
       }

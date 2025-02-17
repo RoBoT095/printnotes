@@ -49,21 +49,12 @@ class NavigationProvider with ChangeNotifier {
 
   void routeItemToPage(BuildContext context, FileSystemEntity item) {
     if (item is File) {
-      if (fileTypeChecker(item) == CFileType.note) {
-        onNoteSelect(context, item);
-      } else if (fileTypeChecker(item) == CFileType.image) {
+      if (fileTypeChecker(item) == CFileType.image) {
         onImageSelect(context, item);
       } else if (fileTypeChecker(item) == CFileType.pdf) {
         onPdfSelect(context, item);
       } else {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Not Supported File Format')));
-
-        // Does not appear unless UI is updated, will fix later
-
-        // customSnackBar('File format not supported!', type: 'info')
-        //     .show(context);
+        onNoteSelect(context, item);
       }
     }
   }

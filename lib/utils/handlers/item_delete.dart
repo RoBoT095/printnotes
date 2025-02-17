@@ -45,7 +45,7 @@ class ItemDeletionHandler {
       loadItems();
       if (context.mounted) {
         customSnackBar(
-                '${item is Directory ? 'Folder' : 'Note'} was moved to the trash bin',
+                '${item is Directory ? 'Folder' : 'File'} was moved to the trash bin',
                 type: 'info')
             .show(context);
       }

@@ -49,6 +49,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   void _navBack() => context.read<NavigationProvider>().navigateBack();
 
+  Future<void> _refreshPage() async {
+    setState(() => _isLoading = true);
+    _loadItems();
+
+    Future.delayed(const Duration(milliseconds: 300),
+        () => setState(() => _isLoading = false));
+  }
+
   List<FileSystemEntity> selectedItemsToFileEntity() {
     List<FileSystemEntity> fileList = [];
     for (var item in context.read<SelectingProvider>().selectedItems) {
@@ -129,12 +137,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                   IconButton(
                     tooltip: 'Reload List',
                     icon: const Icon(Icons.refresh),
-                    onPressed: () {
-                      setState(() => _isLoading = true);
-                      _loadItems();
-                      Timer(const Duration(milliseconds: 300),
-                          () => setState(() => _isLoading = false));
-                    },
+                    onPressed: _refreshPage,
                   ),
                 ],
         ),
@@ -144,9 +147,12 @@ class _NotesDisplayState extends State<NotesDisplay> {
                 ? const Center(
                     child: Text('Nothing here!'),
                   )
-                : context.watch<SettingsProvider>().layout == 'tree'
-                    ? TreeLayoutView(onChange: _loadItems)
-                    : GridListView(items: _items, onChange: _loadItems),
+                : RefreshIndicator(
+                    onRefresh: _refreshPage,
+                    child: context.watch<SettingsProvider>().layout == 'tree'
+                        ? TreeLayoutView(onChange: _loadItems)
+                        : GridListView(items: _items, onChange: _loadItems),
+                  ),
         floatingActionButton: speedDialFAB(
             context,
             _currentPath ?? context.read<SettingsProvider>().mainDir,
