@@ -10,8 +10,8 @@ import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 
-import 'package:printnotes/ui/components/layout/grid_list_view.dart';
-import 'package:printnotes/ui/components/layout/tree_view.dart';
+import 'package:printnotes/ui/screens/layout/grid_list_view.dart';
+import 'package:printnotes/ui/screens/layout/tree_view.dart';
 import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 
 class NotesDisplay extends StatefulWidget {

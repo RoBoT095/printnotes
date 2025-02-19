@@ -65,17 +65,16 @@ class EditorConfigScreen extends StatelessWidget {
                 onChanged: context.read<EditorConfigProvider>().setIsEditing),
           ),
           const Divider(),
-          if (isEditingToolbar)
-            MarkdownToolbar(
-              controller: TextEditingController(),
-              onPreviewChanged: () {},
-              undoController: UndoHistoryController(),
-              toolbarBackground: Theme.of(context).colorScheme.surfaceContainer,
-              expandableBackground: Theme.of(context).colorScheme.surface,
-              userToolbarItemList:
-                  context.watch<EditorConfigProvider>().toolbarItemList,
-              absorbOnTap: true,
-            ),
+          MarkdownToolbar(
+            controller: TextEditingController(),
+            onPreviewChanged: () {},
+            undoController: UndoHistoryController(),
+            toolbarBackground: Theme.of(context).colorScheme.surfaceContainer,
+            expandableBackground: Theme.of(context).colorScheme.surface,
+            userToolbarItemList:
+                context.watch<EditorConfigProvider>().toolbarItemList,
+            absorbOnTap: true,
+          ),
           if (isEditingToolbar)
             const Padding(
               padding: EdgeInsets.all(10),
@@ -84,8 +83,9 @@ class EditorConfigScreen extends StatelessWidget {
                 children: [Text('Include'), Text('Reorder')],
               ),
             ),
-          if (isEditingToolbar)
-            ReorderableListView.builder(
+          AbsorbPointer(
+            absorbing: !isEditingToolbar,
+            child: ReorderableListView.builder(
               primary: false,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
@@ -121,6 +121,7 @@ class EditorConfigScreen extends StatelessWidget {
               },
               onReorder: context.read<EditorConfigProvider>().updateListOrder,
             ),
+          ),
         ],
       ),
     );

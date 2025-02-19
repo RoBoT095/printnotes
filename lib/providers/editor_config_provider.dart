@@ -37,7 +37,9 @@ class EditorConfigProvider with ChangeNotifier {
   }
 
   void setToolbarConfig(List<ToolbarConfigItem>? configList) {
-    if (configList == null || configList.isEmpty) {
+    if (configList == null ||
+        configList.isEmpty ||
+        configList.length != defaultToolbarList.length) {
       _toolbarItemList = defaultToolbarList;
     } else {
       _toolbarItemList = configList;

@@ -27,7 +27,7 @@ class MarkdownToolbar extends StatelessWidget {
   final ValueChanged<bool>? onValueChange;
   final Color? toolbarBackground;
   final Color? expandableBackground;
-  final List<dynamic>? userToolbarItemList;
+  final List<ToolbarConfigItem>? userToolbarItemList;
   final bool absorbOnTap;
 
   @override
@@ -193,6 +193,15 @@ class MarkdownToolbar extends StatelessWidget {
           )
         ],
       ),
+      // underline
+      'toolbar_underline_action': ToolbarItem(
+        key: const ValueKey<String>("toolbar_underline_action"),
+        icon: FontAwesomeIcons.underline,
+        tooltip: 'Underline text',
+        onPressedButton: () {
+          toolbar.action("<u>", "</u>");
+        },
+      ),
       // link
       'toolbar_link_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_link_action"),
@@ -254,8 +263,7 @@ class MarkdownToolbar extends StatelessWidget {
     };
     List<Widget> returnedToolList = [];
     if (userToolbarItemList != null) {
-      for (ToolbarConfigItem item
-          in userToolbarItemList! as List<ToolbarConfigItem>) {
+      for (ToolbarConfigItem item in userToolbarItemList!) {
         if (item.visible) returnedToolList.add(allToolbarItems[item.key]!);
       }
     } else {

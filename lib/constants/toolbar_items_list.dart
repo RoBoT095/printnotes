@@ -89,6 +89,13 @@ List<ToolbarConfigItem> defaultToolbarList = [
     text: 'Checkboxes',
   ),
   ToolbarConfigItem(
+    key: 'toolbar_underline_action',
+    visible: true,
+    icon: FontAwesomeIcons.underline,
+    iconFontFamily: 'FontAwesomeSolid',
+    text: 'Underline text',
+  ),
+  ToolbarConfigItem(
     key: 'toolbar_link_action',
     visible: true,
     icon: FontAwesomeIcons.link,
