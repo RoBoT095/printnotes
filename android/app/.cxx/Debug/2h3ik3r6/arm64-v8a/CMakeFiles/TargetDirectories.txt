@@ -1,0 +1,2 @@
+/home/rpg/Programming/Github/printnotes/android/app/.cxx/Debug/2h3ik3r6/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/rpg/Programming/Github/printnotes/android/app/.cxx/Debug/2h3ik3r6/arm64-v8a/CMakeFiles/rebuild_cache.dir

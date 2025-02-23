@@ -77,7 +77,7 @@ I will release apps when I feel like the app is more complete!
 <details close>
 <summary>Tap to show/hide build instructions</summary>
 
-**Note:** I personally run flutter version `3.24.5` as of <u>1/21/2025</u>, some instability and crashes I can't seem to fully fix/understand when trying to upgrade the project to use latest stable release of `3.27.3`, especially FilePicker is causing app to crash when selecting directory or file.
+I personally run flutter version `3.29.0` as of <u>02/22/2025</u>
 
 Make sure you have a working flutter sdk setup. If not installed, go to [Install - Flutter](https://docs.flutter.dev/get-started/install) and select your platform.
 

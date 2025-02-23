@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (Feb 22, 2025)
+
+- Upgraded to flutter version `3.29.0`.
+- Fixed archive and trash paths not updating when changing notes location.
+
 ### (Feb 16, 2025)
 
 - Fixed drawer "All Notes" button not redirecting user to homepage/main folder

@@ -53,10 +53,7 @@ class SettingsProvider with ChangeNotifier {
     final sortOrder = await UserSortPref.getSortOrder();
     final useLatex = await UserLatexPref.getLatexSupport();
 
-    if (mainDir != null) {
-      _archivePath = path.join(mainDir, '.archive');
-      _trashPath = path.join(mainDir, '.trash');
-    }
+    if (mainDir != null) setHiddenFolders(mainDir);
 
     setMainDir(mainDir ?? '');
     setLayout(layout);
@@ -68,7 +65,13 @@ class SettingsProvider with ChangeNotifier {
   void setMainDir(String dir) {
     _mainDir = dir;
     DataPath.setSelectedDirectory(dir);
+    setHiddenFolders(dir);
     notifyListeners();
+  }
+
+  void setHiddenFolders(String dir) {
+    _archivePath = path.join(mainDir, '.archive');
+    _trashPath = path.join(mainDir, '.trash');
   }
 
   void setLayout(String layout) {
