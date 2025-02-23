@@ -4,6 +4,8 @@
 
 - Upgraded to flutter version `3.29.0`.
 - Fixed archive and trash paths not updating when changing notes location.
+- Added popup for delete config button in settings
+- Fixed minor error with deleteJsonConfigFile not loading new config in time
 
 ### (Feb 16, 2025)
 

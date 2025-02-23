@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
-import 'package:printnotes/providers/theme_provider.dart';
+import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
+import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
 
@@ -213,10 +215,22 @@ class SettingsScreen extends StatelessWidget {
               iconColor: Theme.of(context).colorScheme.secondary,
               leading: const Icon(Icons.data_array),
               title: const Text('Delete main_config.json'),
-              subtitle: const Text(
-                  'Resets certain configs like custom theme and markdown toolbar'),
+              subtitle: const Text('Resets certain configurations'),
               trailing: IconButton(
-                  onPressed: DataPath.deleteJsonConfigFile,
+                  onPressed: () async {
+                    final bool response = await showBasicPopup(
+                        context,
+                        'Delete Config File?',
+                        'Are you sure you want to delete?\nThis will get rid of all custom themes and markdown toolbar modifications and restore defaults!');
+                    if (response) {
+                      DataPath.deleteJsonConfigFile;
+                      if (context.mounted) {
+                        customSnackBar('Generated new config file',
+                                type: 'success')
+                            .show(context);
+                      }
+                    }
+                  },
                   icon: Icon(Icons.delete,
                       color: Theme.of(context).colorScheme.error)),
             ),

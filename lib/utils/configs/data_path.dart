@@ -79,7 +79,6 @@ class DataPath {
 
   // Deletes and regenerates json file
   static void deleteJsonConfigFile() async {
-    configFile.delete();
-    loadJsonConfigFile();
+    configFile.delete().then((_) => loadJsonConfigFile());
   }
 }
