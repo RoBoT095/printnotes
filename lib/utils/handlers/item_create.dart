@@ -49,12 +49,15 @@ class ItemCreationHandler {
     bool noteSubmitted = dialogResult['submitted'];
     if (noteSubmitted && noteName.isNotEmpty) {
       try {
-        final newNotePath =
-            await StorageSystem.createFile(noteName, parentPath: currentPath);
-        if (context.mounted) {
-          final item = File(newNotePath);
-          context.read<NavigationProvider>().routeItemToPage(context, item);
-        }
+        await StorageSystem.createFile(noteName, parentPath: currentPath)
+            .then((e) {
+          if (context.mounted) {
+            context
+                .read<NavigationProvider>()
+                .routeItemToPage(context, File(e));
+          }
+        });
+
         loadItems();
       } catch (e) {
         if (context.mounted) {
