@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:printnotes/constants/toolbar_items_list.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/editor_config_provider.dart';
@@ -110,9 +111,9 @@ class EditorConfigScreen extends StatelessWidget {
                       : null,
                   title: Row(
                     children: [
-                      Icon(toolbarList[index].icon),
+                      Icon(toolbarReference[toolbarList[index].key]!['icon']),
                       const SizedBox(width: 15),
-                      Text(toolbarList[index].text),
+                      Text(toolbarReference[toolbarList[index].key]!['text']),
                     ],
                   ),
                   trailing:
