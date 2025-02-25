@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -32,12 +33,16 @@ void main() async {
 }
 
 Future<void> initializeApp() async {
-  await DataPath.selectedDirectory;
-  var isNewUser = await UserFirstTime.getShowIntro;
-  if (Platform.isAndroid && isNewUser != true) {
-    final status = await Permission.manageExternalStorage.request();
-    if (!status.isGranted) {
-      throw "Please allow storage permission to access files";
+  final String? mainDir = await DataPath.selectedDirectory;
+  final Directory defaultDir = await getApplicationDocumentsDirectory();
+  final bool isNewUser = await UserFirstTime.getShowIntro;
+
+  if (mainDir != null) {
+    if (Platform.isAndroid && isNewUser != true && mainDir != defaultDir.path) {
+      final status = await Permission.manageExternalStorage.request();
+      if (!status.isGranted) {
+        throw "Please allow storage permission to access files";
+      }
     }
   }
 }
