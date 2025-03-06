@@ -1,13 +1,17 @@
 # appimage-builder recipe see https://appimage-builder.readthedocs.io for details
 version: 1
+script:
+  - rm -rf AppDir || true
+  - mkdir -p AppDir/usr/bin
+  - cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
 AppDir:
-  path: /home/rpg/Programming/Github/printnotes/AppDir
+  path: ./AppDir
   app_info:
     id: com.printnotes.printnotes
     name: Print(Notes)
     icon: application-vnd.appimage
     version: latest
-    exec: printnotes
+    exec: usr/bin/printnotes
     exec_args: $@
   files:
     include: []
@@ -36,4 +40,4 @@ AppDir:
 AppImage:
   arch: x86_64
   update-information: guess
-  file_name: 'build/linux/x64/release/appimage/printnotes-x86_64.AppImage'
+  file_name: 'AppDir/usr/bin/printnotes-x86_64.AppImage'

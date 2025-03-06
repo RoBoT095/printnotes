@@ -34,8 +34,11 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/AppDir/
+
+# AppImage related
+AppDir
 appimage-build
+*.AppImage*
 
 # Symbolication related
 app.*.symbols
@@ -48,3 +51,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/app/.cxx
+
+outputs/
+scripts/*.txt
