@@ -77,13 +77,21 @@ I will release apps when I feel like the app is more complete!
 <details close>
 <summary>Tap to show/hide build instructions</summary>
 
-I personally run flutter version `3.29.0` as of <u>02/22/2025</u>
+Make sure you have a working flutter sdk setup. If not installed, go to [Install - Flutter](https://docs.flutter.dev/get-started/install) and select your platform, and follow the instructions to make sure you have all the right dependencies installed.
 
-Make sure you have a working flutter sdk setup. If not installed, go to [Install - Flutter](https://docs.flutter.dev/get-started/install) and select your platform.
+Once you get everything installed, test to see you didn't miss anything:
 
-Be sure to disable signing on build.gradle or change keystore to sign the app.
+```
+flutter doctor -v
+```
 
-Before you start building, run these commands:
+---
+
+Be sure to disable signing on build.gradle or create your own keystore to [sign](https://docs.flutter.dev/deployment/android#sign-the-app) the app for android.
+
+### Building Locally
+
+To make sure you are running latest version of flutter, run these commands:
 
 ```
 $ flutter channel stable
@@ -95,19 +103,25 @@ $ flutter upgrade
 
 After that, building is as simple as running these commands:
 
+> This is to grab app dependencies
+
 ```
 $ flutter pub get
 ```
+
+> This is to make sure app runs
 
 ```
 $ flutter run lib/main.dart
 ```
 
+> If you are unsure what target operating system, read further down
+
 ```
-$ flutter build <target>
+$ flutter build <target> --release
 ```
 
-## Targets available for flutter:
+### Targets available for flutter:
 
 - `aar`: Build a repository containing an AAR and a POM file.
 - `apk`: Build an Android APK file from app.
@@ -123,6 +137,30 @@ In other words, compiling can only be done on device you are compiling for (ex: 
 - `macos`: Build a MacOS desktop application.
   - `ipa`: Build an iOS App Store Package from app.
 
+### Building with Docker
+
+If you have docker installed you can run my script to automatically build APKs, here is how to use them:
+
+> change into scripts directory
+
+```
+cd scripts/
+```
+
+> allow script to be executable
+
+```
+chmod +x docker-build.sh
+```
+
+> run the script
+
+```
+./docker-build.sh
+```
+
+On completion you should have an `outputs/` folder with 4 apk files (app-release, app-arm64-v8a-release, app-armeabi-v7a-release, and app-x86_64-release)
+
 </details>
 
 ### Known issues with running app as linux application on Linux Mint
@@ -130,7 +168,7 @@ In other words, compiling can only be done on device you are compiling for (ex: 
 <details close>
 <summary>Tap to see issue details</summary>
 
-**<u>Note: This doesn't seem to affect other types of distros, or when running android emulator</u>**
+**<u>Note: This doesn't seem to affect other types of distros, or when running in android emulator</u>**
 
 Running as linux application on flutter version _3.24.0-3.24.3_ causes any **TextFields** to <u>slows down</u> or <u>crash</u> the app (ex. editing note, creating note/folder, searching, etc), best workaround currently is to switch to version [3.22.3 following this link](https://docs.flutter.dev/release/upgrade#switching-to-a-specific-flutter-version) and changing all `onPopInvokedWithResult` to just `onPopInvoked` as it doesn't exist in this version, if you are still having issues, try running `flutter clean` then `flutter run lib/main.dart` again, let me know if you have any other issues or need a step-by-step guide.
 
