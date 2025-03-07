@@ -11,6 +11,7 @@ import 'package:flutter_highlight/themes/a11y-dark.dart';
 import 'package:printnotes/ui/components/markdown/rendering/code_wrapper.dart';
 import 'package:printnotes/ui/components/markdown/rendering/custom_node.dart';
 import 'package:printnotes/ui/components/markdown/rendering/highlighter.dart';
+import 'package:printnotes/ui/components/markdown/rendering/underline.dart';
 import 'package:printnotes/ui/components/markdown/rendering/latex.dart';
 import 'package:printnotes/ui/components/markdown/markdown_checkbox.dart';
 import 'package:printnotes/ui/components/markdown/rendering/note_tags.dart';
@@ -91,11 +92,13 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
     generators: [
       if (context.watch<SettingsProvider>().useLatex) latexGenerator,
       highlighterGeneratorWithTag,
+      underlineGeneratorWithTag,
       noteTagGenerator,
     ],
     inlineSyntaxList: [
       if (context.watch<SettingsProvider>().useLatex) LatexSyntax(),
       HighlighterSyntax(),
+      UnderlineSyntax(),
       NoteTagSyntax()
     ],
     textGenerator: (node, config, visitor) =>

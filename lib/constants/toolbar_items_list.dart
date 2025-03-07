@@ -16,6 +16,7 @@ List<ToolbarConfigItem> defaultToolbarList = [
   ToolbarConfigItem(key: 'toolbar_unindent_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_unordered_list_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_checkbox_list_action', visible: true),
+  ToolbarConfigItem(key: 'toolbar_underline_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_link_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_image_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_blockquote_action', visible: true),

@@ -199,7 +199,7 @@ class MarkdownToolbar extends StatelessWidget {
         icon: FontAwesomeIcons.underline,
         tooltip: 'Underline text',
         onPressedButton: () {
-          toolbar.action("<u>", "</u>");
+          toolbar.action("__", "__");
         },
       ),
       // link
