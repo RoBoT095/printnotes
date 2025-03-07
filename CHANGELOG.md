@@ -1,5 +1,11 @@
 # Changelog + Dev Log
 
+### (Mar 7, 2025)
+
+- Added underline markdown syntax (ex. `__text__`) as html syntax wasn't working (my bad for not testing)
+- Note editor now check for external changes to file
+- Notes are no longer saved on immediate change but every 3 seconds instead
+
 ### (Feb 22, 2025)
 
 - Upgraded to flutter version `3.29.0`.

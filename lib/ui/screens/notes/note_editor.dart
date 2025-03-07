@@ -45,10 +45,21 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   bool _isLoading = true;
   bool _isError = false;
 
+  DateTime? _lastModifiedTime;
+  Timer? _fileCheckTimer;
+  Timer? _autoSaveTimer;
+  bool _hasUnsavedChanges = false;
+
+  static const Duration autoSaveInterval = Duration(seconds: 3);
+  static const Duration fileCheckInterval = Duration(seconds: 5);
+
   @override
   void initState() {
     _notesController = TextEditingController();
     _loadFileContent();
+
+    _fileCheckTimer =
+        Timer.periodic(fileCheckInterval, (_) => _checkForExternalChanges());
     super.initState();
   }
 
@@ -56,10 +67,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     try {
       final file = File(widget.filePath);
       final content = await file.readAsString();
+      final lastMod = await file.lastModified();
 
       setState(() {
         _notesController.text = content;
+        _lastModifiedTime = lastMod;
         _isLoading = false;
+        _hasUnsavedChanges = false;
       });
     } catch (e) {
       debugPrint('Error loading file content: $e');
@@ -70,11 +84,68 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
+  void _setUpAutoSave() {
+    _autoSaveTimer?.cancel();
+    _hasUnsavedChanges = true;
+
+    _autoSaveTimer = Timer(autoSaveInterval, () {
+      if (_hasUnsavedChanges && context.mounted) {
+        _saveFileContent(context);
+        _hasUnsavedChanges = false;
+      }
+    });
+  }
+
+  Future<void> _checkForExternalChanges() async {
+    if (_isError || _isLoading) return;
+
+    try {
+      final file = File(widget.filePath);
+      final lastMod = await file.lastModified();
+
+      if (_lastModifiedTime != null &&
+          lastMod.isAfter(_lastModifiedTime!) &&
+          context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('File Changed'),
+            content: const Text(
+                'This file has been modified outside the app. Would you like to reload it?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _saveFileContent(context);
+                },
+                child: const Text('Keep My Changes'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _loadFileContent();
+                },
+                child: const Text('Reload File'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error checking file modification: $e');
+    }
+  }
+
   Future<bool> _saveFileContent(BuildContext context) async {
     if (_isError) return true;
     try {
       final file = File(widget.filePath);
       await file.writeAsString(_notesController.text);
+
+      _lastModifiedTime = DateTime.now();
+      _hasUnsavedChanges = false;
+
       return true;
     } catch (e) {
       debugPrint('Error saving file content: $e');
@@ -231,8 +302,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           footer: _isEditingFile
               ? MarkdownToolbar(
                   controller: _notesController,
-                  onValueChange: (value) async =>
-                      await _saveFileContent(context),
+                  onValueChange: (value) => _setUpAutoSave(),
                   onPreviewChanged: () {
                     setState(() => _isEditingFile = !_isEditingFile);
                   },
@@ -271,8 +341,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             child: _isEditingFile
                                 ? EditorField(
                                     controller: _notesController,
-                                    onChanged: (value) async =>
-                                        await _saveFileContent(context),
+                                    onChanged: (value) => _setUpAutoSave(),
                                     undoController: _undoHistoryController,
                                     fontSize: context
                                         .watch<EditorConfigProvider>()
@@ -311,9 +380,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   @override
   void dispose() {
+    if (_hasUnsavedChanges && context.mounted) {
+      _saveFileContent(context);
+    }
+
     _notesController.dispose();
     _focusNode.dispose();
     _tocController.dispose();
+    _fileCheckTimer?.cancel();
+    _autoSaveTimer?.cancel();
     super.dispose();
   }
 }
