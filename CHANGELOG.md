@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (April 6, 2025)
+
+- Added way to open pdf files on android from file manager (aka Receiving Media Intent)
+- Updated to latest flutter version
+
 ### (Mar 7, 2025)
 
 - Added underline markdown syntax (ex. `__text__`) as html syntax wasn't working (my bad for not testing)

@@ -15,9 +15,8 @@ import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/ui/screens/home/main_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeApp();
   runApp(
     MultiProvider(
       providers: [
@@ -32,23 +31,36 @@ void main() async {
   );
 }
 
-Future<void> initializeApp() async {
-  final String? mainDir = await DataPath.selectedDirectory;
-  final Directory defaultDir = await getApplicationDocumentsDirectory();
-  final bool isNewUser = await UserFirstTime.getShowIntro;
+class App extends StatefulWidget {
+  const App({super.key});
 
-  if (mainDir != null) {
-    if (Platform.isAndroid && isNewUser != true && mainDir != defaultDir.path) {
-      final status = await Permission.manageExternalStorage.request();
-      if (!status.isGranted) {
-        throw "Please allow storage permission to access files";
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    _checkStorageAccess();
+  }
+
+  void _checkStorageAccess() async {
+    final String? mainDir = await DataPath.selectedDirectory;
+    final Directory defaultDir = await getApplicationDocumentsDirectory();
+    final bool isNewUser = await UserFirstTime.getShowIntro;
+
+    if (mainDir != null) {
+      if (Platform.isAndroid &&
+          isNewUser != true &&
+          mainDir != defaultDir.path) {
+        final status = await Permission.manageExternalStorage.request();
+        if (!status.isGranted) {
+          throw "Please allow storage permission to access files";
+        }
       }
     }
   }
-}
-
-class App extends StatelessWidget {
-  const App({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,10 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
 import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
@@ -27,11 +30,20 @@ class NotesDisplay extends StatefulWidget {
 }
 
 class _NotesDisplayState extends State<NotesDisplay> {
+  late StreamSubscription _intentSub;
+  String? _sharedFilePath;
+
   List<FileSystemEntity> _items = [];
   String? _currentPath;
   String _currentFolderName = 'All Notes';
 
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkMediaIntent();
+  }
 
   void _loadItems() {
     context
@@ -65,12 +77,58 @@ class _NotesDisplayState extends State<NotesDisplay> {
     return fileList;
   }
 
+  void _checkMediaIntent() {
+    setState(() => _isLoading = true);
+
+    // Listen to media sharing coming from outside the app while the app is in the memory.
+    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen((value) {
+      if (value.isNotEmpty && value[0].path.endsWith('.pdf')) {
+        setState(() => _sharedFilePath = value[0].path);
+      }
+    }, onError: (e) {
+      debugPrint('getIntentDataStream error: $e');
+    });
+
+    // Get the media sharing coming from outside the app while the app is closed.
+    ReceiveSharingIntent.instance.getInitialMedia().then((value) {
+      if (value.isNotEmpty && value[0].path.endsWith('.pdf')) {
+        setState(() {
+          _sharedFilePath = value[0].path;
+        });
+        // Tell the library that we are done processing the intent.
+        ReceiveSharingIntent.instance.reset();
+      }
+    });
+    setState(() => _isLoading = false);
+  }
+
+  @override
+  void dispose() {
+    _intentSub.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     _loadItems();
 
     List<String> routeHistory =
         context.watch<NavigationProvider>().routeHistory;
+
+    if (_sharedFilePath != null) {
+      File file = File(_sharedFilePath!);
+      if (file.existsSync()) {
+        Future.delayed(const Duration(microseconds: 500), () {
+          if (context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PdfViewScreen(pdfFile: file),
+                )).then((_) => SystemNavigator.pop());
+          }
+        });
+      }
+    }
 
     return PopScope(
       canPop: false,
