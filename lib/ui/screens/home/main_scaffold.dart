@@ -38,6 +38,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         leading: isSearching
             ? Icon(Icons.menu, color: Theme.of(context).disabledColor)
             : null,
+        centerTitle: false,
         title: isSearching
             ? TextField(
                 controller: searchController,

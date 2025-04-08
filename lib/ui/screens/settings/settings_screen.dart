@@ -11,8 +11,10 @@ import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
-import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
+
+import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
+import 'package:printnotes/ui/screens/settings/codeblock_theme_page.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -43,6 +45,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        centerTitle: true,
         title: const Text('Settings'),
       ),
       body: Container(
@@ -197,6 +200,8 @@ class SettingsScreen extends StatelessWidget {
             if (context.watch<ThemeProvider>().themeModeString != 'light' &&
                 !context.watch<ThemeProvider>().useCustomTheme)
               ListTile(
+                iconColor: Theme.of(context).colorScheme.secondary,
+                leading: const Icon(Icons.dark_mode),
                 title: Text('Pure black dark mode'),
                 trailing: Switch(
                     value: context.watch<ThemeProvider>().pureBlack,
@@ -205,7 +210,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             const Divider(),
             sectionTitle(
-              'Other',
+              'Advanced',
               Theme.of(context).colorScheme.secondary,
               padding: 10,
             ),
@@ -219,6 +224,17 @@ class SettingsScreen extends StatelessWidget {
                   onChanged: (value) {
                     context.read<SettingsProvider>().setLatexUse(value);
                   }),
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.code),
+              title: const Text('Code Wrapper Theme'),
+              subtitle: const Text('Change theme for codeblocks'),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CodeblockThemePage())),
             ),
             ListTile(
               iconColor: Theme.of(context).colorScheme.secondary,

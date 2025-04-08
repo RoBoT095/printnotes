@@ -162,8 +162,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        centerTitle: true,
         title: const Text('Custom Colors'),
       ),
       body: DefaultTabController(
@@ -176,14 +175,9 @@ class _CustomThemePageState extends State<CustomThemePage> {
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorWeight: 5,
               tabs: const <Tab>[
-                Tab(
-                    icon: Icon(Icons.download),
-                    child: Text(
-                      'Theme\n Management',
-                      textAlign: TextAlign.center,
-                    )),
-                Tab(icon: Icon(Icons.light_mode), text: 'Light Mode'),
-                Tab(icon: Icon(Icons.dark_mode), text: 'Dark Mode'),
+                Tab(icon: Icon(Icons.import_export)),
+                Tab(icon: Icon(Icons.light_mode)),
+                Tab(icon: Icon(Icons.dark_mode)),
               ],
             ),
             Expanded(
@@ -198,6 +192,14 @@ class _CustomThemePageState extends State<CustomThemePage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Theme Management',
+                              style: TextStyle(
+                                  fontSize: 32, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                           ListTile(
                             title: RichText(
                                 textAlign: TextAlign.center,
@@ -336,41 +338,69 @@ class _CustomThemePageState extends State<CustomThemePage> {
                       ? const Center(
                           child: Text('Import a Custom Light Theme'),
                         )
-                      : Container(
-                          margin: isScreenLarge
-                              ? EdgeInsets.symmetric(
-                                  horizontal: (screenWidth - 600) / 2)
-                              : null,
-                          child: ListView.builder(
-                            itemCount: lightThemes.length,
-                            itemBuilder: (context, index) {
-                              return buildCustomThemeListTile(
-                                lightThemes,
-                                index,
-                                isDark: false,
-                              );
-                            },
-                          ),
+                      : Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Light Mode Colors',
+                                style: TextStyle(
+                                    fontSize: 32, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: isScreenLarge
+                                    ? EdgeInsets.symmetric(
+                                        horizontal: (screenWidth - 600) / 2)
+                                    : null,
+                                child: ListView.builder(
+                                  itemCount: lightThemes.length,
+                                  itemBuilder: (context, index) {
+                                    return buildCustomThemeListTile(
+                                      lightThemes,
+                                      index,
+                                      isDark: false,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                   darkThemes.isEmpty
                       ? const Center(
                           child: Text('Import a Custom Dark Theme'),
                         )
-                      : Container(
-                          margin: isScreenLarge
-                              ? EdgeInsets.symmetric(
-                                  horizontal: (screenWidth - 600) / 2)
-                              : null,
-                          child: ListView.builder(
-                            itemCount: darkThemes.length,
-                            itemBuilder: (context, index) {
-                              return buildCustomThemeListTile(
-                                darkThemes,
-                                index,
-                                isDark: true,
-                              );
-                            },
-                          ),
+                      : Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Dark Mode Colors',
+                                style: TextStyle(
+                                    fontSize: 32, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: isScreenLarge
+                                    ? EdgeInsets.symmetric(
+                                        horizontal: (screenWidth - 600) / 2)
+                                    : null,
+                                child: ListView.builder(
+                                  itemCount: darkThemes.length,
+                                  itemBuilder: (context, index) {
+                                    return buildCustomThemeListTile(
+                                      darkThemes,
+                                      index,
+                                      isDark: true,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         )
                 ],
               ),

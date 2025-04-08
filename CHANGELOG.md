@@ -6,6 +6,7 @@
 - Updated to latest flutter version `3.29.2`
 - Switched to using double space for indentation as tab (`\t`) breaks indents for lines underneath
 - Added option to make dark mode background pure black for builtin themes
+- Added option to switch between different codeblock themes
 
 ### (Mar 7, 2025)
 

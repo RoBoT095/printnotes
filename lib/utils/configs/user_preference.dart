@@ -59,6 +59,16 @@ class UserThemingPref {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('usePureBlack') ?? false;
   }
+
+  static Future<void> setCodeHighlight(String highlight) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('codeHighlight', highlight);
+  }
+
+  static Future<String> getCodeHighlight() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('codeHighlight') ?? '';
+  }
 }
 
 // For saving what order items should be displayed in

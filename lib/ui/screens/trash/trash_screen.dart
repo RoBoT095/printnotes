@@ -119,6 +119,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        centerTitle: true,
         title: Text(_currentFolderName),
         leading: IconButton(
           icon: const Icon(

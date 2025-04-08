@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:provider/provider.dart';
 
+import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
 
+import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_highlight/themes/a11y-light.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 
@@ -21,6 +23,8 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final config =
       isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+
+  final userCodeHighlight = context.watch<ThemeProvider>().codeHighlight;
 
   codeWrapper(child, text, language) => CodeWrapperWidget(
         child,
@@ -60,15 +64,21 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
       textColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
       sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
     ),
-    isDark
-        ? PreConfig.darkConfig.copy(theme: a11yDarkTheme, wrapper: codeWrapper)
-        : const PreConfig().copy(
-            theme: a11yLightTheme,
-            wrapper: codeWrapper,
-            textStyle: TextStyle(fontSize: inEditor ? editorFontSize : null),
-            styleNotMatched:
-                TextStyle(fontSize: inEditor ? editorFontSize : null),
-          ),
+    const PreConfig().copy(
+      theme: themeMap[userCodeHighlight] ??
+          (isDark ? a11yDarkTheme : a11yLightTheme),
+      decoration: BoxDecoration(
+          color: inEditor
+              ? Theme.of(context).colorScheme.surfaceContainer.withOpacity(0.5)
+              : Theme.of(context).colorScheme.surface.withOpacity(0.5),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          border: Border.all(
+              width: 1,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2))),
+      wrapper: codeWrapper,
+      textStyle: TextStyle(fontSize: inEditor ? editorFontSize : null),
+      styleNotMatched: TextStyle(fontSize: inEditor ? editorFontSize : null),
+    ),
   ]);
 }
 

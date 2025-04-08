@@ -8,12 +8,14 @@ class ThemeProvider with ChangeNotifier {
   String _colorScheme = 'default';
   bool _useCustomTheme = false;
   bool _pureBlack = false;
+  String _codeHighlight = '';
 
   ThemeMode get themeMode => _themeMode;
   String get themeModeString => _themeModeToString(_themeMode);
   String get colorScheme => _colorScheme;
   bool get useCustomTheme => _useCustomTheme;
   bool get pureBlack => _pureBlack;
+  String get codeHighlight => _codeHighlight;
 
   ThemeProvider() {
     loadPreferences();
@@ -49,11 +51,13 @@ class ThemeProvider with ChangeNotifier {
     final savedTheme = await UserThemingPref.getThemeMode();
     final savedColorScheme = await UserThemingPref.getColorScheme();
     final usePureBlack = await UserThemingPref.getPureBlackBG();
+    final codeHighlight = await UserThemingPref.getCodeHighlight();
 
     setThemeMode(savedTheme);
     setColorScheme(savedColorScheme);
     setUseCustomTheme(isThemeCustom(colorScheme));
     setPureBlackBG(usePureBlack);
+    setCodeHighlight(codeHighlight);
   }
 
   void setThemeMode(String theme) {
@@ -78,6 +82,12 @@ class ThemeProvider with ChangeNotifier {
   void setPureBlackBG(bool pureBlackBG) {
     _pureBlack = pureBlackBG;
     UserThemingPref.setPureBlackBG(pureBlackBG);
+    notifyListeners();
+  }
+
+  void setCodeHighlight(String highlight) {
+    _codeHighlight = highlight;
+    UserThemingPref.setCodeHighlight(highlight);
     notifyListeners();
   }
 

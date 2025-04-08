@@ -18,6 +18,7 @@ class EditorConfigScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        centerTitle: true,
         title: const Text('Editor Configuration'),
       ),
       body: ListView(
