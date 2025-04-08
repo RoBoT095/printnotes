@@ -147,7 +147,7 @@ class MarkdownToolbar extends StatelessWidget {
         icon: Icons.format_indent_increase,
         tooltip: 'Indent line',
         onPressedButton: () {
-          toolbar.action("\t", "");
+          toolbar.action("  ", "");
         },
       ),
       // unindent
@@ -156,7 +156,7 @@ class MarkdownToolbar extends StatelessWidget {
         icon: Icons.format_indent_decrease,
         tooltip: 'Unindent',
         onPressedButton: () {
-          toolbar.action("", "\t");
+          toolbar.action("", "  ");
         },
       ),
       // unordered list

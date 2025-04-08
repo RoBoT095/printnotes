@@ -49,6 +49,16 @@ class UserThemingPref {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('colorScheme') ?? 'default';
   }
+
+  static Future<void> setPureBlackBG(bool pureBlackBG) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('usePureBlack', pureBlackBG);
+  }
+
+  static Future<bool> getPureBlackBG() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('usePureBlack') ?? false;
+  }
 }
 
 // For saving what order items should be displayed in

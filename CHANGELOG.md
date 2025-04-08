@@ -1,9 +1,11 @@
 # Changelog + Dev Log
 
-### (April 6, 2025)
+### (April 6-8, 2025)
 
 - Added way to open pdf files on android from file manager (aka Receiving Media Intent)
-- Updated to latest flutter version
+- Updated to latest flutter version `3.29.2`
+- Switched to using double space for indentation as tab (`\t`) breaks indents for lines underneath
+- Added option to make dark mode background pure black for builtin themes
 
 ### (Mar 7, 2025)
 

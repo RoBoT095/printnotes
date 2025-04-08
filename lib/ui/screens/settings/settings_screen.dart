@@ -194,6 +194,15 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const CustomThemePage())),
               ),
+            if (context.watch<ThemeProvider>().themeModeString != 'light' &&
+                !context.watch<ThemeProvider>().useCustomTheme)
+              ListTile(
+                title: Text('Pure black dark mode'),
+                trailing: Switch(
+                    value: context.watch<ThemeProvider>().pureBlack,
+                    onChanged: (val) =>
+                        context.read<ThemeProvider>().setPureBlackBG(val)),
+              ),
             const Divider(),
             sectionTitle(
               'Other',

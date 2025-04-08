@@ -7,11 +7,13 @@ class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   String _colorScheme = 'default';
   bool _useCustomTheme = false;
+  bool _pureBlack = false;
 
   ThemeMode get themeMode => _themeMode;
   String get themeModeString => _themeModeToString(_themeMode);
   String get colorScheme => _colorScheme;
   bool get useCustomTheme => _useCustomTheme;
+  bool get pureBlack => _pureBlack;
 
   ThemeProvider() {
     loadPreferences();
@@ -46,10 +48,12 @@ class ThemeProvider with ChangeNotifier {
   void loadPreferences() async {
     final savedTheme = await UserThemingPref.getThemeMode();
     final savedColorScheme = await UserThemingPref.getColorScheme();
+    final usePureBlack = await UserThemingPref.getPureBlackBG();
 
     setThemeMode(savedTheme);
     setColorScheme(savedColorScheme);
     setUseCustomTheme(isThemeCustom(colorScheme));
+    setPureBlackBG(usePureBlack);
   }
 
   void setThemeMode(String theme) {
@@ -71,6 +75,12 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setPureBlackBG(bool pureBlackBG) {
+    _pureBlack = pureBlackBG;
+    UserThemingPref.setPureBlackBG(pureBlackBG);
+    notifyListeners();
+  }
+
   ColorScheme getThemeData(BuildContext context) {
     final brightness = _themeMode == ThemeMode.system
         ? MediaQuery.platformBrightnessOf(context)
@@ -78,23 +88,34 @@ class ThemeProvider with ChangeNotifier {
             ? Brightness.light
             : Brightness.dark;
     bool isDark = brightness == Brightness.dark;
+    Color? pureBlack = isDark && _pureBlack ? Colors.black : null;
     switch (_colorScheme) {
       case 'nordic':
-        return !isDark ? AppThemes.lightNordic : AppThemes.darkNordic;
+        return !isDark
+            ? AppThemes.lightNordic
+            : AppThemes.darkNordic.copyWith(surface: pureBlack);
       case 'green_apple':
-        return !isDark ? AppThemes.lightGreenApple : AppThemes.darkGreenApple;
+        return !isDark
+            ? AppThemes.lightGreenApple
+            : AppThemes.darkGreenApple.copyWith(surface: pureBlack);
       case 'lavender':
-        return !isDark ? AppThemes.lightLavender : AppThemes.darkLavender;
+        return !isDark
+            ? AppThemes.lightLavender
+            : AppThemes.darkLavender.copyWith(surface: pureBlack);
       case 'strawberry':
-        return !isDark ? AppThemes.lightStrawberry : AppThemes.darkStrawberry;
+        return !isDark
+            ? AppThemes.lightStrawberry
+            : AppThemes.darkStrawberry.copyWith(surface: pureBlack);
       // case 'dracula': return !isDark ? AppThemes.lightDracula : AppThemes.darkDracula;
       case 'custom':
         return customThemeBuilder(isDark) ??
-            (!isDark ? AppThemes.lightDefault : AppThemes.darkDefault);
+            (!isDark
+                ? AppThemes.lightDefault
+                : AppThemes.darkDefault.copyWith(surface: pureBlack));
       default:
         return brightness == Brightness.light
             ? AppThemes.lightDefault
-            : AppThemes.darkDefault;
+            : AppThemes.darkDefault.copyWith(surface: pureBlack);
     }
   }
 }

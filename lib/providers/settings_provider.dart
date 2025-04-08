@@ -105,7 +105,7 @@ class SettingsProvider with ChangeNotifier {
     final mainPath = context.read<SettingsProvider>().mainDir;
     String directory = folderPath ?? mainPath;
     String sortOrder = context.read<SettingsProvider>().sortOrder;
-    String currentFolderName = 'All Notes';
+    String currentFolderName = 'Notes';
 
     // Check if path not a file, if so return to mainDir
     if (!FileSystemEntity.isDirectorySync(directory)) {

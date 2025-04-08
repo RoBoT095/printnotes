@@ -35,7 +35,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   List<FileSystemEntity> _items = [];
   String? _currentPath;
-  String _currentFolderName = 'All Notes';
+  String _currentFolderName = 'Notes';
 
   bool _isLoading = false;
 
@@ -145,6 +145,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          centerTitle: true,
           title: Text(_currentFolderName),
           leading: context.watch<SelectingProvider>().selectingMode
               ? IconButton(
@@ -156,7 +157,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       icon: const Icon(Icons.arrow_back),
                       onPressed: _navBack,
                     )
-                  : null,
+                  : Icon(Icons.home),
           actions: context.watch<SelectingProvider>().selectingMode
               ? [
                   IconButton(
