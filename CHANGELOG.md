@@ -1,5 +1,9 @@
 # Changelog + Dev Log
 
+## (April 9, 2025)
+
+- Fixed Markdown syntax for tags, highlights, and underlines reverting to default font size when in a list
+
 ### (April 6-8, 2025)
 
 - Added way to open pdf files on android from file manager (aka Receiving Media Intent)

@@ -15,8 +15,8 @@ class UnderlineNode extends SpanNode {
   @override
   InlineSpan build() => TextSpan(
         text: underlineId,
-        style: parentStyle?.copyWith(decoration: TextDecoration.underline) ??
-            config.p.textStyle.copyWith(decoration: TextDecoration.underline),
+        style: config.p.textStyle
+            .merge(parentStyle?.copyWith(decoration: TextDecoration.underline)),
       );
 }
 

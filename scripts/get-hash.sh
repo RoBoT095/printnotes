@@ -28,7 +28,7 @@ find "$OUTPUT_DIR" -type f | sort | while read -r file; do
   hash=$(sha1sum "$file" | awk '{print $1}')
   
   # Append to hash file with the desired format
-  echo "$filename: $hash" >> "$HASH_FILE"
+  echo "- **$filename:** $hash" >> "$HASH_FILE"
   
   echo "Processed: $filename"
 done
