@@ -11,6 +11,7 @@ import 'package:flutter_highlight/themes/a11y-light.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 
 import 'package:printnotes/ui/components/markdown/rendering/code_wrapper.dart';
+import 'package:printnotes/ui/components/markdown/rendering/custom_img_builder.dart';
 import 'package:printnotes/ui/components/markdown/rendering/custom_node.dart';
 import 'package:printnotes/ui/components/markdown/rendering/highlighter.dart';
 import 'package:printnotes/ui/components/markdown/rendering/underline.dart';
@@ -64,6 +65,7 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
       textColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
       sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
     ),
+    ImgConfig(builder: (url, attributes) => CustomImgBuilder(url, attributes)),
     const PreConfig().copy(
       theme: themeMap[userCodeHighlight] ??
           (isDark ? a11yDarkTheme : a11yLightTheme),

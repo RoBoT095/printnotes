@@ -96,7 +96,10 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.pdfFile.path.split('/').last),
+        title: SelectableText(
+          widget.pdfFile.path.split('/').last,
+          maxLines: 1,
+        ),
         actions: [
           IconButton(
             onPressed: () {

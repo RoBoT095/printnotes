@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+## (April 11, 2025)
+
+- Added ability to display local images inside markdown notes
+- Made file titles selectable on long press
+
 ## (April 9, 2025)
 
 - Fixed Markdown syntax for tags, highlights, and underlines reverting to default font size when in a list

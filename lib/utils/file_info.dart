@@ -31,14 +31,15 @@ String getFormattedDate({required DateTime date}) {
 
 Widget statListTile(titleText, subtitleText) {
   return ListTile(
-    title: Text(
+    title: SelectableText(
       titleText,
       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      maxLines: 1,
     ),
-    subtitle: Text(
+    subtitle: SelectableText(
       subtitleText,
       style: const TextStyle(fontSize: 20, overflow: TextOverflow.ellipsis),
-      softWrap: true,
+      minLines: 1,
       maxLines: 3,
     ),
   );

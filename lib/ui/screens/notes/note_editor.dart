@@ -173,7 +173,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
         appBar: AppBar(
           centerTitle: false,
-          title: Text(widget.filePath.split('/').last),
+          title: SelectableText(
+            widget.filePath.split('/').last,
+            maxLines: 1,
+          ),
           actions: _isError
               ? null
               : [

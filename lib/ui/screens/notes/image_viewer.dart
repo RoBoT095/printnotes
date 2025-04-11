@@ -18,7 +18,10 @@ class ImageViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(imageFile.path.split('/').last),
+        title: SelectableText(
+          imageFile.path.split('/').last,
+          maxLines: 1,
+        ),
         actions: [
           PopupMenuButton(
             onSelected: (value) {},
