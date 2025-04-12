@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:animated_tree_view/animated_tree_view.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
+import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
 
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
@@ -42,18 +45,25 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
     List<FileSystemEntity> items = StorageSystem.listFolderContents(dir);
     items = ItemSortHandler.sortItems(
         items, context.read<SettingsProvider>().sortOrder);
+    bool useFM = context.read<SettingsProvider>().useFrontmatter;
+
+    String getFileName(String filePath) {
+      if (useFM && filePath.endsWith('.md')) {
+        String? title = FrontmatterHandleParsing.getTagString(
+            File(filePath).readAsStringSync(), 'title');
+        if (title != null) return title;
+      }
+      return path.basename(filePath);
+    }
 
     return [
       for (var item in items)
         if (item is Directory)
-          FolderNode(
-              data: TFolder(
-                  item.path.split(Platform.pathSeparator).last, item.path))
+          FolderNode(data: TFolder(path.basename(item.path), item.path))
             ..addAll(getTree(item.path))
         else if (item is File)
           FileNode(
-              data: TFile(
-                  item.path.split(Platform.pathSeparator).last, item.path,
+              data: TFile(getFileName(item.path), item.path,
                   type:
                       fileTypeChecker(item) == CFileType.image ? Image : File))
     ];

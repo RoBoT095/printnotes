@@ -7,8 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
+
 import 'package:printnotes/utils/open_explorer.dart';
+import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
+
 import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/markdown/editor_field.dart';
@@ -55,12 +59,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     _notesController = TextEditingController();
     _loadFileContent();
 
     _fileCheckTimer =
         Timer.periodic(fileCheckInterval, (_) => _checkForExternalChanges());
-    super.initState();
   }
 
   Future<void> _loadFileContent() async {
@@ -105,7 +110,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
       if (_lastModifiedTime != null &&
           lastMod.isAfter(_lastModifiedTime!) &&
-          context.mounted) {
+          mounted) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -158,6 +163,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool useFM = context.read<SettingsProvider>().useFrontmatter;
+    String? fmBody;
+    String? fmTitle;
+
+    if (useFM) {
+      final doc = FrontmatterHandleParsing.getParsedData(_notesController.text);
+      fmTitle =
+          FrontmatterHandleParsing.getTagString(_notesController.text, 'title');
+      if (doc != null) fmBody = doc.body;
+    }
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -174,7 +189,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         appBar: AppBar(
           centerTitle: false,
           title: SelectableText(
-            widget.filePath.split('/').last,
+            fmTitle ?? widget.filePath.split('/').last,
             maxLines: 1,
           ),
           actions: _isError
@@ -229,7 +244,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   ),
                 ],
         ),
-        body: buildMarkdownView(),
+        body: buildMarkdownView(fmBody ?? _notesController.text),
         endDrawer: _isError
             ? null
             : Drawer(
@@ -281,7 +296,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           borderRadius: BorderRadius.circular(20)),
       child: TocWidget(controller: _tocController));
 
-  Widget buildMarkdownView() {
+  Widget buildMarkdownView(String previewBody) {
     return SafeArea(
       child: Container(
         margin: isScreenLarge(context)
@@ -369,7 +384,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                           )
                                         : buildMarkdownWidget(
                                             context,
-                                            data: _notesController.text,
+                                            data: previewBody,
                                             tocController: _tocController,
                                           ),
                                   ),

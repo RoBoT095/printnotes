@@ -20,6 +20,7 @@ class SettingsProvider with ChangeNotifier {
   int _previewLength = 100;
   String _sortOrder = 'default';
   bool _useLatex = false;
+  bool _useFrontmatter = false;
 
   bool get showIntro => _showIntro;
   String get mainDir => _mainDir;
@@ -29,6 +30,7 @@ class SettingsProvider with ChangeNotifier {
   int get previewLength => _previewLength;
   String get sortOrder => _sortOrder;
   bool get useLatex => _useLatex;
+  bool get useFrontmatter => _useFrontmatter;
 
   SettingsProvider() {
     loadSettings();
@@ -52,6 +54,7 @@ class SettingsProvider with ChangeNotifier {
     final previewLength = await UserLayoutPref.getNotePreviewLength();
     final sortOrder = await UserSortPref.getSortOrder();
     final useLatex = await UserLatexPref.getLatexSupport();
+    final useFM = await UserFrontmatterPref.getFrontmatterSupport();
 
     if (mainDir != null) setHiddenFolders(mainDir);
 
@@ -60,6 +63,7 @@ class SettingsProvider with ChangeNotifier {
     setPreviewLength(previewLength);
     setSortOrder(sortOrder);
     setLatexUse(useLatex);
+    setFrontMatterUse(useFM);
   }
 
   void setMainDir(String dir) {
@@ -95,6 +99,12 @@ class SettingsProvider with ChangeNotifier {
   void setLatexUse(bool useLatex) {
     _useLatex = useLatex;
     UserLatexPref.setLatexSupport(useLatex);
+    notifyListeners();
+  }
+
+  void setFrontMatterUse(bool useFM) {
+    _useFrontmatter = useFM;
+    UserFrontmatterPref.setFrontmatterSupport(useFM);
     notifyListeners();
   }
 

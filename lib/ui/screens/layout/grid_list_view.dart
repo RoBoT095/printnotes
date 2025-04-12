@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
@@ -11,6 +11,7 @@ import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
+import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
@@ -89,7 +90,19 @@ class _GridListViewState extends State<GridListView> {
   }
 
   Widget fileItem(BuildContext context, FileSystemEntity item) {
+    final itemName = path.basename(item.path);
+    final useFM = context.read<SettingsProvider>().useFrontmatter;
+    String? fmTitle;
+    String? fmDescription;
+
     if (item is File) {
+      if (useFM) {
+        String fileText = File(item.path).readAsStringSync();
+        fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
+        fmDescription =
+            FrontmatterHandleParsing.getTagString(fileText, 'description');
+      }
+
       if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
       }
@@ -101,7 +114,7 @@ class _GridListViewState extends State<GridListView> {
             color: Theme.of(context).colorScheme.secondary,
           ),
           title: Text(
-            path.basename(item.path),
+            itemName,
             textAlign: TextAlign.start,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
@@ -113,7 +126,7 @@ class _GridListViewState extends State<GridListView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          path.basename(item.path).replaceAll(".md", ''),
+          fmTitle ?? itemName.replaceAll(".md", ''),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -121,13 +134,17 @@ class _GridListViewState extends State<GridListView> {
           ),
         ),
         const SizedBox(height: 4),
-        MarkdownBlock(
-          selectable: false,
-          data: StorageSystem.getFilePreview(item.path,
-              previewLength: context.watch<SettingsProvider>().previewLength),
-          config: theMarkdownConfigs(context, hideCodeButtons: true),
-          generator: theMarkdownGenerators(context, textScale: 0.95),
-        ),
+        fmDescription != null
+            ? Text(fmDescription)
+            : MarkdownBlock(
+                selectable: false,
+                data: StorageSystem.getFilePreview(item.path,
+                    parseFrontmatter: useFM,
+                    previewLength:
+                        context.watch<SettingsProvider>().previewLength),
+                config: theMarkdownConfigs(context, hideCodeButtons: true),
+                generator: theMarkdownGenerators(context, textScale: 0.95),
+              ),
       ],
     );
   }
