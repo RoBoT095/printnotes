@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:printnotes/utils/hex_color_extension.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -36,6 +37,16 @@ class _GridListViewState extends State<GridListView> {
     final isDirectory = item is Directory;
     final isSelected =
         context.read<SelectingProvider>().selectedItems.contains(item.path);
+    final useFM = context.read<SettingsProvider>().useFrontmatter;
+    String? fmColor;
+    String? fmBgColor;
+
+    if (useFM && item.path.endsWith('.md')) {
+      fmColor = FrontmatterHandleParsing.getTagString(
+          File(item.path).readAsStringSync(), 'color');
+      fmBgColor = FrontmatterHandleParsing.getTagString(
+          File(item.path).readAsStringSync(), 'background');
+    }
 
     return GestureDetector(
       onTap: () {
@@ -58,7 +69,9 @@ class _GridListViewState extends State<GridListView> {
           color:
               (isDirectory && context.watch<SelectingProvider>().selectingMode)
                   ? Theme.of(context).disabledColor.withOpacity(0.1)
-                  : Theme.of(context).colorScheme.surfaceContainer,
+                  : fmBgColor != null
+                      ? HexColor.fromHex(fmBgColor)
+                      : Theme.of(context).colorScheme.surfaceContainer,
           shape: isSelected
               ? RoundedRectangleBorder(
                   side: BorderSide(
@@ -83,13 +96,14 @@ class _GridListViewState extends State<GridListView> {
                 )
               : Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: fileItem(context, item)),
+                  child: fileItem(context, item,
+                      fmColor != null ? HexColor.fromHex(fmColor) : null)),
         ),
       ),
     );
   }
 
-  Widget fileItem(BuildContext context, FileSystemEntity item) {
+  Widget fileItem(BuildContext context, FileSystemEntity item, Color? color) {
     final itemName = path.basename(item.path);
     final useFM = context.read<SettingsProvider>().useFrontmatter;
     String? fmTitle;
@@ -127,22 +141,27 @@ class _GridListViewState extends State<GridListView> {
       children: [
         Text(
           fmTitle ?? itemName.replaceAll(".md", ''),
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: color,
             fontSize: 16,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         const SizedBox(height: 4),
         fmDescription != null
-            ? Text(fmDescription)
+            ? Text(
+                fmDescription,
+                style: TextStyle(color: color),
+              )
             : MarkdownBlock(
                 selectable: false,
                 data: StorageSystem.getFilePreview(item.path,
                     parseFrontmatter: useFM,
                     previewLength:
                         context.watch<SettingsProvider>().previewLength),
-                config: theMarkdownConfigs(context, hideCodeButtons: true),
+                config: theMarkdownConfigs(context,
+                    hideCodeButtons: true, textColor: color),
                 generator: theMarkdownGenerators(context, textScale: 0.95),
               ),
       ],

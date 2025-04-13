@@ -14,6 +14,7 @@
 
 - Supports Markdown... obviously
 - Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
+- Supports Frontmatter for metadata and styling like title, description, color, and background
 - Stores notes locally on device
 - Possible to create folders to better organize notes
 - Can view images and pdf files found in selected directory and in external folders

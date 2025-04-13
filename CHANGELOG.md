@@ -1,11 +1,22 @@
 # Changelog + Dev Log
 
-## (April 11, 2025)
+### (April 12-13, 2025)
+
+- Added Frontmatter support for tags: (**Note:** colors can only be hex values in quotation marks ex. '#cbff90')
+
+  - title -> Displays set title rather then file name
+  - description -> Overrides preview of file content with set description
+  - color -> Changes the color of the text
+  - background -> Changes the color of the background
+
+- Added button in drawer to github wiki
+
+### (April 11, 2025)
 
 - Added ability to display local images inside markdown notes
 - Made file titles selectable on long press
 
-## (April 9, 2025)
+### (April 9, 2025)
 
 - Fixed Markdown syntax for tags, highlights, and underlines reverting to default font size when in a list
 

@@ -42,7 +42,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
   @override
   void initState() {
     super.initState();
-    _checkMediaIntent();
+    if (Platform.isAndroid) _checkMediaIntent();
   }
 
   void _loadItems() {
