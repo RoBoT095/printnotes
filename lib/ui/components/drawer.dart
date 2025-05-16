@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
@@ -9,8 +11,6 @@ import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
 import 'package:printnotes/constants/constants.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({super.key});

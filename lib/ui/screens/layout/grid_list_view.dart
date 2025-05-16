@@ -110,13 +110,6 @@ class _GridListViewState extends State<GridListView> {
     String? fmDescription;
 
     if (item is File) {
-      if (useFM) {
-        String fileText = File(item.path).readAsStringSync();
-        fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
-        fmDescription =
-            FrontmatterHandleParsing.getTagString(fileText, 'description');
-      }
-
       if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
       }
@@ -135,6 +128,12 @@ class _GridListViewState extends State<GridListView> {
           ),
         );
       }
+    }
+    if (useFM) {
+      String fileText = File(item.path).readAsStringSync();
+      fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
+      fmDescription =
+          FrontmatterHandleParsing.getTagString(fileText, 'description');
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

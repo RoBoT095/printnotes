@@ -257,7 +257,7 @@ class MarkdownToolbar extends StatelessWidget {
         icon: FontAwesomeIcons.rulerHorizontal,
         tooltip: 'Add line',
         onPressedButton: () {
-          toolbar.action("\n___\n", "");
+          toolbar.action("___", "");
         },
       ),
     };

@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (May 16, 2025)
+
+- Removed the added empty lines above and below horizontal rule from the toolbar shortcut
+- Fixed image and pdf not rendering when frontmatter enabled
+
 ### (April 12-13, 2025)
 
 - Added Frontmatter support for tags: (**Note:** colors can only be hex values in quotation marks ex. '#cbff90')
