@@ -20,49 +20,80 @@ import 'package:printnotes/ui/components/markdown/markdown_checkbox.dart';
 import 'package:printnotes/ui/components/markdown/rendering/note_tags.dart';
 
 MarkdownConfig theMarkdownConfigs(BuildContext context,
-    {bool? hideCodeButtons, bool inEditor = false}) {
+    {bool? hideCodeButtons, bool inEditor = false, Color? textColor}) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final config =
       isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
   final userCodeHighlight = context.watch<ThemeProvider>().codeHighlight;
 
-  codeWrapper(child, text, language) => CodeWrapperWidget(
-        child,
-        text,
-        language,
-        hideCodeButtons: hideCodeButtons,
-      );
+  codeWrapper(child, text, language) => CodeWrapperWidget(child, text, language,
+      hideCodeButtons: hideCodeButtons);
 
   double editorFontSize = context.watch<EditorConfigProvider>().fontSize;
 
-  List<WidgetConfig> editorSpecificConfigs = [
-    PConfig(textStyle: TextStyle(fontSize: editorFontSize)),
-    H1Config(style: TextStyle(fontSize: editorFontSize + 16)),
-    H2Config(style: TextStyle(fontSize: editorFontSize + 8)),
-    H3Config(style: TextStyle(fontSize: editorFontSize + 4)),
-    H4Config(style: TextStyle(fontSize: editorFontSize)),
-    H5Config(style: TextStyle(fontSize: editorFontSize)),
-    H6Config(style: TextStyle(fontSize: editorFontSize)),
-  ];
-
   return config.copy(configs: [
-    if (inEditor) ...editorSpecificConfigs,
+    PConfig(
+      textStyle: TextStyle(
+        fontSize: inEditor ? editorFontSize : 16,
+        color: textColor,
+      ),
+    ),
+    H1Config(
+      style: TextStyle(
+        fontSize: inEditor ? editorFontSize + 16 : 32,
+        color: textColor,
+      ),
+    ),
+    H2Config(
+      style: TextStyle(
+        fontSize: inEditor ? editorFontSize + 8 : 24,
+        color: textColor,
+      ),
+    ),
+    H3Config(
+      style: TextStyle(
+        fontSize: inEditor ? editorFontSize + 4 : 20,
+        color: textColor,
+      ),
+    ),
+    H4Config(
+      style: TextStyle(
+        fontSize: inEditor ? editorFontSize : 16,
+        color: textColor,
+      ),
+    ),
+    H5Config(
+      style: TextStyle(
+        fontSize: inEditor ? editorFontSize : 16,
+        color: textColor,
+      ),
+    ),
+    H6Config(
+      style: TextStyle(
+        fontSize: inEditor ? editorFontSize : 16,
+        color: textColor,
+      ),
+    ),
     ListConfig(marginLeft: editorFontSize * 1.5),
     CheckBoxConfig(
-        builder: (checked) =>
-            markdownCheckBox(checked, inEditor ? editorFontSize * 1.25 : null)),
+      builder: (checked) =>
+          markdownCheckBox(checked, inEditor ? editorFontSize * 1.25 : null),
+    ),
     TableConfig(
-        wrapper: (table) => SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: table,
-            )),
+      wrapper: (table) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: table,
+      ),
+    ),
     HrConfig(
       height: 2,
-      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+      color:
+          textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
     ),
     BlockquoteConfig(
-      textColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+      textColor:
+          textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
       sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
     ),
     ImgConfig(builder: (url, attributes) => CustomImgBuilder(url, attributes)),

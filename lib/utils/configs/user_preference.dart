@@ -99,6 +99,20 @@ class UserLatexPref {
   }
 }
 
+// For using Frontmatter for metadata of not
+
+class UserFrontmatterPref {
+  static Future<void> setFrontmatterSupport(bool useFM) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('useFrontmatter', useFM);
+  }
+
+  static Future<bool> getFrontmatterSupport() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('useFrontmatter') ?? false;
+  }
+}
+
 // For Editor settings
 
 class UserEditorConfig {

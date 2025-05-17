@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
+import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
 
 // The Abomination Folder that handles everything related to folders on the device
 // better to rewrite and clean up everything but this sand castle is already held by hot glue
@@ -171,11 +172,16 @@ class StorageSystem {
     return '';
   }
 
-  static String getFilePreview(String filePath, {int previewLength = 100}) {
+  static String getFilePreview(String filePath,
+      {bool parseFrontmatter = false, int previewLength = 100}) {
     try {
       final file = File(filePath);
       if (file.existsSync()) {
         String content = file.readAsStringSync();
+        if (parseFrontmatter) {
+          final doc = FrontmatterHandleParsing.getParsedData(content);
+          if (doc != null) content = doc.body;
+        }
         // Limit to previewLength then trim whitespace
         return content
             .substring(0,

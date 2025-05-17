@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
+import 'package:printnotes/utils/hex_color_extension.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
@@ -11,6 +12,7 @@ import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
+import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
@@ -35,6 +37,16 @@ class _GridListViewState extends State<GridListView> {
     final isDirectory = item is Directory;
     final isSelected =
         context.read<SelectingProvider>().selectedItems.contains(item.path);
+    final useFM = context.read<SettingsProvider>().useFrontmatter;
+    String? fmColor;
+    String? fmBgColor;
+
+    if (useFM && item.path.endsWith('.md')) {
+      fmColor = FrontmatterHandleParsing.getTagString(
+          File(item.path).readAsStringSync(), 'color');
+      fmBgColor = FrontmatterHandleParsing.getTagString(
+          File(item.path).readAsStringSync(), 'background');
+    }
 
     return GestureDetector(
       onTap: () {
@@ -57,7 +69,9 @@ class _GridListViewState extends State<GridListView> {
           color:
               (isDirectory && context.watch<SelectingProvider>().selectingMode)
                   ? Theme.of(context).disabledColor.withOpacity(0.1)
-                  : Theme.of(context).colorScheme.surfaceContainer,
+                  : fmBgColor != null
+                      ? HexColor.fromHex(fmBgColor)
+                      : Theme.of(context).colorScheme.surfaceContainer,
           shape: isSelected
               ? RoundedRectangleBorder(
                   side: BorderSide(
@@ -82,13 +96,19 @@ class _GridListViewState extends State<GridListView> {
                 )
               : Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: fileItem(context, item)),
+                  child: fileItem(context, item,
+                      fmColor != null ? HexColor.fromHex(fmColor) : null)),
         ),
       ),
     );
   }
 
-  Widget fileItem(BuildContext context, FileSystemEntity item) {
+  Widget fileItem(BuildContext context, FileSystemEntity item, Color? color) {
+    final itemName = path.basename(item.path);
+    final useFM = context.read<SettingsProvider>().useFrontmatter;
+    String? fmTitle;
+    String? fmDescription;
+
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
@@ -101,7 +121,7 @@ class _GridListViewState extends State<GridListView> {
             color: Theme.of(context).colorScheme.secondary,
           ),
           title: Text(
-            path.basename(item.path),
+            itemName,
             textAlign: TextAlign.start,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
@@ -109,25 +129,40 @@ class _GridListViewState extends State<GridListView> {
         );
       }
     }
+    if (useFM) {
+      String fileText = File(item.path).readAsStringSync();
+      fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
+      fmDescription =
+          FrontmatterHandleParsing.getTagString(fileText, 'description');
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          path.basename(item.path).replaceAll(".md", ''),
-          style: const TextStyle(
+          fmTitle ?? itemName.replaceAll(".md", ''),
+          style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: color,
             fontSize: 16,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         const SizedBox(height: 4),
-        MarkdownBlock(
-          selectable: false,
-          data: StorageSystem.getFilePreview(item.path,
-              previewLength: context.watch<SettingsProvider>().previewLength),
-          config: theMarkdownConfigs(context, hideCodeButtons: true),
-          generator: theMarkdownGenerators(context, textScale: 0.95),
-        ),
+        fmDescription != null
+            ? Text(
+                fmDescription,
+                style: TextStyle(color: color),
+              )
+            : MarkdownBlock(
+                selectable: false,
+                data: StorageSystem.getFilePreview(item.path,
+                    parseFrontmatter: useFM,
+                    previewLength:
+                        context.watch<SettingsProvider>().previewLength),
+                config: theMarkdownConfigs(context,
+                    hideCodeButtons: true, textColor: color),
+                generator: theMarkdownGenerators(context, textScale: 0.95),
+              ),
       ],
     );
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
@@ -9,7 +11,6 @@ import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
 import 'package:printnotes/constants/constants.dart';
-import 'package:provider/provider.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({super.key});
@@ -39,83 +40,88 @@ class DrawerView extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              // DrawerHeader without bottom border
-              Container(
-                height: MediaQuery.paddingOf(context).top + 160.0,
-                decoration:
-                    BoxDecoration(color: Theme.of(context).colorScheme.primary),
-                child: AnimatedContainer(
-                  margin: const EdgeInsets.only(bottom: 8.0),
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0).add(
-                      EdgeInsets.only(top: MediaQuery.paddingOf(context).top)),
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.fastOutSlowIn,
-                  child: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/app_icon_no-bg.png",
-                          height: 48,
-                        ),
-                        Text(
-                          'Menu',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: isDarkMode ? Colors.white : Colors.black,
+          child: ListTileTheme(
+            iconColor: Theme.of(context).colorScheme.secondary,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                // DrawerHeader without bottom border
+                Container(
+                  height: MediaQuery.paddingOf(context).top + 160.0,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary),
+                  child: AnimatedContainer(
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0)
+                        .add(EdgeInsets.only(
+                            top: MediaQuery.paddingOf(context).top)),
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.fastOutSlowIn,
+                    child: CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/app_icon_no-bg.png",
+                            height: 48,
                           ),
-                        )
-                      ],
+                          Text(
+                            'Menu',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              ListTile(
-                  iconColor: Theme.of(context).colorScheme.secondary,
-                  leading: const Icon(Icons.article_outlined),
-                  title: const Text('All Notes'),
-                  onTap: () {
-                    _navigateToScreen(context,
-                        path: context.read<SettingsProvider>().mainDir);
-                  }),
-              const Opacity(opacity: 0.2, child: Divider()),
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.secondary,
-                leading: const Icon(Icons.archive_outlined),
-                title: const Text('Archive'),
-                onTap: () => _navigateToScreen(context,
-                    path: context.read<SettingsProvider>().archivePath,
-                    screen: const ArchiveScreen()),
-              ),
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.secondary,
-                leading: const Icon(Icons.delete_outlined),
-                title: const Text('Trash'),
-                onTap: () => _navigateToScreen(context,
-                    path: context.read<SettingsProvider>().trashPath,
-                    screen: const DeletedScreen()),
-              ),
-              const Opacity(opacity: 0.2, child: Divider()),
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.secondary,
-                leading: const Icon(Icons.settings_outlined),
-                title: const Text('Settings'),
-                onTap: () =>
-                    _navigateToScreen(context, screen: const SettingsScreen()),
-              ),
-              ListTile(
-                iconColor: Theme.of(context).colorScheme.secondary,
-                leading: const Icon(Icons.info_outlined),
-                title: const Text('About'),
-                onTap: () =>
-                    _navigateToScreen(context, screen: const AboutScreen()),
-              ),
-            ],
+                ListTile(
+                    leading: const Icon(Icons.article_outlined),
+                    title: const Text('All Notes'),
+                    onTap: () {
+                      _navigateToScreen(context,
+                          path: context.read<SettingsProvider>().mainDir);
+                    }),
+                const Opacity(opacity: 0.2, child: Divider()),
+                ListTile(
+                  leading: const Icon(Icons.archive_outlined),
+                  title: const Text('Archive'),
+                  onTap: () => _navigateToScreen(context,
+                      path: context.read<SettingsProvider>().archivePath,
+                      screen: const ArchiveScreen()),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete_outlined),
+                  title: const Text('Trash'),
+                  onTap: () => _navigateToScreen(context,
+                      path: context.read<SettingsProvider>().trashPath,
+                      screen: const DeletedScreen()),
+                ),
+                const Opacity(opacity: 0.2, child: Divider()),
+                ListTile(
+                  leading: const Icon(Icons.settings_outlined),
+                  title: const Text('Settings'),
+                  onTap: () => _navigateToScreen(context,
+                      screen: const SettingsScreen()),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.info_outlined),
+                  title: const Text('About'),
+                  onTap: () =>
+                      _navigateToScreen(context, screen: const AboutScreen()),
+                ),
+                ListTile(
+                    leading: const Icon(Icons.help_outline),
+                    title: const Text('Wiki'),
+                    trailing: const Icon(Icons.launch_rounded),
+                    onTap: () => launchUrl(Uri.parse(
+                        'https://github.com/RoBoT095/printnotes/wiki'))),
+              ],
+            ),
           ),
         ),
         const ListTile(

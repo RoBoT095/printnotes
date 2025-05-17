@@ -155,15 +155,21 @@ final List<Library> libraries = [
     license: 'GPL V3 License',
   ),
   Library(
-    name: 'pdf',
-    publisher: 'nfet.net',
-    url: 'https://github.com/DavBfr/dart_pdf',
-    license: 'Apache-2.0',
+    name: 'pdfrx',
+    publisher: 'espresso3389.jp',
+    url: 'https://github.com/espresso3389/pdfrx',
+    license: 'MIT License',
   ),
   Library(
     name: 'receive_sharing_intent',
     publisher: 'kasem.dev',
     url: 'https://github.com/KasemJaffer/receive_sharing_intent',
     license: 'Apache-2.0',
+  ),
+  Library(
+    name: 'cosmic_frontmatter',
+    publisher: 'cosmic-horse',
+    url: 'https://github.com/cosmic-horse/cosmic_frontmatter',
+    license: 'MIT License',
   ),
 ];
