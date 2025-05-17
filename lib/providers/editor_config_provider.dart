@@ -37,10 +37,22 @@ class EditorConfigProvider with ChangeNotifier {
   }
 
   void setToolbarConfig(List<ToolbarConfigItem>? configList) {
-    if (configList == null ||
-        configList.isEmpty ||
-        configList.length != defaultToolbarList.length) {
+    if (configList == null || configList.isEmpty) {
       _toolbarItemList = defaultToolbarList;
+    } else if (configList.length > defaultToolbarList.length) {
+      for (ToolbarConfigItem item in configList) {
+        if (!defaultToolbarList.contains(item)) {
+          debugPrint('Removed $item from Toolbar configList');
+          configList.remove(item);
+        }
+      }
+    } else if (configList.length < defaultToolbarList.length) {
+      for (ToolbarConfigItem item in defaultToolbarList) {
+        if (!configList.contains(item)) {
+          debugPrint('Added $item from Toolbar configList');
+          configList.add(item);
+        }
+      }
     } else {
       _toolbarItemList = configList;
     }

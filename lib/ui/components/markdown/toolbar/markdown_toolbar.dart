@@ -5,6 +5,7 @@ import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
 
 import 'toolbar.dart';
 import 'modal_input_url.dart';
+import 'modal_insert_table.dart';
 import 'toolbar_item.dart';
 
 class MarkdownToolbar extends StatelessWidget {
@@ -202,6 +203,19 @@ class MarkdownToolbar extends StatelessWidget {
           toolbar.action("__", "__");
         },
       ),
+
+      'toolbar_insert_table': ToolbarItem(
+        key: const ValueKey<String>('toolbar_insert_table'),
+        icon: FontAwesomeIcons.table,
+        tooltip: 'Insert Table',
+        onPressedButton: () async {
+          if (toolbar.hasSelection) {
+            toolbar.action("| ", " |");
+          } else {
+            await _showModalInsertTable(context, controller.selection);
+          }
+        },
+      ),
       // link
       'toolbar_link_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_link_action"),
@@ -286,7 +300,7 @@ class MarkdownToolbar extends StatelessWidget {
     );
   }
 
-  // show modal input
+  // show modal for url input
   Future<dynamic> _showModalInputUrl(
     BuildContext context,
     String leftText,
@@ -304,6 +318,28 @@ class MarkdownToolbar extends StatelessWidget {
         return ModalInputUrl(
           toolbar: toolbar,
           leftText: leftText,
+          selection: selection,
+        );
+      },
+    );
+  }
+
+  // show modal to build a table
+  Future<dynamic> _showModalInsertTable(
+    BuildContext context,
+    TextSelection selection,
+  ) {
+    return showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(30),
+        ),
+      ),
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return ModalInsertTable(
+          toolbar: toolbar,
           selection: selection,
         );
       },

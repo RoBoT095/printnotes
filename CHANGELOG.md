@@ -1,5 +1,9 @@
 # Changelog + Dev Log
 
+### (May 17, 2025)
+
+- Added markdown table maker to toolbar
+
 ### (May 16, 2025)
 
 - Removed the added empty lines above and below horizontal rule from the toolbar shortcut
