@@ -18,6 +18,7 @@ class SettingsProvider with ChangeNotifier {
   String _trashPath = '';
   String _layout = 'grid';
   int _previewLength = 100;
+  String _folderPriority = 'none';
   String _sortOrder = 'default';
   bool _useLatex = false;
   bool _useFrontmatter = false;
@@ -28,6 +29,7 @@ class SettingsProvider with ChangeNotifier {
   String get trashPath => _trashPath;
   String get layout => _layout;
   int get previewLength => _previewLength;
+  String get folderPriority => _folderPriority;
   String get sortOrder => _sortOrder;
   bool get useLatex => _useLatex;
   bool get useFrontmatter => _useFrontmatter;
@@ -52,6 +54,7 @@ class SettingsProvider with ChangeNotifier {
     final mainDir = await DataPath.selectedDirectory;
     final layout = await UserLayoutPref.getLayoutView();
     final previewLength = await UserLayoutPref.getNotePreviewLength();
+    final folderPriority = await UserSortPref.getFolderPriority();
     final sortOrder = await UserSortPref.getSortOrder();
     final useLatex = await UserLatexPref.getLatexSupport();
     final useFM = await UserFrontmatterPref.getFrontmatterSupport();
@@ -61,6 +64,7 @@ class SettingsProvider with ChangeNotifier {
     setMainDir(mainDir ?? '');
     setLayout(layout);
     setPreviewLength(previewLength);
+    setFolderPriority(folderPriority);
     setSortOrder(sortOrder);
     setLatexUse(useLatex);
     setFrontMatterUse(useFM);
@@ -90,6 +94,12 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setFolderPriority(String folderPriority) {
+    _folderPriority = folderPriority;
+    UserSortPref.setFolderPriority(folderPriority);
+    notifyListeners();
+  }
+
   void setSortOrder(String sortOrder) {
     _sortOrder = sortOrder;
     UserSortPref.setSortOrder(sortOrder);
@@ -114,6 +124,7 @@ class SettingsProvider with ChangeNotifier {
   ) {
     final mainPath = context.read<SettingsProvider>().mainDir;
     String directory = folderPath ?? mainPath;
+    String folderPriority = context.read<SettingsProvider>().folderPriority;
     String sortOrder = context.read<SettingsProvider>().sortOrder;
     String currentFolderName = 'Notes';
 
@@ -125,7 +136,8 @@ class SettingsProvider with ChangeNotifier {
     }
 
     final items = StorageSystem.listFolderContents(directory);
-    final sortedItems = ItemSortHandler.sortItems(items, sortOrder);
+    final sortedItems =
+        ItemSortHandler.getSortedItems(items, folderPriority, sortOrder);
 
     if (directory != mainPath) {
       currentFolderName = path.basename(directory);

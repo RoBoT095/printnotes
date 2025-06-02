@@ -43,8 +43,11 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
 
   List<Node> getTree(String dir) {
     List<FileSystemEntity> items = StorageSystem.listFolderContents(dir);
-    items = ItemSortHandler.sortItems(
-        items, context.read<SettingsProvider>().sortOrder);
+    items = ItemSortHandler.getSortedItems(
+      items,
+      context.read<SettingsProvider>().folderPriority,
+      context.read<SettingsProvider>().sortOrder,
+    );
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
 
     String getFileName(String filePath) {

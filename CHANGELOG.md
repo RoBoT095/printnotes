@@ -1,5 +1,11 @@
 # Changelog + Dev Log
 
+### (June 1, 2025)
+
+- Fixed exiting without editing note updates last modified date
+- Added sorting option called folder priority, or show folders above or below files or none aka don't separate
+- Added sort order to settings screen as well
+
 ### (May 17, 2025)
 
 - Added markdown table maker to toolbar

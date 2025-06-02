@@ -28,6 +28,8 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    String currentFolderPriority =
+        context.watch<SettingsProvider>().folderPriority;
     String currentSort = context.watch<SettingsProvider>().sortOrder;
     String currentLayout = context.watch<SettingsProvider>().layout;
 
@@ -138,6 +140,37 @@ class _MainScaffoldState extends State<MainScaffold> {
                   child: const ListTile(
                     leading: Icon(Icons.sort),
                     title: Text('Sort By'),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                enabled: !context.read<SelectingProvider>().selectingMode,
+                child: PopupMenuButton(
+                  onSelected: (value) {
+                    context.read<SettingsProvider>().setFolderPriority(value);
+                    Navigator.pop(context);
+                  },
+                  enabled: !context.read<SelectingProvider>().selectingMode,
+                  itemBuilder: (context) => [
+                    CheckedPopupMenuItem(
+                      value: 'above',
+                      checked: currentFolderPriority == 'above',
+                      child: const Text('Above'),
+                    ),
+                    CheckedPopupMenuItem(
+                      value: 'none',
+                      checked: currentFolderPriority == 'none',
+                      child: const Text('None'),
+                    ),
+                    CheckedPopupMenuItem(
+                      value: 'below',
+                      checked: currentFolderPriority == 'below',
+                      child: const Text('Below'),
+                    )
+                  ],
+                  child: const ListTile(
+                    leading: Icon(Icons.folder_copy_outlined),
+                    title: Text('Folder Priority'),
                   ),
                 ),
               )

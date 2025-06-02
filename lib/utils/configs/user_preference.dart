@@ -1,5 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: Add button to reset all settings including config file
+// Delete all set preferences
+Future<void> clearAllPrefs() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
 // For layout selection
 
 // Left it as a string in case I want to add more layouts
@@ -74,6 +81,16 @@ class UserThemingPref {
 // For saving what order items should be displayed in
 
 class UserSortPref {
+  static Future<void> setFolderPriority(String folderPriority) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('folderPriority', folderPriority);
+  }
+
+  static Future<String> getFolderPriority() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('folderPriority') ?? 'none';
+  }
+
   static Future<void> setSortOrder(String sortOrder) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('sortOrder', sortOrder);
