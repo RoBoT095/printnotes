@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
@@ -15,6 +14,9 @@ import 'package:printnotes/utils/handlers/item_delete.dart';
 
 import 'package:printnotes/ui/screens/layout/grid_list_view.dart';
 import 'package:printnotes/ui/screens/layout/tree_view.dart';
+import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
+
+import 'package:printnotes/ui/components/drawer_rail.dart';
 import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 
 class NotesDisplay extends StatefulWidget {
@@ -112,6 +114,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
   Widget build(BuildContext context) {
     _loadItems();
 
+    bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
+
     List<String> routeHistory =
         context.watch<NavigationProvider>().routeHistory;
 
@@ -129,6 +133,10 @@ class _NotesDisplayState extends State<NotesDisplay> {
         });
       }
     }
+
+    Widget layoutView = context.watch<SettingsProvider>().layout == 'tree'
+        ? TreeLayoutView(onChange: _loadItems)
+        : GridListView(items: _items, onChange: _loadItems);
 
     return PopScope(
       canPop: false,
@@ -157,7 +165,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       icon: const Icon(Icons.arrow_back),
                       onPressed: _navBack,
                     )
-                  : Icon(Icons.home),
+                  : null, //Icon(Icons.home),
           actions: context.watch<SelectingProvider>().selectingMode
               ? [
                   IconButton(
@@ -208,9 +216,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
                   )
                 : RefreshIndicator(
                     onRefresh: _refreshPage,
-                    child: context.watch<SettingsProvider>().layout == 'tree'
-                        ? TreeLayoutView(onChange: _loadItems)
-                        : GridListView(items: _items, onChange: _loadItems),
+                    child: isScreenLarge
+                        ? Row(
+                            children: [
+                              SizedBox(width: 50, child: DrawerRailView()),
+                              Expanded(child: layoutView),
+                            ],
+                          )
+                        : layoutView,
                   ),
         floatingActionButton: speedDialFAB(
             context,

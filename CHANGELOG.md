@@ -1,5 +1,9 @@
 # Changelog + Dev Log
 
+### (June 3, 2025)
+
+- Redesigned drawer into a rail of icons for larger screens
+
 ### (June 1, 2025)
 
 - Fixed exiting without editing note updates last modified date

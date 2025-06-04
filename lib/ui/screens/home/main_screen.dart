@@ -26,8 +26,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    const breakpoint = 1000.0;
     return context.watch<SettingsProvider>().showIntro
         ? const IntroScreen()
         : PopScope(
@@ -43,40 +41,16 @@ class _MainPageState extends State<MainPage> {
                 }
               }
             },
-            child: Row(
-              children: [
-                if (screenWidth >= breakpoint)
-                  SizedBox(
-                    width: 240,
-                    child: Drawer(
-                      backgroundColor: Theme.of(context).colorScheme.surface,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.zero)),
-                      child: const DrawerView(),
-                    ),
-                  ),
-                if (screenWidth >= breakpoint)
-                  Container(
-                    width: 0.5,
-                    color: Colors.black,
-                  ),
-                Expanded(
-                  child: MainScaffold(
-                    title: widget.title,
-                    body: NotesDisplay(
-                      key: ValueKey(context.watch<SettingsProvider>().mainDir),
-                      updateCanPop: _updateCanPop,
-                    ),
-                    drawer: screenWidth < breakpoint
-                        ? Drawer(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.surface,
-                            child: const DrawerView(),
-                          )
-                        : null,
-                  ),
-                ),
-              ],
+            child: MainScaffold(
+              title: widget.title,
+              body: NotesDisplay(
+                key: ValueKey(context.watch<SettingsProvider>().mainDir),
+                updateCanPop: _updateCanPop,
+              ),
+              drawer: Drawer(
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                child: const DrawerView(),
+              ),
             ),
           );
   }
