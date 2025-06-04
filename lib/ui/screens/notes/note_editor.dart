@@ -178,7 +178,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) return;
 
-        final canPop = await _saveFileContent(context);
+        bool canPop =
+            _hasUnsavedChanges ? await _saveFileContent(context) : true;
         if (canPop && context.mounted) {
           Navigator.of(context).pop();
         }

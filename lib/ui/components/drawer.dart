@@ -35,8 +35,6 @@ class DrawerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = Theme.of(context).brightness;
-    bool isDarkMode = brightness == Brightness.dark;
     return Column(
       children: [
         Expanded(
@@ -57,25 +55,9 @@ class DrawerView extends StatelessWidget {
                             top: MediaQuery.paddingOf(context).top)),
                     duration: const Duration(milliseconds: 250),
                     curve: Curves.fastOutSlowIn,
-                    child: CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.surface,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/app_icon_no-bg.png",
-                            height: 48,
-                          ),
-                          Text(
-                            'Menu',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
-                          )
-                        ],
-                      ),
+                    child: Image.asset(
+                      "assets/app_icon_no-bg.png",
+                      height: 48,
                     ),
                   ),
                 ),

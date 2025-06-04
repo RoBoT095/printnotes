@@ -35,6 +35,31 @@ class SettingsScreen extends StatelessWidget {
     double screenWidth = MediaQuery.sizeOf(context).width;
     bool isScreenLarge = screenWidth >= 600;
 
+    Widget? getSortOrderSubtitle() {
+      String sortOrder = context.watch<SettingsProvider>().sortOrder;
+      String? text;
+      switch (sortOrder) {
+        case 'default':
+          text = 'Varies on system';
+          break;
+        case 'titleAsc':
+          text = 'Sorted a,b,c...';
+          break;
+        case 'titleDsc':
+          text = 'Sorted z,y,x...';
+          break;
+        case 'lastModAsc':
+          text = 'Newer towards bottom';
+          break;
+        case 'lastModDsc':
+          text = 'Newer towards top';
+          break;
+        default:
+          text = null;
+      }
+      return text != null ? Text(text) : null;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -140,6 +165,55 @@ class SettingsScreen extends StatelessWidget {
                         .setPreviewLength(value.toInt());
                   },
                 ),
+              ),
+              const Divider(),
+              sectionTitle(
+                'Sorting',
+                Theme.of(context).colorScheme.secondary,
+                padding: 10,
+              ),
+              ListTile(
+                leading: const Icon(Icons.sort),
+                title: const Text('Sort Order'),
+                subtitle: getSortOrderSubtitle(),
+                trailing: DropdownButton(
+                    value: context.watch<SettingsProvider>().sortOrder,
+                    items: const [
+                      DropdownMenuItem(
+                          value: 'default', child: Text('Default Order')),
+                      DropdownMenuItem(
+                          value: 'titleAsc', child: Text('Title (Asc)')),
+                      DropdownMenuItem(
+                          value: 'titleDsc', child: Text('Title (Desc)')),
+                      DropdownMenuItem(
+                          value: 'lastModAsc', child: Text('Last Mod (Asc)')),
+                      DropdownMenuItem(
+                          value: 'lastModDsc', child: Text('Last Mod (Desc)')),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        context.read<SettingsProvider>().setSortOrder(value);
+                      }
+                    }),
+              ),
+              ListTile(
+                leading: const Icon(Icons.folder_copy_outlined),
+                title: const Text('Folder Sort Priority'),
+                subtitle: const Text('Display folders above or below files'),
+                trailing: DropdownButton(
+                    value: context.watch<SettingsProvider>().folderPriority,
+                    items: const [
+                      DropdownMenuItem(value: 'above', child: Text('Above')),
+                      DropdownMenuItem(value: 'none', child: Text('None')),
+                      DropdownMenuItem(value: 'below', child: Text('Below')),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        context
+                            .read<SettingsProvider>()
+                            .setFolderPriority(value);
+                      }
+                    }),
               ),
               const Divider(),
               sectionTitle(

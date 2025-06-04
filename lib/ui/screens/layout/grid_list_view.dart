@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:printnotes/utils/hex_color_extension.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -13,6 +12,7 @@ import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
+import 'package:printnotes/utils/hex_color_extension.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';

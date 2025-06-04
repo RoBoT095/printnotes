@@ -1,5 +1,19 @@
 # Changelog + Dev Log
 
+### (June 3, 2025)
+
+- Redesigned drawer into a rail of icons for larger screens
+
+### (June 1, 2025)
+
+- Fixed exiting without editing note updates last modified date
+- Added sorting option called folder priority, or show folders above or below files or none aka don't separate
+- Added sort order to settings screen as well
+
+### (May 17, 2025)
+
+- Added markdown table maker to toolbar
+
 ### (May 16, 2025)
 
 - Removed the added empty lines above and below horizontal rule from the toolbar shortcut

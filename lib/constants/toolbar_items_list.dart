@@ -17,6 +17,7 @@ List<ToolbarConfigItem> defaultToolbarList = [
   ToolbarConfigItem(key: 'toolbar_unordered_list_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_checkbox_list_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_underline_action', visible: true),
+  ToolbarConfigItem(key: 'toolbar_insert_table', visible: true),
   ToolbarConfigItem(key: 'toolbar_link_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_image_action', visible: true),
   ToolbarConfigItem(key: 'toolbar_blockquote_action', visible: true),
@@ -76,6 +77,10 @@ final Map<String, Map<String, dynamic>> toolbarReference = {
   'toolbar_underline_action': {
     'icon': FontAwesomeIcons.underline,
     'text': 'Underline text',
+  },
+  'toolbar_insert_table': {
+    'icon': FontAwesomeIcons.table,
+    'text': 'Insert table',
   },
   'toolbar_link_action': {
     'icon': FontAwesomeIcons.link,
