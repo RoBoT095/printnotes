@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
-import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
+import 'package:printnotes/utils/parsers/csv_parser.dart';
+import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 
 // The Abomination Folder that handles everything related to folders on the device
 // better to rewrite and clean up everything but this sand castle is already held by hot glue
@@ -172,8 +173,12 @@ class StorageSystem {
     return '';
   }
 
-  static String getFilePreview(String filePath,
-      {bool parseFrontmatter = false, int previewLength = 100}) {
+  static String getFilePreview(
+    String filePath, {
+    bool parseFrontmatter = false,
+    bool isTrimmed = true,
+    int previewLength = 100,
+  }) {
     try {
       final file = File(filePath);
       if (file.existsSync()) {
@@ -182,11 +187,24 @@ class StorageSystem {
           final doc = FrontmatterHandleParsing.getParsedData(content);
           if (doc != null) content = doc.body;
         }
+
         // Limit to previewLength then trim whitespace
-        return content
-            .substring(0,
-                content.length < previewLength ? content.length : previewLength)
-            .trim();
+        if (isTrimmed) {
+          String trimmedContent = content
+              .substring(
+                  0,
+                  content.length < previewLength
+                      ? content.length
+                      : previewLength)
+              .trim();
+
+          if (filePath.endsWith('csv')) {
+            trimmedContent = csvToMarkdownTable(trimmedContent);
+          }
+          return trimmedContent;
+        } else {
+          return content;
+        }
       }
     } catch (e) {
       debugPrint('Error reading file: $e');

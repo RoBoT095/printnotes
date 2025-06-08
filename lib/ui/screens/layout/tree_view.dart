@@ -12,7 +12,7 @@ import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
-import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
+import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
