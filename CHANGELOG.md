@@ -1,5 +1,12 @@
 # Changelog + Dev Log
 
+### (June 7, 2025)
+
+- Upgraded project from flutter version `3.29.2` to `3.32.2`
+  - As well as upgraded pub dependencies/libraries
+- Added ability to parse CSV files into markdown tables for previewing
+- Fixed error when having unsupported file types in app (broke it when adding frontmatter support)
+
 ### (June 3, 2025)
 
 - Redesigned drawer into a rail of icons for larger screens

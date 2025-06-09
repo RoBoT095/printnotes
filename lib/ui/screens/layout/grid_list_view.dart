@@ -11,8 +11,8 @@ import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
-import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
-import 'package:printnotes/utils/hex_color_extension.dart';
+import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
+import 'package:printnotes/utils/parsers/hex_color_extension.dart';
 
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
@@ -130,10 +130,15 @@ class _GridListViewState extends State<GridListView> {
       }
     }
     if (useFM) {
-      String fileText = File(item.path).readAsStringSync();
-      fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
-      fmDescription =
-          FrontmatterHandleParsing.getTagString(fileText, 'description');
+      // I am beginning to hate this function, but why create new one when
+      // we can add more functionality to it
+      String fileText =
+          StorageSystem.getFilePreview(item.path, isTrimmed: false);
+      if (fileText != 'No preview available') {
+        fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
+        fmDescription =
+            FrontmatterHandleParsing.getTagString(fileText, 'description');
+      }
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

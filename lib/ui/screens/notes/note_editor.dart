@@ -11,7 +11,8 @@ import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
-import 'package:printnotes/utils/handlers/frontmatter_parser.dart';
+import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
+import 'package:printnotes/utils/parsers/csv_parser.dart';
 
 import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
 import 'package:printnotes/ui/components/markdown/build_markdown.dart';
@@ -298,6 +299,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       child: TocWidget(controller: _tocController));
 
   Widget buildMarkdownView(String previewBody) {
+    if (widget.filePath.endsWith('.csv')) {
+      previewBody = csvToMarkdownTable(previewBody);
+    }
     return SafeArea(
       child: Container(
         margin: isScreenLarge(context)
