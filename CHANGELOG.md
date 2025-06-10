@@ -1,5 +1,9 @@
 # Changelog + Dev Log
 
+### (June 10, 2025)
+
+- Changed logic for referencing local images to allow relative path
+
 ### (June 7, 2025)
 
 - Upgraded project from flutter version `3.29.2` to `3.32.2`

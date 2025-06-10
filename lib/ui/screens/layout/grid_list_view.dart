@@ -165,7 +165,9 @@ class _GridListViewState extends State<GridListView> {
                     previewLength:
                         context.watch<SettingsProvider>().previewLength),
                 config: theMarkdownConfigs(context,
-                    hideCodeButtons: true, textColor: color),
+                    filePath: item.path,
+                    hideCodeButtons: true,
+                    textColor: color),
                 generator: theMarkdownGenerators(context, textScale: 0.95),
               ),
       ],

@@ -69,6 +69,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         Timer.periodic(fileCheckInterval, (_) => _checkForExternalChanges());
   }
 
+  /// Load the passed files contents and set the state
   Future<void> _loadFileContent() async {
     try {
       final file = File(widget.filePath);
@@ -102,6 +103,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     });
   }
 
+  /// Check if file has been modified outside of app
   Future<void> _checkForExternalChanges() async {
     if (_isError || _isLoading) return;
 
@@ -168,6 +170,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     String? fmBody;
     String? fmTitle;
 
+    // frontmatter logic
     if (useFM) {
       final doc = FrontmatterHandleParsing.getParsedData(_notesController.text);
       fmTitle =
@@ -249,6 +252,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         body: buildMarkdownView(fmBody ?? _notesController.text),
         endDrawer: _isError
             ? null
+            // Drawer for table of contents
             : Drawer(
                 child: SafeArea(
                   child: Column(
@@ -292,6 +296,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
+  /// Table of Contents
   Widget buildTocList() => Container(
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -303,6 +308,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       previewBody = csvToMarkdownTable(previewBody);
     }
     return SafeArea(
+      // Styling for desktop mode to have document centered with grey background
       child: Container(
         margin: isScreenLarge(context)
             ? EdgeInsets.symmetric(
@@ -322,6 +328,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           borderRadius:
               isScreenLarge(context) ? BorderRadius.circular(10) : null,
         ),
+        // Wrap child to add Toolbar at the bottom of the screen or on top
+        // of the keyboard
         child: FooterLayout(
           footer: _isEditingFile
               ? MarkdownToolbar(
@@ -342,6 +350,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               ? const Center(child: CircularProgressIndicator())
               : _isError
                   ? const Center(child: Text('Error Reading File'))
+                  // Catch if "ctrl+shift+v" was used to switch between
+                  // edit and preview mode
                   : Shortcuts(
                       shortcuts: <ShortcutActivator, Intent>{
                         LogicalKeySet(
@@ -371,12 +381,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                         .watch<EditorConfigProvider>()
                                         .fontSize,
                                   )
+                                // Check if double tap to change to edit mode
                                 : GestureDetector(
                                     onDoubleTap: () {
                                       setState(() =>
                                           _isEditingFile = !_isEditingFile);
                                     },
                                     child: _notesController.text.isEmpty
+                                        // If note is empty so message
                                         ? SizedBox(
                                             height: MediaQuery.sizeOf(context)
                                                 .height,
@@ -387,9 +399,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                                       .hintColor),
                                             ),
                                           )
+                                        // Parse and render the markdown text
                                         : buildMarkdownWidget(
                                             context,
                                             data: previewBody,
+                                            filePath: widget.filePath,
                                             tocController: _tocController,
                                           ),
                                   ),

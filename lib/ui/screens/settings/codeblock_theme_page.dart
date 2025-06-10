@@ -55,6 +55,7 @@ class CodeblockThemePage extends StatelessWidget {
             selectable: false,
             config: theMarkdownConfigs(
               context,
+              filePath: '',
               hideCodeButtons: true,
               inEditor: true,
             ),

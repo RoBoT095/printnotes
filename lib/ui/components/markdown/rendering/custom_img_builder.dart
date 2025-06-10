@@ -10,26 +10,35 @@ import 'package:printnotes/utils/storage_system.dart';
 
 class CustomImgBuilder extends StatelessWidget {
   final String url;
+  final String filePath;
   final Map<String, String> attributes;
 
-  const CustomImgBuilder(this.url, this.attributes, {super.key});
+  const CustomImgBuilder(this.url, this.filePath, this.attributes, {super.key});
 
   @override
   Widget build(BuildContext context) {
     double editorFontSize = context.watch<EditorConfigProvider>().fontSize;
 
+    // Get image stored locally, totally fine if fails or file doesn't exist
+    // as Image.file error builder will catch it
     File getLocalImage() {
+      // Check if image (url) is relative to note (filePath)
+      File relativeFile = File(join(dirname(filePath), url));
+      if (relativeFile.existsSync()) return relativeFile;
+
+      // Otherwise, go through all files in mainDir to find by exact name
       final allFiles = StorageSystem.listFolderContents(
         context.read<SettingsProvider>().mainDir,
         recursive: true,
         showHidden: true,
       );
-
       for (var item in allFiles) {
         if (item is File && basename(item.path) == url) {
           return File(item.path);
         }
       }
+
+      // Catch for if full path was used instead
       return File(url);
     }
 

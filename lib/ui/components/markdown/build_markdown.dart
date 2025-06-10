@@ -19,8 +19,13 @@ import 'package:printnotes/ui/components/markdown/rendering/latex.dart';
 import 'package:printnotes/ui/components/markdown/markdown_checkbox.dart';
 import 'package:printnotes/ui/components/markdown/rendering/note_tags.dart';
 
-MarkdownConfig theMarkdownConfigs(BuildContext context,
-    {bool? hideCodeButtons, bool inEditor = false, Color? textColor}) {
+MarkdownConfig theMarkdownConfigs(
+  BuildContext context, {
+  required String filePath,
+  bool? hideCodeButtons,
+  bool inEditor = false,
+  Color? textColor,
+}) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final config =
       isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
@@ -96,7 +101,9 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
           textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
       sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
     ),
-    ImgConfig(builder: (url, attributes) => CustomImgBuilder(url, attributes)),
+    ImgConfig(
+        builder: (url, attributes) =>
+            CustomImgBuilder(url, filePath, attributes)),
     const PreConfig().copy(
       theme: themeMap[userCodeHighlight] ??
           (isDark ? a11yDarkTheme : a11yLightTheme),
@@ -153,12 +160,17 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
   );
 }
 
-Widget buildMarkdownWidget(BuildContext context,
-    {required String data, bool? selectable, TocController? tocController}) {
+Widget buildMarkdownWidget(
+  BuildContext context, {
+  required String data,
+  required String filePath,
+  bool? selectable,
+  TocController? tocController,
+}) {
   return MarkdownWidget(
     data: data,
     selectable: selectable ?? true,
-    config: theMarkdownConfigs(context, inEditor: true),
+    config: theMarkdownConfigs(context, filePath: filePath, inEditor: true),
     tocController: tocController,
     markdownGenerator: theMarkdownGenerators(context),
   );
