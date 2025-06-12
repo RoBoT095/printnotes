@@ -106,7 +106,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   void dispose() {
-    _intentSub.cancel();
+    if (Platform.isAndroid) _intentSub.cancel();
     super.dispose();
   }
 
