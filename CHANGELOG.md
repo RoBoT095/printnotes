@@ -1,8 +1,13 @@
 # Changelog + Dev Log
 
+### (June 11, 2025)
+
+- Improved local image relative path logic further
+
 ### (June 10, 2025)
 
 - Changed logic for referencing local images to allow relative path
+- Added internet usage info page to IntroScreen to clear confusion regarding internet access
 
 ### (June 7, 2025)
 

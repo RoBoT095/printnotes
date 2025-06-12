@@ -23,7 +23,8 @@ class CustomImgBuilder extends StatelessWidget {
     // as Image.file error builder will catch it
     File getLocalImage() {
       // Check if image (url) is relative to note (filePath)
-      File relativeFile = File(join(dirname(filePath), url));
+      File relativeFile = File(join(dirname(filePath),
+          url.startsWith('./') ? url.replaceFirst('./', '') : url));
       if (relativeFile.existsSync()) return relativeFile;
 
       // Otherwise, go through all files in mainDir to find by exact name
