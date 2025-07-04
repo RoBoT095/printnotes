@@ -15,9 +15,9 @@ import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/csv_parser.dart';
 
 import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
-import 'package:printnotes/ui/components/markdown/build_markdown.dart';
-import 'package:printnotes/ui/components/markdown/editor_field.dart';
-import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/markdown/build_markdown.dart';
+import 'package:printnotes/markdown/editor_field.dart';
+import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
 import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/editor_config_provider.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
-import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
 
 class EditorConfigScreen extends StatelessWidget {
   const EditorConfigScreen({super.key});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
@@ -10,14 +11,15 @@ import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_highlight/themes/a11y-light.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 
-import 'package:printnotes/ui/components/markdown/rendering/code_wrapper.dart';
-import 'package:printnotes/ui/components/markdown/rendering/custom_img_builder.dart';
-import 'package:printnotes/ui/components/markdown/rendering/custom_node.dart';
-import 'package:printnotes/ui/components/markdown/rendering/highlighter.dart';
-import 'package:printnotes/ui/components/markdown/rendering/underline.dart';
-import 'package:printnotes/ui/components/markdown/rendering/latex.dart';
-import 'package:printnotes/ui/components/markdown/markdown_checkbox.dart';
-import 'package:printnotes/ui/components/markdown/rendering/note_tags.dart';
+import 'package:printnotes/markdown/rendering/code_wrapper.dart';
+import 'package:printnotes/markdown/rendering/custom_img_builder.dart';
+import 'package:printnotes/markdown/rendering/custom_node.dart';
+import 'package:printnotes/markdown/rendering/latex.dart';
+import 'package:printnotes/markdown/rendering/highlighter.dart';
+import 'package:printnotes/markdown/rendering/underline.dart';
+import 'package:printnotes/markdown/rendering/note_tags.dart';
+
+import 'package:printnotes/markdown/markdown_checkbox.dart';
 
 MarkdownConfig theMarkdownConfigs(
   BuildContext context, {

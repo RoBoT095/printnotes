@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:printnotes/ui/components/markdown/toolbar/toolbar.dart';
+import 'package:printnotes/markdown/toolbar/toolbar.dart';
 
 class ModalInsertTable extends StatefulWidget {
   const ModalInsertTable({

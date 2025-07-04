@@ -4,7 +4,7 @@ import 'package:markdown_widget/widget/markdown_block.dart';
 import 'package:flutter_highlight/theme_map.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
-import 'package:printnotes/ui/components/markdown/build_markdown.dart';
+import 'package:printnotes/markdown/build_markdown.dart';
 
 class CodeblockThemePage extends StatelessWidget {
   const CodeblockThemePage({super.key});

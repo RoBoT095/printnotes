@@ -14,7 +14,7 @@ import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/hex_color_extension.dart';
 
-import 'package:printnotes/ui/components/markdown/build_markdown.dart';
+import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
 class GridListView extends StatefulWidget {
