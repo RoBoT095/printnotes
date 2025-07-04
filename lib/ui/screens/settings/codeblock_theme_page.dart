@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:markdown_widget/widget/markdown_block.dart';
+import 'package:printnotes/markdown/markdown_widget/widget/markdown_block.dart';
 import 'package:flutter_highlight/theme_map.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';

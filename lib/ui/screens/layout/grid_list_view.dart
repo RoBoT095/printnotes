@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:markdown_widget/markdown_widget.dart';
+import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';

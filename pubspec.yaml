@@ -31,7 +31,6 @@ dependencies:
       ref: master
   introduction_screen: ^3.1.12
   http: ^1.2.2
-  markdown_widget: ^2.3.2+6
   flutter_highlight: ^0.7.0
   html: ^0.15.4
   flutter_math_fork: ^0.7.2
@@ -44,6 +43,9 @@ dependencies:
       url: https://github.com/KasemJaffer/receive_sharing_intent
       ref: master
   cosmic_frontmatter: ^1.0.3
+  highlight: ^0.7.0
+  visibility_detector: ^0.4.0+2
+  scroll_to_index: ^3.0.1
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:markdown_widget/markdown_widget.dart';
+import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';

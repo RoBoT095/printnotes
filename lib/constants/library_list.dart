@@ -172,4 +172,29 @@ final List<Library> libraries = [
     url: 'https://github.com/cosmic-horse/cosmic_frontmatter',
     license: 'MIT License',
   ),
+  Library(
+    name: 'highlight',
+    publisher: 'git-touch',
+    url: 'https://github.com/git-touch/highlight.dart',
+    license: 'MIT License',
+  ),
+  Library(
+    name: 'VisibilityDetector',
+    publisher: 'google',
+    url:
+        'https://github.com/google/flutter.widgets/tree/master/packages/visibility_detector',
+    license: 'BSD 3-Clause License',
+  ),
+  Library(
+    name: 'scroll-to-index',
+    publisher: 'quire.io',
+    url: 'https://github.com/quire-io/scroll-to-index',
+    license: 'MIT License',
+  ),
+  // Library(
+  //   name: '',
+  //   publisher: '',
+  //   url: '',
+  //   license: '',
+  // ),
 ];
