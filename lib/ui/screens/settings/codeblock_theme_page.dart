@@ -5,6 +5,7 @@ import 'package:flutter_highlight/theme_map.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/markdown/build_markdown.dart';
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 
 class CodeblockThemePage extends StatelessWidget {
   const CodeblockThemePage({super.key});
@@ -19,9 +20,11 @@ class CodeblockThemePage extends StatelessWidget {
         '```Python\n@requires_authorization\ndef somefunc(param1=\'\', param2=0):\n    r\'\'\'A docstring\'\'\'\n    if param1 > param2: # interesting\n        print \'Gre\\\'ater\'\n    return (param2 - param1 + 1 + 0b10l) or None\n\nclass SomeClass:\n    pass\n\n>>> message = \'\'\'interpreter\n... prompt\'\'\'\n```';
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Select Code Theme'),
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          centerTitle: true,
+          title: Text('Select Code Theme'),
+        ),
       ),
       body: Column(
         children: [

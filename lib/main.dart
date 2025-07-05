@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
@@ -12,11 +13,13 @@ import 'package:printnotes/providers/editor_config_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
+import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/ui/screens/home/main_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
@@ -43,6 +46,15 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     _checkStorageAccess();
+    _setTitleBarVisibility();
+  }
+
+  void _setTitleBarVisibility() async {
+    final isTitleBarHidden = await UserAdvancedPref.getTitleBarVisibility();
+    if (Platform.isLinux || Platform.isWindows) {
+      windowManager.setTitleBarStyle(
+          isTitleBarHidden ? TitleBarStyle.hidden : TitleBarStyle.normal);
+    }
   }
 
   void _checkStorageAccess() async {

@@ -20,7 +20,6 @@ import 'package:printnotes/markdown/rendering/underline.dart';
 import 'package:printnotes/markdown/rendering/note_tags.dart';
 
 import 'package:printnotes/markdown/link_handler.dart';
-import 'package:printnotes/markdown/markdown_checkbox.dart';
 
 MarkdownConfig theMarkdownConfigs(
   BuildContext context, {
@@ -84,10 +83,7 @@ MarkdownConfig theMarkdownConfigs(
       ),
     ),
     ListConfig(marginLeft: editorFontSize * 1.5),
-    CheckBoxConfig(
-      builder: (checked) =>
-          markdownCheckBox(checked, inEditor ? editorFontSize * 1.25 : null),
-    ),
+    CheckBoxConfig(size: inEditor ? editorFontSize * 1.25 : null),
     TableConfig(
       wrapper: (table) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,

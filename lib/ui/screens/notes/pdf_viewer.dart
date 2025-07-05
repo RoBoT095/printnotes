@@ -6,6 +6,7 @@ import 'package:pdfrx/pdfrx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 
 class PdfViewScreen extends StatefulWidget {
@@ -94,141 +95,144 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: SelectableText(
-          widget.pdfFile.path.split('/').last,
-          maxLines: 1,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() => linkHighlight = !linkHighlight);
-            },
-            color: linkHighlight
-                ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.onSurface,
-            icon: const Icon(Icons.link),
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          centerTitle: true,
+          title: SelectableText(
+            widget.pdfFile.path.split('/').last,
+            maxLines: 1,
           ),
-          IconButton(
+          actions: [
+            IconButton(
               onPressed: () {
-                setState(() => searchToggled = !searchToggled);
+                setState(() => linkHighlight = !linkHighlight);
               },
-              color: searchToggled
+              color: linkHighlight
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.onSurface,
-              icon: const Icon(Icons.search)),
-          PopupMenuButton(
-            onSelected: (value) {},
-            itemBuilder: (context) => <PopupMenuEntry>[
-              PopupMenuItem(
-                child: ListTile(
-                  leading: const Icon(Icons.folder_open),
-                  title: const Text("Open Location"),
-                  iconColor: mobileNullColor(context),
-                  textColor: mobileNullColor(context),
+              icon: const Icon(Icons.link),
+            ),
+            IconButton(
+                onPressed: () {
+                  setState(() => searchToggled = !searchToggled);
+                },
+                color: searchToggled
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.onSurface,
+                icon: const Icon(Icons.search)),
+            PopupMenuButton(
+              onSelected: (value) {},
+              itemBuilder: (context) => <PopupMenuEntry>[
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: const Icon(Icons.folder_open),
+                    title: const Text("Open Location"),
+                    iconColor: mobileNullColor(context),
+                    textColor: mobileNullColor(context),
+                  ),
+                  onTap: () async =>
+                      await openExplorer(context, widget.pdfFile.parent.path),
                 ),
-                onTap: () async =>
-                    await openExplorer(context, widget.pdfFile.parent.path),
-              ),
-            ],
-          ),
-        ],
-        bottom: searchToggled
-            ? PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        border: Border(
-                            top: BorderSide(
-                                color:
-                                    Theme.of(context).colorScheme.onSurface))),
-                    child: Column(
-                      children: [
-                        textSearcher.isSearching
-                            ? LinearProgressIndicator(
-                                value: textSearcher.searchProgress,
-                                minHeight: 4,
-                              )
-                            : const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  TextField(
-                                    autofocus: true,
-                                    focusNode: focusNode,
-                                    controller: searchTextController,
-                                    decoration: const InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(right: 50),
+              ],
+            ),
+          ],
+          bottom: searchToggled
+              ? PreferredSize(
+                  preferredSize: const Size.fromHeight(kToolbarHeight),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          border: Border(
+                              top: BorderSide(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface))),
+                      child: Column(
+                        children: [
+                          textSearcher.isSearching
+                              ? LinearProgressIndicator(
+                                  value: textSearcher.searchProgress,
+                                  minHeight: 4,
+                                )
+                              : const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Stack(
+                                  alignment: Alignment.centerLeft,
+                                  children: [
+                                    TextField(
+                                      autofocus: true,
+                                      focusNode: focusNode,
+                                      controller: searchTextController,
+                                      decoration: const InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.only(right: 50),
+                                      ),
+                                      textInputAction: TextInputAction.search,
+                                      onChanged: (value) {
+                                        textSearcher.startTextSearch(
+                                          searchTextController.text,
+                                          searchImmediately: true,
+                                        );
+                                      },
+                                      onSubmitted: (value) {},
                                     ),
-                                    textInputAction: TextInputAction.search,
-                                    onChanged: (value) {
-                                      textSearcher.startTextSearch(
-                                        searchTextController.text,
-                                        searchImmediately: true,
-                                      );
-                                    },
-                                    onSubmitted: (value) {},
-                                  ),
-                                  if (textSearcher.hasMatches)
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        '${textSearcher.currentIndex! + 1} / ${textSearcher.matches.length}',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                    if (textSearcher.hasMatches)
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          '${textSearcher.currentIndex! + 1} / ${textSearcher.matches.length}',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 4),
-                            IconButton(
-                              onPressed: (textSearcher.currentIndex ?? 0) > 0
-                                  ? () async {
-                                      await textSearcher.goToPrevMatch();
-                                      _update();
-                                    }
-                                  : null,
-                              icon: const Icon(Icons.arrow_upward),
-                              iconSize: 20,
-                            ),
-                            IconButton(
-                              onPressed: (textSearcher.currentIndex ?? 0) <
-                                      textSearcher.matches.length
-                                  ? () async {
-                                      await textSearcher.goToNextMatch();
-                                      _update();
-                                    }
-                                  : null,
-                              icon: const Icon(Icons.arrow_downward),
-                              iconSize: 20,
-                            ),
-                            IconButton(
-                              onPressed: searchTextController.text.isNotEmpty
-                                  ? () {
-                                      searchTextController.text = '';
-                                      textSearcher.resetTextSearch();
-                                      focusNode.requestFocus();
-                                    }
-                                  : null,
-                              icon: const Icon(Icons.close),
-                              iconSize: 20,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                      ],
-                    )))
-            : null,
+                              const SizedBox(width: 4),
+                              IconButton(
+                                onPressed: (textSearcher.currentIndex ?? 0) > 0
+                                    ? () async {
+                                        await textSearcher.goToPrevMatch();
+                                        _update();
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.arrow_upward),
+                                iconSize: 20,
+                              ),
+                              IconButton(
+                                onPressed: (textSearcher.currentIndex ?? 0) <
+                                        textSearcher.matches.length
+                                    ? () async {
+                                        await textSearcher.goToNextMatch();
+                                        _update();
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.arrow_downward),
+                                iconSize: 20,
+                              ),
+                              IconButton(
+                                onPressed: searchTextController.text.isNotEmpty
+                                    ? () {
+                                        searchTextController.text = '';
+                                        textSearcher.resetTextSearch();
+                                        focusNode.requestFocus();
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.close),
+                                iconSize: 20,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                        ],
+                      )))
+              : null,
+        ),
       ),
       body: PdfViewer.file(
         widget.pdfFile.path,

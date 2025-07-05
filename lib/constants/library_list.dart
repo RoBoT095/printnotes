@@ -191,6 +191,12 @@ final List<Library> libraries = [
     url: 'https://github.com/quire-io/scroll-to-index',
     license: 'MIT License',
   ),
+  Library(
+    name: 'window_manager',
+    publisher: 'leanflutter.dev',
+    url: 'https://github.com/leanflutter/window_manager',
+    license: 'MIT License',
+  ),
   // Library(
   //   name: '',
   //   publisher: '',

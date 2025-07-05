@@ -39,8 +39,9 @@ typedef CheckBoxBuilder = Widget Function(bool checked);
 ///config class for checkbox, tag: input
 class CheckBoxConfig implements InlineConfig {
   final CheckBoxBuilder? builder;
+  final double? size;
 
-  const CheckBoxConfig({this.builder});
+  const CheckBoxConfig({this.builder, this.size});
 
   @nonVirtual
   @override
@@ -50,14 +51,26 @@ class CheckBoxConfig implements InlineConfig {
 ///the check box widget
 class MCheckBox extends StatelessWidget {
   final bool checked;
+  final double? size;
 
-  const MCheckBox({super.key, required this.checked});
+  const MCheckBox({
+    super.key,
+    required this.checked,
+    this.size,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      checked ? Icons.check_box : Icons.check_box_outline_blank,
-      size: 20,
+    return SizedBox(
+      width: size ?? 20,
+      height: size ?? 20,
+      child: Checkbox(
+        value: checked,
+        hoverColor: null,
+        focusColor: null,
+        splashRadius: 0,
+        onChanged: (value) {},
+      ),
     );
   }
 }

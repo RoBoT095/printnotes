@@ -20,6 +20,7 @@ class SettingsProvider with ChangeNotifier {
   int _previewLength = 100;
   String _folderPriority = 'none';
   String _sortOrder = 'default';
+  bool _hideTitleBar = false;
   bool _useLatex = false;
   bool _useFrontmatter = false;
 
@@ -31,6 +32,7 @@ class SettingsProvider with ChangeNotifier {
   int get previewLength => _previewLength;
   String get folderPriority => _folderPriority;
   String get sortOrder => _sortOrder;
+  bool get hideTitleBar => _hideTitleBar;
   bool get useLatex => _useLatex;
   bool get useFrontmatter => _useFrontmatter;
 
@@ -56,8 +58,9 @@ class SettingsProvider with ChangeNotifier {
     final previewLength = await UserLayoutPref.getNotePreviewLength();
     final folderPriority = await UserSortPref.getFolderPriority();
     final sortOrder = await UserSortPref.getSortOrder();
-    final useLatex = await UserLatexPref.getLatexSupport();
-    final useFM = await UserFrontmatterPref.getFrontmatterSupport();
+    final titleBar = await UserAdvancedPref.getTitleBarVisibility();
+    final useLatex = await UserAdvancedPref.getLatexSupport();
+    final useFM = await UserAdvancedPref.getFrontmatterSupport();
 
     if (mainDir != null) setHiddenFolders(mainDir);
 
@@ -66,6 +69,7 @@ class SettingsProvider with ChangeNotifier {
     setPreviewLength(previewLength);
     setFolderPriority(folderPriority);
     setSortOrder(sortOrder);
+    setTitleBarVisibility(titleBar);
     setLatexUse(useLatex);
     setFrontMatterUse(useFM);
   }
@@ -106,15 +110,21 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setTitleBarVisibility(bool visibility) {
+    _hideTitleBar = visibility;
+    UserAdvancedPref.setTitleBarVisibility(visibility);
+    notifyListeners();
+  }
+
   void setLatexUse(bool useLatex) {
     _useLatex = useLatex;
-    UserLatexPref.setLatexSupport(useLatex);
+    UserAdvancedPref.setLatexSupport(useLatex);
     notifyListeners();
   }
 
   void setFrontMatterUse(bool useFM) {
     _useFrontmatter = useFM;
-    UserFrontmatterPref.setFrontmatterSupport(useFM);
+    UserAdvancedPref.setFrontmatterSupport(useFM);
     notifyListeners();
   }
 

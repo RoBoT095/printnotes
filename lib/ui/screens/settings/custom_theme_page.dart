@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_validator.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class CustomThemePage extends StatefulWidget {
@@ -161,9 +162,11 @@ class _CustomThemePageState extends State<CustomThemePage> {
     bool isScreenLarge = screenWidth >= 600;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Custom Colors'),
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          centerTitle: true,
+          title: const Text('Custom Colors'),
+        ),
       ),
       body: DefaultTabController(
         length: 3,

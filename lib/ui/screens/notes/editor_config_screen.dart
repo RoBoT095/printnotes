@@ -4,6 +4,8 @@ import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/editor_config_provider.dart';
+
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
 import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
 
@@ -16,11 +18,13 @@ class EditorConfigScreen extends StatelessWidget {
     bool isEditingToolbar = context.watch<EditorConfigProvider>().isEditing;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        centerTitle: true,
-        title: const Text('Editor Configuration'),
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          centerTitle: true,
+          title: const Text('Editor Configuration'),
+        ),
       ),
       body: ListView(
         primary: true,

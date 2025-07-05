@@ -4,6 +4,9 @@
 
 - Moved [markdown_widget](https://github.com/asjqkkkk/markdown_widget) library in house to have better control over it for future updates
 - Added ability to link to files with WikiLinks and regular links
+- Forgot to mention that I bumped flutter version from `3.32.2` to `3.32.5` due to some bugs with that version
+- Added option to hide title bar on linux and windows
+- On desktop, title bars (aka AppBar) in the app can now be used to grab the window around
 
 ### (June 11, 2025)
 

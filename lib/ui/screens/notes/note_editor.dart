@@ -14,6 +14,7 @@ import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/csv_parser.dart';
 
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
 import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/markdown/editor_field.dart';
@@ -191,63 +192,66 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-        appBar: AppBar(
-          centerTitle: false,
-          title: SelectableText(
-            fmTitle ?? widget.filePath.split('/').last,
-            maxLines: 1,
-          ),
-          actions: _isError
-              ? null
-              : [
-                  IconButton(
-                      tooltip: 'Preview/Edit Mode',
-                      icon: Icon(
-                          _isEditingFile ? Icons.visibility : Icons.mode_edit),
-                      onPressed: () {
-                        setState(() => _isEditingFile = !_isEditingFile);
-                      }),
-                  if (isScreenLarge(context) &&
-                      _notesController.text.contains("# "))
+        appBar: AppBarDragWrapper(
+          child: AppBar(
+            centerTitle: false,
+            title: SelectableText(
+              fmTitle ?? widget.filePath.split('/').last,
+              maxLines: 1,
+            ),
+            actions: _isError
+                ? null
+                : [
                     IconButton(
-                      tooltip: 'Table of Contents',
-                      onPressed: () =>
-                          _scaffoldKey.currentState!.openEndDrawer(),
-                      icon: const Icon(Icons.toc_rounded),
+                        tooltip: 'Preview/Edit Mode',
+                        icon: Icon(_isEditingFile
+                            ? Icons.visibility
+                            : Icons.mode_edit),
+                        onPressed: () {
+                          setState(() => _isEditingFile = !_isEditingFile);
+                        }),
+                    if (isScreenLarge(context) &&
+                        _notesController.text.contains("# "))
+                      IconButton(
+                        tooltip: 'Table of Contents',
+                        onPressed: () =>
+                            _scaffoldKey.currentState!.openEndDrawer(),
+                        icon: const Icon(Icons.toc_rounded),
+                      ),
+                    PopupMenuButton(
+                      itemBuilder: (context) => <PopupMenuEntry>[
+                        PopupMenuItem(
+                          child: const ListTile(
+                            leading: Icon(Icons.info_outline),
+                            title: Text('Info'),
+                          ),
+                          onTap: () =>
+                              modalShowFileInfo(context, widget.filePath),
+                        ),
+                        PopupMenuItem(
+                          child: const ListTile(
+                            leading: Icon(Icons.tune),
+                            title: Text('Configure'),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditorConfigScreen())),
+                        ),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: const Icon(Icons.folder_open),
+                            title: const Text("Open Location"),
+                            iconColor: mobileNullColor(context),
+                            textColor: mobileNullColor(context),
+                          ),
+                          onTap: () async =>
+                              await openExplorer(context, widget.filePath),
+                        ),
+                      ],
                     ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => <PopupMenuEntry>[
-                      PopupMenuItem(
-                        child: const ListTile(
-                          leading: Icon(Icons.info_outline),
-                          title: Text('Info'),
-                        ),
-                        onTap: () =>
-                            modalShowFileInfo(context, widget.filePath),
-                      ),
-                      PopupMenuItem(
-                        child: const ListTile(
-                          leading: Icon(Icons.tune),
-                          title: Text('Configure'),
-                        ),
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const EditorConfigScreen())),
-                      ),
-                      PopupMenuItem(
-                        child: ListTile(
-                          leading: const Icon(Icons.folder_open),
-                          title: const Text("Open Location"),
-                          iconColor: mobileNullColor(context),
-                          textColor: mobileNullColor(context),
-                        ),
-                        onTap: () async =>
-                            await openExplorer(context, widget.filePath),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+          ),
         ),
         body: buildMarkdownView(fmBody ?? _notesController.text),
         endDrawer: _isError

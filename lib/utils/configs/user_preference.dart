@@ -102,9 +102,19 @@ class UserSortPref {
   }
 }
 
-// For having LaTeX rendered or not
+class UserAdvancedPref {
+  // For hiding and showing title bar on desktop
+  static Future<void> setTitleBarVisibility(bool visibility) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('titleBarVisibility', visibility);
+  }
 
-class UserLatexPref {
+  static Future<bool> getTitleBarVisibility() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('titleBarVisibility') ?? false;
+  }
+
+  // For having LaTeX rendered or not
   static Future<void> setLatexSupport(bool latexRendering) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('useLatex', latexRendering);
@@ -114,11 +124,8 @@ class UserLatexPref {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('useLatex') ?? false;
   }
-}
 
-// For using Frontmatter for metadata of not
-
-class UserFrontmatterPref {
+  // For using Frontmatter for metadata of not
   static Future<void> setFrontmatterSupport(bool useFM) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('useFrontmatter', useFM);
