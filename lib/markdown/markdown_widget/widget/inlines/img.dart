@@ -38,7 +38,7 @@ class ImageNode extends SpanNode {
         ? imgWidget
         : Builder(builder: (context) {
             return InkWell(
-              child: Hero(child: imgWidget, tag: imgWidget.hashCode),
+              child: Hero(tag: imgWidget.hashCode, child: imgWidget),
               onTap: () => _showImage(context, imgWidget),
             );
           });
@@ -88,7 +88,7 @@ class ImgConfig implements InlineConfig {
 class ImageViewer extends StatelessWidget {
   final Widget child;
 
-  const ImageViewer({Key? key, required this.child}) : super(key: key);
+  const ImageViewer({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class ImageViewer extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             InteractiveViewer(
-                child: Center(child: Hero(child: child, tag: child.hashCode))),
+                child: Center(child: Hero(tag: child.hashCode, child: child))),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -108,15 +108,15 @@ class ImageViewer extends StatelessWidget {
                 child: IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Container(
-                    child: Icon(
-                      Icons.clear,
-                      color: Colors.grey,
-                    ),
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
                         color: Colors.white.toOpacity(0.2),
                         shape: BoxShape.circle),
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),

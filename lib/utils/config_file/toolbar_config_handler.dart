@@ -28,7 +28,8 @@ void saveToolbarLoadout(List<ToolbarConfigItem> toolbarConfigList) {
   // Object existence check for "toolbarConfig", create if null
   configFileMap['toolbarConfig'] ??= [];
 
-  var jsonList = toolbarConfigList.map((e) => e.toJson()).toList();
+  List<Map<String, dynamic>> jsonList =
+      toolbarConfigList.map((e) => e.toJson()).toList();
 
   // Add to toolbar configurations to json
   configFileMap['toolbarConfig'] = jsonList;

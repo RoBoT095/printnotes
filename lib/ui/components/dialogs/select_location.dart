@@ -34,7 +34,7 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
       _directories = contents.whereType<Directory>().toList();
       // Removes the item if it's a directory to prevent moving into itself
       if (widget.items.length == 1) {
-        var item = widget.items.first;
+        FileSystemEntity item = widget.items.first;
         if (item is Directory) {
           _directories.removeWhere((dir) => dir.path == item.path);
         }

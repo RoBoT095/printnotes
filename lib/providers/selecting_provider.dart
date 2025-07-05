@@ -33,7 +33,7 @@ class SelectingProvider with ChangeNotifier {
   void selectAll(String dir) {
     final List<FileSystemEntity> items = StorageSystem.listFolderContents(dir);
     List<String> itemPathsList = [];
-    for (var item in items) {
+    for (FileSystemEntity item in items) {
       if (item is File) itemPathsList.add(item.path);
     }
 
@@ -42,7 +42,7 @@ class SelectingProvider with ChangeNotifier {
       _selectedItems.clear();
     } else {
       // else select all
-      for (var item in itemPathsList) {
+      for (String item in itemPathsList) {
         if (!_selectedItems.contains(item)) {
           _selectedItems.add(item);
         }

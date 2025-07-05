@@ -29,7 +29,7 @@ class StorageSystem {
         .toList());
 
     // Then by characters in file
-    for (var item in filteredItems) {
+    for (FileSystemEntity item in filteredItems) {
       String fileText = File(item.path)
           .readAsStringSync()
           .replaceAll('\n', ' ')
@@ -129,9 +129,9 @@ class StorageSystem {
       Directory source, Directory destination) async {
     await destination.create(recursive: true);
 
-    await for (var entity in source.list(recursive: false)) {
+    await for (FileSystemEntity entity in source.list(recursive: false)) {
       if (entity is Directory) {
-        var newDirectory =
+        Directory newDirectory =
             Directory(path.join(destination.path, path.basename(entity.path)));
         await _copyDirectory(entity, newDirectory);
       } else if (entity is File) {
@@ -370,7 +370,7 @@ class StorageSystem {
 
   static Future<void> moveManyItems(
       List<FileSystemEntity> items, String newLocation) async {
-    for (var item in items) {
+    for (FileSystemEntity item in items) {
       final String itemName = path.basename(item.path);
       final String newPath = path.join(newLocation, itemName);
       try {

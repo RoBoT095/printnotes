@@ -60,7 +60,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
     }
 
     return [
-      for (var item in items)
+      for (FileSystemEntity item in items)
         if (item is Directory)
           FolderNode(data: TFolder(path.basename(item.path), item.path))
             ..addAll(getTree(item.path))

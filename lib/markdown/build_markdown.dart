@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './markdown_widget/markdown_widget.dart';
-
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
@@ -15,10 +14,12 @@ import 'package:printnotes/markdown/rendering/code_wrapper.dart';
 import 'package:printnotes/markdown/rendering/custom_img_builder.dart';
 import 'package:printnotes/markdown/rendering/custom_node.dart';
 import 'package:printnotes/markdown/rendering/latex.dart';
+import 'package:printnotes/markdown/rendering/wiki_link.dart';
 import 'package:printnotes/markdown/rendering/highlighter.dart';
 import 'package:printnotes/markdown/rendering/underline.dart';
 import 'package:printnotes/markdown/rendering/note_tags.dart';
 
+import 'package:printnotes/markdown/link_handler.dart';
 import 'package:printnotes/markdown/markdown_checkbox.dart';
 
 MarkdownConfig theMarkdownConfigs(
@@ -104,8 +105,10 @@ MarkdownConfig theMarkdownConfigs(
       sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
     ),
     ImgConfig(
-        builder: (url, attributes) =>
-            CustomImgBuilder(url, filePath, attributes)),
+      builder: (url, attributes) => CustomImgBuilder(url, filePath, attributes),
+    ),
+    LinkConfig(onTap: (url) => linkHandler(context, url)),
+    WikiLinkConfig(onTap: (url) => linkHandler(context, url)),
     const PreConfig().copy(
       theme: themeMap[userCodeHighlight] ??
           (isDark ? a11yDarkTheme : a11yLightTheme),
@@ -143,12 +146,14 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
   return MarkdownGenerator(
     generators: [
       if (context.watch<SettingsProvider>().useLatex) latexGenerator,
+      // wikiLinkGeneratorWithTag,
       highlighterGeneratorWithTag,
       underlineGeneratorWithTag,
       noteTagGenerator,
     ],
     inlineSyntaxList: [
       if (context.watch<SettingsProvider>().useLatex) LatexSyntax(),
+      WikiLinkSyntax(),
       HighlighterSyntax(),
       UnderlineSyntax(),
       NoteTagSyntax()

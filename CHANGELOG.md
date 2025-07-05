@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (July 4-5, 2025)
+
+- Moved [markdown_widget](https://github.com/asjqkkkk/markdown_widget) library in house to have better control over it for future updates
+- Added ability to link to files with WikiLinks and regular links
+
 ### (June 11, 2025)
 
 - Improved local image relative path logic further

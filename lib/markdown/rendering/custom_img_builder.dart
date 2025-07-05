@@ -36,7 +36,7 @@ class CustomImgBuilder extends StatelessWidget {
         recursive: true,
         showHidden: true,
       );
-      for (var item in allFiles) {
+      for (FileSystemEntity item in allFiles) {
         if (item is File && basename(item.path) == url) {
           return File(item.path);
         }

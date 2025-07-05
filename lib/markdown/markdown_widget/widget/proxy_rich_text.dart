@@ -9,9 +9,9 @@ class ProxyRichText extends StatelessWidget {
 
   const ProxyRichText(
     this.textSpan, {
-    Key? key,
+    super.key,
     this.richTextBuilder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

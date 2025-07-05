@@ -73,7 +73,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   List<FileSystemEntity> selectedItemsToFileEntity() {
     List<FileSystemEntity> fileList = [];
-    for (var item in context.read<SelectingProvider>().selectedItems) {
+    for (String item in context.read<SelectingProvider>().selectedItems) {
       fileList.add(File(item));
     }
     return fileList;

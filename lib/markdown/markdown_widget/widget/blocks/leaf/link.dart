@@ -78,8 +78,8 @@ InlineSpan _toLinkInlineSpan(InlineSpan span, VoidCallback onTap) {
   } else if (span is WidgetSpan) {
     span = WidgetSpan(
       child: InkWell(
-        child: span.child,
         onTap: onTap,
+        child: span.child,
       ),
       alignment: span.alignment,
       baseline: span.baseline,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:markdown/markdown.dart' as m;
+import 'package:printnotes/markdown/rendering/wiki_link.dart';
 import '../config/configs.dart';
 import './all.dart';
 
@@ -135,6 +136,8 @@ class WidgetVisitor implements m.NodeVisitor {
         InputNode(e.attributes, config),
     MarkdownTag.a.name: (e, config, visitor) =>
         LinkNode(e.attributes, config.a),
+    MarkdownTag.wl.name: (e, config, visitor) =>
+        WikiLinkNode(e.attributes, config.wl),
     MarkdownTag.del.name: (e, config, visitor) => DelNode(),
     MarkdownTag.strong.name: (e, config, visitor) => StrongNode(),
     MarkdownTag.em.name: (e, config, visitor) => EmNode(),

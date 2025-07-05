@@ -51,7 +51,7 @@ class CheckBoxConfig implements InlineConfig {
 class MCheckBox extends StatelessWidget {
   final bool checked;
 
-  const MCheckBox({Key? key, required this.checked}) : super(key: key);
+  const MCheckBox({super.key, required this.checked});
 
   @override
   Widget build(BuildContext context) {

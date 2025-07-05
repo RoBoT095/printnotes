@@ -1,3 +1,5 @@
+import 'package:printnotes/markdown/rendering/wiki_link.dart';
+
 import '../widget/all.dart';
 
 abstract class WidgetConfig {
@@ -71,6 +73,9 @@ enum MarkdownTag {
   /// [a] Link reference definitions,A link reference definition consists of a link label
   a,
 
+  /// [wk] WikiLink
+  wl,
+
   /// [p] A sequence of non-blank lines that cannot be interpreted as other kinds of blocks forms a paragraph
   p,
 
@@ -126,6 +131,9 @@ class MarkdownConfig {
       _getConfig<PreConfig>(MarkdownTag.pre, const PreConfig());
 
   LinkConfig get a => _getConfig<LinkConfig>(MarkdownTag.a, const LinkConfig());
+
+  WikiLinkConfig get wl =>
+      _getConfig<WikiLinkConfig>(MarkdownTag.wl, const WikiLinkConfig());
 
   PConfig get p => _getConfig<PConfig>(MarkdownTag.p, const PConfig());
 

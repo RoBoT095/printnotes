@@ -19,21 +19,21 @@ class MarkdownBlock extends StatelessWidget {
   final MarkdownGenerator? generator;
 
   const MarkdownBlock({
-    Key? key,
+    super.key,
     required this.data,
     this.selectable = true,
     this.config,
     this.generator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final markdownGenerator = generator ?? MarkdownGenerator();
     final widgets = markdownGenerator.buildWidgets(data, config: config);
     final column = Column(
-      children: widgets,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
     );
     return selectable ? SelectionArea(child: column) : column;
   }

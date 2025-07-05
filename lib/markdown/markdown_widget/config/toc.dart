@@ -93,7 +93,7 @@ class TocWidget extends StatefulWidget {
   final TextStyle currentTocTextStyle;
 
   const TocWidget({
-    Key? key,
+    super.key,
     required this.controller,
     this.physics,
     this.shrinkWrap = false,
@@ -102,8 +102,7 @@ class TocWidget extends StatefulWidget {
     TextStyle? tocTextStyle,
     TextStyle? currentTocTextStyle,
   })  : tocTextStyle = tocTextStyle ?? defaultTocTextStyle,
-        currentTocTextStyle = currentTocTextStyle ?? defaultCurrentTocTextStyle,
-        super(key: key);
+        currentTocTextStyle = currentTocTextStyle ?? defaultCurrentTocTextStyle;
 
   @override
   State<TocWidget> createState() => _TocWidgetState();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printnotes/constants/toolbar_items_list.dart';
+import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/editor_config_provider.dart';
@@ -94,7 +95,7 @@ class EditorConfigScreen extends StatelessWidget {
               itemCount:
                   context.watch<EditorConfigProvider>().toolbarItemList.length,
               itemBuilder: (context, index) {
-                var toolbarList =
+                List<ToolbarConfigItem> toolbarList =
                     context.watch<EditorConfigProvider>().toolbarItemList;
                 return ListTile(
                   key: ValueKey<String>(toolbarList[index].key),

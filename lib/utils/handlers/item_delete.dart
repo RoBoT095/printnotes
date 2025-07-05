@@ -164,7 +164,7 @@ class ItemDeletionHandler {
       BuildContext context, List<FileSystemEntity> items, Function loadItems,
       {int? daysForDeletion}) async {
     try {
-      for (var item in items) {
+      for (FileSystemEntity item in items) {
         await StorageSystem.trashItem(item.path);
       }
 
