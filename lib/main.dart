@@ -19,7 +19,9 @@ import 'package:printnotes/ui/screens/home/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
+  if (Platform.isLinux || Platform.isWindows) {
+    await windowManager.ensureInitialized();
+  }
   runApp(
     MultiProvider(
       providers: [

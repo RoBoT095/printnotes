@@ -1,31 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
-
-import 'package:printnotes/ui/widgets/custom_snackbar.dart';
-import 'package:printnotes/ui/components/dialogs/libraries_dialog.dart';
 import 'package:printnotes/constants/constants.dart';
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+import 'package:printnotes/ui/components/dialogs/libraries_dialog.dart';
+import 'package:printnotes/utils/handlers/open_url_link.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
-
-  Future<void> _urlHandler(BuildContext context, dynamic url,
-      {bool copyToClipboard = false}) async {
-    if (copyToClipboard) {
-      await Clipboard.setData(ClipboardData(text: url)).then((_) {
-        if (context.mounted) {
-          customSnackBar('Copied to clipboard!', type: 'success').show(context);
-        }
-      });
-    } else {
-      url = Uri.parse(url);
-      if (!await launchUrl(url)) {
-        throw Exception('Could not launch $url');
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +40,9 @@ class AboutScreen extends StatelessWidget {
                 leading: const Icon(Icons.code),
                 title: const Text('Contribute'),
                 subtitle: const Text('https://github.com/RoBoT095/printnotes'),
-                onTap: () => _urlHandler(
+                onTap: () => urlHandler(
                     context, 'https://github.com/RoBoT095/printnotes'),
-                onLongPress: () => _urlHandler(
+                onLongPress: () => urlHandler(
                     context, 'https://github.com/RoBoT095/printnotes',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
@@ -71,9 +52,8 @@ class AboutScreen extends StatelessWidget {
                 leading: const Icon(Icons.person),
                 title: const Text('Developer'),
                 subtitle: const Text('RoBoT_095 aka Rob'),
-                onTap: () =>
-                    _urlHandler(context, 'https://github.com/RoBoT095'),
-                onLongPress: () => _urlHandler(
+                onTap: () => urlHandler(context, 'https://github.com/RoBoT095'),
+                onLongPress: () => urlHandler(
                     context, 'https://github.com/RoBoT095',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
@@ -85,8 +65,8 @@ class AboutScreen extends StatelessWidget {
                 subtitle: const Text(
                     "I'm a solo dev working hard on this, \nMaybe buy me some Coffee?"),
                 onTap: () =>
-                    _urlHandler(context, 'https://buymeacoffee.com/robot_095'),
-                onLongPress: () => _urlHandler(
+                    urlHandler(context, 'https://buymeacoffee.com/robot_095'),
+                onLongPress: () => urlHandler(
                     context, 'https://buymeacoffee.com/robot_095',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
@@ -106,9 +86,9 @@ class AboutScreen extends StatelessWidget {
                 title: const Text('App License'),
                 subtitle:
                     const Text("This App is protected under the GPL 3 License"),
-                onTap: () => _urlHandler(
+                onTap: () => urlHandler(
                     context, 'https://www.gnu.org/licenses/gpl-3.0.en.html'),
-                onLongPress: () => _urlHandler(
+                onLongPress: () => urlHandler(
                     context, 'https://www.gnu.org/licenses/gpl-3.0.en.html',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),

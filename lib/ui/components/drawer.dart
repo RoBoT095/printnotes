@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
+
+import 'package:printnotes/utils/handlers/open_url_link.dart';
+import 'package:printnotes/constants/constants.dart';
 
 import 'package:printnotes/ui/screens/archive/archive_screen.dart';
 import 'package:printnotes/ui/screens/trash/trash_screen.dart';
 import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
-
-import 'package:printnotes/constants/constants.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({super.key});
@@ -100,8 +100,8 @@ class DrawerView extends StatelessWidget {
                     leading: const Icon(Icons.help_outline),
                     title: const Text('Wiki'),
                     trailing: const Icon(Icons.launch_rounded),
-                    onTap: () => launchUrl(Uri.parse(
-                        'https://github.com/RoBoT095/printnotes/wiki'))),
+                    onTap: () => urlHandler(context,
+                        'https://github.com/RoBoT095/printnotes/wiki')),
               ],
             ),
           ),

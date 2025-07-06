@@ -45,8 +45,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
     super.dispose();
   }
 
-  // TODO: Should I move to seperate file and add it to link like in About page?
-  openLinkHandler(PdfLink link) async {
+  Future<void> openLinkHandler(PdfLink link) async {
     if (link.url != null) {
       final response = await showBasicPopup(context, 'Open Link?',
           'Are you sure you want to open:\n${link.url}?');
@@ -96,6 +95,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarDragWrapper(
+        bottom: searchToggled ? kToolbarHeight : 0,
         child: AppBar(
           centerTitle: true,
           title: SelectableText(

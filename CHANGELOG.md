@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (July 6, 2025)
+
+- Merged url handlers
+- Fixed pdf search bar
+
 ### (July 4-5, 2025)
 
 - Moved [markdown_widget](https://github.com/asjqkkkk/markdown_widget) library in house to have better control over it for future updates

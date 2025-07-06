@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
+
+import 'package:printnotes/utils/handlers/open_url_link.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_validator.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
+
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
@@ -38,13 +40,6 @@ class _CustomThemePageState extends State<CustomThemePage> {
       darkThemes = listAllThemeFromConfig(isDark: true);
       lightThemes = listAllThemeFromConfig(isDark: false);
     });
-  }
-
-  Future<void> _launchUrl(url) async {
-    url = Uri.parse(url);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
   }
 
   void addItemBack() {
@@ -225,7 +220,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                                 .colorScheme
                                                 .secondary),
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap = () => _launchUrl(
+                                          ..onTap = () => urlHandler(context,
                                               'https://design.printnotes.app'),
                                       ),
                                     ])),
