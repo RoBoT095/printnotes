@@ -4,6 +4,7 @@
 
 - Merged url handlers
 - Fixed pdf search bar
+- Optimized general searching
 
 ### (July 4-5, 2025)
 

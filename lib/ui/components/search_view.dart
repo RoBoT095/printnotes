@@ -111,23 +111,30 @@ class SearchView extends StatelessWidget {
     final foundItemsList = StorageSystem.searchItems(
         searchQuery, context.watch<SettingsProvider>().mainDir);
 
-    return ListView.builder(
-      itemCount: foundItemsList.length,
-      itemBuilder: (context, index) {
-        final item = foundItemsList[index];
+    return FutureBuilder(
+      future: foundItemsList,
+      builder: (context, snapshot) {
+        return ListView.builder(
+          itemCount: snapshot.data?.length ?? 0,
+          itemBuilder: (context, index) {
+            final item = snapshot.data![index];
 
-        return ListTile(
-          leading: Icon(
-            Icons.insert_drive_file,
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          title: Text(path.basename(item.path)),
-          subtitle: _buildSubtitle(context, File(item.path)),
-          onTap: () {
-            // Should never be a folder but it is just a backup check unless I messed something up
-            if (item is File) {
-              context.read<NavigationProvider>().routeItemToPage(context, item);
-            }
+            return ListTile(
+              leading: Icon(
+                Icons.insert_drive_file,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: Text(path.basename(item.path)),
+              subtitle: _buildSubtitle(context, File(item.path)),
+              onTap: () {
+                // Should never be a folder but it is just a backup check unless I messed something up
+                if (item is File) {
+                  context
+                      .read<NavigationProvider>()
+                      .routeItemToPage(context, item);
+                }
+              },
+            );
           },
         );
       },

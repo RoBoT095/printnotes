@@ -52,7 +52,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                     border: InputBorder.none,
                   ),
                   onChanged: (query) {
-                    setState(() => searchController.text = query);
+                    setState(() {});
                   },
                 )
               : Text(widget.title),
