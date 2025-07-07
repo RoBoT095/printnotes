@@ -5,6 +5,7 @@
 - Merged url handlers
 - Fixed pdf search bar
 - Optimized general searching
+- Changed StorageSystem.listFolderContents into a Future which in theory should improve performance
 
 ### (July 4-5, 2025)
 

@@ -46,19 +46,23 @@ class _NotesDisplayState extends State<NotesDisplay> {
   void initState() {
     super.initState();
     if (Platform.isAndroid) _checkMediaIntent();
+    _loadItems();
   }
 
-  void _loadItems() {
+  Future<void> _loadItems() async {
+    setState(() => _isLoading = true);
     context
         .read<NavigationProvider>()
         .initRouteHistory(context.read<SettingsProvider>().mainDir);
-    final loadedItems = context.read<SettingsProvider>().loadItems(
+
+    final loadedItems = await context.read<SettingsProvider>().loadItems(
         context, context.read<NavigationProvider>().routeHistory.last);
 
     setState(() {
       _items = loadedItems['items'];
       _currentPath = loadedItems['currentPath'];
       _currentFolderName = loadedItems['currentFolderName'];
+      _isLoading = false;
     });
   }
 
@@ -113,8 +117,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    _loadItems();
-
     bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
 
     List<String> routeHistory =

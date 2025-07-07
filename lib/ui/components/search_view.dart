@@ -30,46 +30,6 @@ class SearchView extends StatelessWidget {
       return Text('/$relativePath');
     }
 
-    // if (searchQueryLC.contains('tags:')) {
-    //   // Regex for tag format of '#words'
-    //   List<RegExpMatch> regexAllMatches =
-    //       RegExp(r'#\w+').allMatches(textLC).toList();
-    //   if (regexAllMatches.isNotEmpty) {
-    //     RegExpMatch regexMatch = regexAllMatches.first;
-    //     String tagText = text.substring(regexMatch.start, regexMatch.end);
-    //     return Align(
-    //       // IDK how to constrain container any other way
-    //       alignment: Alignment.centerLeft,
-    //       child: Container(
-    //         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    //         margin: const EdgeInsets.symmetric(horizontal: 2),
-    //         decoration: BoxDecoration(
-    //           color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-    //           borderRadius: BorderRadius.circular(8),
-    //         ),
-    //         child: Stack(
-    //           children: [
-    //             Text(tagText,
-    //                 style: TextStyle(
-    //                     foreground: Paint()
-    //                       ..style = PaintingStyle.stroke
-    //                       ..strokeWidth = 1
-    //                       ..color = Theme.of(context).colorScheme.primary)),
-    //             Text(tagText,
-    //                 style: TextStyle(
-    //                     color: Theme.of(context)
-    //                         .colorScheme
-    //                         .onSurface
-    //                         .withOpacity(0.3),
-    //                     decoration: TextDecoration.underline,
-    //                     decorationColor:
-    //                         Theme.of(context).colorScheme.primary)),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   }
-    // } else {
     final int startIndex = textLC.indexOf(searchQueryLC);
     // if search query not found, display first few characters based on maxChar
     // of file text followed by ellipsis
@@ -102,8 +62,6 @@ class SearchView extends StatelessWidget {
         ],
       ),
     );
-    // }
-    // return null;
   }
 
   @override
@@ -114,6 +72,9 @@ class SearchView extends StatelessWidget {
     return FutureBuilder(
       future: foundItemsList,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
         return ListView.builder(
           itemCount: snapshot.data?.length ?? 0,
           itemBuilder: (context, index) {

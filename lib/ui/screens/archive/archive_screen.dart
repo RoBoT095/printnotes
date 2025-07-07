@@ -30,11 +30,11 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     _loadArchivedItems();
   }
 
-  void _loadArchivedItems([String? folderPath]) {
+  Future<void> _loadArchivedItems([String? folderPath]) async {
     final archivePath = context.read<SettingsProvider>().archivePath;
     final currentPath = folderPath ?? archivePath;
     final items =
-        StorageSystem.listFolderContents(currentPath, showHidden: true);
+        await StorageSystem.listFolderContents(currentPath, showHidden: true);
     setState(() {
       _archivedItems = items;
       _currentPath = currentPath;

@@ -21,7 +21,7 @@ class CustomImgBuilder extends StatelessWidget {
 
     // Get image stored locally, totally fine if fails or file doesn't exist
     // as Image.file error builder will catch it
-    File getLocalImage() {
+    Future<File> getLocalImage() async {
       // Check if image (url) is relative to note (filePath)
       File relativeFile = File(join(
           dirname(filePath),
@@ -31,7 +31,7 @@ class CustomImgBuilder extends StatelessWidget {
       if (relativeFile.existsSync()) return relativeFile;
 
       // Otherwise, go through all files in mainDir to find by exact name
-      final allFiles = StorageSystem.listFolderContents(
+      final allFiles = await StorageSystem.listFolderContents(
         context.read<SettingsProvider>().mainDir,
         recursive: true,
         showHidden: true,
@@ -98,11 +98,19 @@ class CustomImgBuilder extends StatelessWidget {
             errorMessage('Image could not be loaded'),
       );
     } else {
-      return Image.file(
-        getLocalImage(),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => errorMessage(
-            'Incorrect path or file type, check if url is correct'),
+      return FutureBuilder(
+        future: getLocalImage(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          return Image.file(
+            snapshot.data != null ? snapshot.data! : File(''),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => errorMessage(
+                'Incorrect path or file type, check if url is correct'),
+          );
+        },
       );
     }
   }

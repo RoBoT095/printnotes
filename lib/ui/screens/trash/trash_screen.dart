@@ -29,11 +29,11 @@ class _DeletedScreenState extends State<DeletedScreen> {
     _loadDeletedItems();
   }
 
-  void _loadDeletedItems([String? folderPath]) {
+  Future<void> _loadDeletedItems([String? folderPath]) async {
     final deletePath = context.read<SettingsProvider>().trashPath;
     final currentPath = folderPath ?? deletePath;
     final items =
-        StorageSystem.listFolderContents(currentPath, showHidden: true);
+        await StorageSystem.listFolderContents(currentPath, showHidden: true);
     setState(() {
       _deletedItems = items;
       _currentPath = currentPath;

@@ -128,10 +128,10 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, dynamic> loadItems(
+  Future<Map<String, dynamic>> loadItems(
     BuildContext context,
     String? folderPath,
-  ) {
+  ) async {
     final mainPath = context.read<SettingsProvider>().mainDir;
     String directory = folderPath ?? mainPath;
     String folderPriority = context.read<SettingsProvider>().folderPriority;
@@ -139,13 +139,15 @@ class SettingsProvider with ChangeNotifier {
     String currentFolderName = 'Notes';
 
     // Check if path not a file, if so return to mainDir
-    if (!FileSystemEntity.isDirectorySync(directory)) {
-      context.read<NavigationProvider>().routeHistory.clear();
-      context.read<NavigationProvider>().routeHistory.add(mainPath);
+    if (!await FileSystemEntity.isDirectory(directory)) {
+      if (context.mounted) {
+        context.read<NavigationProvider>().routeHistory.clear();
+        context.read<NavigationProvider>().routeHistory.add(mainPath);
+      }
       directory = mainPath;
     }
 
-    final items = StorageSystem.listFolderContents(directory);
+    final items = await StorageSystem.listFolderContents(directory);
     final sortedItems =
         ItemSortHandler.getSortedItems(items, folderPriority, sortOrder);
 

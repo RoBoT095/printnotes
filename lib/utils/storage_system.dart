@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
@@ -11,12 +10,12 @@ import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 /// Used by [StorageSystem.searchItem] with [StorageSystem.searchMultiFileContents]
 class SearchPayload {
   final String query;
-  final List<String> filePaths;
+  final List<File> files;
 
-  SearchPayload({required this.query, required this.filePaths});
+  SearchPayload({required this.query, required this.files});
 }
 
-// The Abomination Folder that handles everything related to folders on the device
+// The Abomination File that handles everything related to folders on the device
 // better to rewrite and clean up everything but this sand castle is already held by hot glue
 // and it can only grow now
 class StorageSystem {
@@ -25,7 +24,7 @@ class StorageSystem {
   static Future<List<FileSystemEntity>> searchItems(
       String query, String mainDir) async {
     List<FileSystemEntity> allItems =
-        StorageSystem.listFolderContents(mainDir, recursive: true);
+        await StorageSystem.listFolderContents(mainDir, recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
       return fileTypeChecker(item) == CFileType.note;
@@ -39,18 +38,18 @@ class StorageSystem {
         .where((item) => path.basename(item.path.toLowerCase()).contains(query))
         .toList();
 
-    // Isolate file paths for compute
-    final List<String> filePaths = filteredItems.map((e) => e.path).toList();
+    // Isolate files for compute
+    final List<File> files = filteredItems.map((e) => File(e.path)).toList();
 
     // Multi-threading search baby (idk how this all works >.<)
-    final List<String> matchedPaths = await compute(searchMultiFileContents,
-        SearchPayload(query: query, filePaths: filePaths));
+    final List<File> matchedFiles = await compute(
+        searchMultiFileContents, SearchPayload(query: query, files: files));
 
     // Merge files found by name and contents, avoids duplicates
     final Set<String> pathSet = results.map((e) => e.path).toSet();
-    for (String path in matchedPaths) {
-      if (!pathSet.contains(path)) {
-        results.add(File(path));
+    for (File file in matchedFiles) {
+      if (!pathSet.contains(file.path)) {
+        results.add(file);
       }
     }
 
@@ -60,14 +59,13 @@ class StorageSystem {
   /// Used by [searchItem] with compute
   // and I don't know if it should be used by other function
   // idr if this is duplicate code
-  static List<String> searchMultiFileContents(SearchPayload payload) {
+  static List<File> searchMultiFileContents(SearchPayload payload) {
     final query = payload.query;
-    final filePaths = payload.filePaths;
-    final List<String> results = [];
+    final files = payload.files;
+    final List<File> results = [];
 
     // Loop through files and check contents
-    for (String filePath in filePaths) {
-      final file = File(filePath);
+    for (File file in files) {
       if (!file.existsSync()) continue;
 
       final content =
@@ -75,12 +73,11 @@ class StorageSystem {
 
       // Files that match by their contents
       if (content.contains(query)) {
-        results.add(filePath);
+        results.add(file);
         continue;
       }
 
-      // TODO: Display file multiple times if multiple tags inside and correctly display it in subtitle
-      // Do we want duplicates???
+      // TODO: Display the tag maybe?
 
       // If files have tags, check em
       if (query.contains('tags:')) {
@@ -91,11 +88,11 @@ class StorageSystem {
         if (tags.isNotEmpty) {
           // Display all files with tags
           if (cleanQuery.isEmpty) {
-            results.add(filePath);
+            results.add(file);
             // Display searched files with tags
           } else if (tags.any(
               (e) => content.substring(e.start, e.end).contains(cleanQuery))) {
-            results.add(filePath);
+            results.add(file);
           }
         }
       }
@@ -365,11 +362,11 @@ class StorageSystem {
 
   // Get files (and folders) of a folder
 
-  static List<FileSystemEntity> listFolderContents(String folderPath,
-      {bool recursive = false, bool showHidden = false}) {
+  static Future<List<FileSystemEntity>> listFolderContents(String folderPath,
+      {bool recursive = false, bool showHidden = false}) async {
     final folder = Directory(folderPath);
-    if (folder.existsSync()) {
-      final contents = folder.listSync(recursive: recursive).toList();
+    if (await folder.exists()) {
+      final contents = await folder.list(recursive: recursive).toList();
       if (showHidden) {
         return contents;
       } else {

@@ -9,12 +9,12 @@ import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 
-void linkHandler(BuildContext context, String url) {
+Future<void> linkHandler(BuildContext context, String url) async {
   Uri parsedUri = Uri.parse(url);
   if (parsedUri.hasAbsolutePath) {
     launchUrl(parsedUri);
   } else {
-    final allFiles = StorageSystem.listFolderContents(
+    final allFiles = await StorageSystem.listFolderContents(
       context.read<SettingsProvider>().mainDir,
       recursive: true,
       showHidden: true,
@@ -22,7 +22,9 @@ void linkHandler(BuildContext context, String url) {
 
     for (FileSystemEntity item in allFiles) {
       String baseFile = basename(item.path).toLowerCase();
-      if (item is File && baseFile.contains(url.toLowerCase())) {
+      if (item is File &&
+          baseFile.contains(url.toLowerCase()) &&
+          context.mounted) {
         context.read<NavigationProvider>().routeItemToPage(context, item);
         break;
       }

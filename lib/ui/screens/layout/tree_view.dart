@@ -33,16 +33,22 @@ class TreeLayoutView extends StatefulWidget {
 class _TreeLayoutViewState extends State<TreeLayoutView> {
   late TreeNode<Explorable> _rootNode;
 
-  void _loadTree() {
+  @override
+  void initState() {
+    super.initState();
+    _loadTree();
+  }
+
+  Future<void> _loadTree() async {
     String mainDir = context.read<SettingsProvider>().mainDir;
 
     _rootNode = TreeNode.root(
         data: TFolder(mainDir.split(Platform.pathSeparator).last, mainDir));
-    _rootNode.addAll(getTree(mainDir));
+    _rootNode.addAll(await getTree(mainDir));
   }
 
-  List<Node> getTree(String dir) {
-    List<FileSystemEntity> items = StorageSystem.listFolderContents(dir);
+  Future<List<Node>> getTree(String dir) async {
+    List<FileSystemEntity> items = await StorageSystem.listFolderContents(dir);
     items = ItemSortHandler.getSortedItems(
       items,
       context.read<SettingsProvider>().folderPriority,
@@ -63,7 +69,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
       for (FileSystemEntity item in items)
         if (item is Directory)
           FolderNode(data: TFolder(path.basename(item.path), item.path))
-            ..addAll(getTree(item.path))
+            ..addAll(await getTree(item.path))
         else if (item is File)
           FileNode(
               data: TFile(getFileName(item.path), item.path,
@@ -74,8 +80,6 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
 
   @override
   Widget build(BuildContext context) {
-    _loadTree();
-
     if (!context.watch<SelectingProvider>().selectingMode) {
       context.read<SelectingProvider>().selectedItems.clear();
     }

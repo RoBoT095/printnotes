@@ -30,8 +30,9 @@ class SelectingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void selectAll(String dir) {
-    final List<FileSystemEntity> items = StorageSystem.listFolderContents(dir);
+  Future<void> selectAll(String dir) async {
+    final List<FileSystemEntity> items =
+        await StorageSystem.listFolderContents(dir);
     List<String> itemPathsList = [];
     for (FileSystemEntity item in items) {
       if (item is File) itemPathsList.add(item.path);
