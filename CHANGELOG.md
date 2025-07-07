@@ -6,6 +6,9 @@
 - Fixed pdf search bar
 - Optimized general searching
 - Changed StorageSystem.listFolderContents into a Future which in theory should improve performance
+- Changed StorageSystem.getFilePreview into a Future
+- Migrates withOpacity to withValues()
+- App version bump
 
 ### (July 4-5, 2025)
 

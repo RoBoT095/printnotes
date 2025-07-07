@@ -68,7 +68,7 @@ class _GridListViewState extends State<GridListView> {
         child: Card(
           color:
               (isDirectory && context.watch<SelectingProvider>().selectingMode)
-                  ? Theme.of(context).disabledColor.withOpacity(0.1)
+                  ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
                   : fmBgColor != null
                       ? HexColor.fromHex(fmBgColor)
                       : Theme.of(context).colorScheme.surfaceContainer,
@@ -95,17 +95,34 @@ class _GridListViewState extends State<GridListView> {
                   ),
                 )
               : Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: fileItem(context, item,
-                      fmColor != null ? HexColor.fromHex(fmColor) : null)),
+                  padding: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                      future: fileItem(context, item,
+                          fmColor != null ? HexColor.fromHex(fmColor) : null),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return snapshot.data ?? const SizedBox();
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      }),
+                ),
         ),
       ),
     );
   }
 
-  Widget fileItem(BuildContext context, FileSystemEntity item, Color? color) {
+  Future<Widget> fileItem(
+      BuildContext context, FileSystemEntity item, Color? color) async {
     final itemName = path.basename(item.path);
     final useFM = context.read<SettingsProvider>().useFrontmatter;
+    final previewLength = context.watch<SettingsProvider>().previewLength;
+    final markdownConfigs = theMarkdownConfigs(context,
+        filePath: item.path, hideCodeButtons: true, textColor: color);
+    final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
+
     String? fmTitle;
     String? fmDescription;
 
@@ -133,13 +150,16 @@ class _GridListViewState extends State<GridListView> {
       // I am beginning to hate this function, but why create new one when
       // we can add more functionality to it
       String fileText =
-          StorageSystem.getFilePreview(item.path, isTrimmed: false);
+          await StorageSystem.getFilePreview(item.path, isTrimmed: false);
       if (fileText != 'No preview available') {
         fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
         fmDescription =
             FrontmatterHandleParsing.getTagString(fileText, 'description');
       }
     }
+    final String previewText = await StorageSystem.getFilePreview(item.path,
+        parseFrontmatter: useFM, previewLength: previewLength);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -160,15 +180,9 @@ class _GridListViewState extends State<GridListView> {
               )
             : MarkdownBlock(
                 selectable: false,
-                data: StorageSystem.getFilePreview(item.path,
-                    parseFrontmatter: useFM,
-                    previewLength:
-                        context.watch<SettingsProvider>().previewLength),
-                config: theMarkdownConfigs(context,
-                    filePath: item.path,
-                    hideCodeButtons: true,
-                    textColor: color),
-                generator: theMarkdownGenerators(context, textScale: 0.95),
+                data: previewText,
+                config: markdownConfigs,
+                generator: markdownGenerators,
               ),
       ],
     );
@@ -193,25 +207,17 @@ class _GridListViewState extends State<GridListView> {
           ),
         ),
         // Adds empty space at bottom, helps when in list view
-        const SliverToBoxAdapter(
-          child: SizedBox(
-            height: 200,
-          ),
-        )
+        const SliverToBoxAdapter(child: SizedBox(height: 200))
       ],
     );
   }
 
   int _displayGridCount(BuildContext context, String layout) {
-    if (layout == 'list') {
-      return 1;
-    } else {
-      double displayWidth = MediaQuery.sizeOf(context).width;
-      if (displayWidth > 1200) {
-        return 4;
-      } else {
-        return 2;
-      }
-    }
+    double displayWidth = MediaQuery.sizeOf(context).width;
+    return layout == 'list'
+        ? 1
+        : displayWidth > 1200
+            ? 4
+            : 2;
   }
 }

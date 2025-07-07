@@ -59,7 +59,10 @@ class CustomImgBuilder extends StatelessWidget {
                   showDuration: const Duration(seconds: 5),
                   enableTapToDismiss: true,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .error
+                        .withValues(alpha: 0.5),
                   ),
                   message: text,
                   textStyle:

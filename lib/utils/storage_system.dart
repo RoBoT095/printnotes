@@ -207,16 +207,16 @@ class StorageSystem {
     return '';
   }
 
-  static String getFilePreview(
+  static Future<String> getFilePreview(
     String filePath, {
     bool parseFrontmatter = false,
     bool isTrimmed = true,
     int previewLength = 100,
-  }) {
+  }) async {
     try {
       final file = File(filePath);
-      if (file.existsSync()) {
-        String content = file.readAsStringSync();
+      if (await file.exists()) {
+        String content = await file.readAsString();
         if (parseFrontmatter) {
           final doc = FrontmatterHandleParsing.getParsedData(content);
           if (doc != null) content = doc.body;

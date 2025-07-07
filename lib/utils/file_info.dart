@@ -29,7 +29,7 @@ String getFormattedDate({required DateTime date}) {
   return DateFormat.yMMMd().add_jm().format(date);
 }
 
-Widget statListTile(titleText, subtitleText) {
+Widget statListTile(String titleText, String subtitleText) {
   return ListTile(
     title: SelectableText(
       titleText,

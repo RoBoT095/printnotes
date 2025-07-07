@@ -83,7 +83,7 @@ class IntroScreen extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .surfaceContainer
-                        .withOpacity(0.6),
+                        .withValues(alpha: 0.6),
                     child: const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(

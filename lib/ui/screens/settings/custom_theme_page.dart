@@ -112,7 +112,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
         trailing: SizedBox(
           width: ((circleRadius * 2) * 7) + 8,
           child: Card.filled(
-            color: Color(list[index]['secondary']).withOpacity(0.2),
+            color: Color(list[index]['secondary']).withValues(alpha: 0.2),
             child: Row(
               children: <Widget>[
                 CircleAvatar(
@@ -243,7 +243,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onSurface
-                                              .withOpacity(0.6)),
+                                              .withValues(alpha: 0.6)),
                                     ),
                                     enableSuggestions: false,
                                     validator: (name) {
@@ -274,7 +274,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onSurface
-                                              .withOpacity(0.6)),
+                                              .withValues(alpha: 0.6)),
                                     ),
                                     enableSuggestions: false,
                                     validator: (theme) {

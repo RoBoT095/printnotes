@@ -103,7 +103,10 @@ class _DeletedScreenState extends State<DeletedScreen> {
             size: 48,
             color: isDirectory
                 ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                : Theme.of(context)
+                    .colorScheme
+                    .secondary
+                    .withValues(alpha: 0.8),
           ),
           title: Text(
             name,

@@ -92,13 +92,13 @@ MarkdownConfig theMarkdownConfigs(
     ),
     HrConfig(
       height: 2,
-      color:
-          textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+      color: textColor ??
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
     ),
     BlockquoteConfig(
-      textColor:
-          textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-      sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+      textColor: textColor ??
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+      sideColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
     ),
     ImgConfig(
       builder: (url, attributes) => CustomImgBuilder(url, filePath, attributes),
@@ -110,12 +110,18 @@ MarkdownConfig theMarkdownConfigs(
           (isDark ? a11yDarkTheme : a11yLightTheme),
       decoration: BoxDecoration(
           color: inEditor
-              ? Theme.of(context).colorScheme.surfaceContainer.withOpacity(0.5)
-              : Theme.of(context).colorScheme.surface.withOpacity(0.5),
+              ? Theme.of(context)
+                  .colorScheme
+                  .surfaceContainer
+                  .withValues(alpha: 0.5)
+              : Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
           borderRadius: BorderRadius.all(Radius.circular(12)),
           border: Border.all(
               width: 1,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2))),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.2))),
       wrapper: codeWrapper,
       textStyle: TextStyle(fontSize: inEditor ? editorFontSize : null),
       styleNotMatched: TextStyle(fontSize: inEditor ? editorFontSize : null),
@@ -133,7 +139,7 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
             e.attributes,
             config,
             tagBackgroundColor:
-                Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
             tagTextColor: isDark
                 ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).colorScheme.primary,
