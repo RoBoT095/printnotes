@@ -13,7 +13,9 @@ import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
 class DrawerView extends StatelessWidget {
-  const DrawerView({super.key});
+  const DrawerView({super.key, required this.onRefresh});
+
+  final Function onRefresh;
 
   void _navigateToScreen(BuildContext context, {Widget? screen, String? path}) {
     final bool isDrawerPersistent = MediaQuery.sizeOf(context).width >= 800;
@@ -67,6 +69,7 @@ class DrawerView extends StatelessWidget {
                     onTap: () {
                       _navigateToScreen(context,
                           path: context.read<SettingsProvider>().mainDir);
+                      onRefresh();
                     }),
                 const Opacity(opacity: 0.2, child: Divider()),
                 ListTile(
