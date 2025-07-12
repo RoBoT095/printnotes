@@ -66,11 +66,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
     });
   }
 
-  void _navBack() => context.read<NavigationProvider>().navigateBack();
+  void _navBack() async {
+    context.read<NavigationProvider>().navigateBack();
+    await _loadItems();
+  }
 
   Future<void> _refreshPage() async {
     setState(() => _isLoading = true);
-    _loadItems();
+    await _loadItems();
 
     Future.delayed(const Duration(milliseconds: 300),
         () => setState(() => _isLoading = false));
