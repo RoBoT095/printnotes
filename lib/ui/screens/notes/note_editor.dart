@@ -15,7 +15,7 @@ import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/csv_parser.dart';
 
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
-import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
+import 'package:printnotes/ui/screens/notes/editor_config_page.dart';
 import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/markdown/editor_field.dart';
 import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
@@ -236,7 +236,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                           onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const EditorConfigScreen())),
+                                      const EditorConfigPage())),
                         ),
                         PopupMenuItem(
                           child: ListTile(

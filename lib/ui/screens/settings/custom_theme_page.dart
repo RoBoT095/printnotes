@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:printnotes/providers/theme_provider.dart';
 
 import 'package:printnotes/utils/handlers/open_url_link.dart';
+import 'package:printnotes/utils/config_file/custom_themes/custom_theme_model.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_validator.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
 

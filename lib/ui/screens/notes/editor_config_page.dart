@@ -9,8 +9,8 @@ import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
 import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
 
-class EditorConfigScreen extends StatelessWidget {
-  const EditorConfigScreen({super.key});
+class EditorConfigPage extends StatelessWidget {
+  const EditorConfigPage({super.key});
 
   @override
   Widget build(BuildContext context) {

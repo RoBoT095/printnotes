@@ -14,6 +14,7 @@ import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
 
+import 'package:printnotes/ui/screens/settings/more_design_options_page.dart';
 import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
 import 'package:printnotes/ui/screens/settings/codeblock_theme_page.dart';
 
@@ -292,6 +293,14 @@ class SettingsScreen extends StatelessWidget {
                         onChanged: (val) =>
                             context.read<ThemeProvider>().setPureBlackBG(val)),
                   ),
+                ListTile(
+                  leading: const Icon(Icons.dashboard_customize),
+                  title: Text('More Design Options'),
+                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MoreDesignOptionsPage(),
+                  )),
+                ),
                 const Divider(),
                 sectionTitle(
                   'Advanced',

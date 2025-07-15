@@ -67,11 +67,12 @@ class _GridListViewState extends State<GridListView> {
       child: AbsorbPointer(
         child: Card(
           color:
-              (isDirectory && context.watch<SelectingProvider>().selectingMode)
-                  ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
-                  : fmBgColor != null
-                      ? HexColor.fromHex(fmBgColor)
-                      : Theme.of(context).colorScheme.surfaceContainer,
+              ((isDirectory && context.watch<SelectingProvider>().selectingMode)
+                      ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
+                      : fmBgColor != null
+                          ? HexColor.fromHex(fmBgColor)
+                          : Theme.of(context).colorScheme.surfaceContainer)
+                  ?.withValues(alpha: null), // TODO: add dynamic value to alpha
           shape: isSelected
               ? RoundedRectangleBorder(
                   side: BorderSide(
