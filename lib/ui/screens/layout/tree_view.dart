@@ -99,10 +99,8 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
         indentation: const Indentation(),
         builder: (context, node) {
           return Container(
-            color: Theme.of(context)
-                .colorScheme
-                .surface
-                .withValues(alpha: null), // TODO: add dynamic value to alpha
+            color: Theme.of(context).colorScheme.surface.withValues(
+                alpha: context.watch<SettingsProvider>().noteTileOpacity),
             padding: const EdgeInsets.only(left: 16.0),
             child: GestureDetector(
               onTap: node is FileNode

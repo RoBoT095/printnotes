@@ -9,6 +9,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+import 'package:printnotes/utils/handlers/style_handler.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 
@@ -232,15 +233,27 @@ class _NotesDisplayState extends State<NotesDisplay> {
                             ],
                           )
                         : Container(
-                            decoration: BoxDecoration(
-                                // image: DecorationImage(
-                                //   opacity: 0.5,
-                                //   repeat: ImageRepeat.repeat,
-                                //   image: NetworkImage(
-                                //       'https://images.unsplash.com/photo-1750412143850-68d5003c6a36?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                                //   fit: BoxFit.cover,
-                                // ),
-                                ),
+                            decoration: context
+                                        .watch<SettingsProvider>()
+                                        .bgImagePath !=
+                                    null
+                                ? BoxDecoration(
+                                    image: DecorationImage(
+                                        opacity: context
+                                            .watch<SettingsProvider>()
+                                            .bgImageOpacity,
+                                        repeat: StyleHandler.getBgImageRepeat(
+                                            context
+                                                .watch<SettingsProvider>()
+                                                .bgImageRepeat),
+                                        fit: StyleHandler.getBgImageFit(context
+                                            .watch<SettingsProvider>()
+                                            .bgImageFit),
+                                        image: FileImage(File(context
+                                            .watch<SettingsProvider>()
+                                            .bgImagePath!))),
+                                  )
+                                : null,
                             child: layoutView),
                   ),
         floatingActionButton: speedDialFAB(

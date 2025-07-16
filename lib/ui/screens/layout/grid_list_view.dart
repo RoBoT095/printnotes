@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+
 import 'package:printnotes/utils/storage_system.dart';
+import 'package:printnotes/utils/handlers/style_handler.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/hex_color_extension.dart';
@@ -66,19 +68,22 @@ class _GridListViewState extends State<GridListView> {
       onLongPress: () => showBottomMenu(context, item, widget.onChange),
       child: AbsorbPointer(
         child: Card(
-          color:
-              ((isDirectory && context.watch<SelectingProvider>().selectingMode)
-                      ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
-                      : fmBgColor != null
-                          ? HexColor.fromHex(fmBgColor)
-                          : Theme.of(context).colorScheme.surfaceContainer)
-                  ?.withValues(alpha: null), // TODO: add dynamic value to alpha
+          color: (isDirectory &&
+                  context.watch<SelectingProvider>().selectingMode)
+              ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
+              : (fmBgColor != null
+                      ? HexColor.fromHex(fmBgColor)
+                      : Theme.of(context).colorScheme.surfaceContainer)
+                  ?.withValues(
+                      alpha: context.watch<SettingsProvider>().noteTileOpacity),
           shape: isSelected
-              ? RoundedRectangleBorder(
+              ? StyleHandler.getNoteTileShape(
+                  context.watch<SettingsProvider>().noteTileShape,
                   side: BorderSide(
                       color: Theme.of(context).colorScheme.primary, width: 5),
                   borderRadius: BorderRadius.circular(12))
-              : null,
+              : StyleHandler.getNoteTileShape(
+                  context.watch<SettingsProvider>().noteTileShape),
           child: isDirectory
               ? ListTile(
                   leading: Icon(
@@ -96,7 +101,8 @@ class _GridListViewState extends State<GridListView> {
                   ),
                 )
               : Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(
+                      context.watch<SettingsProvider>().noteTilePadding),
                   child: FutureBuilder(
                       future: fileItem(context, item,
                           fmColor != null ? HexColor.fromHex(fmColor) : null),
@@ -201,8 +207,8 @@ class _GridListViewState extends State<GridListView> {
           sliver: SliverMasonryGrid.count(
             crossAxisCount: _displayGridCount(
                 context, context.watch<SettingsProvider>().layout),
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
+            mainAxisSpacing: context.watch<SettingsProvider>().noteTileSpacing,
+            crossAxisSpacing: context.watch<SettingsProvider>().noteTileSpacing,
             childCount: widget.items.length,
             itemBuilder: (context, index) => _buildItem(context, index),
           ),

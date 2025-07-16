@@ -78,6 +78,90 @@ class UserThemingPref {
   }
 }
 
+class UserStylePref {
+  static Future<void> setBgImagePath(String? path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('bgImgPath', path ?? '');
+  }
+
+  static Future<String?> getBgImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    final path = prefs.getString('bgImgPath');
+    print(path);
+    return path == '' ? null : path;
+  }
+
+  static Future<void> setBgImageOpacity(double opacity) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('bgImgOpacity', opacity);
+  }
+
+  static Future<double> getBgImageOpacity() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('bgImgOpacity') ?? 0.5;
+  }
+
+  static Future<void> setBgImageFit(String fit) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('bgImgFit', fit);
+  }
+
+  static Future<String> getBgImageFit() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('bgImgFit') ?? 'cover';
+  }
+
+  static Future<void> setBgImageRepeat(String repeat) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('bgImgRepeat', repeat);
+  }
+
+  static Future<String> getBgImageRepeat() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('bgImgRepeat') ?? 'noRepeat';
+  }
+
+  static Future<void> setNoteTileOpacity(double opacity) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('noteTileOpacity', opacity);
+  }
+
+  static Future<double> getNoteTileOpacity() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('noteTileOpacity') ?? 1;
+  }
+
+  static Future<void> setNoteTileShape(String shape) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('noteTileShape', shape);
+  }
+
+  static Future<String> getNoteTileShape() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('noteTileShape') ?? 'round';
+  }
+
+  static Future<void> setNoteTilePadding(double padding) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('noteTilePadding', padding);
+  }
+
+  static Future<double> getNoteTilePadding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('noteTilePadding') ?? 10;
+  }
+
+  static Future<void> setNoteTileSpacing(double spacing) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('noteTileSpacing', spacing);
+  }
+
+  static Future<double> getNoteTileSpacing() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('noteTileSpacing') ?? 4;
+  }
+}
+
 // For saving what order items should be displayed in
 
 class UserSortPref {
