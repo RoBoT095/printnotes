@@ -91,7 +91,9 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                     subtitle: Text('Replace background color with image'),
                     trailing:
                         // If empty, show icon, otherwise dropdown of images
-                        _bgImgList.isNotEmpty
+                        _bgImgList.isNotEmpty &&
+                                _bgImgList[0].value != null &&
+                                _bgImgList[1].value != 'add new image'
                             ? DropdownButton(
                                 items: _bgImgList,
                                 value: watchSettings.bgImagePath,
