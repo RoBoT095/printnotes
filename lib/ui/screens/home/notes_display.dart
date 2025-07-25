@@ -39,6 +39,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
   List<FileSystemEntity> _items = [];
   String? _currentPath;
   String _currentFolderName = 'Notes';
+  String _currentSortOrder = '';
+  String _currentFolderPriority = '';
 
   bool _isLoading = false;
 
@@ -51,17 +53,22 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   Future<void> _loadItems() async {
     setState(() => _isLoading = true);
-    context
-        .read<NavigationProvider>()
-        .initRouteHistory(context.read<SettingsProvider>().mainDir);
+    final readSettings = context.read<SettingsProvider>();
+    context.read<NavigationProvider>().initRouteHistory(readSettings.mainDir);
 
-    final loadedItems = await context.read<SettingsProvider>().loadItems(
+    final loadedItems = await readSettings.loadItems(
         context, context.read<NavigationProvider>().routeHistory.last);
+
+    final sortOrder = readSettings.sortOrder;
+    final folderPriority = readSettings.folderPriority;
 
     setState(() {
       _items = loadedItems['items'];
       _currentPath = loadedItems['currentPath'];
       _currentFolderName = loadedItems['currentFolderName'];
+      _currentSortOrder = sortOrder;
+      _currentFolderPriority = folderPriority;
+
       _isLoading = false;
     });
   }
@@ -121,6 +128,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
   @override
   Widget build(BuildContext context) {
     bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
+    final watchSettings = context.watch<SettingsProvider>();
 
     List<String> routeHistory =
         context.watch<NavigationProvider>().routeHistory;
@@ -140,9 +148,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
       }
     }
 
-    Widget layoutView = context.watch<SettingsProvider>().layout == 'tree'
+    Widget layoutView = watchSettings.layout == 'tree'
         ? TreeLayoutView(onChange: _loadItems)
         : GridListView(items: _items, onChange: _loadItems);
+
+    if (watchSettings.sortOrder != _currentSortOrder ||
+        watchSettings.folderPriority != _currentFolderPriority) {
+      _loadItems();
+    }
 
     return PopScope(
       canPop: false,
