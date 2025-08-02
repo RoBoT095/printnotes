@@ -10,6 +10,7 @@ import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+import 'package:printnotes/ui/components/centered_page_wrapper.dart';
 import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
@@ -23,9 +24,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.sizeOf(context).width;
-    bool isScreenLarge = screenWidth >= 800;
-
     Widget? getSortOrderSubtitle() {
       String sortOrder = context.watch<SettingsProvider>().sortOrder;
       String? text;
@@ -67,11 +65,7 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          margin: isScreenLarge
-              ? EdgeInsets.symmetric(
-                  horizontal: (MediaQuery.sizeOf(context).width - 800) / 2)
-              : null,
+        child: CenteredPageWrapper(
           child: ListTileTheme(
             iconColor: Theme.of(context).colorScheme.secondary,
             child: Column(
@@ -258,7 +252,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ListTile(
                   leading: const Icon(Icons.dashboard_customize),
-                  title: Text('More Design Options'),
+                  title: Text('More Options'),
                   trailing: const Icon(Icons.arrow_forward_ios_rounded),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const MoreDesignOptionsPage(),

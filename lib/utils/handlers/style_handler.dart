@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 
 class StyleHandler {
-  static Future<bool> uploadBgImage() async {
+  static Future<String?> uploadBgImage() async {
     return await DataPath.uploadBgImage();
   }
 

@@ -1,5 +1,28 @@
 # Changelog + Dev Log
 
+### (July 16 - August 2, 2025)
+
+Been working on new styling options and forgot to write changelog
+
+- Removed Table of Contents in favor of scroll position remembered between edit and preview mode (might rework it back in later)
+- In settings, removed layout section and moved to styling and the new "More Options" page
+- In More Design Options page, added:
+  - Home Screen settings:
+    - Background image
+      - Bg Image opacity, fit, and repeat
+    - Note Tile Opacity
+    - Note Text Preview Amount
+  - Grid/List View Specific settings:
+    - Note Tile Shape (round or square border)
+    - Note Tile Text Padding (spacing between border and text)
+    - Note Tile Spacing (space between each tile)
+  - Note Editor settings:
+    - Note Editor Padding (space between edge and text)
+
+### July (12 & 25, 2025)
+
+Fixed certain things not reloading page due to the optimization changes
+
 ### (July 6, 2025)
 
 - Merged url handlers

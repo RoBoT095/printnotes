@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/storage_system.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DataPath {
   static String? _selectedDirectory;
@@ -92,7 +93,7 @@ class DataPath {
   static final bgImagesFolderPath =
       '$hiddenFolderPath${Platform.pathSeparator}background_images';
 
-  static Future<bool> uploadBgImage() async {
+  static Future<String?> uploadBgImage() async {
     if (!await Directory(bgImagesFolderPath).exists()) {
       await Directory(bgImagesFolderPath).create(recursive: true);
     }
@@ -101,13 +102,13 @@ class DataPath {
         .pickFiles(type: FileType.image, allowMultiple: false, withData: true);
     if (pickedImage != null) {
       final data = pickedImage.files.single.bytes!;
-      await File(
+      final file = await File(
               '$bgImagesFolderPath${Platform.pathSeparator}${pickedImage.files.single.name}')
           .writeAsBytes(
               data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-      return true;
+      return file.path;
     }
-    return false;
+    return null;
   }
 
   static Future<List<String>> getBgImages() async {
