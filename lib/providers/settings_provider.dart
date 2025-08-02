@@ -31,6 +31,7 @@ class SettingsProvider with ChangeNotifier {
   String _noteTileShape = 'round';
   double _noteTilePadding = 10;
   double _noteTileSpacing = 4;
+  double _noteEditorPadding = 8;
 
   bool get showIntro => _showIntro;
   String get mainDir => _mainDir;
@@ -51,6 +52,7 @@ class SettingsProvider with ChangeNotifier {
   String get noteTileShape => _noteTileShape;
   double get noteTilePadding => _noteTilePadding;
   double get noteTileSpacing => _noteTileSpacing;
+  double get noteEditorPadding => _noteEditorPadding;
 
   SettingsProvider() {
     loadSettings();
@@ -85,6 +87,7 @@ class SettingsProvider with ChangeNotifier {
     final noteTileShape = await UserStylePref.getNoteTileShape();
     final noteTilePadding = await UserStylePref.getNoteTilePadding();
     final noteTileSpacing = await UserStylePref.getNoteTileSpacing();
+    final noteEditorPadding = await UserStylePref.getNoteEditorPadding();
 
     if (mainDir != null) setHiddenFolders(mainDir);
 
@@ -104,6 +107,7 @@ class SettingsProvider with ChangeNotifier {
     setNoteTileShape(noteTileShape);
     setNoteTilePadding(noteTilePadding);
     setNoteTileSpacing(noteTileSpacing);
+    setNoteEditorPadding(noteEditorPadding);
   }
 
   void setMainDir(String dir) {
@@ -208,6 +212,12 @@ class SettingsProvider with ChangeNotifier {
   void setNoteTileSpacing(double spacing) {
     _noteTileSpacing = spacing;
     UserStylePref.setNoteTileSpacing(spacing);
+    notifyListeners();
+  }
+
+  void setNoteEditorPadding(double padding) {
+    _noteEditorPadding = padding;
+    UserStylePref.setNoteEditorPadding(padding);
     notifyListeners();
   }
 

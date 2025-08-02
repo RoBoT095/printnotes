@@ -319,6 +319,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                 horizontal: (MediaQuery.sizeOf(context).width - 1000) / 2,
                 vertical: 15)
             : null,
+        padding:
+            EdgeInsets.all(context.watch<SettingsProvider>().noteEditorPadding),
         width: 1000,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,

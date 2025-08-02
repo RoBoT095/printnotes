@@ -21,17 +21,6 @@ import 'package:printnotes/ui/screens/settings/codeblock_theme_page.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  String sliderLabels(int value) {
-    String valString = value.toString();
-    if (value == 0) {
-      return 'Title Only: $valString';
-    }
-    if (value == 100) {
-      return 'Default: $valString';
-    }
-    return valString;
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.sizeOf(context).width;
@@ -129,54 +118,6 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 if (!Platform.isIOS) const Divider(),
                 sectionTitle(
-                  'View',
-                  Theme.of(context).colorScheme.secondary,
-                  padding: 10,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.view_module),
-                  title: const Text('Layout Mode'),
-                  trailing: DropdownButton(
-                      value: context.watch<SettingsProvider>().layout,
-                      items: const [
-                        DropdownMenuItem(
-                            value: 'grid', child: Text('Grid View')),
-                        DropdownMenuItem(
-                            value: 'list', child: Text('List View')),
-                        DropdownMenuItem(
-                            value: 'tree', child: Text('Tree View')),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          context.read<SettingsProvider>().setLayout(value);
-                          context
-                              .read<SelectingProvider>()
-                              .setSelectingMode(mode: false);
-                        }
-                      }),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.list_alt_rounded),
-                  title: const Text('Note Preview amount'),
-                  subtitle: Slider(
-                    value: context
-                        .watch<SettingsProvider>()
-                        .previewLength
-                        .toDouble(),
-                    min: 0,
-                    max: 200,
-                    divisions: 10,
-                    label: sliderLabels(
-                        context.watch<SettingsProvider>().previewLength),
-                    onChanged: (value) {
-                      context
-                          .read<SettingsProvider>()
-                          .setPreviewLength(value.toInt());
-                    },
-                  ),
-                ),
-                const Divider(),
-                sectionTitle(
                   'Sorting',
                   Theme.of(context).colorScheme.secondary,
                   padding: 10,
@@ -227,9 +168,31 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(),
                 sectionTitle(
-                  'Style',
+                  'Styling',
                   Theme.of(context).colorScheme.secondary,
                   padding: 10,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.view_module),
+                  title: const Text('Layout Mode'),
+                  trailing: DropdownButton(
+                      value: context.watch<SettingsProvider>().layout,
+                      items: const [
+                        DropdownMenuItem(
+                            value: 'grid', child: Text('Grid View')),
+                        DropdownMenuItem(
+                            value: 'list', child: Text('List View')),
+                        DropdownMenuItem(
+                            value: 'tree', child: Text('Tree View')),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          context.read<SettingsProvider>().setLayout(value);
+                          context
+                              .read<SelectingProvider>()
+                              .setSelectingMode(mode: false);
+                        }
+                      }),
                 ),
                 ListTile(
                   leading: const Icon(

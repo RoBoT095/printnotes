@@ -87,7 +87,6 @@ class UserStylePref {
   static Future<String?> getBgImagePath() async {
     final prefs = await SharedPreferences.getInstance();
     final path = prefs.getString('bgImgPath');
-    print(path);
     return path == '' ? null : path;
   }
 
@@ -159,6 +158,16 @@ class UserStylePref {
   static Future<double> getNoteTileSpacing() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getDouble('noteTileSpacing') ?? 4;
+  }
+
+  static Future<void> setNoteEditorPadding(double padding) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('noteEditorPadding', padding);
+  }
+
+  static Future<double> getNoteEditorPadding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('noteEditorPadding') ?? 8;
   }
 }
 

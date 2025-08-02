@@ -212,6 +212,26 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                         readSettings.setNoteTileOpacity(opacity),
                   ),
                 ),
+                ListTile(
+                  leading: const Icon(Icons.list_alt_rounded),
+                  title: const Text('Note Text Preview amount'),
+                  subtitle: Slider(
+                    value: context
+                        .watch<SettingsProvider>()
+                        .previewLength
+                        .toDouble(),
+                    min: 0,
+                    max: 200,
+                    divisions: 10,
+                    label: sliderLabels(
+                        context.watch<SettingsProvider>().previewLength),
+                    onChanged: (value) {
+                      context
+                          .read<SettingsProvider>()
+                          .setPreviewLength(value.toInt());
+                    },
+                  ),
+                ),
                 const Divider(),
                 sectionTitle(
                   'Grid/List View Specific',
@@ -264,6 +284,25 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                         readSettings.setNoteTileSpacing(spacing),
                   ),
                 ),
+                const Divider(),
+                sectionTitle(
+                  'Note Editor',
+                  Theme.of(context).colorScheme.secondary,
+                  padding: 10,
+                ),
+                ListTile(
+                  leading: Icon(Icons.padding_outlined),
+                  title: Text('Note Editor Padding'),
+                  trailing: Text('${watchSettings.noteEditorPadding} px'),
+                  subtitle: Slider(
+                    value: watchSettings.noteEditorPadding,
+                    divisions: 20,
+                    min: 0,
+                    max: 20,
+                    onChanged: (padding) =>
+                        readSettings.setNoteEditorPadding(padding),
+                  ),
+                ),
                 // const Divider(),
                 // ListTile(
                 //   title: Text(''),
@@ -272,5 +311,16 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
             ),
           )),
     );
+  }
+
+  String sliderLabels(int value) {
+    String valString = value.toString();
+    if (value == 0) {
+      return 'Title Only: $valString';
+    }
+    if (value == 100) {
+      return 'Default: $valString';
+    }
+    return valString;
   }
 }
