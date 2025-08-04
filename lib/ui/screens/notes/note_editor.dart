@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
@@ -14,11 +15,14 @@ import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/csv_parser.dart';
 
-import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
-import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
 import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/markdown/editor_field.dart';
 import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
+
+import 'package:printnotes/ui/screens/notes/editor_config_page.dart';
+
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+import 'package:printnotes/ui/components/centered_page_wrapper.dart';
 import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
@@ -41,10 +45,11 @@ bool isScreenLarge(BuildContext context) {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
-  late TextEditingController _notesController;
-  final TocController _tocController = TocController();
-  final FocusNode _focusNode = FocusNode();
-  final UndoHistoryController _undoHistoryController = UndoHistoryController();
+  late final TextEditingController _notesController;
+  late final TocController _tocController;
+  late final AutoScrollController _autoScrollController;
+  late final FocusNode _focusNode;
+  late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _isEditingFile = false;
@@ -62,8 +67,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   @override
   void initState() {
     super.initState();
-
     _notesController = TextEditingController();
+    _tocController = TocController();
+    _autoScrollController = AutoScrollController();
+    _focusNode = FocusNode();
+    _undoHistoryController = UndoHistoryController();
     _loadFileContent();
 
     _fileCheckTimer =
@@ -165,6 +173,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
+  void _toggleMode() {
+    setState(() => _isEditingFile = !_isEditingFile);
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
@@ -178,6 +190,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           FrontmatterHandleParsing.getTagString(_notesController.text, 'title');
       if (doc != null) fmBody = doc.body;
     }
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -207,17 +220,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         icon: Icon(_isEditingFile
                             ? Icons.visibility
                             : Icons.mode_edit),
-                        onPressed: () {
-                          setState(() => _isEditingFile = !_isEditingFile);
-                        }),
-                    if (isScreenLarge(context) &&
-                        _notesController.text.contains("# "))
-                      IconButton(
-                        tooltip: 'Table of Contents',
-                        onPressed: () =>
-                            _scaffoldKey.currentState!.openEndDrawer(),
-                        icon: const Icon(Icons.toc_rounded),
-                      ),
+                        onPressed: _toggleMode),
+                    // if (isScreenLarge(context) &&
+                    //     _notesController.text.contains("# "))
+                    //   IconButton(
+                    //     tooltip: 'Table of Contents',
+                    //     onPressed: () =>
+                    //         _scaffoldKey.currentState!.openEndDrawer(),
+                    //     icon: const Icon(Icons.toc_rounded),
+                    //   ),
                     PopupMenuButton(
                       itemBuilder: (context) => <PopupMenuEntry>[
                         PopupMenuItem(
@@ -236,7 +247,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                           onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const EditorConfigScreen())),
+                                      const EditorConfigPage())),
                         ),
                         PopupMenuItem(
                           child: ListTile(
@@ -274,51 +285,49 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         thickness: 0.3,
                       ),
                       Expanded(
-                        child: _notesController.text.contains("# ")
-                            ? buildTocList()
-                            : const Center(
-                                child: Text(
-                                  'Add headers using "#" to populate\n the table of contents',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
+                        child:
+                            //  _notesController.text.contains("# ")
+                            //     ? buildTocList()
+                            //     :
+                            const Center(
+                          child: Text(
+                            'Add headers using "#" to populate\n the table of contents',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-        floatingActionButton: !isScreenLarge(context) &&
-                _notesController.text.contains("# ") &&
-                !_isEditingFile
-            ? FloatingActionButton(
-                onPressed: _scaffoldKey.currentState!.openEndDrawer,
-                heroTag: 'Table of Contents',
-                child: const Icon(Icons.format_list_bulleted),
-              )
-            : null,
+        // floatingActionButton: !isScreenLarge(context) &&
+        //         _notesController.text.contains("# ") &&
+        //         !_isEditingFile
+        //     ? FloatingActionButton(
+        //         onPressed: _scaffoldKey.currentState!.openEndDrawer,
+        //         heroTag: 'Table of Contents',
+        //         child: const Icon(Icons.format_list_bulleted),
+        //       )
+        //     : null,
       ),
     );
   }
 
   /// Table of Contents
-  Widget buildTocList() => Container(
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20)),
-      child: TocWidget(controller: _tocController));
+  // Widget buildTocList() => Container(
+  //     decoration: BoxDecoration(
+  //         color: Theme.of(context).colorScheme.surface,
+  //         borderRadius: BorderRadius.circular(20)),
+  //     child: TocWidget(controller: _tocController));
 
   Widget buildMarkdownView(String previewBody) {
     if (widget.filePath.endsWith('.csv')) {
       previewBody = csvToMarkdownTable(previewBody);
     }
     return SafeArea(
-      // Styling for desktop mode to have document centered with grey background
-      child: Container(
-        margin: isScreenLarge(context)
-            ? EdgeInsets.symmetric(
-                horizontal: (MediaQuery.sizeOf(context).width - 1000) / 2,
-                vertical: 15)
-            : null,
+      child: CenteredPageWrapper(
+        padding:
+            EdgeInsets.all(context.watch<SettingsProvider>().noteEditorPadding),
         width: 1000,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -339,9 +348,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               ? MarkdownToolbar(
                   controller: _notesController,
                   onValueChange: (value) => _setUpAutoSave(),
-                  onPreviewChanged: () {
-                    setState(() => _isEditingFile = !_isEditingFile);
-                  },
+                  onPreviewChanged: _toggleMode,
                   undoController: _undoHistoryController,
                   toolbarBackground:
                       Theme.of(context).colorScheme.surfaceContainer,
@@ -366,51 +373,51 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       child: Actions(
                         actions: <Type, Action<Intent>>{
                           SwitchModeIntent: CallbackAction<SwitchModeIntent>(
-                            onInvoke: (SwitchModeIntent intent) => setState(() {
-                              _isEditingFile = !_isEditingFile;
-                            }),
-                          ),
+                              onInvoke: (SwitchModeIntent intent) =>
+                                  _toggleMode()),
                         },
                         child: Focus(
                           autofocus: true,
                           focusNode: _focusNode,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                            child: _isEditingFile
-                                ? EditorField(
-                                    controller: _notesController,
-                                    onChanged: (value) => _setUpAutoSave(),
-                                    undoController: _undoHistoryController,
-                                    fontSize: context
-                                        .watch<EditorConfigProvider>()
-                                        .fontSize,
-                                  )
-                                // Check if double tap to change to edit mode
-                                : GestureDetector(
-                                    onDoubleTap: () {
-                                      setState(() =>
-                                          _isEditingFile = !_isEditingFile);
-                                    },
-                                    child: _notesController.text.isEmpty
-                                        // If note is empty so message
-                                        ? SizedBox(
-                                            height: MediaQuery.sizeOf(context)
-                                                .height,
-                                            child: Text(
-                                              'Double click screen or hit the pencil icon in the top right corner to write!',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .hintColor),
+                          child: SingleChildScrollView(
+                            controller: _autoScrollController,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: _isEditingFile
+                                  ? EditorField(
+                                      controller: _notesController,
+                                      scrollController: _autoScrollController,
+                                      onChanged: (value) => _setUpAutoSave(),
+                                      undoController: _undoHistoryController,
+                                      fontSize: context
+                                          .watch<EditorConfigProvider>()
+                                          .fontSize,
+                                    )
+                                  : GestureDetector(
+                                      // Check if double tap to change to edit mode
+                                      onDoubleTap: _toggleMode,
+                                      child: _notesController.text.isEmpty
+                                          // If note is empty so message
+                                          ? SizedBox(
+                                              height: MediaQuery.sizeOf(context)
+                                                  .height,
+                                              child: Text(
+                                                'Double click screen or hit the pencil icon in the top right corner to write!',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .hintColor),
+                                              ),
+                                            )
+                                          // Parse and render the markdown text
+                                          : buildMarkdownWidget(
+                                              context,
+                                              data: previewBody,
+                                              filePath: widget.filePath,
+                                              shrinkWrap: true,
+                                              // tocController: _tocController,
                                             ),
-                                          )
-                                        // Parse and render the markdown text
-                                        : buildMarkdownWidget(
-                                            context,
-                                            data: previewBody,
-                                            filePath: widget.filePath,
-                                            tocController: _tocController,
-                                          ),
-                                  ),
+                                    ),
+                            ),
                           ),
                         ),
                       ),

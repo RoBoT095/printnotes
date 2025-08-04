@@ -73,7 +73,7 @@ enum MarkdownTag {
   /// [a] Link reference definitions,A link reference definition consists of a link label
   a,
 
-  /// [wk] WikiLink
+  /// [wl] WikiLink
   wl,
 
   /// [p] A sequence of non-blank lines that cannot be interpreted as other kinds of blocks forms a paragraph

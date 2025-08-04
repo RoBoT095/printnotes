@@ -98,7 +98,9 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
         showRootNode: false,
         indentation: const Indentation(),
         builder: (context, node) {
-          return Padding(
+          return Container(
+            color: Theme.of(context).colorScheme.surface.withValues(
+                alpha: context.watch<SettingsProvider>().noteTileOpacity),
             padding: const EdgeInsets.only(left: 16.0),
             child: GestureDetector(
               onTap: node is FileNode

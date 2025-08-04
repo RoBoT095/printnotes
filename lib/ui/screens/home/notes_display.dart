@@ -9,6 +9,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+import 'package:printnotes/utils/handlers/style_handler.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 
@@ -244,7 +245,29 @@ class _NotesDisplayState extends State<NotesDisplay> {
                               Expanded(child: layoutView),
                             ],
                           )
-                        : layoutView,
+                        : Container(
+                            decoration: context
+                                        .watch<SettingsProvider>()
+                                        .bgImagePath !=
+                                    null
+                                ? BoxDecoration(
+                                    image: DecorationImage(
+                                        opacity: context
+                                            .watch<SettingsProvider>()
+                                            .bgImageOpacity,
+                                        repeat: StyleHandler.getBgImageRepeat(
+                                            context
+                                                .watch<SettingsProvider>()
+                                                .bgImageRepeat),
+                                        fit: StyleHandler.getBgImageFit(context
+                                            .watch<SettingsProvider>()
+                                            .bgImageFit),
+                                        image: FileImage(File(context
+                                            .watch<SettingsProvider>()
+                                            .bgImagePath!))),
+                                  )
+                                : null,
+                            child: layoutView),
                   ),
         floatingActionButton: speedDialFAB(
             context,

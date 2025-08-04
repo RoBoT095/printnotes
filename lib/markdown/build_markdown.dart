@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './markdown_widget/markdown_widget.dart';
 import 'package:provider/provider.dart';
+import './markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
@@ -174,12 +174,14 @@ Widget buildMarkdownWidget(
   required String data,
   required String filePath,
   bool? selectable,
+  bool shrinkWrap = false,
   TocController? tocController,
 }) {
   return MarkdownWidget(
     data: data,
     selectable: selectable ?? true,
     config: theMarkdownConfigs(context, filePath: filePath, inEditor: true),
+    shrinkWrap: shrinkWrap,
     tocController: tocController,
     markdownGenerator: theMarkdownGenerators(context),
   );

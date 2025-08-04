@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+import 'package:printnotes/ui/components/centered_page_wrapper.dart';
 import 'package:printnotes/ui/components/dialogs/libraries_dialog.dart';
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 
@@ -10,9 +11,6 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.sizeOf(context).width;
-    bool isScreenLarge = screenWidth >= 800;
-
     return Scaffold(
       appBar: AppBarDragWrapper(
         child: AppBar(
@@ -23,10 +21,7 @@ class AboutScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          margin: isScreenLarge
-              ? EdgeInsets.symmetric(horizontal: (screenWidth - 800) / 2)
-              : null,
+        child: CenteredPageWrapper(
           child: Column(
             children: [
               ListTile(

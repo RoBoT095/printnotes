@@ -10,32 +10,20 @@ import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+import 'package:printnotes/ui/components/centered_page_wrapper.dart';
 import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 import 'package:printnotes/ui/widgets/list_section_title.dart';
 
+import 'package:printnotes/ui/screens/settings/more_design_options_page.dart';
 import 'package:printnotes/ui/screens/settings/custom_theme_page.dart';
 import 'package:printnotes/ui/screens/settings/codeblock_theme_page.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  String sliderLabels(int value) {
-    String valString = value.toString();
-    if (value == 0) {
-      return 'Title Only: $valString';
-    }
-    if (value == 100) {
-      return 'Default: $valString';
-    }
-    return valString;
-  }
-
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.sizeOf(context).width;
-    bool isScreenLarge = screenWidth >= 800;
-
     Widget? getSortOrderSubtitle() {
       String sortOrder = context.watch<SettingsProvider>().sortOrder;
       String? text;
@@ -77,11 +65,7 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          margin: isScreenLarge
-              ? EdgeInsets.symmetric(
-                  horizontal: (MediaQuery.sizeOf(context).width - 800) / 2)
-              : null,
+        child: CenteredPageWrapper(
           child: ListTileTheme(
             iconColor: Theme.of(context).colorScheme.secondary,
             child: Column(
@@ -127,54 +111,6 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 if (!Platform.isIOS) const Divider(),
-                sectionTitle(
-                  'View',
-                  Theme.of(context).colorScheme.secondary,
-                  padding: 10,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.view_module),
-                  title: const Text('Layout Mode'),
-                  trailing: DropdownButton(
-                      value: context.watch<SettingsProvider>().layout,
-                      items: const [
-                        DropdownMenuItem(
-                            value: 'grid', child: Text('Grid View')),
-                        DropdownMenuItem(
-                            value: 'list', child: Text('List View')),
-                        DropdownMenuItem(
-                            value: 'tree', child: Text('Tree View')),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          context.read<SettingsProvider>().setLayout(value);
-                          context
-                              .read<SelectingProvider>()
-                              .setSelectingMode(mode: false);
-                        }
-                      }),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.list_alt_rounded),
-                  title: const Text('Note Preview amount'),
-                  subtitle: Slider(
-                    value: context
-                        .watch<SettingsProvider>()
-                        .previewLength
-                        .toDouble(),
-                    min: 0,
-                    max: 200,
-                    divisions: 10,
-                    label: sliderLabels(
-                        context.watch<SettingsProvider>().previewLength),
-                    onChanged: (value) {
-                      context
-                          .read<SettingsProvider>()
-                          .setPreviewLength(value.toInt());
-                    },
-                  ),
-                ),
-                const Divider(),
                 sectionTitle(
                   'Sorting',
                   Theme.of(context).colorScheme.secondary,
@@ -226,9 +162,31 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(),
                 sectionTitle(
-                  'Style',
+                  'Styling',
                   Theme.of(context).colorScheme.secondary,
                   padding: 10,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.view_module),
+                  title: const Text('Layout Mode'),
+                  trailing: DropdownButton(
+                      value: context.watch<SettingsProvider>().layout,
+                      items: const [
+                        DropdownMenuItem(
+                            value: 'grid', child: Text('Grid View')),
+                        DropdownMenuItem(
+                            value: 'list', child: Text('List View')),
+                        DropdownMenuItem(
+                            value: 'tree', child: Text('Tree View')),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          context.read<SettingsProvider>().setLayout(value);
+                          context
+                              .read<SelectingProvider>()
+                              .setSelectingMode(mode: false);
+                        }
+                      }),
                 ),
                 ListTile(
                   leading: const Icon(
@@ -292,6 +250,14 @@ class SettingsScreen extends StatelessWidget {
                         onChanged: (val) =>
                             context.read<ThemeProvider>().setPureBlackBG(val)),
                   ),
+                ListTile(
+                  leading: const Icon(Icons.dashboard_customize),
+                  title: Text('More Options'),
+                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MoreDesignOptionsPage(),
+                  )),
+                ),
                 const Divider(),
                 sectionTitle(
                   'Advanced',
