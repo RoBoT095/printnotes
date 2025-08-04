@@ -9,6 +9,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+import 'package:printnotes/utils/handlers/style_handler.dart';
 import 'package:printnotes/utils/handlers/item_move.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 
@@ -16,6 +17,7 @@ import 'package:printnotes/ui/screens/layout/grid_list_view.dart';
 import 'package:printnotes/ui/screens/layout/tree_view.dart';
 import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
 
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/drawer_rail.dart';
 import 'package:printnotes/ui/widgets/speed_dial_fab.dart';
 
@@ -38,6 +40,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
   List<FileSystemEntity> _items = [];
   String? _currentPath;
   String _currentFolderName = 'Notes';
+  String _currentSortOrder = '';
+  String _currentFolderPriority = '';
 
   bool _isLoading = false;
 
@@ -45,27 +49,39 @@ class _NotesDisplayState extends State<NotesDisplay> {
   void initState() {
     super.initState();
     if (Platform.isAndroid) _checkMediaIntent();
+    _loadItems();
   }
 
-  void _loadItems() {
-    context
-        .read<NavigationProvider>()
-        .initRouteHistory(context.read<SettingsProvider>().mainDir);
-    final loadedItems = context.read<SettingsProvider>().loadItems(
+  Future<void> _loadItems() async {
+    setState(() => _isLoading = true);
+    final readSettings = context.read<SettingsProvider>();
+    context.read<NavigationProvider>().initRouteHistory(readSettings.mainDir);
+
+    final loadedItems = await readSettings.loadItems(
         context, context.read<NavigationProvider>().routeHistory.last);
+
+    final sortOrder = readSettings.sortOrder;
+    final folderPriority = readSettings.folderPriority;
 
     setState(() {
       _items = loadedItems['items'];
       _currentPath = loadedItems['currentPath'];
       _currentFolderName = loadedItems['currentFolderName'];
+      _currentSortOrder = sortOrder;
+      _currentFolderPriority = folderPriority;
+
+      _isLoading = false;
     });
   }
 
-  void _navBack() => context.read<NavigationProvider>().navigateBack();
+  void _navBack() async {
+    context.read<NavigationProvider>().navigateBack();
+    await _loadItems();
+  }
 
   Future<void> _refreshPage() async {
     setState(() => _isLoading = true);
-    _loadItems();
+    await _loadItems();
 
     Future.delayed(const Duration(milliseconds: 300),
         () => setState(() => _isLoading = false));
@@ -73,7 +89,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   List<FileSystemEntity> selectedItemsToFileEntity() {
     List<FileSystemEntity> fileList = [];
-    for (var item in context.read<SelectingProvider>().selectedItems) {
+    for (String item in context.read<SelectingProvider>().selectedItems) {
       fileList.add(File(item));
     }
     return fileList;
@@ -106,15 +122,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   void dispose() {
-    _intentSub.cancel();
+    if (Platform.isAndroid) _intentSub.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _loadItems();
-
     bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
+    final watchSettings = context.watch<SettingsProvider>();
 
     List<String> routeHistory =
         context.watch<NavigationProvider>().routeHistory;
@@ -134,9 +149,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
       }
     }
 
-    Widget layoutView = context.watch<SettingsProvider>().layout == 'tree'
+    Widget layoutView = watchSettings.layout == 'tree'
         ? TreeLayoutView(onChange: _loadItems)
         : GridListView(items: _items, onChange: _loadItems);
+
+    if (watchSettings.sortOrder != _currentSortOrder ||
+        watchSettings.folderPriority != _currentFolderPriority) {
+      _loadItems();
+    }
 
     return PopScope(
       canPop: false,
@@ -150,63 +170,65 @@ class _NotesDisplayState extends State<NotesDisplay> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          centerTitle: true,
-          title: Text(_currentFolderName),
-          leading: context.watch<SelectingProvider>().selectingMode
-              ? IconButton(
-                  onPressed: () =>
-                      context.read<SelectingProvider>().setSelectingMode(),
-                  icon: const Icon(Icons.close))
-              : routeHistory.length > 1
-                  ? IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: _navBack,
-                    )
-                  : null, //Icon(Icons.home),
-          actions: context.watch<SelectingProvider>().selectingMode
-              ? [
-                  IconButton(
-                    tooltip: 'Select All',
-                    onPressed: () {
-                      context
-                          .read<SelectingProvider>()
-                          .selectAll(_currentPath!);
-                    },
-                    icon: const Icon(Icons.select_all),
-                  ),
-                  IconButton(
-                    tooltip: 'Move Selected',
-                    onPressed: () {
-                      ItemMoveHandler.showMoveDialog(
-                          context, selectedItemsToFileEntity(), _loadItems);
-                      context
-                          .read<SelectingProvider>()
-                          .setSelectingMode(mode: false);
-                    },
-                    icon: const Icon(Icons.drive_file_move),
-                  ),
-                  IconButton(
-                    tooltip: 'Delete Selected',
-                    onPressed: () {
-                      ItemDeletionHandler.showTrashManyConfirmation(
-                          context, selectedItemsToFileEntity(), _loadItems);
-                      context
-                          .read<SelectingProvider>()
-                          .setSelectingMode(mode: false);
-                    },
-                    icon: const Icon(Icons.delete),
-                  ),
-                ]
-              : [
-                  IconButton(
-                    tooltip: 'Reload List',
-                    icon: const Icon(Icons.refresh),
-                    onPressed: _refreshPage,
-                  ),
-                ],
+        appBar: AppBarDragWrapper(
+          child: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            centerTitle: true,
+            title: Text(_currentFolderName),
+            leading: context.watch<SelectingProvider>().selectingMode
+                ? IconButton(
+                    onPressed: () =>
+                        context.read<SelectingProvider>().setSelectingMode(),
+                    icon: const Icon(Icons.close))
+                : routeHistory.length > 1
+                    ? IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: _navBack,
+                      )
+                    : null, //Icon(Icons.home),
+            actions: context.watch<SelectingProvider>().selectingMode
+                ? [
+                    IconButton(
+                      tooltip: 'Select All',
+                      onPressed: () {
+                        context
+                            .read<SelectingProvider>()
+                            .selectAll(_currentPath!);
+                      },
+                      icon: const Icon(Icons.select_all),
+                    ),
+                    IconButton(
+                      tooltip: 'Move Selected',
+                      onPressed: () {
+                        ItemMoveHandler.showMoveDialog(
+                            context, selectedItemsToFileEntity(), _loadItems);
+                        context
+                            .read<SelectingProvider>()
+                            .setSelectingMode(mode: false);
+                      },
+                      icon: const Icon(Icons.drive_file_move),
+                    ),
+                    IconButton(
+                      tooltip: 'Delete Selected',
+                      onPressed: () {
+                        ItemDeletionHandler.showTrashManyConfirmation(
+                            context, selectedItemsToFileEntity(), _loadItems);
+                        context
+                            .read<SelectingProvider>()
+                            .setSelectingMode(mode: false);
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ]
+                : [
+                    IconButton(
+                      tooltip: 'Reload List',
+                      icon: const Icon(Icons.refresh),
+                      onPressed: _refreshPage,
+                    ),
+                  ],
+          ),
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -223,7 +245,29 @@ class _NotesDisplayState extends State<NotesDisplay> {
                               Expanded(child: layoutView),
                             ],
                           )
-                        : layoutView,
+                        : Container(
+                            decoration: context
+                                        .watch<SettingsProvider>()
+                                        .bgImagePath !=
+                                    null
+                                ? BoxDecoration(
+                                    image: DecorationImage(
+                                        opacity: context
+                                            .watch<SettingsProvider>()
+                                            .bgImageOpacity,
+                                        repeat: StyleHandler.getBgImageRepeat(
+                                            context
+                                                .watch<SettingsProvider>()
+                                                .bgImageRepeat),
+                                        fit: StyleHandler.getBgImageFit(context
+                                            .watch<SettingsProvider>()
+                                            .bgImageFit),
+                                        image: FileImage(File(context
+                                            .watch<SettingsProvider>()
+                                            .bgImagePath!))),
+                                  )
+                                : null,
+                            child: layoutView),
                   ),
         floatingActionButton: speedDialFAB(
             context,

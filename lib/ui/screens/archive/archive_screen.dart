@@ -10,6 +10,8 @@ import 'package:printnotes/utils/handlers/item_archive.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 import 'package:printnotes/utils/storage_system.dart';
 
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+
 class ArchiveScreen extends StatefulWidget {
   const ArchiveScreen({super.key});
 
@@ -28,11 +30,11 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     _loadArchivedItems();
   }
 
-  void _loadArchivedItems([String? folderPath]) {
+  Future<void> _loadArchivedItems([String? folderPath]) async {
     final archivePath = context.read<SettingsProvider>().archivePath;
     final currentPath = folderPath ?? archivePath;
     final items =
-        StorageSystem.listFolderContents(currentPath, showHidden: true);
+        await StorageSystem.listFolderContents(currentPath, showHidden: true);
     setState(() {
       _archivedItems = items;
       _currentPath = currentPath;
@@ -102,7 +104,10 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             size: 48,
             color: isDirectory
                 ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                : Theme.of(context)
+                    .colorScheme
+                    .secondary
+                    .withValues(alpha: 0.8),
           ),
           title: Text(
             name,
@@ -118,25 +123,27 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        centerTitle: true,
-        title: Text(_currentFolderName),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          centerTitle: true,
+          title: Text(_currentFolderName),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+            ),
+            onPressed: context.read<NavigationProvider>().routeHistory.last !=
+                    context.read<SettingsProvider>().archivePath
+                ? () {
+                    setState(() => _loadArchivedItems(
+                        context.read<NavigationProvider>().navigateBack()));
+                  }
+                : () {
+                    context.read<NavigationProvider>().navigateBack();
+                    Navigator.pop(context);
+                  },
           ),
-          onPressed: context.read<NavigationProvider>().routeHistory.last !=
-                  context.read<SettingsProvider>().archivePath
-              ? () {
-                  setState(() => _loadArchivedItems(
-                      context.read<NavigationProvider>().navigateBack()));
-                }
-              : () {
-                  context.read<NavigationProvider>().navigateBack();
-                  Navigator.pop(context);
-                },
         ),
       ),
       body: _archivedItems.isEmpty

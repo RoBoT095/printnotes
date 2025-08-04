@@ -1,4 +1,4 @@
-FROM ghcr.io/cirruslabs/flutter:3.32.2 AS build
+FROM ghcr.io/cirruslabs/flutter:3.32.5 AS build
 
 # Set up the working directory
 WORKDIR /app
@@ -49,11 +49,8 @@ RUN flutter build apk --release --split-per-abi
 # Make output folder
 RUN mkdir -p /app/output
 
-# Move all apk files to output folder
-RUN cp build/app/outputs/flutter-apk/app-release.apk /app/output/
-RUN cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk /app/output/
-RUN cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk /app/output/
-RUN cp build/app/outputs/flutter-apk/app-x86_64-release.apk /app/output/
+# Move all files from build to output folder
+RUN cp build/app/outputs/flutter-apk/. /app/output/
 
 # The default working directory inside the container
 CMD ["bash"]

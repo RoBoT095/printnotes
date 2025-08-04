@@ -12,7 +12,7 @@ class ItemSortHandler {
     List<FileSystemEntity> folders = [];
     List<FileSystemEntity> files = [];
 
-    for (var item in items) {
+    for (FileSystemEntity item in items) {
       if (item is Directory) {
         folders.add(item);
       } else {

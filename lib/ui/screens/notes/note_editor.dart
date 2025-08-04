@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:markdown_widget/markdown_widget.dart';
+import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
@@ -14,10 +15,14 @@ import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 import 'package:printnotes/utils/parsers/csv_parser.dart';
 
-import 'package:printnotes/ui/screens/notes/editor_config_screen.dart';
-import 'package:printnotes/ui/components/markdown/build_markdown.dart';
-import 'package:printnotes/ui/components/markdown/editor_field.dart';
-import 'package:printnotes/ui/components/markdown/toolbar/markdown_toolbar.dart';
+import 'package:printnotes/markdown/build_markdown.dart';
+import 'package:printnotes/markdown/editor_field.dart';
+import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
+
+import 'package:printnotes/ui/screens/notes/editor_config_page.dart';
+
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+import 'package:printnotes/ui/components/centered_page_wrapper.dart';
 import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
@@ -40,10 +45,11 @@ bool isScreenLarge(BuildContext context) {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
-  late TextEditingController _notesController;
-  final TocController _tocController = TocController();
-  final FocusNode _focusNode = FocusNode();
-  final UndoHistoryController _undoHistoryController = UndoHistoryController();
+  late final TextEditingController _notesController;
+  late final TocController _tocController;
+  late final AutoScrollController _autoScrollController;
+  late final FocusNode _focusNode;
+  late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _isEditingFile = false;
@@ -61,14 +67,18 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   @override
   void initState() {
     super.initState();
-
     _notesController = TextEditingController();
+    _tocController = TocController();
+    _autoScrollController = AutoScrollController();
+    _focusNode = FocusNode();
+    _undoHistoryController = UndoHistoryController();
     _loadFileContent();
 
     _fileCheckTimer =
         Timer.periodic(fileCheckInterval, (_) => _checkForExternalChanges());
   }
 
+  /// Load the passed files contents and set the state
   Future<void> _loadFileContent() async {
     try {
       final file = File(widget.filePath);
@@ -102,6 +112,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     });
   }
 
+  /// Check if file has been modified outside of app
   Future<void> _checkForExternalChanges() async {
     if (_isError || _isLoading) return;
 
@@ -162,18 +173,24 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
+  void _toggleMode() {
+    setState(() => _isEditingFile = !_isEditingFile);
+  }
+
   @override
   Widget build(BuildContext context) {
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
     String? fmBody;
     String? fmTitle;
 
+    // frontmatter logic
     if (useFM) {
       final doc = FrontmatterHandleParsing.getParsedData(_notesController.text);
       fmTitle =
           FrontmatterHandleParsing.getTagString(_notesController.text, 'title');
       if (doc != null) fmBody = doc.body;
     }
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
@@ -188,67 +205,69 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-        appBar: AppBar(
-          centerTitle: false,
-          title: SelectableText(
-            fmTitle ?? widget.filePath.split('/').last,
-            maxLines: 1,
-          ),
-          actions: _isError
-              ? null
-              : [
-                  IconButton(
-                      tooltip: 'Preview/Edit Mode',
-                      icon: Icon(
-                          _isEditingFile ? Icons.visibility : Icons.mode_edit),
-                      onPressed: () {
-                        setState(() => _isEditingFile = !_isEditingFile);
-                      }),
-                  if (isScreenLarge(context) &&
-                      _notesController.text.contains("# "))
+        appBar: AppBarDragWrapper(
+          child: AppBar(
+            centerTitle: false,
+            title: SelectableText(
+              fmTitle ?? widget.filePath.split('/').last,
+              maxLines: 1,
+            ),
+            actions: _isError
+                ? null
+                : [
                     IconButton(
-                      tooltip: 'Table of Contents',
-                      onPressed: () =>
-                          _scaffoldKey.currentState!.openEndDrawer(),
-                      icon: const Icon(Icons.toc_rounded),
+                        tooltip: 'Preview/Edit Mode',
+                        icon: Icon(_isEditingFile
+                            ? Icons.visibility
+                            : Icons.mode_edit),
+                        onPressed: _toggleMode),
+                    // if (isScreenLarge(context) &&
+                    //     _notesController.text.contains("# "))
+                    //   IconButton(
+                    //     tooltip: 'Table of Contents',
+                    //     onPressed: () =>
+                    //         _scaffoldKey.currentState!.openEndDrawer(),
+                    //     icon: const Icon(Icons.toc_rounded),
+                    //   ),
+                    PopupMenuButton(
+                      itemBuilder: (context) => <PopupMenuEntry>[
+                        PopupMenuItem(
+                          child: const ListTile(
+                            leading: Icon(Icons.info_outline),
+                            title: Text('Info'),
+                          ),
+                          onTap: () =>
+                              modalShowFileInfo(context, widget.filePath),
+                        ),
+                        PopupMenuItem(
+                          child: const ListTile(
+                            leading: Icon(Icons.tune),
+                            title: Text('Configure'),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditorConfigPage())),
+                        ),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: const Icon(Icons.folder_open),
+                            title: const Text("Open Location"),
+                            iconColor: mobileNullColor(context),
+                            textColor: mobileNullColor(context),
+                          ),
+                          onTap: () async =>
+                              await openExplorer(context, widget.filePath),
+                        ),
+                      ],
                     ),
-                  PopupMenuButton(
-                    itemBuilder: (context) => <PopupMenuEntry>[
-                      PopupMenuItem(
-                        child: const ListTile(
-                          leading: Icon(Icons.info_outline),
-                          title: Text('Info'),
-                        ),
-                        onTap: () =>
-                            modalShowFileInfo(context, widget.filePath),
-                      ),
-                      PopupMenuItem(
-                        child: const ListTile(
-                          leading: Icon(Icons.tune),
-                          title: Text('Configure'),
-                        ),
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const EditorConfigScreen())),
-                      ),
-                      PopupMenuItem(
-                        child: ListTile(
-                          leading: const Icon(Icons.folder_open),
-                          title: const Text("Open Location"),
-                          iconColor: mobileNullColor(context),
-                          textColor: mobileNullColor(context),
-                        ),
-                        onTap: () async =>
-                            await openExplorer(context, widget.filePath),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+          ),
         ),
         body: buildMarkdownView(fmBody ?? _notesController.text),
         endDrawer: _isError
             ? null
+            // Drawer for table of contents
             : Drawer(
                 child: SafeArea(
                   child: Column(
@@ -266,55 +285,55 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         thickness: 0.3,
                       ),
                       Expanded(
-                        child: _notesController.text.contains("# ")
-                            ? buildTocList()
-                            : const Center(
-                                child: Text(
-                                  'Add headers using "#" to populate\n the table of contents',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
+                        child:
+                            //  _notesController.text.contains("# ")
+                            //     ? buildTocList()
+                            //     :
+                            const Center(
+                          child: Text(
+                            'Add headers using "#" to populate\n the table of contents',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-        floatingActionButton: !isScreenLarge(context) &&
-                _notesController.text.contains("# ") &&
-                !_isEditingFile
-            ? FloatingActionButton(
-                onPressed: _scaffoldKey.currentState!.openEndDrawer,
-                heroTag: 'Table of Contents',
-                child: const Icon(Icons.format_list_bulleted),
-              )
-            : null,
+        // floatingActionButton: !isScreenLarge(context) &&
+        //         _notesController.text.contains("# ") &&
+        //         !_isEditingFile
+        //     ? FloatingActionButton(
+        //         onPressed: _scaffoldKey.currentState!.openEndDrawer,
+        //         heroTag: 'Table of Contents',
+        //         child: const Icon(Icons.format_list_bulleted),
+        //       )
+        //     : null,
       ),
     );
   }
 
-  Widget buildTocList() => Container(
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20)),
-      child: TocWidget(controller: _tocController));
+  /// Table of Contents
+  // Widget buildTocList() => Container(
+  //     decoration: BoxDecoration(
+  //         color: Theme.of(context).colorScheme.surface,
+  //         borderRadius: BorderRadius.circular(20)),
+  //     child: TocWidget(controller: _tocController));
 
   Widget buildMarkdownView(String previewBody) {
     if (widget.filePath.endsWith('.csv')) {
       previewBody = csvToMarkdownTable(previewBody);
     }
     return SafeArea(
-      child: Container(
-        margin: isScreenLarge(context)
-            ? EdgeInsets.symmetric(
-                horizontal: (MediaQuery.sizeOf(context).width - 1000) / 2,
-                vertical: 15)
-            : null,
+      child: CenteredPageWrapper(
+        padding:
+            EdgeInsets.all(context.watch<SettingsProvider>().noteEditorPadding),
         width: 1000,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(0, 3)),
@@ -322,14 +341,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           borderRadius:
               isScreenLarge(context) ? BorderRadius.circular(10) : null,
         ),
+        // Wrap child to add Toolbar at the bottom of the screen or on top
+        // of the keyboard
         child: FooterLayout(
           footer: _isEditingFile
               ? MarkdownToolbar(
                   controller: _notesController,
                   onValueChange: (value) => _setUpAutoSave(),
-                  onPreviewChanged: () {
-                    setState(() => _isEditingFile = !_isEditingFile);
-                  },
+                  onPreviewChanged: _toggleMode,
                   undoController: _undoHistoryController,
                   toolbarBackground:
                       Theme.of(context).colorScheme.surfaceContainer,
@@ -342,6 +361,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               ? const Center(child: CircularProgressIndicator())
               : _isError
                   ? const Center(child: Text('Error Reading File'))
+                  // Catch if "ctrl+shift+v" was used to switch between
+                  // edit and preview mode
                   : Shortcuts(
                       shortcuts: <ShortcutActivator, Intent>{
                         LogicalKeySet(
@@ -352,47 +373,51 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       child: Actions(
                         actions: <Type, Action<Intent>>{
                           SwitchModeIntent: CallbackAction<SwitchModeIntent>(
-                            onInvoke: (SwitchModeIntent intent) => setState(() {
-                              _isEditingFile = !_isEditingFile;
-                            }),
-                          ),
+                              onInvoke: (SwitchModeIntent intent) =>
+                                  _toggleMode()),
                         },
                         child: Focus(
                           autofocus: true,
                           focusNode: _focusNode,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                            child: _isEditingFile
-                                ? EditorField(
-                                    controller: _notesController,
-                                    onChanged: (value) => _setUpAutoSave(),
-                                    undoController: _undoHistoryController,
-                                    fontSize: context
-                                        .watch<EditorConfigProvider>()
-                                        .fontSize,
-                                  )
-                                : GestureDetector(
-                                    onDoubleTap: () {
-                                      setState(() =>
-                                          _isEditingFile = !_isEditingFile);
-                                    },
-                                    child: _notesController.text.isEmpty
-                                        ? SizedBox(
-                                            height: MediaQuery.sizeOf(context)
-                                                .height,
-                                            child: Text(
-                                              'Double click screen or hit the pencil icon in the top right corner to write!',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .hintColor),
+                          child: SingleChildScrollView(
+                            controller: _autoScrollController,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: _isEditingFile
+                                  ? EditorField(
+                                      controller: _notesController,
+                                      scrollController: _autoScrollController,
+                                      onChanged: (value) => _setUpAutoSave(),
+                                      undoController: _undoHistoryController,
+                                      fontSize: context
+                                          .watch<EditorConfigProvider>()
+                                          .fontSize,
+                                    )
+                                  : GestureDetector(
+                                      // Check if double tap to change to edit mode
+                                      onDoubleTap: _toggleMode,
+                                      child: _notesController.text.isEmpty
+                                          // If note is empty so message
+                                          ? SizedBox(
+                                              height: MediaQuery.sizeOf(context)
+                                                  .height,
+                                              child: Text(
+                                                'Double click screen or hit the pencil icon in the top right corner to write!',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .hintColor),
+                                              ),
+                                            )
+                                          // Parse and render the markdown text
+                                          : buildMarkdownWidget(
+                                              context,
+                                              data: previewBody,
+                                              filePath: widget.filePath,
+                                              shrinkWrap: true,
+                                              // tocController: _tocController,
                                             ),
-                                          )
-                                        : buildMarkdownWidget(
-                                            context,
-                                            data: previewBody,
-                                            tocController: _tocController,
-                                          ),
-                                  ),
+                                    ),
+                            ),
                           ),
                         ),
                       ),

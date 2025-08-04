@@ -10,26 +10,39 @@ import 'package:printnotes/utils/storage_system.dart';
 
 class CustomImgBuilder extends StatelessWidget {
   final String url;
+  final String filePath;
   final Map<String, String> attributes;
 
-  const CustomImgBuilder(this.url, this.attributes, {super.key});
+  const CustomImgBuilder(this.url, this.filePath, this.attributes, {super.key});
 
   @override
   Widget build(BuildContext context) {
     double editorFontSize = context.watch<EditorConfigProvider>().fontSize;
 
-    File getLocalImage() {
-      final allFiles = StorageSystem.listFolderContents(
+    // Get image stored locally, totally fine if fails or file doesn't exist
+    // as Image.file error builder will catch it
+    Future<File> getLocalImage() async {
+      // Check if image (url) is relative to note (filePath)
+      File relativeFile = File(join(
+          dirname(filePath),
+          url.startsWith('.${Platform.pathSeparator}')
+              ? url.replaceFirst('.${Platform.pathSeparator}', '')
+              : url));
+      if (relativeFile.existsSync()) return relativeFile;
+
+      // Otherwise, go through all files in mainDir to find by exact name
+      final allFiles = await StorageSystem.listFolderContents(
         context.read<SettingsProvider>().mainDir,
         recursive: true,
         showHidden: true,
       );
-
-      for (var item in allFiles) {
+      for (FileSystemEntity item in allFiles) {
         if (item is File && basename(item.path) == url) {
           return File(item.path);
         }
       }
+
+      // Catch for if full path was used instead
       return File(url);
     }
 
@@ -46,7 +59,10 @@ class CustomImgBuilder extends StatelessWidget {
                   showDuration: const Duration(seconds: 5),
                   enableTapToDismiss: true,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .error
+                        .withValues(alpha: 0.5),
                   ),
                   message: text,
                   textStyle:
@@ -85,11 +101,19 @@ class CustomImgBuilder extends StatelessWidget {
             errorMessage('Image could not be loaded'),
       );
     } else {
-      return Image.file(
-        getLocalImage(),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => errorMessage(
-            'Incorrect path or file type, check if url is correct'),
+      return FutureBuilder(
+        future: getLocalImage(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          return Image.file(
+            snapshot.data != null ? snapshot.data! : File(''),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => errorMessage(
+                'Incorrect path or file type, check if url is correct'),
+          );
+        },
       );
     }
   }

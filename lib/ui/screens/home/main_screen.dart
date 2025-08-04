@@ -49,7 +49,9 @@ class _MainPageState extends State<MainPage> {
               ),
               drawer: Drawer(
                 backgroundColor: Theme.of(context).colorScheme.surface,
-                child: const DrawerView(),
+                child: DrawerView(
+                  onRefresh: () => setState(() {}),
+                ),
               ),
             ),
           );

@@ -1,20 +1,30 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter/material.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/utils/parsers/csv_parser.dart';
 import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
 
-// The Abomination Folder that handles everything related to folders on the device
+/// Used by [StorageSystem.searchItem] with [StorageSystem.searchMultiFileContents]
+class SearchPayload {
+  final String query;
+  final List<File> files;
+
+  SearchPayload({required this.query, required this.files});
+}
+
+// The Abomination File that handles everything related to folders on the device
 // better to rewrite and clean up everything but this sand castle is already held by hot glue
+// and it can only grow now
 class StorageSystem {
   // For searching
 
-  static List<FileSystemEntity> searchItems(String query, String mainDir) {
+  static Future<List<FileSystemEntity>> searchItems(
+      String query, String mainDir) async {
     List<FileSystemEntity> allItems =
-        StorageSystem.listFolderContents(mainDir, recursive: true);
+        await StorageSystem.listFolderContents(mainDir, recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
       return fileTypeChecker(item) == CFileType.note;
@@ -24,35 +34,65 @@ class StorageSystem {
     query = query.toLowerCase();
 
     // First match by name
-    results.addAll(filteredItems
+    results = filteredItems
         .where((item) => path.basename(item.path.toLowerCase()).contains(query))
-        .toList());
+        .toList();
 
-    // Then by characters in file
-    for (var item in filteredItems) {
-      String fileText = File(item.path)
-          .readAsStringSync()
-          .replaceAll('\n', ' ')
-          .toLowerCase();
-      // Files that match by their contents
-      if (fileText.contains(query)) {
-        results.add(item);
+    // Isolate files for compute
+    final List<File> files = filteredItems.map((e) => File(e.path)).toList();
+
+    // Multi-threading search baby (idk how this all works >.<)
+    final List<File> matchedFiles = await compute(
+        searchMultiFileContents, SearchPayload(query: query, files: files));
+
+    // Merge files found by name and contents, avoids duplicates
+    final Set<String> pathSet = results.map((e) => e.path).toSet();
+    for (File file in matchedFiles) {
+      if (!pathSet.contains(file.path)) {
+        results.add(file);
       }
-      // Files that have tags
-      // TODO: Display file multiple times if multiple tags inside and correctly display it in subtitle
+    }
+
+    return results;
+  }
+
+  /// Used by [searchItem] with compute
+  // and I don't know if it should be used by other function
+  // idr if this is duplicate code
+  static List<File> searchMultiFileContents(SearchPayload payload) {
+    final query = payload.query;
+    final files = payload.files;
+    final List<File> results = [];
+
+    // Loop through files and check contents
+    for (File file in files) {
+      if (!file.existsSync()) continue;
+
+      final content =
+          file.readAsStringSync().replaceAll('\n', ' ').toLowerCase();
+
+      // Files that match by their contents
+      if (content.contains(query)) {
+        results.add(file);
+        continue;
+      }
+
+      // TODO: Display the tag maybe?
+
+      // If files have tags, check em
       if (query.contains('tags:')) {
-        List<RegExpMatch> tags = RegExp(r'#\w+').allMatches(fileText).toList();
-        String cleanQuery = query.replaceFirst('tags:', '').trim();
+        final List<RegExpMatch> tags =
+            RegExp(r'#\w+').allMatches(content).toList();
+        final String cleanQuery = query.replaceFirst('tags:', '').trim();
+
         if (tags.isNotEmpty) {
           // Display all files with tags
           if (cleanQuery.isEmpty) {
-            results.add(item);
-          } else {
+            results.add(file);
             // Display searched files with tags
-            if (tags.any((e) =>
-                fileText.substring(e.start, e.end).contains(cleanQuery))) {
-              results.add(item);
-            }
+          } else if (tags.any(
+              (e) => content.substring(e.start, e.end).contains(cleanQuery))) {
+            results.add(file);
           }
         }
       }
@@ -63,17 +103,11 @@ class StorageSystem {
 
   // Methods for archiving
 
-  // TODO: Fully integrate with SettingsProvider
-  static Future<String> getArchivePath() async {
-    final basDir = await DataPath.selectedDirectory;
-    return path.join(basDir!, '.archive');
-  }
-
   static Future<void> unarchiveItem(String archivedItemPath) async {
     final baseDir = await DataPath.selectedDirectory;
-    final archiveDir = await getArchivePath();
+    final archiveDir = path.join(baseDir!, '.archive');
     final relativePath = path.relative(archivedItemPath, from: archiveDir);
-    final destinationPath = path.join(baseDir!, relativePath);
+    final destinationPath = path.join(baseDir, relativePath);
 
     final archivedItem = FileSystemEntity.typeSync(archivedItemPath) ==
             FileSystemEntityType.directory
@@ -99,7 +133,7 @@ class StorageSystem {
 
   static Future<void> archiveItem(String itemPath) async {
     final baseDir = await DataPath.selectedDirectory;
-    final archiveDir = await getArchivePath();
+    final archiveDir = path.join(baseDir!, '.archive');
     final relativePath = path.relative(itemPath, from: baseDir);
     final archivePath = path.join(archiveDir, relativePath);
 
@@ -129,9 +163,9 @@ class StorageSystem {
       Directory source, Directory destination) async {
     await destination.create(recursive: true);
 
-    await for (var entity in source.list(recursive: false)) {
+    await for (FileSystemEntity entity in source.list(recursive: false)) {
       if (entity is Directory) {
-        var newDirectory =
+        Directory newDirectory =
             Directory(path.join(destination.path, path.basename(entity.path)));
         await _copyDirectory(entity, newDirectory);
       } else if (entity is File) {
@@ -173,16 +207,16 @@ class StorageSystem {
     return '';
   }
 
-  static String getFilePreview(
+  static Future<String> getFilePreview(
     String filePath, {
     bool parseFrontmatter = false,
     bool isTrimmed = true,
     int previewLength = 100,
-  }) {
+  }) async {
     try {
       final file = File(filePath);
-      if (file.existsSync()) {
-        String content = file.readAsStringSync();
+      if (await file.exists()) {
+        String content = await file.readAsString();
         if (parseFrontmatter) {
           final doc = FrontmatterHandleParsing.getParsedData(content);
           if (doc != null) content = doc.body;
@@ -255,16 +289,10 @@ class StorageSystem {
 
   // Methods to trash and permanent delete
 
-  // TODO: Fully integrate with SettingsProvider
-  static Future<String> getTrashPath() async {
-    final basDir = await DataPath.selectedDirectory;
-    return path.join(basDir!, '.trash');
-  }
-
   static Future<void> trashItem(String itemPath) async {
     final baseDir = await DataPath.selectedDirectory;
-    final deleteDir = await getTrashPath();
-    final relativePath = path.relative(itemPath, from: baseDir!);
+    final deleteDir = path.join(baseDir!, '.trash');
+    final relativePath = path.relative(itemPath, from: baseDir);
     final itemName = path.basename(itemPath);
     final deletedPath =
         path.join(deleteDir, path.dirname(relativePath), itemName);
@@ -293,11 +321,11 @@ class StorageSystem {
 
   static Future<void> restoreDeletedItem(String deletedItemPath) async {
     final baseDir = await DataPath.selectedDirectory;
-    final deleteDir = await getTrashPath();
+    final deleteDir = path.join(baseDir!, '.trash');
     final itemName = path.basename(deletedItemPath);
     final relativePath =
         path.relative(path.dirname(deletedItemPath), from: deleteDir);
-    final destinationPath = path.join(baseDir!, relativePath, itemName);
+    final destinationPath = path.join(baseDir, relativePath, itemName);
 
     final deletedItem = FileSystemEntity.typeSync(deletedItemPath) ==
             FileSystemEntityType.directory
@@ -334,11 +362,11 @@ class StorageSystem {
 
   // Get files (and folders) of a folder
 
-  static List<FileSystemEntity> listFolderContents(String folderPath,
-      {bool recursive = false, bool showHidden = false}) {
+  static Future<List<FileSystemEntity>> listFolderContents(String folderPath,
+      {bool recursive = false, bool showHidden = false}) async {
     final folder = Directory(folderPath);
-    if (folder.existsSync()) {
-      final contents = folder.listSync(recursive: recursive).toList();
+    if (await folder.exists()) {
+      final contents = await folder.list(recursive: recursive).toList();
       if (showHidden) {
         return contents;
       } else {
@@ -370,7 +398,7 @@ class StorageSystem {
 
   static Future<void> moveManyItems(
       List<FileSystemEntity> items, String newLocation) async {
-    for (var item in items) {
+    for (FileSystemEntity item in items) {
       final String itemName = path.basename(item.path);
       final String newPath = path.join(newLocation, itemName);
       try {

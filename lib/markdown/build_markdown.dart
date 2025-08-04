@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:markdown_widget/markdown_widget.dart';
 import 'package:provider/provider.dart';
+import './markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
@@ -10,17 +10,24 @@ import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_highlight/themes/a11y-light.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 
-import 'package:printnotes/ui/components/markdown/rendering/code_wrapper.dart';
-import 'package:printnotes/ui/components/markdown/rendering/custom_img_builder.dart';
-import 'package:printnotes/ui/components/markdown/rendering/custom_node.dart';
-import 'package:printnotes/ui/components/markdown/rendering/highlighter.dart';
-import 'package:printnotes/ui/components/markdown/rendering/underline.dart';
-import 'package:printnotes/ui/components/markdown/rendering/latex.dart';
-import 'package:printnotes/ui/components/markdown/markdown_checkbox.dart';
-import 'package:printnotes/ui/components/markdown/rendering/note_tags.dart';
+import 'package:printnotes/markdown/rendering/code_wrapper.dart';
+import 'package:printnotes/markdown/rendering/custom_img_builder.dart';
+import 'package:printnotes/markdown/rendering/custom_node.dart';
+import 'package:printnotes/markdown/rendering/latex.dart';
+import 'package:printnotes/markdown/rendering/wiki_link.dart';
+import 'package:printnotes/markdown/rendering/highlighter.dart';
+import 'package:printnotes/markdown/rendering/underline.dart';
+import 'package:printnotes/markdown/rendering/note_tags.dart';
 
-MarkdownConfig theMarkdownConfigs(BuildContext context,
-    {bool? hideCodeButtons, bool inEditor = false, Color? textColor}) {
+import 'package:printnotes/markdown/link_handler.dart';
+
+MarkdownConfig theMarkdownConfigs(
+  BuildContext context, {
+  required String filePath,
+  bool? hideCodeButtons,
+  bool inEditor = false,
+  Color? textColor,
+}) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final config =
       isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
@@ -76,10 +83,7 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
       ),
     ),
     ListConfig(marginLeft: editorFontSize * 1.5),
-    CheckBoxConfig(
-      builder: (checked) =>
-          markdownCheckBox(checked, inEditor ? editorFontSize * 1.25 : null),
-    ),
+    CheckBoxConfig(size: inEditor ? editorFontSize * 1.25 : null),
     TableConfig(
       wrapper: (table) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -88,26 +92,36 @@ MarkdownConfig theMarkdownConfigs(BuildContext context,
     ),
     HrConfig(
       height: 2,
-      color:
-          textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+      color: textColor ??
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
     ),
     BlockquoteConfig(
-      textColor:
-          textColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-      sideColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+      textColor: textColor ??
+          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+      sideColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
     ),
-    ImgConfig(builder: (url, attributes) => CustomImgBuilder(url, attributes)),
+    ImgConfig(
+      builder: (url, attributes) => CustomImgBuilder(url, filePath, attributes),
+    ),
+    LinkConfig(onTap: (url) => linkHandler(context, url)),
+    WikiLinkConfig(onTap: (url) => linkHandler(context, url)),
     const PreConfig().copy(
       theme: themeMap[userCodeHighlight] ??
           (isDark ? a11yDarkTheme : a11yLightTheme),
       decoration: BoxDecoration(
           color: inEditor
-              ? Theme.of(context).colorScheme.surfaceContainer.withOpacity(0.5)
-              : Theme.of(context).colorScheme.surface.withOpacity(0.5),
+              ? Theme.of(context)
+                  .colorScheme
+                  .surfaceContainer
+                  .withValues(alpha: 0.5)
+              : Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
           borderRadius: BorderRadius.all(Radius.circular(12)),
           border: Border.all(
               width: 1,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2))),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.2))),
       wrapper: codeWrapper,
       textStyle: TextStyle(fontSize: inEditor ? editorFontSize : null),
       styleNotMatched: TextStyle(fontSize: inEditor ? editorFontSize : null),
@@ -125,7 +139,7 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
             e.attributes,
             config,
             tagBackgroundColor:
-                Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
             tagTextColor: isDark
                 ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).colorScheme.primary,
@@ -134,12 +148,14 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
   return MarkdownGenerator(
     generators: [
       if (context.watch<SettingsProvider>().useLatex) latexGenerator,
+      // wikiLinkGeneratorWithTag,
       highlighterGeneratorWithTag,
       underlineGeneratorWithTag,
       noteTagGenerator,
     ],
     inlineSyntaxList: [
       if (context.watch<SettingsProvider>().useLatex) LatexSyntax(),
+      WikiLinkSyntax(),
       HighlighterSyntax(),
       UnderlineSyntax(),
       NoteTagSyntax()
@@ -153,12 +169,19 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
   );
 }
 
-Widget buildMarkdownWidget(BuildContext context,
-    {required String data, bool? selectable, TocController? tocController}) {
+Widget buildMarkdownWidget(
+  BuildContext context, {
+  required String data,
+  required String filePath,
+  bool? selectable,
+  bool shrinkWrap = false,
+  TocController? tocController,
+}) {
   return MarkdownWidget(
     data: data,
     selectable: selectable ?? true,
-    config: theMarkdownConfigs(context, inEditor: true),
+    config: theMarkdownConfigs(context, filePath: filePath, inEditor: true),
+    shrinkWrap: shrinkWrap,
     tocController: tocController,
     markdownGenerator: theMarkdownGenerators(context),
   );

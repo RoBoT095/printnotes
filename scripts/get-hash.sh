@@ -2,7 +2,7 @@
 
 # Define the output directory and hash file
 OUTPUT_DIR="../outputs"
-HASH_FILE="app_hashes.txt"
+HASH_FILE="../outputs/app_hashes.txt"
 
 # Check if the outputs directory exists
 if [ ! -d "$OUTPUT_DIR" ]; then
@@ -15,9 +15,12 @@ if [ -f "$HASH_FILE" ]; then
   rm "$HASH_FILE"
 fi
 
+# Remove all .sha1 files in the outputs directory
+find "$OUTPUT_DIR" -type f -name "*.sha1" -exec rm -f {} +
+
 # Count how many files need processing
 file_count=$(find "$OUTPUT_DIR" -type f | wc -l)
-echo "Generating SHA1 hashes for $file_count files in $OUTPUT_DIR..."
+echo "Generating SHA1 hashes for $file_count files in $OUTPUT_DIR folder"
 
 # Process each file in the directory
 find "$OUTPUT_DIR" -type f | sort | while read -r file; do

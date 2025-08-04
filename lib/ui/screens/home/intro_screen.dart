@@ -83,7 +83,7 @@ class IntroScreen extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .surfaceContainer
-                        .withOpacity(0.6),
+                        .withValues(alpha: 0.6),
                     child: const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
@@ -123,6 +123,17 @@ class IntroScreen extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondary,
             )),
           ),
+        PageViewModel(
+          title: "Internet Usage",
+          body:
+              "This app uses internet access solely for the purpose of loading images from external URLs when rendered through Markdown or HTML.\n\nNo additional data is transmitted, collected, or stored as user privacy is important.",
+          image: Center(
+              child: Icon(
+            Icons.wifi_lock,
+            size: 150.0,
+            color: Theme.of(context).colorScheme.secondary,
+          )),
+        ),
       ],
       showSkipButton: false,
       showNextButton: true,

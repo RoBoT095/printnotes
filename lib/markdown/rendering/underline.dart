@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:markdown_widget/markdown_widget.dart';
+import '../markdown_widget/markdown_widget.dart';
 import 'package:markdown/markdown.dart' as m;
 
 const _underlineTag = 'underline';

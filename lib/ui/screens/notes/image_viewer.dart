@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/file_info.dart';
 import 'package:printnotes/utils/open_explorer.dart';
 
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+
 class ImageViewScreen extends StatelessWidget {
   const ImageViewScreen({super.key, required this.imageFile});
 
@@ -16,29 +18,31 @@ class ImageViewScreen extends StatelessWidget {
     bool isScreenLarge = screenWidth >= 600;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: SelectableText(
-          imageFile.path.split('/').last,
-          maxLines: 1,
-        ),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {},
-            itemBuilder: (context) => <PopupMenuEntry>[
-              PopupMenuItem(
-                child: ListTile(
-                  leading: const Icon(Icons.folder_open),
-                  title: const Text("Open Location"),
-                  iconColor: mobileNullColor(context),
-                  textColor: mobileNullColor(context),
-                ),
-                onTap: () async =>
-                    await openExplorer(context, imageFile.parent.path),
-              ),
-            ],
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          centerTitle: true,
+          title: SelectableText(
+            imageFile.path.split('/').last,
+            maxLines: 1,
           ),
-        ],
+          actions: [
+            PopupMenuButton(
+              onSelected: (value) {},
+              itemBuilder: (context) => <PopupMenuEntry>[
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: const Icon(Icons.folder_open),
+                    title: const Text("Open Location"),
+                    iconColor: mobileNullColor(context),
+                    textColor: mobileNullColor(context),
+                  ),
+                  onTap: () async =>
+                      await openExplorer(context, imageFile.parent.path),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+import 'package:printnotes/utils/handlers/open_url_link.dart';
 import 'package:printnotes/constants/library_list.dart';
-
-launchURL(String urlString) async {
-  Uri url = Uri.parse(urlString);
-  try {
-    await launchUrl(url);
-  } catch (e) {
-    throw 'Could not launch $url with error $e';
-  }
-}
 
 void showLibrariesDialog(BuildContext context) {
   showDialog(
@@ -32,7 +23,7 @@ void showLibrariesDialog(BuildContext context) {
                 child: ListTile(
                   title: InkWell(
                     onTap: () {
-                      launchURL(libraries[index].url);
+                      urlHandler(context, libraries[index].url);
                     },
                     child: Text(
                         '${libraries[index].name} by ${libraries[index].publisher}'),
@@ -43,7 +34,7 @@ void showLibrariesDialog(BuildContext context) {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.5)),
+                            .withValues(alpha: 0.5)),
                   ),
                 ),
               );

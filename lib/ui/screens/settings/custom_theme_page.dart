@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
+
+import 'package:printnotes/utils/handlers/open_url_link.dart';
+import 'package:printnotes/utils/config_file/custom_themes/custom_theme_model.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_validator.dart';
 import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
+
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class CustomThemePage extends StatefulWidget {
@@ -37,13 +41,6 @@ class _CustomThemePageState extends State<CustomThemePage> {
       darkThemes = listAllThemeFromConfig(isDark: true);
       lightThemes = listAllThemeFromConfig(isDark: false);
     });
-  }
-
-  Future<void> _launchUrl(url) async {
-    url = Uri.parse(url);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
   }
 
   void addItemBack() {
@@ -116,7 +113,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
         trailing: SizedBox(
           width: ((circleRadius * 2) * 7) + 8,
           child: Card.filled(
-            color: Color(list[index]['secondary']).withOpacity(0.2),
+            color: Color(list[index]['secondary']).withValues(alpha: 0.2),
             child: Row(
               children: <Widget>[
                 CircleAvatar(
@@ -161,9 +158,11 @@ class _CustomThemePageState extends State<CustomThemePage> {
     bool isScreenLarge = screenWidth >= 600;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Custom Colors'),
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          centerTitle: true,
+          title: const Text('Custom Colors'),
+        ),
       ),
       body: DefaultTabController(
         length: 3,
@@ -222,7 +221,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                                 .colorScheme
                                                 .secondary),
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap = () => _launchUrl(
+                                          ..onTap = () => urlHandler(context,
                                               'https://design.printnotes.app'),
                                       ),
                                     ])),
@@ -245,7 +244,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onSurface
-                                              .withOpacity(0.6)),
+                                              .withValues(alpha: 0.6)),
                                     ),
                                     enableSuggestions: false,
                                     validator: (name) {
@@ -276,7 +275,7 @@ class _CustomThemePageState extends State<CustomThemePage> {
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onSurface
-                                              .withOpacity(0.6)),
+                                              .withValues(alpha: 0.6)),
                                     ),
                                     enableSuggestions: false,
                                     validator: (theme) {

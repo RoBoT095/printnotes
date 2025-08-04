@@ -9,7 +9,7 @@ bool isMobile() =>
 
 Color mobileNullColor(BuildContext context) => !isMobile()
     ? Theme.of(context).colorScheme.onSurface
-    : Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
+    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5);
 
 Future<bool> openExplorer(BuildContext context, String filePath) async {
   if (Platform.isLinux) {

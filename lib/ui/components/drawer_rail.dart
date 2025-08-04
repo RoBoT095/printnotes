@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
+
+import 'package:printnotes/utils/handlers/open_url_link.dart';
 
 import 'package:printnotes/ui/screens/archive/archive_screen.dart';
 import 'package:printnotes/ui/screens/trash/trash_screen.dart';
@@ -74,8 +75,8 @@ class DrawerRailView extends StatelessWidget {
             IconButton(
                 icon: const Icon(Icons.help_outline),
                 tooltip: 'Wiki',
-                onPressed: () => launchUrl(
-                    Uri.parse('https://github.com/RoBoT095/printnotes/wiki'))),
+                onPressed: () => urlHandler(
+                    context, 'https://github.com/RoBoT095/printnotes/wiki')),
           ],
         ),
       ),

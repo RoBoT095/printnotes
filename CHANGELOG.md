@@ -1,5 +1,60 @@
 # Changelog + Dev Log
 
+### (August 3, 2025)
+
+- Added popup with a list of users background images for app where they can delete them
+- Added error handling for if image that is being used by apps background gets deleted outside of app
+
+### (July 16 - August 2, 2025)
+
+Been working on new styling options and forgot to write changelog
+
+- Removed Table of Contents in favor of scroll position remembered between edit and preview mode (might rework it back in later)
+- In settings, removed layout section and moved to styling and the new "More Options" page
+- In More Design Options page, added:
+  - Home Screen settings:
+    - Background image
+      - Bg Image opacity, fit, and repeat
+    - Note Tile Opacity
+    - Note Text Preview Amount
+  - Grid/List View Specific settings:
+    - Note Tile Shape (round or square border)
+    - Note Tile Text Padding (spacing between border and text)
+    - Note Tile Spacing (space between each tile)
+  - Note Editor settings:
+    - Note Editor Padding (space between edge and text)
+
+### July (12 & 25, 2025)
+
+Fixed certain things not reloading page due to the optimization changes
+
+### (July 6, 2025)
+
+- Merged url handlers
+- Fixed pdf search bar
+- Optimized general searching
+- Changed StorageSystem.listFolderContents into a Future which in theory should improve performance
+- Changed StorageSystem.getFilePreview into a Future
+- Migrates withOpacity to withValues()
+- App version bump
+
+### (July 4-5, 2025)
+
+- Moved [markdown_widget](https://github.com/asjqkkkk/markdown_widget) library in house to have better control over it for future updates
+- Added ability to link to files with WikiLinks and regular links
+- Forgot to mention that I bumped flutter version from `3.32.2` to `3.32.5` due to some bugs with that version
+- Added option to hide title bar on linux and windows
+- On desktop, title bars (aka AppBar) in the app can now be used to grab the window around
+
+### (June 11, 2025)
+
+- Improved local image relative path logic further
+
+### (June 10, 2025)
+
+- Changed logic for referencing local images to allow relative path
+- Added internet usage info page to IntroScreen to clear confusion regarding internet access
+
 ### (June 7, 2025)
 
 - Upgraded project from flutter version `3.29.2` to `3.32.2`

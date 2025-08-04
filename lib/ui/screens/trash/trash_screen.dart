@@ -9,6 +9,8 @@ import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 import 'package:printnotes/utils/storage_system.dart';
 
+import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
+
 class DeletedScreen extends StatefulWidget {
   const DeletedScreen({super.key});
 
@@ -27,11 +29,11 @@ class _DeletedScreenState extends State<DeletedScreen> {
     _loadDeletedItems();
   }
 
-  void _loadDeletedItems([String? folderPath]) {
+  Future<void> _loadDeletedItems([String? folderPath]) async {
     final deletePath = context.read<SettingsProvider>().trashPath;
     final currentPath = folderPath ?? deletePath;
     final items =
-        StorageSystem.listFolderContents(currentPath, showHidden: true);
+        await StorageSystem.listFolderContents(currentPath, showHidden: true);
     setState(() {
       _deletedItems = items;
       _currentPath = currentPath;
@@ -101,7 +103,10 @@ class _DeletedScreenState extends State<DeletedScreen> {
             size: 48,
             color: isDirectory
                 ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                : Theme.of(context)
+                    .colorScheme
+                    .secondary
+                    .withValues(alpha: 0.8),
           ),
           title: Text(
             name,
@@ -116,44 +121,46 @@ class _DeletedScreenState extends State<DeletedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        centerTitle: true,
-        title: Text(_currentFolderName),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
+      appBar: AppBarDragWrapper(
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          centerTitle: true,
+          title: Text(_currentFolderName),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+            ),
+            onPressed: context.read<NavigationProvider>().routeHistory.last !=
+                    context.read<SettingsProvider>().trashPath
+                ? () {
+                    setState(() => _loadDeletedItems(
+                        context.read<NavigationProvider>().navigateBack()));
+                  }
+                : () {
+                    context.read<NavigationProvider>().navigateBack();
+                    Navigator.pop(context);
+                  },
           ),
-          onPressed: context.read<NavigationProvider>().routeHistory.last !=
-                  context.read<SettingsProvider>().trashPath
-              ? () {
-                  setState(() => _loadDeletedItems(
-                      context.read<NavigationProvider>().navigateBack()));
+          actions: [
+            PopupMenuButton(
+              onSelected: (value) {
+                if (value == 'delAll') {
+                  for (final item in _deletedItems) {
+                    ItemDeletionHandler.handlePermanentItemDelete(
+                        context, item, () => _loadDeletedItems());
+                  }
                 }
-              : () {
-                  context.read<NavigationProvider>().navigateBack();
-                  Navigator.pop(context);
-                },
+              },
+              itemBuilder: (context) => <PopupMenuEntry>[
+                const PopupMenuItem(
+                  value: 'delAll',
+                  child: Text("Empty Out Bin"),
+                ),
+              ],
+            ),
+          ],
         ),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              if (value == 'delAll') {
-                for (final item in _deletedItems) {
-                  ItemDeletionHandler.handlePermanentItemDelete(
-                      context, item, () => _loadDeletedItems());
-                }
-              }
-            },
-            itemBuilder: (context) => <PopupMenuEntry>[
-              const PopupMenuItem(
-                value: 'delAll',
-                child: Text("Empty Out Bin"),
-              ),
-            ],
-          ),
-        ],
       ),
       body: _deletedItems.isEmpty
           ? const Center(
