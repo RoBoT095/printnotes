@@ -125,4 +125,8 @@ class DataPath {
     }
     return imgList;
   }
+
+  static Future<void> deleteBgImage(String path) async {
+    await File(path).delete();
+  }
 }

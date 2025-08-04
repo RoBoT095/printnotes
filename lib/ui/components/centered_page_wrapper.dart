@@ -6,12 +6,14 @@ class CenteredPageWrapper extends StatelessWidget {
     required this.child,
     this.padding,
     this.width,
+    this.height,
     this.decoration,
   });
 
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final double? width;
+  final double? height;
   final Decoration? decoration;
 
   @override
@@ -30,6 +32,7 @@ class CenteredPageWrapper extends StatelessWidget {
           : null,
       padding: padding,
       width: width, // 1000
+      height: height,
       decoration: decoration,
       child: child,
     );

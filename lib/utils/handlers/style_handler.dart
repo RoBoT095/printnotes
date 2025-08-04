@@ -10,6 +10,10 @@ class StyleHandler {
     return await DataPath.getBgImages();
   }
 
+  static Future<void> deleteBgImage(String path) async {
+    return await DataPath.deleteBgImage(path);
+  }
+
   static BoxFit getBgImageFit(String fit) {
     switch (fit) {
       case 'contain':

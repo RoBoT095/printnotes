@@ -165,8 +165,12 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void setBgImagePath(String? path) {
-    _bgImagePath = path;
-    UserStylePref.setBgImagePath(path);
+    String? imgPath;
+    if (path != null && File(path).existsSync()) {
+      imgPath = path;
+    }
+    _bgImagePath = imgPath;
+    UserStylePref.setBgImagePath(imgPath);
     notifyListeners();
   }
 
