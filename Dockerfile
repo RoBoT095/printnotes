@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev 
 
 # Accept android licenses
-RUN flutter doctor --android-licenses
+RUN yes | flutter doctor --android-licenses
 
 # Set Java 17 as the default version instead of 21
 RUN update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
