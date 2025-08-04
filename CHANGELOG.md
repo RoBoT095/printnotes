@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (August 3, 2025)
+
+- Added popup with a list of users background images for app where they can delete them
+- Added error handling for if image that is being used by apps background gets deleted outside of app
+
 ### (July 16 - August 2, 2025)
 
 Been working on new styling options and forgot to write changelog
