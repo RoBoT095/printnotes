@@ -11,9 +11,7 @@ import 'package:printnotes/ui/components/drawer.dart';
 import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.title});
-
-  final String title;
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -42,7 +40,6 @@ class _MainPageState extends State<MainPage> {
               }
             },
             child: MainScaffold(
-              title: widget.title,
               body: NotesDisplay(
                 key: ValueKey(context.watch<SettingsProvider>().mainDir),
                 updateCanPop: _updateCanPop,

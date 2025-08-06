@@ -71,6 +71,17 @@ class DrawerView extends StatelessWidget {
                           path: context.read<SettingsProvider>().mainDir);
                       onRefresh();
                     }),
+                ExpansionTile(
+                  leading: Icon(Icons.tag),
+                  title: Text('Tags'),
+                  collapsedIconColor: Theme.of(context).colorScheme.secondary,
+                  children: [
+                    // TODO: Make a ListTile builder and use compute to scan all
+                    // note content on a separate thread.
+                  ],
+                  onExpansionChanged:
+                      (value) {}, // Maybe use provider to get tags when ExpansionTile is opened
+                ),
                 const Opacity(opacity: 0.2, child: Divider()),
                 ListTile(
                   leading: const Icon(Icons.archive_outlined),

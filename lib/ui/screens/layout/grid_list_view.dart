@@ -9,6 +9,7 @@ import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/style_handler.dart';
@@ -68,22 +69,24 @@ class _GridListViewState extends State<GridListView> {
       onLongPress: () => showBottomMenu(context, item, widget.onChange),
       child: AbsorbPointer(
         child: Card(
-          color: (isDirectory &&
-                  context.watch<SelectingProvider>().selectingMode)
-              ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
-              : (fmBgColor != null
-                      ? HexColor.fromHex(fmBgColor)
-                      : Theme.of(context).colorScheme.surfaceContainer)
-                  ?.withValues(
-                      alpha: context.watch<SettingsProvider>().noteTileOpacity),
+          color:
+              (isDirectory && context.watch<SelectingProvider>().selectingMode)
+                  ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
+                  : (fmBgColor != null
+                          ? HexColor.fromHex(fmBgColor)
+                          : Theme.of(context).colorScheme.surfaceContainer)
+                      ?.withValues(
+                          alpha: context
+                              .watch<CustomizationProvider>()
+                              .noteTileOpacity),
           shape: isSelected
               ? StyleHandler.getNoteTileShape(
-                  context.watch<SettingsProvider>().noteTileShape,
+                  context.watch<CustomizationProvider>().noteTileShape,
                   side: BorderSide(
                       color: Theme.of(context).colorScheme.primary, width: 5),
                   borderRadius: BorderRadius.circular(12))
               : StyleHandler.getNoteTileShape(
-                  context.watch<SettingsProvider>().noteTileShape),
+                  context.watch<CustomizationProvider>().noteTileShape),
           child: isDirectory
               ? ListTile(
                   leading: Icon(
@@ -102,7 +105,7 @@ class _GridListViewState extends State<GridListView> {
                 )
               : Padding(
                   padding: EdgeInsets.all(
-                      context.watch<SettingsProvider>().noteTilePadding),
+                      context.watch<CustomizationProvider>().noteTilePadding),
                   child: FutureBuilder(
                       future: fileItem(context, item,
                           fmColor != null ? HexColor.fromHex(fmColor) : null),
@@ -125,7 +128,7 @@ class _GridListViewState extends State<GridListView> {
       BuildContext context, FileSystemEntity item, Color? color) async {
     final itemName = path.basename(item.path);
     final useFM = context.read<SettingsProvider>().useFrontmatter;
-    final previewLength = context.watch<SettingsProvider>().previewLength;
+    final previewLength = context.watch<CustomizationProvider>().previewLength;
     final markdownConfigs = theMarkdownConfigs(context,
         filePath: item.path, hideCodeButtons: true, textColor: color);
     final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
@@ -207,8 +210,10 @@ class _GridListViewState extends State<GridListView> {
           sliver: SliverMasonryGrid.count(
             crossAxisCount: _displayGridCount(
                 context, context.watch<SettingsProvider>().layout),
-            mainAxisSpacing: context.watch<SettingsProvider>().noteTileSpacing,
-            crossAxisSpacing: context.watch<SettingsProvider>().noteTileSpacing,
+            mainAxisSpacing:
+                context.watch<CustomizationProvider>().noteTileSpacing,
+            crossAxisSpacing:
+                context.watch<CustomizationProvider>().noteTileSpacing,
             childCount: widget.items.length,
             itemBuilder: (context, index) => _buildItem(context, index),
           ),

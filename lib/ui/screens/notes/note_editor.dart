@@ -9,6 +9,7 @@ import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
@@ -326,8 +327,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
     return SafeArea(
       child: CenteredPageWrapper(
-        padding:
-            EdgeInsets.all(context.watch<SettingsProvider>().noteEditorPadding),
+        padding: EdgeInsets.all(
+            context.watch<CustomizationProvider>().noteEditorPadding),
         width: 1000,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,

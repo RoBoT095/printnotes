@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
-import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 
 import 'package:printnotes/utils/handlers/style_handler.dart';
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
@@ -106,7 +106,7 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
     final value = await StyleHandler.uploadBgImage();
     if (context.mounted) {
       if (value != null) {
-        context.read<SettingsProvider>().setBgImagePath(value);
+        context.read<CustomizationProvider>().setBgImagePath(value);
         _loadImages();
       }
     }
@@ -117,8 +117,8 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
     _bgImgDropItemList.removeWhere((e) => e.value == imgPath);
     _bgImgPathList.removeWhere((e) => e == imgPath);
     if (context.mounted) {
-      if (context.read<SettingsProvider>().bgImagePath == imgPath) {
-        context.read<SettingsProvider>().setBgImagePath(null);
+      if (context.read<CustomizationProvider>().bgImagePath == imgPath) {
+        context.read<CustomizationProvider>().setBgImagePath(null);
       }
     }
     _loadImages();
@@ -126,8 +126,8 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final watchSettings = context.watch<SettingsProvider>();
-    final readSettings = context.read<SettingsProvider>();
+    final watchCustomizations = context.watch<CustomizationProvider>();
+    final readCustomizations = context.read<CustomizationProvider>();
 
     return Scaffold(
       appBar: AppBarDragWrapper(
@@ -150,16 +150,16 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                   ),
                   Container(
                     // reflect the selected image
-                    decoration: watchSettings.bgImagePath != null
+                    decoration: watchCustomizations.bgImagePath != null
                         ? BoxDecoration(
                             image: DecorationImage(
                               repeat: StyleHandler.getBgImageRepeat(
-                                  watchSettings.bgImageRepeat),
+                                  watchCustomizations.bgImageRepeat),
                               fit: StyleHandler.getBgImageFit(
-                                  watchSettings.bgImageFit),
-                              opacity: watchSettings.bgImageOpacity,
-                              image:
-                                  FileImage(File(watchSettings.bgImagePath!)),
+                                  watchCustomizations.bgImageFit),
+                              opacity: watchCustomizations.bgImageOpacity,
+                              image: FileImage(
+                                  File(watchCustomizations.bgImagePath!)),
                             ),
                           )
                         : null,
@@ -174,14 +174,15 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                                   _bgImgDropItemList[1].value != 'add new image'
                               ? DropdownButton(
                                   items: _bgImgDropItemList,
-                                  value: watchSettings.bgImagePath,
+                                  value: watchCustomizations.bgImagePath,
                                   hint: Text('Select Image'),
                                   onChanged: (value) {
                                     if (value is String?) {
                                       if (value == 'add new image') {
                                         _uploadImage(context);
                                       } else {
-                                        readSettings.setBgImagePath(value);
+                                        readCustomizations
+                                            .setBgImagePath(value);
                                       }
                                     }
                                   },
@@ -200,26 +201,27 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                       trailing: Icon(Icons.chevron_right),
                       onTap: () => delImgDialog(context),
                     ),
-                  if (watchSettings.bgImagePath != null)
+                  if (watchCustomizations.bgImagePath != null)
                     ListTile(
                       leading: Icon(Icons.opacity),
                       title: Text('Background Image Opacity'),
-                      trailing: Text('${watchSettings.bgImageOpacity * 100}%'),
+                      trailing:
+                          Text('${watchCustomizations.bgImageOpacity * 100}%'),
                       subtitle: Slider(
-                        value: watchSettings.bgImageOpacity,
+                        value: watchCustomizations.bgImageOpacity,
                         divisions: 10,
                         min: 0,
                         max: 1,
                         onChanged: (opacity) =>
-                            readSettings.setBgImageOpacity(opacity),
+                            readCustomizations.setBgImageOpacity(opacity),
                       ),
                     ),
-                  if (watchSettings.bgImagePath != null)
+                  if (watchCustomizations.bgImagePath != null)
                     ListTile(
                       leading: Icon(Icons.format_shapes),
                       title: Text('Background Image fit'),
                       trailing: DropdownButton(
-                        value: watchSettings.bgImageFit,
+                        value: watchCustomizations.bgImageFit,
                         items: [
                           DropdownMenuItem(
                             value: 'cover',
@@ -251,16 +253,17 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                           ),
                         ],
                         onChanged: (fit) {
-                          if (fit != null) readSettings.setBgImageFit(fit);
+                          if (fit != null)
+                            readCustomizations.setBgImageFit(fit);
                         },
                       ),
                     ),
-                  if (watchSettings.bgImagePath != null)
+                  if (watchCustomizations.bgImagePath != null)
                     ListTile(
                       leading: Icon(Icons.loop),
                       title: Text('Background Image Repeat'),
                       trailing: DropdownButton(
-                        value: watchSettings.bgImageRepeat,
+                        value: watchCustomizations.bgImageRepeat,
                         items: [
                           DropdownMenuItem(
                             value: 'noRepeat',
@@ -281,7 +284,7 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                         ],
                         onChanged: (repeat) {
                           if (repeat != null) {
-                            readSettings.setBgImageRepeat(repeat);
+                            readCustomizations.setBgImageRepeat(repeat);
                           }
                         },
                       ),
@@ -289,33 +292,28 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                   ListTile(
                     leading: Icon(Icons.opacity),
                     title: Text('Note Opacity'),
-                    trailing: Text('${watchSettings.noteTileOpacity * 100}%'),
+                    trailing:
+                        Text('${watchCustomizations.noteTileOpacity * 100}%'),
                     subtitle: Slider(
-                      value: watchSettings.noteTileOpacity,
+                      value: watchCustomizations.noteTileOpacity,
                       divisions: 10,
                       min: 0.0,
                       max: 1,
                       onChanged: (opacity) =>
-                          readSettings.setNoteTileOpacity(opacity),
+                          readCustomizations.setNoteTileOpacity(opacity),
                     ),
                   ),
                   ListTile(
                     leading: const Icon(Icons.list_alt_rounded),
                     title: const Text('Note Text Preview Amount'),
                     subtitle: Slider(
-                      value: context
-                          .watch<SettingsProvider>()
-                          .previewLength
-                          .toDouble(),
+                      value: watchCustomizations.previewLength.toDouble(),
                       min: 0,
                       max: 200,
                       divisions: 10,
-                      label: sliderLabels(
-                          context.watch<SettingsProvider>().previewLength),
+                      label: sliderLabels(watchCustomizations.previewLength),
                       onChanged: (value) {
-                        context
-                            .read<SettingsProvider>()
-                            .setPreviewLength(value.toInt());
+                        readCustomizations.setPreviewLength(value.toInt());
                       },
                     ),
                   ),
@@ -329,7 +327,7 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                     leading: Icon(Icons.interests),
                     title: Text('Note Tile Shape'),
                     trailing: DropdownButton(
-                      value: watchSettings.noteTileShape,
+                      value: watchCustomizations.noteTileShape,
                       items: [
                         DropdownMenuItem(
                           value: 'round',
@@ -341,34 +339,35 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                         ),
                       ],
                       onChanged: (shape) {
-                        if (shape != null) readSettings.setNoteTileShape(shape);
+                        if (shape != null)
+                          readCustomizations.setNoteTileShape(shape);
                       },
                     ),
                   ),
                   ListTile(
                     leading: Icon(Icons.padding),
                     title: Text('Note Tile Text Padding'),
-                    trailing: Text('${watchSettings.noteTilePadding} px'),
+                    trailing: Text('${watchCustomizations.noteTilePadding} px'),
                     subtitle: Slider(
-                      value: watchSettings.noteTilePadding,
+                      value: watchCustomizations.noteTilePadding,
                       divisions: 20,
                       min: 5,
                       max: 25,
                       onChanged: (padding) =>
-                          readSettings.setNoteTilePadding(padding),
+                          readCustomizations.setNoteTilePadding(padding),
                     ),
                   ),
                   ListTile(
                     leading: Icon(Icons.straighten),
                     title: Text('Note Tile Spacing'),
-                    trailing: Text('${watchSettings.noteTileSpacing} px'),
+                    trailing: Text('${watchCustomizations.noteTileSpacing} px'),
                     subtitle: Slider(
-                      value: watchSettings.noteTileSpacing,
+                      value: watchCustomizations.noteTileSpacing,
                       divisions: 20,
                       min: 0,
                       max: 20,
                       onChanged: (spacing) =>
-                          readSettings.setNoteTileSpacing(spacing),
+                          readCustomizations.setNoteTileSpacing(spacing),
                     ),
                   ),
                   const Divider(),
@@ -380,14 +379,15 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                   ListTile(
                     leading: Icon(Icons.padding_outlined),
                     title: Text('Note Editor Padding'),
-                    trailing: Text('${watchSettings.noteEditorPadding} px'),
+                    trailing:
+                        Text('${watchCustomizations.noteEditorPadding} px'),
                     subtitle: Slider(
-                      value: watchSettings.noteEditorPadding,
+                      value: watchCustomizations.noteEditorPadding,
                       divisions: 20,
                       min: 0,
                       max: 20,
                       onChanged: (padding) =>
-                          readSettings.setNoteEditorPadding(padding),
+                          readCustomizations.setNoteEditorPadding(padding),
                     ),
                   ),
                   // const Divider(),
