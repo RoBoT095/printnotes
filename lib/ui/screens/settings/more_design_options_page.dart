@@ -33,13 +33,15 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
     setState(() => _isLoading = true);
     final List<DropdownMenuItem> saveStateList = [];
     final list = await StyleHandler.getBgImageList();
-    for (String imgPath in list) {
+    if (list.isNotEmpty) {
+      for (String imgPath in list) {
+        saveStateList.add(
+            DropdownMenuItem(value: imgPath, child: Text(basename(imgPath))));
+      }
+      saveStateList.add(DropdownMenuItem(value: null, child: Text('No Image')));
       saveStateList.add(
-          DropdownMenuItem(value: imgPath, child: Text(basename(imgPath))));
+          DropdownMenuItem(value: 'add new image', child: Text('+ Add Image')));
     }
-    saveStateList.add(DropdownMenuItem(value: null, child: Text('No Image')));
-    saveStateList.add(
-        DropdownMenuItem(value: 'add new image', child: Text('+ Add Image')));
     setState(() {
       _bgImgDropItemList = saveStateList;
       _bgImgPathList = list;
@@ -128,6 +130,7 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
   Widget build(BuildContext context) {
     final watchCustomizations = context.watch<CustomizationProvider>();
     final readCustomizations = context.read<CustomizationProvider>();
+    bool isScreenLarge = MediaQuery.sizeOf(context).width >= 600;
 
     return Scaffold(
       appBar: AppBarDragWrapper(
@@ -166,35 +169,49 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
                     child: ListTile(
                       leading: Icon(Icons.image),
                       title: Text('Background Image'),
-                      subtitle: Text('Replace background color with image'),
+                      subtitle: isScreenLarge || _bgImgDropItemList.isEmpty
+                          ? Text('Replace background color with image')
+                          : DropdownButton(
+                              items: _bgImgDropItemList,
+                              value: watchCustomizations.bgImagePath,
+                              isExpanded: true,
+                              hint: Text('Select Image'),
+                              onChanged: (value) {
+                                if (value is String?) {
+                                  if (value == 'add new image') {
+                                    _uploadImage(context);
+                                  } else {
+                                    readCustomizations.setBgImagePath(value);
+                                  }
+                                }
+                              },
+                            ),
                       trailing:
                           // If empty, show icon, otherwise dropdown of images
-                          _bgImgDropItemList.isNotEmpty &&
-                                  _bgImgDropItemList[0].value != null &&
-                                  _bgImgDropItemList[1].value != 'add new image'
-                              ? DropdownButton(
-                                  items: _bgImgDropItemList,
-                                  value: watchCustomizations.bgImagePath,
-                                  hint: Text('Select Image'),
-                                  onChanged: (value) {
-                                    if (value is String?) {
-                                      if (value == 'add new image') {
-                                        _uploadImage(context);
-                                      } else {
-                                        readCustomizations
-                                            .setBgImagePath(value);
-                                      }
-                                    }
-                                  },
-                                )
-                              : IconButton(
+                          _bgImgDropItemList.isEmpty
+                              ? IconButton(
                                   onPressed: () => _uploadImage(context),
-                                  icon: Icon(Icons.add)),
+                                  icon: Icon(Icons.add))
+                              : isScreenLarge
+                                  ? DropdownButton(
+                                      items: _bgImgDropItemList,
+                                      value: watchCustomizations.bgImagePath,
+                                      hint: Text('Select Image'),
+                                      onChanged: (value) {
+                                        if (value is String?) {
+                                          if (value == 'add new image') {
+                                            _uploadImage(context);
+                                          } else {
+                                            readCustomizations
+                                                .setBgImagePath(value);
+                                          }
+                                        }
+                                      },
+                                    )
+                                  : null,
                     ),
                   ),
-                  if (_bgImgDropItemList.isNotEmpty &&
-                      _bgImgDropItemList[0].value != null &&
-                      _bgImgDropItemList[1].value != 'add new image')
+                  if (_bgImgDropItemList.isNotEmpty)
                     ListTile(
                       leading: Icon(Icons.delete),
                       title: Text('Delete Image'),

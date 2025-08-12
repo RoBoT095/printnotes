@@ -1,5 +1,13 @@
 # Changelog + Dev Log
 
+### (August 12, 2025)
+
+- Made dropdown list of note background images become subtitle if screen small to not crowd text
+
+### (August 10, 2025)
+
+Working on adding a list of tags in drawer
+
 ### (August 3, 2025)
 
 - Added popup with a list of users background images for app where they can delete them
