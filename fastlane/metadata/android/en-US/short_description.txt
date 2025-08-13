@@ -1,0 +1,1 @@
+A cross-platform markdown notes app inspired by Google Keep and Obsidian
