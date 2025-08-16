@@ -75,8 +75,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
 
-    _fileCheckTimer =
-        Timer.periodic(fileCheckInterval, (_) => _checkForExternalChanges());
+    _fileCheckTimer = Timer.periodic(
+        fileCheckInterval, (_) => _checkForExternalChanges(context));
   }
 
   /// Load the passed files contents and set the state
@@ -114,7 +114,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   }
 
   /// Check if file has been modified outside of app
-  Future<void> _checkForExternalChanges() async {
+  Future<void> _checkForExternalChanges(BuildContext context) async {
     if (_isError || _isLoading) return;
 
     try {
@@ -123,7 +123,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
       if (_lastModifiedTime != null &&
           lastMod.isAfter(_lastModifiedTime!) &&
-          mounted) {
+          mounted &&
+          context.mounted) {
         showDialog(
           context: context,
           barrierDismissible: false,

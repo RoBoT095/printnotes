@@ -2,7 +2,8 @@
 
 ### (August 15, 2025)
 
-Redesigned custom themes page
+- Redesigned custom themes page
+- WikiLinks now display header links so `[[note#topic]]` render as `note > topic`, but doesn't scroll to header yet
 
 ### (August 13, 2025)
 

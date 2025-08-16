@@ -16,7 +16,8 @@ class WikiLinkNode extends ElementNode {
 
   @override
   InlineSpan build() {
-    String parseCustomName(String text) {
+    String parseWikiLinkName(String text) {
+      // Check for pipe '|' aka custom name
       int pipeIndex = text.lastIndexOf('|');
       // If pipeIndex is -1, it means '|' was not found.
       // If pipeIndex is less than text.length - 1, it means '|' is the last character,
@@ -24,21 +25,35 @@ class WikiLinkNode extends ElementNode {
         String pipedText = text.substring(pipeIndex + 1).trim();
         if (pipedText.isNotEmpty) return pipedText;
       }
-      return text;
+
+      // Check for header reference '#'
+      int headerIndex = text.indexOf('#');
+      // Similar logic as pipe
+      if (headerIndex != -1) {
+        String file = text.substring(0, headerIndex).trim();
+        String header = text.substring(headerIndex + 1).trim();
+        if (file.isNotEmpty && header.isNotEmpty) {
+          return '$file > $header';
+        }
+      }
+      return text.trim();
     }
 
     String parseLink(String text) {
-      // TODO: Add support for linking to headers and displaying them as:
-      // [[note#topic]] to 'note > topic'
+      // TODO: Add support for scrolling to headers
+      int headerIndex = text.indexOf('#');
+      if (headerIndex != -1) {
+        return text.substring(0, headerIndex).trim();
+      }
       int pipeIndex = text.lastIndexOf('|');
-      // If pipeIndex is -1, it means '|' was not found.
       if (pipeIndex != -1) {
         return text.substring(0, pipeIndex).trim();
       }
+
       return text;
     }
 
-    String wikiLinkText = parseCustomName(wikiLinkId);
+    String wikiLinkText = parseWikiLinkName(wikiLinkId);
 
     return TextSpan(
         text: wikiLinkText,
