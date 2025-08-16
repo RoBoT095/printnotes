@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (August 13, 2025)
+
+- Added tag list in drawer
+- Fixed 'All Notes' button in drawer again
+
 ### (August 12, 2025)
 
 - Made dropdown list of note background images become subtitle if screen small to not crowd text
