@@ -1,5 +1,9 @@
 # Changelog + Dev Log
 
+### (August 15, 2025)
+
+Redesigned custom themes page
+
 ### (August 13, 2025)
 
 - Added tag list in drawer
