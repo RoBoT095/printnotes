@@ -13,17 +13,12 @@ import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
 class DrawerView extends StatelessWidget {
-  const DrawerView({super.key, required this.onRefresh});
+  const DrawerView({super.key, required this.reload});
 
-  final Function onRefresh;
+  final VoidCallback reload;
 
   void _navigateToScreen(BuildContext context, {Widget? screen, String? path}) {
-    final bool isDrawerPersistent = MediaQuery.sizeOf(context).width >= 800;
-    // On desktop, drawer is a side menu, trying to pop it causes issues
-    // this stops it.
-    if (!isDrawerPersistent) {
-      Navigator.pop(context);
-    }
+    Navigator.pop(context);
 
     if (path != null) {
       context.read<NavigationProvider>().addToRouteHistory(path);
@@ -69,18 +64,33 @@ class DrawerView extends StatelessWidget {
                     onTap: () {
                       _navigateToScreen(context,
                           path: context.read<SettingsProvider>().mainDir);
-                      onRefresh();
+                      reload();
                     }),
                 ExpansionTile(
                   leading: Icon(Icons.tag),
                   title: Text('Tags'),
                   collapsedIconColor: Theme.of(context).colorScheme.secondary,
-                  children: [
-                    // TODO: Make a ListTile builder and use compute to scan all
-                    // note content on a separate thread.
-                  ],
-                  onExpansionChanged:
-                      (value) {}, // Maybe use provider to get tags when ExpansionTile is opened
+                  children: context.watch<SettingsProvider>().tagList.isNotEmpty
+                      ? context
+                          .watch<SettingsProvider>()
+                          .tagList
+                          .map(
+                            (tag) => ListTile(
+                                title: Text(tag),
+                                onTap: () {
+                                  _navigateToScreen(context, path: tag);
+                                  reload();
+                                }),
+                          )
+                          .toList()
+                      : [
+                          ListTile(
+                            title: Text('You don\'t have any tags'),
+                          ),
+                        ],
+                  onExpansionChanged: (expanded) {
+                    if (expanded) context.read<SettingsProvider>().getTagList();
+                  },
                 ),
                 const Opacity(opacity: 0.2, child: Divider()),
                 ListTile(

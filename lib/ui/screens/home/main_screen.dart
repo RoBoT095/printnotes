@@ -19,6 +19,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool _canPop = false;
+  VoidCallback? _reloadCallback;
+
+  void _handleReload(VoidCallback callback) {
+    _reloadCallback = callback;
+  }
 
   void _updateCanPop() => setState(() => _canPop = !_canPop);
 
@@ -43,11 +48,16 @@ class _MainPageState extends State<MainPage> {
               body: NotesDisplay(
                 key: ValueKey(context.watch<SettingsProvider>().mainDir),
                 updateCanPop: _updateCanPop,
+                onReload: _handleReload,
               ),
               drawer: Drawer(
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 child: DrawerView(
-                  onRefresh: () => setState(() {}),
+                  reload: () {
+                    if (_reloadCallback != null) {
+                      _reloadCallback!();
+                    }
+                  },
                 ),
               ),
             ),

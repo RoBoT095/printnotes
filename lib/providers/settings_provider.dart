@@ -22,6 +22,7 @@ class SettingsProvider with ChangeNotifier {
   bool _hideTitleBar = false;
   bool _useLatex = false;
   bool _useFrontmatter = false;
+  List<String> _tagList = [];
 
   bool get showIntro => _showIntro;
   String get mainDir => _mainDir;
@@ -33,6 +34,7 @@ class SettingsProvider with ChangeNotifier {
   bool get hideTitleBar => _hideTitleBar;
   bool get useLatex => _useLatex;
   bool get useFrontmatter => _useFrontmatter;
+  List<String> get tagList => _tagList;
 
   SettingsProvider() {
     loadSettings();
@@ -47,6 +49,16 @@ class SettingsProvider with ChangeNotifier {
   void setShowIntro(bool showIntro) {
     _showIntro = showIntro;
     UserFirstTime.setShowIntro(showIntro);
+    notifyListeners();
+  }
+
+  Future<Map<String, List<String>>> getTagMap() async {
+    return await StorageSystem.getAllTags(mainDir);
+  }
+
+  void getTagList() async {
+    Map<String, List<String>> tagMap = await getTagMap();
+    _tagList = tagMap.keys.toList();
     notifyListeners();
   }
 
@@ -127,21 +139,34 @@ class SettingsProvider with ChangeNotifier {
     String folderPriority = context.read<SettingsProvider>().folderPriority;
     String sortOrder = context.read<SettingsProvider>().sortOrder;
     String currentFolderName = 'Notes';
+    bool isTag = false;
+    List<FileSystemEntity> filesWithTags = [];
 
-    // Check if path not a file, if so return to mainDir
+    // Check if path not a file, if not, check if it is a tag, if not, return to mainDir
     if (!await FileSystemEntity.isDirectory(directory)) {
-      if (context.mounted) {
-        context.read<NavigationProvider>().routeHistory.clear();
-        context.read<NavigationProvider>().routeHistory.add(mainPath);
+      if (directory.startsWith('#')) {
+        isTag = true;
+        Map<String, List<String>> tagMap = await getTagMap();
+        if (tagMap[directory] != null) {
+          filesWithTags.addAll(tagMap[directory]!.map((e) => File(e)));
+        }
+      } else {
+        if (context.mounted) {
+          context.read<NavigationProvider>().routeHistory.clear();
+          context.read<NavigationProvider>().routeHistory.add(mainPath);
+        }
+        directory = mainPath;
       }
-      directory = mainPath;
     }
 
-    final items = await StorageSystem.listFolderContents(directory);
+    final items = isTag
+        ? filesWithTags
+        : await StorageSystem.listFolderContents(directory);
     final sortedItems =
         ItemSortHandler.getSortedItems(items, folderPriority, sortOrder);
-
-    if (directory != mainPath) {
+    if (isTag) {
+      currentFolderName = directory;
+    } else if (directory != mainPath) {
       currentFolderName = path.basename(directory);
     } else {
       currentFolderName;

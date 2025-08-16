@@ -27,9 +27,11 @@ class NotesDisplay extends StatefulWidget {
   const NotesDisplay({
     super.key,
     required this.updateCanPop,
+    required this.onReload,
   });
 
   final VoidCallback updateCanPop;
+  final Function(VoidCallback) onReload;
 
   @override
   State<NotesDisplay> createState() => _NotesDisplayState();
@@ -52,6 +54,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     super.initState();
     if (Platform.isAndroid) _checkMediaIntent();
     _loadItems();
+    widget.onReload(_loadItems);
   }
 
   Future<void> _loadItems() async {
@@ -61,7 +64,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
     final loadedItems = await readSettings.loadItems(
         context, context.read<NavigationProvider>().routeHistory.last);
-
     final sortOrder = readSettings.sortOrder;
     final folderPriority = readSettings.folderPriority;
 
