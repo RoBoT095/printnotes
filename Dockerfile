@@ -1,4 +1,4 @@
-FROM ghcr.io/cirruslabs/flutter:3.32.5 AS build
+FROM ghcr.io/cirruslabs/flutter:3.35.1 AS build
 
 # Set up the working directory
 WORKDIR /app
