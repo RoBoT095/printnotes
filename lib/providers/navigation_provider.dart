@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:printnotes/constants/constants.dart';
 
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/ui/screens/notes/image_viewer.dart';
@@ -104,7 +105,11 @@ class NavigationProvider with ChangeNotifier {
     FilePickerResult? selectedFile = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'pdf'],
+      allowedExtensions: [
+        ...allowedImageExtensions,
+        ...allowedPdfExtensions,
+        ...allowedNoteExtensions,
+      ],
     );
     if (selectedFile != null && context.mounted) {
       File item = File(selectedFile.files.single.path!);
