@@ -104,7 +104,7 @@ class NavigationProvider with ChangeNotifier {
     FilePickerResult? selectedFile = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'pdf'],
     );
     if (selectedFile != null && context.mounted) {
       File item = File(selectedFile.files.single.path!);

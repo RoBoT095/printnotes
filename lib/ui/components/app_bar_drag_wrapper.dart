@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -9,6 +11,9 @@ class AppBarDragWrapper extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isIOS || Platform.isAndroid) {
+      return child;
+    }
     return DragToMoveArea(
       child: child,
     );

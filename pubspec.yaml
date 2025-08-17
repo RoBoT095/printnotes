@@ -38,10 +38,7 @@ dependencies:
   animated_tree_view: ^2.3.0
   animated_snack_bar: ^0.4.0
   pdfrx: ^1.0.94
-  receive_sharing_intent: 
-   git:
-      url: https://github.com/KasemJaffer/receive_sharing_intent
-      ref: master
+  listen_sharing_intent: ^1.9.2
   cosmic_frontmatter: ^1.0.3
   highlight: ^0.7.0
   visibility_detector: ^0.4.0+2

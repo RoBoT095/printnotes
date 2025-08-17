@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
@@ -47,12 +46,13 @@ bool isScreenLarge(BuildContext context) {
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late final TextEditingController _notesController;
-  late final TocController _tocController;
   late final AutoScrollController _autoScrollController;
   late final FocusNode _focusNode;
   late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // TODO: Add read only mode
+  bool _readOnlyMode = false;
   bool _isEditingFile = false;
   bool _isLoading = true;
   bool _isError = false;
@@ -62,14 +62,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   Timer? _autoSaveTimer;
   bool _hasUnsavedChanges = false;
 
-  static const Duration autoSaveInterval = Duration(seconds: 3);
-  static const Duration fileCheckInterval = Duration(seconds: 5);
+  final Duration autoSaveInterval = Duration(seconds: 3);
+  final Duration fileCheckInterval = Duration(seconds: 5);
 
   @override
   void initState() {
     super.initState();
     _notesController = TextEditingController();
-    _tocController = TocController();
     _autoScrollController = AutoScrollController();
     _focusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
@@ -91,6 +90,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         _lastModifiedTime = lastMod;
         _isLoading = false;
         _hasUnsavedChanges = false;
+
+        if (mounted &&
+            !widget.filePath
+                .contains(context.read<SettingsProvider>().mainDir)) {
+          _readOnlyMode = true;
+        }
       });
     } catch (e) {
       debugPrint('Error loading file content: $e');
@@ -176,7 +181,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   }
 
   void _toggleMode() {
-    setState(() => _isEditingFile = !_isEditingFile);
+    if (!_readOnlyMode) {
+      setState(() => _isEditingFile = !_isEditingFile);
+    }
   }
 
   @override
@@ -217,12 +224,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             actions: _isError
                 ? null
                 : [
-                    IconButton(
-                        tooltip: 'Preview/Edit Mode',
-                        icon: Icon(_isEditingFile
-                            ? Icons.visibility
-                            : Icons.mode_edit),
-                        onPressed: _toggleMode),
+                    if (!_readOnlyMode)
+                      IconButton(
+                          tooltip: 'Preview/Edit Mode',
+                          icon: Icon(_isEditingFile
+                              ? Icons.visibility
+                              : Icons.mode_edit),
+                          onPressed: _toggleMode),
                     // if (isScreenLarge(context) &&
                     //     _notesController.text.contains("# "))
                     //   IconButton(
@@ -266,42 +274,58 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   ],
           ),
         ),
-        body: buildMarkdownView(fmBody ?? _notesController.text),
-        endDrawer: _isError
-            ? null
-            // Drawer for table of contents
-            : Drawer(
-                child: SafeArea(
-                  child: Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Table of Contents',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 24),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Divider(
-                        thickness: 0.3,
-                      ),
-                      Expanded(
-                        child:
-                            //  _notesController.text.contains("# ")
-                            //     ? buildTocList()
-                            //     :
-                            const Center(
-                          child: Text(
-                            'Add headers using "#" to populate\n the table of contents',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+        body: Column(
+          children: [
+            if (_readOnlyMode)
+              Container(
+                width: double.infinity,
+                color: Colors.amber.shade700,
+                padding: const EdgeInsets.all(8),
+                child: const Text(
+                  "Read-Only Mode",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
               ),
+            Expanded(child: buildMarkdownView(fmBody ?? _notesController.text)),
+          ],
+        ),
+        // endDrawer: _isError
+        //     ? null
+        //     // Drawer for table of contents
+        //     : Drawer(
+        //         child: SafeArea(
+        //           child: Column(
+        //             children: [
+        //               const Padding(
+        //                 padding: EdgeInsets.all(10),
+        //                 child: Text(
+        //                   'Table of Contents',
+        //                   style: TextStyle(
+        //                       fontWeight: FontWeight.bold, fontSize: 24),
+        //                   textAlign: TextAlign.center,
+        //                 ),
+        //               ),
+        //               const Divider(
+        //                 thickness: 0.3,
+        //               ),
+        //               Expanded(
+        //                 child:
+        //                     //  _notesController.text.contains("# ")
+        //                     //     ? buildTocList()
+        //                     //     :
+        //                     const Center(
+        //                   child: Text(
+        //                     'Add headers using "#" to populate\n the table of contents',
+        //                     textAlign: TextAlign.center,
+        //                   ),
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
         // floatingActionButton: !isScreenLarge(context) &&
         //         _notesController.text.contains("# ") &&
         //         !_isEditingFile
@@ -437,7 +461,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
     _notesController.dispose();
     _focusNode.dispose();
-    _tocController.dispose();
     _fileCheckTimer?.cancel();
     _autoSaveTimer?.cancel();
     super.dispose();

@@ -2,9 +2,8 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:listen_sharing_intent/listen_sharing_intent.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
@@ -17,7 +16,6 @@ import 'package:printnotes/utils/handlers/item_delete.dart';
 
 import 'package:printnotes/ui/screens/layout/grid_list_view.dart';
 import 'package:printnotes/ui/screens/layout/tree_view.dart';
-import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
 
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/drawer_rail.dart';
@@ -104,7 +102,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
     // Listen to media sharing coming from outside the app while the app is in the memory.
     _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen((value) {
-      if (value.isNotEmpty && value[0].path.endsWith('.pdf')) {
+      if (value.isNotEmpty) {
         setState(() => _sharedFilePath = value[0].path);
       }
     }, onError: (e) {
@@ -113,7 +111,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
     // Get the media sharing coming from outside the app while the app is closed.
     ReceiveSharingIntent.instance.getInitialMedia().then((value) {
-      if (value.isNotEmpty && value[0].path.endsWith('.pdf')) {
+      if (value.isNotEmpty) {
         setState(() {
           _sharedFilePath = value[0].path;
         });
@@ -141,13 +139,10 @@ class _NotesDisplayState extends State<NotesDisplay> {
     if (_sharedFilePath != null) {
       File file = File(_sharedFilePath!);
       if (file.existsSync()) {
+        _sharedFilePath = null;
         Future.delayed(const Duration(microseconds: 500), () {
           if (context.mounted) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PdfViewScreen(pdfFile: file),
-                )).then((_) => SystemNavigator.pop());
+            context.read<NavigationProvider>().routeItemToPage(context, file);
           }
         });
       }

@@ -1,5 +1,11 @@
 # Changelog + Dev Log
 
+### (August 17, 2025)
+
+- Increased flutter version
+- Expanded img file support to `bmp` and `gif`
+- Added ability to open pdf, images and text files (in read only mode) from file manager on android
+
 ### (August 15, 2025)
 
 - Redesigned custom themes page
