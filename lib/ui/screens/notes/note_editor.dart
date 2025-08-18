@@ -413,7 +413,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               child: _isEditingFile
                                   ? EditorField(
                                       controller: _notesController,
-                                      scrollController: _autoScrollController,
                                       onChanged: (value) => _setUpAutoSave(),
                                       undoController: _undoHistoryController,
                                       fontSize: context
