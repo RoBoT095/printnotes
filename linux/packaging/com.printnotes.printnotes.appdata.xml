@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.printnotes.printnotes</id>
+  
+  <name>Print(Notes)</name>
+  <summary>A markdown notes app inspired by Google Keep and Obsidian</summary>
+  
+  <metadata_license>CC-BY-SA-4.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <description>
+    <p>
+      Print(Notes) is an open source markdown notes app, inspired by the look of Google Keep and functionality of Dynalist&apos;s Obsidian. All notes and folders are stored locally on the device, without needing a connection to the cloud!
+    </p>
+    <p>
+      Features Include:
+      <ul>
+        <li>Ultimate customizability</li>
+        <li>Many themes for light and dark mode</li>
+        <li>Create your own custom color themes</li>
+        <li>Change note display layout (Grid, List, Tree views)</li>
+        <li>Supports Markdown and LaTeX formatting - Includes basic Image and PDF viewers</li>
+      </ul>
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">com.printnotes.printnotes.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes2-smaller.png</image>
+    </screenshot>
+  </screenshots>
+</component>

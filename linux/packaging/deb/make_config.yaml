@@ -1,0 +1,27 @@
+display_name: Print(Notes)
+package_name: printnotes
+
+maintainer:
+  name: RoBoT_095
+  email: robot095@printnotes.app
+
+priority: optional
+section: x11
+installed_size: 20000
+essential: false
+icon: assets/app_icon.png
+
+keywords:
+  - Markdown
+  - Notes
+  - Obsidian
+
+generic_name: Markdown Notes Application
+
+categories:
+  - Office
+
+startup_notify: true
+# You can also specify [metainfo](https://freedesktop.org/software/appstream/docs/chap-Quickstart.html) file
+# which contains metadata of the app.
+metainfo: linux/packaging/com.printnotes.printnotes.appdata.xml

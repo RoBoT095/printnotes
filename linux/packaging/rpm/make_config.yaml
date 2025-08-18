@@ -1,0 +1,25 @@
+icon: assets/app_icon.png
+summary: A markdown notes app inspired by Google Keep and Obsidian
+vendor: RoBoT_095
+packager: RoBoT_095
+packagerEmail: robot095@printnotes.app
+license: GPLv3
+url: https://github.com/RoBoT_095/printnotes
+
+
+display_name: Print(Notes)
+
+keywords:
+  - Markdown
+  - Notes
+  - Obsidian
+
+generic_name: Markdown Notes Application
+
+categories:
+  - Office
+
+startup_notify: true
+# You can also specify [metainfo](https://freedesktop.org/software/appstream/docs/chap-Quickstart.html) file
+# which contains metadata of the app.
+metainfo: linux/packaging/com.printnotes.printnotes.appdata.xml
