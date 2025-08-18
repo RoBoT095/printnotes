@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:printnotes/markdown/markdown_widget/config/toc.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/customization_provider.dart';
@@ -47,11 +48,11 @@ bool isScreenLarge(BuildContext context) {
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late final TextEditingController _notesController;
   late final AutoScrollController _autoScrollController;
+  late final TocController _tocController;
   late final FocusNode _focusNode;
   late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // TODO: Add read only mode
   bool _readOnlyMode = false;
   bool _isEditingFile = false;
   bool _isLoading = true;
@@ -70,6 +71,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     super.initState();
     _notesController = TextEditingController();
     _autoScrollController = AutoScrollController();
+    _tocController = TocController();
     _focusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
@@ -231,14 +233,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               ? Icons.visibility
                               : Icons.mode_edit),
                           onPressed: _toggleMode),
-                    // if (isScreenLarge(context) &&
-                    //     _notesController.text.contains("# "))
-                    //   IconButton(
-                    //     tooltip: 'Table of Contents',
-                    //     onPressed: () =>
-                    //         _scaffoldKey.currentState!.openEndDrawer(),
-                    //     icon: const Icon(Icons.toc_rounded),
-                    //   ),
+                    if (isScreenLarge(context) &&
+                        _notesController.text.contains("# "))
+                      IconButton(
+                        tooltip: 'Table of Contents',
+                        onPressed: () =>
+                            _scaffoldKey.currentState!.openEndDrawer(),
+                        icon: const Icon(Icons.toc_rounded),
+                      ),
                     PopupMenuButton(
                       itemBuilder: (context) => <PopupMenuEntry>[
                         PopupMenuItem(
@@ -291,60 +293,59 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             Expanded(child: buildMarkdownView(fmBody ?? _notesController.text)),
           ],
         ),
-        // endDrawer: _isError
-        //     ? null
-        //     // Drawer for table of contents
-        //     : Drawer(
-        //         child: SafeArea(
-        //           child: Column(
-        //             children: [
-        //               const Padding(
-        //                 padding: EdgeInsets.all(10),
-        //                 child: Text(
-        //                   'Table of Contents',
-        //                   style: TextStyle(
-        //                       fontWeight: FontWeight.bold, fontSize: 24),
-        //                   textAlign: TextAlign.center,
-        //                 ),
-        //               ),
-        //               const Divider(
-        //                 thickness: 0.3,
-        //               ),
-        //               Expanded(
-        //                 child:
-        //                     //  _notesController.text.contains("# ")
-        //                     //     ? buildTocList()
-        //                     //     :
-        //                     const Center(
-        //                   child: Text(
-        //                     'Add headers using "#" to populate\n the table of contents',
-        //                     textAlign: TextAlign.center,
-        //                   ),
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        // floatingActionButton: !isScreenLarge(context) &&
-        //         _notesController.text.contains("# ") &&
-        //         !_isEditingFile
-        //     ? FloatingActionButton(
-        //         onPressed: _scaffoldKey.currentState!.openEndDrawer,
-        //         heroTag: 'Table of Contents',
-        //         child: const Icon(Icons.format_list_bulleted),
-        //       )
-        //     : null,
+        endDrawer: _isError
+            ? null
+            // Drawer for table of contents
+            : Drawer(
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Table of Contents',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 24),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const Divider(
+                        thickness: 0.3,
+                      ),
+                      Expanded(
+                        child: _notesController.text.contains("# ")
+                            ? buildTocList()
+                            : const Center(
+                                child: Text(
+                                  'Add headers using "#" to populate\n the table of contents',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        floatingActionButton: !isScreenLarge(context) &&
+                _notesController.text.contains("# ") &&
+                !_isEditingFile
+            ? FloatingActionButton(
+                onPressed: _scaffoldKey.currentState!.openEndDrawer,
+                heroTag: 'Table of Contents',
+                child: const Icon(Icons.format_list_bulleted),
+              )
+            : null,
       ),
     );
   }
 
   /// Table of Contents
-  // Widget buildTocList() => Container(
-  //     decoration: BoxDecoration(
-  //         color: Theme.of(context).colorScheme.surface,
-  //         borderRadius: BorderRadius.circular(20)),
-  //     child: TocWidget(controller: _tocController));
+  Widget buildTocList() => Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(20)),
+        child: TocWidget(controller: _tocController),
+      );
 
   Widget buildMarkdownView(String previewBody) {
     if (widget.filePath.endsWith('.csv')) {
@@ -439,8 +440,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                               context,
                                               data: previewBody,
                                               filePath: widget.filePath,
+                                              controller: _autoScrollController,
+                                              tocController: _tocController,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
-                                              // tocController: _tocController,
                                             ),
                                     ),
                             ),
