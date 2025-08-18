@@ -44,6 +44,19 @@ class TocController {
     _jumpToIndexCallback?.call(index);
   }
 
+  void jumpToText(String text) {
+    if (text.trim().isEmpty) return;
+
+    final query = text.trim().toLowerCase();
+    for (final toc in _index2toc.values) {
+      final headingText =
+          toc.node.childrenSpan.toPlainText().trim().toLowerCase();
+      if (headingText.contains(query)) {
+        _jumpToIndexCallback?.call(toc.widgetIndex);
+      }
+    }
+  }
+
   void onIndexChanged(int index) {
     _onIndexChangedCallback?.call(index);
   }

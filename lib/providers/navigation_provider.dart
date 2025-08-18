@@ -48,29 +48,28 @@ class NavigationProvider with ChangeNotifier {
     return null;
   }
 
-  void routeItemToPage(BuildContext context, FileSystemEntity item) {
+  void routeItemToPage(BuildContext context, FileSystemEntity item,
+      {String? jumpToHeader}) {
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
         onImageSelect(context, item);
       } else if (fileTypeChecker(item) == CFileType.pdf) {
         onPdfSelect(context, item);
       } else {
-        onNoteSelect(context, item);
+        onNoteSelect(context, item, jumpToHeader: jumpToHeader);
       }
     }
   }
 
   // For notes only, won't work with folders
-  void onNoteSelect(
-    BuildContext context,
-    File item,
-  ) {
+  void onNoteSelect(BuildContext context, File item, {String? jumpToHeader}) {
     addToRouteHistory(item.path);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => NoteEditorScreen(
           filePath: item.path,
+          jumpToHeader: jumpToHeader,
         ),
       ),
     ).then((_) => navigateBack());

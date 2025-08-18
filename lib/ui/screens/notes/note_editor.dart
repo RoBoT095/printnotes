@@ -28,9 +28,11 @@ import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen({super.key, required this.filePath});
+  const NoteEditorScreen(
+      {super.key, required this.filePath, this.jumpToHeader});
 
   final String filePath;
+  final String? jumpToHeader;
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -61,6 +63,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   DateTime? _lastModifiedTime;
   Timer? _fileCheckTimer;
   Timer? _autoSaveTimer;
+  Timer? _scrollToHeader;
   bool _hasUnsavedChanges = false;
 
   final Duration autoSaveInterval = Duration(seconds: 3);
@@ -193,6 +196,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
     String? fmBody;
     String? fmTitle;
+
+    if (widget.jumpToHeader != null) {
+      _scrollToHeader = Timer(Duration(microseconds: 800), () {
+        _tocController.jumpToText(widget.jumpToHeader!);
+        setState(() {});
+      });
+    }
 
     // frontmatter logic
     if (useFM) {
@@ -466,6 +476,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _focusNode.dispose();
     _fileCheckTimer?.cancel();
     _autoSaveTimer?.cancel();
+    _scrollToHeader?.cancel();
     super.dispose();
   }
 }

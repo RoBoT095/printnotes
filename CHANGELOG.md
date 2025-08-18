@@ -6,6 +6,7 @@
 - Expanded img file support to `bmp` and `gif`
 - Added ability to open pdf, images and text files (in read only mode) from file manager on android
 - Returned ToC and kept scroll position synced between edit and preview mode in note editor
+- WikiLink header reference now scrolls to header
 
 ### (August 15, 2025)
 

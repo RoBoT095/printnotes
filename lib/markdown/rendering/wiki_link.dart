@@ -40,10 +40,10 @@ class WikiLinkNode extends ElementNode {
     }
 
     String parseLink(String text) {
-      // TODO: Add support for scrolling to headers
       int headerIndex = text.indexOf('#');
       if (headerIndex != -1) {
-        return text.substring(0, headerIndex).trim();
+        String header = text.substring(headerIndex + 1).trim();
+        return '${text.substring(0, headerIndex).trim()}&jumpToHeader=$header';
       }
       int pipeIndex = text.lastIndexOf('|');
       if (pipeIndex != -1) {
