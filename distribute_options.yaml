@@ -1,0 +1,100 @@
+output: outputs/
+artifact_name: "Print(Notes)-v{{version}}-{{platform}}.{{ext}}"
+variables:
+  FLUTTER_ROOT: ~/development/flutter
+releases:
+  - name: release-android
+    jobs:
+      # - name: android-aab
+      #   package:
+      #     platform: android
+      #     target: aab
+      #     build_args:
+      #       profile: true
+      #       target-platform: android-arm,android-arm64
+      - name: android-apk
+        package:
+          platform: android
+          target: apk
+          build_args:
+            profile: true
+            target-platform: android-arm,android-arm64
+
+  - name: release-ios
+    jobs:
+      - name: ios-ipa
+        package:
+          platform: ios
+          target: ipa
+          build_args:
+            profile: true
+            export-method: ad-hoc
+
+  - name: release-linux
+    jobs:
+      - name: linux-appimage
+        package:
+          platform: linux
+          target: appimage
+          build_args:
+            profile: true
+      - name: linux-deb
+        package:
+          platform: linux
+          target: deb
+          build_args:
+            profile: true
+      ####################
+      # Currently Broken #
+      ####################
+      # - name: linux-rpm
+      #   package:
+      #     platform: linux
+      #     target: rpm
+      #     build_args:
+      #       profile: true
+      ####################
+
+      # - name: linux-pacman
+      #   package:
+      #     platform: linux
+      #     target: pacman
+      #     build_args:
+      #       profile: true
+      # - name: linux-zip
+      #   package:
+      #     platform: linux
+      #     target: zip
+      #     build_args:
+      #       profile: true
+
+  - name: release-macos
+    jobs:
+      - name: macos-dmg
+        package:
+          platform: macos
+          target: dmg
+          build_args:
+            profile: true
+
+      # - name: macos-zip
+      #   package:
+      #     platform: macos
+      #     target: zip
+      #     build_args:
+      #       profile: true
+
+  - name: release-windows
+    jobs:
+      - name: windows-exe
+        package:
+          platform: windows
+          target: exe
+          build_args:
+            profile: true
+      # - name: windows-zip
+      #   package:
+      #     platform: windows
+      #     target: zip
+      #     build_args:
+      #       profile: true

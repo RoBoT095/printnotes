@@ -18,13 +18,11 @@ class CenteredPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isScreenLarge(BuildContext context) {
-      return MediaQuery.sizeOf(context).width >= 1000;
-    }
+    bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000;
 
 // Styling for desktop mode to have contents centered
     return Container(
-      margin: isScreenLarge(context)
+      margin: isScreenLarge
           ? EdgeInsets.symmetric(
               horizontal:
                   (MediaQuery.sizeOf(context).width - (width ?? 800)) / 2,

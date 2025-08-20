@@ -8,6 +8,7 @@ import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
@@ -100,7 +101,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
         builder: (context, node) {
           return Container(
             color: Theme.of(context).colorScheme.surface.withValues(
-                alpha: context.watch<SettingsProvider>().noteTileOpacity),
+                alpha: context.watch<CustomizationProvider>().noteTileOpacity),
             padding: const EdgeInsets.only(left: 16.0),
             child: GestureDetector(
               onTap: node is FileNode

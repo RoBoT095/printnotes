@@ -4,11 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:printnotes/markdown/markdown_widget/config/toc.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
@@ -27,9 +28,11 @@ import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen({super.key, required this.filePath});
+  const NoteEditorScreen(
+      {super.key, required this.filePath, this.jumpToHeader});
 
   final String filePath;
+  final String? jumpToHeader;
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -46,12 +49,13 @@ bool isScreenLarge(BuildContext context) {
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late final TextEditingController _notesController;
-  late final TocController _tocController;
   late final AutoScrollController _autoScrollController;
+  late final TocController _tocController;
   late final FocusNode _focusNode;
   late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _readOnlyMode = false;
   bool _isEditingFile = false;
   bool _isLoading = true;
   bool _isError = false;
@@ -59,23 +63,24 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   DateTime? _lastModifiedTime;
   Timer? _fileCheckTimer;
   Timer? _autoSaveTimer;
+  Timer? _scrollToHeader;
   bool _hasUnsavedChanges = false;
 
-  static const Duration autoSaveInterval = Duration(seconds: 3);
-  static const Duration fileCheckInterval = Duration(seconds: 5);
+  final Duration autoSaveInterval = Duration(seconds: 3);
+  final Duration fileCheckInterval = Duration(seconds: 5);
 
   @override
   void initState() {
     super.initState();
     _notesController = TextEditingController();
-    _tocController = TocController();
     _autoScrollController = AutoScrollController();
+    _tocController = TocController();
     _focusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
 
-    _fileCheckTimer =
-        Timer.periodic(fileCheckInterval, (_) => _checkForExternalChanges());
+    _fileCheckTimer = Timer.periodic(
+        fileCheckInterval, (_) => _checkForExternalChanges(context));
   }
 
   /// Load the passed files contents and set the state
@@ -90,6 +95,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         _lastModifiedTime = lastMod;
         _isLoading = false;
         _hasUnsavedChanges = false;
+
+        if (mounted &&
+            !widget.filePath
+                .contains(context.read<SettingsProvider>().mainDir)) {
+          _readOnlyMode = true;
+        }
       });
     } catch (e) {
       debugPrint('Error loading file content: $e');
@@ -113,7 +124,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   }
 
   /// Check if file has been modified outside of app
-  Future<void> _checkForExternalChanges() async {
+  Future<void> _checkForExternalChanges(BuildContext context) async {
     if (_isError || _isLoading) return;
 
     try {
@@ -122,7 +133,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
       if (_lastModifiedTime != null &&
           lastMod.isAfter(_lastModifiedTime!) &&
-          mounted) {
+          mounted &&
+          context.mounted) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -174,7 +186,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   }
 
   void _toggleMode() {
-    setState(() => _isEditingFile = !_isEditingFile);
+    if (!_readOnlyMode) {
+      setState(() => _isEditingFile = !_isEditingFile);
+    }
   }
 
   @override
@@ -182,6 +196,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
     String? fmBody;
     String? fmTitle;
+
+    if (widget.jumpToHeader != null) {
+      _scrollToHeader = Timer(Duration(microseconds: 800), () {
+        _tocController.jumpToText(widget.jumpToHeader!);
+        setState(() {});
+      });
+    }
 
     // frontmatter logic
     if (useFM) {
@@ -215,20 +236,21 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             actions: _isError
                 ? null
                 : [
-                    IconButton(
-                        tooltip: 'Preview/Edit Mode',
-                        icon: Icon(_isEditingFile
-                            ? Icons.visibility
-                            : Icons.mode_edit),
-                        onPressed: _toggleMode),
-                    // if (isScreenLarge(context) &&
-                    //     _notesController.text.contains("# "))
-                    //   IconButton(
-                    //     tooltip: 'Table of Contents',
-                    //     onPressed: () =>
-                    //         _scaffoldKey.currentState!.openEndDrawer(),
-                    //     icon: const Icon(Icons.toc_rounded),
-                    //   ),
+                    if (!_readOnlyMode)
+                      IconButton(
+                          tooltip: 'Preview/Edit Mode',
+                          icon: Icon(_isEditingFile
+                              ? Icons.visibility
+                              : Icons.mode_edit),
+                          onPressed: _toggleMode),
+                    if (isScreenLarge(context) &&
+                        _notesController.text.contains("# "))
+                      IconButton(
+                        tooltip: 'Table of Contents',
+                        onPressed: () =>
+                            _scaffoldKey.currentState!.openEndDrawer(),
+                        icon: const Icon(Icons.toc_rounded),
+                      ),
                     PopupMenuButton(
                       itemBuilder: (context) => <PopupMenuEntry>[
                         PopupMenuItem(
@@ -264,7 +286,23 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   ],
           ),
         ),
-        body: buildMarkdownView(fmBody ?? _notesController.text),
+        body: Column(
+          children: [
+            if (_readOnlyMode)
+              Container(
+                width: double.infinity,
+                color: Colors.amber.shade700,
+                padding: const EdgeInsets.all(8),
+                child: const Text(
+                  "Read-Only Mode",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            Expanded(child: buildMarkdownView(fmBody ?? _notesController.text)),
+          ],
+        ),
         endDrawer: _isError
             ? null
             // Drawer for table of contents
@@ -285,40 +323,39 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         thickness: 0.3,
                       ),
                       Expanded(
-                        child:
-                            //  _notesController.text.contains("# ")
-                            //     ? buildTocList()
-                            //     :
-                            const Center(
-                          child: Text(
-                            'Add headers using "#" to populate\n the table of contents',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                        child: _notesController.text.contains("# ")
+                            ? buildTocList()
+                            : const Center(
+                                child: Text(
+                                  'Add headers using "#" to populate\n the table of contents',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                       ),
                     ],
                   ),
                 ),
               ),
-        // floatingActionButton: !isScreenLarge(context) &&
-        //         _notesController.text.contains("# ") &&
-        //         !_isEditingFile
-        //     ? FloatingActionButton(
-        //         onPressed: _scaffoldKey.currentState!.openEndDrawer,
-        //         heroTag: 'Table of Contents',
-        //         child: const Icon(Icons.format_list_bulleted),
-        //       )
-        //     : null,
+        floatingActionButton: !isScreenLarge(context) &&
+                _notesController.text.contains("# ") &&
+                !_isEditingFile
+            ? FloatingActionButton(
+                onPressed: _scaffoldKey.currentState!.openEndDrawer,
+                heroTag: 'Table of Contents',
+                child: const Icon(Icons.format_list_bulleted),
+              )
+            : null,
       ),
     );
   }
 
   /// Table of Contents
-  // Widget buildTocList() => Container(
-  //     decoration: BoxDecoration(
-  //         color: Theme.of(context).colorScheme.surface,
-  //         borderRadius: BorderRadius.circular(20)),
-  //     child: TocWidget(controller: _tocController));
+  Widget buildTocList() => Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(20)),
+        child: TocWidget(controller: _tocController),
+      );
 
   Widget buildMarkdownView(String previewBody) {
     if (widget.filePath.endsWith('.csv')) {
@@ -326,8 +363,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
     return SafeArea(
       child: CenteredPageWrapper(
-        padding:
-            EdgeInsets.all(context.watch<SettingsProvider>().noteEditorPadding),
+        padding: EdgeInsets.all(
+            context.watch<CustomizationProvider>().noteEditorPadding),
         width: 1000,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -386,7 +423,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               child: _isEditingFile
                                   ? EditorField(
                                       controller: _notesController,
-                                      scrollController: _autoScrollController,
                                       onChanged: (value) => _setUpAutoSave(),
                                       undoController: _undoHistoryController,
                                       fontSize: context
@@ -413,8 +449,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                               context,
                                               data: previewBody,
                                               filePath: widget.filePath,
+                                              controller: _autoScrollController,
+                                              tocController: _tocController,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
-                                              // tocController: _tocController,
                                             ),
                                     ),
                             ),
@@ -435,9 +474,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
     _notesController.dispose();
     _focusNode.dispose();
-    _tocController.dispose();
     _fileCheckTimer?.cancel();
     _autoSaveTimer?.cancel();
+    _scrollToHeader?.cancel();
     super.dispose();
   }
 }

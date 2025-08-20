@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './markdown_widget/markdown_widget.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
@@ -173,16 +174,20 @@ Widget buildMarkdownWidget(
   BuildContext context, {
   required String data,
   required String filePath,
-  bool? selectable,
-  bool shrinkWrap = false,
+  AutoScrollController? controller,
   TocController? tocController,
+  ScrollPhysics? physics,
+  bool shrinkWrap = false,
+  bool? selectable,
 }) {
   return MarkdownWidget(
     data: data,
+    controller: controller,
+    tocController: tocController,
+    physics: physics,
+    shrinkWrap: shrinkWrap,
     selectable: selectable ?? true,
     config: theMarkdownConfigs(context, filePath: filePath, inEditor: true),
-    shrinkWrap: shrinkWrap,
-    tocController: tocController,
     markdownGenerator: theMarkdownGenerators(context),
   );
 }

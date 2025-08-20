@@ -11,6 +11,7 @@ import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/editor_config_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
@@ -30,6 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(create: (_) => EditorConfigProvider()),
         ChangeNotifierProvider(create: (_) => SelectingProvider()),
+        ChangeNotifierProvider(create: (_) => CustomizationProvider()),
       ],
       child: const App(),
     ),
@@ -85,9 +87,7 @@ class _AppState extends State<App> {
           theme: ThemeData(colorScheme: themeProvider.getThemeData(context)),
           themeMode: themeProvider.themeMode,
           title: 'Print(Notes)',
-          home: const MainPage(
-            title: 'Print(Notes)',
-          ),
+          home: const MainPage(),
         );
       },
     );

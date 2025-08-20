@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:printnotes/constants/constants.dart';
 
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/ui/screens/notes/image_viewer.dart';
@@ -47,29 +48,28 @@ class NavigationProvider with ChangeNotifier {
     return null;
   }
 
-  void routeItemToPage(BuildContext context, FileSystemEntity item) {
+  void routeItemToPage(BuildContext context, FileSystemEntity item,
+      {String? jumpToHeader}) {
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
         onImageSelect(context, item);
       } else if (fileTypeChecker(item) == CFileType.pdf) {
         onPdfSelect(context, item);
       } else {
-        onNoteSelect(context, item);
+        onNoteSelect(context, item, jumpToHeader: jumpToHeader);
       }
     }
   }
 
   // For notes only, won't work with folders
-  void onNoteSelect(
-    BuildContext context,
-    File item,
-  ) {
+  void onNoteSelect(BuildContext context, File item, {String? jumpToHeader}) {
     addToRouteHistory(item.path);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => NoteEditorScreen(
           filePath: item.path,
+          jumpToHeader: jumpToHeader,
         ),
       ),
     ).then((_) => navigateBack());
@@ -104,7 +104,11 @@ class NavigationProvider with ChangeNotifier {
     FilePickerResult? selectedFile = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+      allowedExtensions: [
+        ...allowedImageExtensions,
+        ...allowedPdfExtensions,
+        ...allowedNoteExtensions,
+      ],
     );
     if (selectedFile != null && context.mounted) {
       File item = File(selectedFile.files.single.path!);

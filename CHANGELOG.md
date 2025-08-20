@@ -1,5 +1,31 @@
 # Changelog + Dev Log
 
+### (August 17, 2025)
+
+- Increased flutter version
+- Expanded img file support to `bmp` and `gif`
+- Added ability to open pdf, images and text files (in read only mode) from file manager on android
+- Returned ToC and kept scroll position synced between edit and preview mode in note editor
+- WikiLink header reference now scrolls to header
+
+### (August 15, 2025)
+
+- Redesigned custom themes page
+- WikiLinks now display header links so `[[note#topic]]` render as `note > topic`, but doesn't scroll to header yet
+
+### (August 13, 2025)
+
+- Added tag list in drawer
+- Fixed 'All Notes' button in drawer again
+
+### (August 12, 2025)
+
+- Made dropdown list of note background images become subtitle if screen small to not crowd text
+
+### (August 10, 2025)
+
+Working on adding a list of tags in drawer
+
 ### (August 3, 2025)
 
 - Added popup with a list of users background images for app where they can delete them

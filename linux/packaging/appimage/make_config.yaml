@@ -1,0 +1,18 @@
+display_name: Print(Notes)
+
+icon: assets/app_icon.png
+
+keywords:
+  - Markdown
+  - Notes
+  - Obsidian
+
+generic_name: Markdown Notes Application
+
+categories:
+  - Office
+
+startup_notify: true
+# You can also specify [metainfo](https://www.freedesktop.org/software/appstream/metainfocreator/#/) file
+# which contains metadata of the app.
+metainfo: linux/packaging/com.printnotes.printnotes.appdata.xml

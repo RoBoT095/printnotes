@@ -101,6 +101,42 @@ class StorageSystem {
     return results;
   }
 
+  static Future<Map<String, List<String>>> getAllTags(String mainDir) async {
+    List<FileSystemEntity> allItems =
+        await StorageSystem.listFolderContents(mainDir, recursive: true);
+
+    final List<FileSystemEntity> filteredItems = allItems.where((item) {
+      return fileTypeChecker(item) == CFileType.note;
+    }).toList();
+
+    // Isolate files for compute
+    final List<File> files = filteredItems.map((e) => File(e.path)).toList();
+
+    final List<File> matchedFiles = await compute(
+        searchMultiFileContents, SearchPayload(query: 'tags:', files: files));
+
+    final Map<String, List<String>> tagMap = {};
+
+    for (File file in matchedFiles) {
+      if (!file.existsSync()) continue;
+
+      String contents = await file.readAsString();
+
+      final matches = RegExp(r'#\w+').allMatches(contents);
+
+      for (final match in matches) {
+        final tag = contents.substring(match.start, match.end);
+
+        tagMap.putIfAbsent(tag, () => []);
+
+        if (!tagMap[tag]!.contains(file.path)) {
+          tagMap[tag]!.add(file.path);
+        }
+      }
+    }
+    return tagMap;
+  }
+
   // Methods for archiving
 
   static Future<void> unarchiveItem(String archivedItemPath) async {

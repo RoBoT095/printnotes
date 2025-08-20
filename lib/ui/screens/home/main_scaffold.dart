@@ -10,12 +10,10 @@ import 'package:printnotes/ui/components/search_view.dart';
 class MainScaffold extends StatefulWidget {
   const MainScaffold({
     super.key,
-    required this.title,
     required this.body,
     this.drawer,
   });
 
-  final String title;
   final Widget body;
   final Widget? drawer;
 
@@ -55,7 +53,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                     setState(() {});
                   },
                 )
-              : Text(widget.title),
+              : Text('Print(Notes)'),
           actions: [
             IconButton(
               tooltip: 'Search Notes',
