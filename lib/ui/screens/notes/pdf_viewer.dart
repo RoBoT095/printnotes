@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pdfrx/pdfrx.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
@@ -123,6 +124,18 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
             PopupMenuButton(
               onSelected: (value) {},
               itemBuilder: (context) => <PopupMenuEntry>[
+                if (!Platform
+                    .isLinux) // Is currently files not supported by SharePlus
+                  PopupMenuItem(
+                    child: ListTile(
+                      leading: const Icon(Icons.share),
+                      title: Text('Share'),
+                      onTap: () {
+                        SharePlus.instance.share(
+                            ShareParams(files: [XFile(widget.pdfFile.path)]));
+                      },
+                    ),
+                  ),
                 PopupMenuItem(
                   child: ListTile(
                     leading: const Icon(Icons.folder_open),

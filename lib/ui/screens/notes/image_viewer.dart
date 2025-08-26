@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:printnotes/utils/file_info.dart';
 import 'package:printnotes/utils/open_explorer.dart';
@@ -29,6 +30,18 @@ class ImageViewScreen extends StatelessWidget {
             PopupMenuButton(
               onSelected: (value) {},
               itemBuilder: (context) => <PopupMenuEntry>[
+                if (!Platform
+                    .isLinux) // Is currently files not supported by SharePlus
+                  PopupMenuItem(
+                    child: ListTile(
+                      leading: const Icon(Icons.share),
+                      title: Text('Share'),
+                      onTap: () {
+                        SharePlus.instance
+                            .share(ShareParams(files: [XFile(imageFile.path)]));
+                      },
+                    ),
+                  ),
                 PopupMenuItem(
                   child: ListTile(
                     leading: const Icon(Icons.folder_open),

@@ -1,5 +1,9 @@
 # Changelog + Dev Log
 
+### (August 25, 2025)
+
+Added a share button to Note Editor (to share text) and to PDF and Image viewers (to share file)
+
 ### (August 17, 2025)
 
 - Increased flutter version
