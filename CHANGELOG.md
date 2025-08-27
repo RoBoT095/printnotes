@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (August 26, 2025)
+
+- File duplication now increments with a number (ex. `Note(1).md`, `Note(2).md`) instead of adding `_copy` to it every time (ex. `Note_copy.md`, `Note_copy_copy.md`)
+- Fixed screen rebuilding every time item is selected/deselected in select file mode
+
 ### (August 25, 2025)
 
 Added a share button to Note Editor (to share text) and to PDF and Image viewers (to share file)
