@@ -1,5 +1,10 @@
 # Changelog + Dev Log
 
+### (August 28, 2025)
+
+- Fixed archive screen navigation breaking
+- Merged the code for trash and archive screens (didn't change visually)
+
 ### (August 26, 2025)
 
 - File duplication now increments with a number (ex. `Note(1).md`, `Note(2).md`) instead of adding `_copy` to it every time (ex. `Note_copy.md`, `Note_copy_copy.md`)
