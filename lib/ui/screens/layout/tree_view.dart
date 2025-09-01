@@ -44,7 +44,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
     String mainDir = context.read<SettingsProvider>().mainDir;
 
     _rootNode = TreeNode.root(
-        data: TFolder(mainDir.split(Platform.pathSeparator).last, mainDir));
+        data: TFolder(mainDir.split(path.separator).last, mainDir));
     _rootNode.addAll(await getTree(mainDir));
   }
 

@@ -414,9 +414,8 @@ class StorageSystem {
       } else {
         // Filter out hidden folders and files
         final filteredContents = contents.where((item) {
-          final pathSegments = item.path
-              .replaceFirst(folderPath, '')
-              .split(Platform.pathSeparator);
+          final pathSegments =
+              path.split(item.path.replaceFirst(folderPath, ''));
           return !pathSegments.any((segment) => segment.startsWith('.'));
         }).toList();
         return filteredContents;

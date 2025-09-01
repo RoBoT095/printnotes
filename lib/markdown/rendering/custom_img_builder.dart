@@ -25,8 +25,8 @@ class CustomImgBuilder extends StatelessWidget {
       // Check if image (url) is relative to note (filePath)
       File relativeFile = File(join(
           dirname(filePath),
-          url.startsWith('.${Platform.pathSeparator}')
-              ? url.replaceFirst('.${Platform.pathSeparator}', '')
+          url.startsWith('.$separator')
+              ? url.replaceFirst('.$separator', '')
               : url));
       if (relativeFile.existsSync()) return relativeFile;
 

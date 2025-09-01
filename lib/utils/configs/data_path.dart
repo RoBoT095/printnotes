@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +13,8 @@ import 'package:printnotes/utils/storage_system.dart';
 class DataPath {
   static String? _selectedDirectory;
   static const String _prefKey = 'selected_directory';
-  static final hiddenFolderPath =
-      '$_selectedDirectory${Platform.pathSeparator}.printnotes';
+  static String get hiddenFolderPath =>
+      path.join(_selectedDirectory!, '.printnotes');
 
   static Future<String?> pickDirectory() async {
     if (Platform.isIOS) {
@@ -61,8 +62,8 @@ class DataPath {
 
   // Hidden app config file called .main_config.json
 
-  static final configFile =
-      File('$hiddenFolderPath${Platform.pathSeparator}main_config.json');
+  static File get configFile =>
+      File(path.join(hiddenFolderPath, 'main_config.json'));
 
   // Create and load contents of config file
   static Map<String, dynamic> loadJsonConfigFile() {
@@ -90,8 +91,8 @@ class DataPath {
   // Create a folder to store all the users upload images to use as a background
 
   // Path to folder with all the images
-  static final bgImagesFolderPath =
-      '$hiddenFolderPath${Platform.pathSeparator}background_images';
+  static String get bgImagesFolderPath =>
+      path.join(hiddenFolderPath, 'background_images');
 
   static Future<String?> uploadBgImage() async {
     if (!await Directory(bgImagesFolderPath).exists()) {
@@ -103,7 +104,7 @@ class DataPath {
     if (pickedImage != null) {
       final data = pickedImage.files.single.bytes!;
       final file = await File(
-              '$bgImagesFolderPath${Platform.pathSeparator}${pickedImage.files.single.name}')
+              path.join(bgImagesFolderPath, pickedImage.files.single.name))
           .writeAsBytes(
               data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
       return file.path;
