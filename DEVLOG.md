@@ -4,12 +4,17 @@
 
 - Migrating Path String to URI to support SAF for android
   - Do it slowly with maybe a custom string/uri handler
-- Add a sketch pad with [sketch_flow](https://github.com/Fasoo-DigitalPage/sketch_flow)
-  - Save as custom file format, but be `JSON` or `BSON`
+- [x] Add a sketch pad with [sketch_flow](https://github.com/Fasoo-DigitalPage/sketch_flow)
+  - [x] Save as custom file format, but be `JSON` or `BSON`
+  - [ ] Change home screen tile icon
 - Receive text sharing intent from other apps and create a new "untitled" note with contents being the received text
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
 
 ## Day to Day Changes
+
+### (September 06, 2026)
+
+- Added sketch pad with the use of `BSON` files using `sketch_flow` library
 
 ### (August 28, 2025)
 
@@ -23,7 +28,7 @@
 
 ### (August 25, 2025)
 
-Added a share button to Note Editor (to share text) and to PDF and Image viewers (to share file)
+- Added a share button to Note Editor (to share text) and to PDF and Image viewers (to share file)
 
 ### (August 17, 2025)
 
@@ -77,7 +82,7 @@ Been working on new styling options and forgot to write changelog
 
 ### July (12 & 25, 2025)
 
-Fixed certain things not reloading page due to the optimization changes
+- Fixed certain things not reloading page due to the optimization changes
 
 ### (July 6, 2025)
 
@@ -259,15 +264,15 @@ Tried publishing app to Google Play Store, got passed closed testing, but when t
 
 ### (Dec 27, 2024)
 
-Fixed search and removed hidden folders from results
+- Fixed search and removed hidden folders from results
 
 ### (Nov 30, 2024)
 
-Made Snackbars prettier
+- Made Snackbars prettier
 
 ### (Nov 25, 2024)
 
-Fixed minor bugs and visual discrepancies, config file for custom themes is now looks readable with indentation instead of all being on one line.
+- Fixed minor bugs and visual discrepancies, config file for custom themes is now looks readable with indentation instead of all being on one line.
 
 ### (Nov 11, 2024)
 

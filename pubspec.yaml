@@ -47,6 +47,11 @@ dependencies:
   animated_tree_view: ^2.3.0
   pdfrx: ^1.0.94
 
+  sketch_flow:
+    git:
+      url: https://github.com/RoBoT095/sketch_flow
+      ref: '82b4b10'
+
   flutter_speed_dial: ^7.0.0
   animated_snack_bar: ^0.4.0
   font_awesome_flutter: ^10.7.0

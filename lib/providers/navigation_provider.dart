@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:printnotes/constants/constants.dart';
+import 'package:printnotes/ui/screens/sketch_pad/sketch_pad_viewer.dart';
 
 import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/ui/screens/notes/image_viewer.dart';
@@ -55,6 +56,8 @@ class NavigationProvider with ChangeNotifier {
         onImageSelect(context, item);
       } else if (fileTypeChecker(item) == CFileType.pdf) {
         onPdfSelect(context, item);
+      } else if (fileTypeChecker(item) == CFileType.sketch) {
+        onSketchSelect(context, item);
       } else {
         onNoteSelect(context, item, jumpToHeader: jumpToHeader);
       }
@@ -97,6 +100,15 @@ class NavigationProvider with ChangeNotifier {
             MaterialPageRoute(
                 builder: (context) => PdfViewScreen(pdfFile: item)))
         .then((_) => navigateBack());
+  }
+
+  void onSketchSelect(BuildContext context, File item) {
+    addToRouteHistory(item.path);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SketchPad(sketchFile: item),
+        ));
   }
 
   // Open files outside selected app directory
