@@ -4,15 +4,17 @@
 
 - Migrating Path String to URI to support SAF for android
   - Do it slowly with maybe a custom string/uri handler
-- [x] Add a sketch pad with [sketch_flow](https://github.com/Fasoo-DigitalPage/sketch_flow)
-  - [x] Save as custom file format, but be `JSON` or `BSON`
-  - [ ] Change home screen tile icon
 - Receive text sharing intent from other apps and create a new "untitled" note with contents being the received text
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
 
 ## Day to Day Changes
 
-### (September 06, 2026)
+### (September 07, 2025)
+
+- Fixed the icons on the sketchpad bottom bar
+- Fixed look of the sketchpad from grid/list/tree modes
+
+### (September 06, 2025)
 
 - Added sketch pad with the use of `BSON` files using `sketch_flow` library
 

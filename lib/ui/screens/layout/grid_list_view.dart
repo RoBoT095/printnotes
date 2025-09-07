@@ -141,8 +141,7 @@ class _GridListViewState extends State<GridListView> {
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
-      }
-      if (fileTypeChecker(item) == CFileType.pdf) {
+      } else if (fileTypeChecker(item) == CFileType.pdf) {
         return ListTile(
           leading: Icon(
             Icons.picture_as_pdf,
@@ -151,6 +150,19 @@ class _GridListViewState extends State<GridListView> {
           ),
           title: Text(
             itemName,
+            textAlign: TextAlign.start,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      } else if (fileTypeChecker(item) == CFileType.sketch) {
+        return ListTile(
+          leading: Icon(
+            Icons.draw,
+            size: 34,
+          ),
+          title: Text(
+            itemName.replaceAll('.bson', ''),
             textAlign: TextAlign.start,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,

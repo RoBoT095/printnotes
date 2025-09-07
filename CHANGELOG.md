@@ -4,6 +4,16 @@
 
 ## v0.10.3 - WIP
 
+### Changes:
+
+- Added sketchpad that saves files as `.bson` files
+- Changed file duplication increments with a number instead of adding `_copy` to name over and over.
+- Added a share button on note editor (for text), and to PDF and Image viewers (to share file)
+
+### Fixed:
+
+- Fixed archive screen navigation breaking
+
 ## v0.10.2 - Aug 20, 2025
 
 ### Changes:

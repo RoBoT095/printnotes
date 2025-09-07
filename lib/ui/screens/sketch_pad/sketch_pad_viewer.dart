@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 import 'package:sketch_flow/sketch_flow.dart';
 
@@ -17,6 +18,7 @@ class _SketchPadState extends State<SketchPad> {
   final _sketchController =
       SketchController(sketchConfig: SketchConfig(showEraserEffect: true));
   final GlobalKey _repaintKey = GlobalKey();
+  final _scrollController = ScrollController();
 
   bool _isError = false;
 
@@ -77,7 +79,34 @@ class _SketchPadState extends State<SketchPad> {
                 repaintKey: _repaintKey,
               ),
             ),
-      bottomNavigationBar: SketchBottomBar(controller: _sketchController),
+      bottomNavigationBar: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        child: SketchBottomBar(
+          controller: _sketchController,
+          highlighterIcon: SketchToolIcon(
+            enableIcon: Icon(
+              FontAwesomeIcons.highlighter,
+              opticalSize: 20,
+            ),
+            disableIcon: Icon(
+              FontAwesomeIcons.highlighter,
+              opticalSize: 20,
+            ),
+          ),
+          eraserIcon: SketchToolIcon(
+            enableIcon: Icon(
+              FontAwesomeIcons.eraser,
+              opticalSize: 20,
+            ),
+            disableIcon: Icon(
+              FontAwesomeIcons.eraser,
+              opticalSize: 20,
+            ),
+          ),
+          showColorPickerSliderBar: true,
+        ),
+      ),
     );
   }
 }

@@ -108,7 +108,7 @@ class NavigationProvider with ChangeNotifier {
         context,
         MaterialPageRoute(
           builder: (context) => SketchPad(sketchFile: item),
-        ));
+        )).then((_) => navigateBack());
   }
 
   // Open files outside selected app directory
