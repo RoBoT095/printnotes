@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:printnotes/constants/constants.dart';
-import 'package:printnotes/ui/screens/sketch_pad/sketch_pad_viewer.dart';
+import 'package:printnotes/ui/screens/editors/sketch_pad/sketch_pad.dart';
 
 import 'package:printnotes/utils/handlers/file_extensions.dart';
-import 'package:printnotes/ui/screens/notes/image_viewer.dart';
-import 'package:printnotes/ui/screens/notes/note_editor.dart';
-import 'package:printnotes/ui/screens/notes/pdf_viewer.dart';
+import 'package:printnotes/ui/screens/viewers/image_viewer.dart';
+import 'package:printnotes/ui/screens/editors/notes/note_editor.dart';
+import 'package:printnotes/ui/screens/viewers/pdf_viewer.dart';
 // import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NavigationProvider with ChangeNotifier {

@@ -9,6 +9,11 @@
 
 ## Day to Day Changes
 
+### (September 12, 2025)
+
+- Clean up and reorganization
+- Version bump
+
 ### (September 07, 2025)
 
 - Fixed the icons on the sketchpad bottom bar

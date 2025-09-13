@@ -27,7 +27,7 @@ Widget speedDialFAB(
       ),
       SpeedDialChild(
         child: const Icon(Icons.draw),
-        label: 'Create Sketch pad',
+        label: 'Create Sketch',
         onTap: () => ItemCreationHandler.handleCreateNewSketch(
             context, currentFolder, loadItems),
       ),

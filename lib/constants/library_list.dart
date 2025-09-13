@@ -197,6 +197,19 @@ final List<Library> libraries = [
     url: 'https://github.com/leanflutter/window_manager',
     license: 'MIT License',
   ),
+  Library(
+    name: 'share_plus',
+    publisher: 'fluttercommunity.dev',
+    url:
+        'https://github.com/fluttercommunity/plus_plugins/tree/main/packages/share_plus/share_plus',
+    license: 'BSD 3-Clause License',
+  ),
+  Library(
+    name: 'Sketch Flow',
+    publisher: 'JunYeong0314',
+    url: 'https://github.com/Fasoo-DigitalPage/sketch_flow',
+    license: 'MIT License',
+  ),
   // Library(
   //   name: '',
   //   publisher: '',

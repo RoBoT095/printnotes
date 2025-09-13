@@ -24,10 +24,10 @@ Future modalShowFileInfo(BuildContext context, String filePath) =>
             statListTile('Character Count:', getCharacterCount(filePath)),
             statListTile('Word Count:', getWordCount(filePath)),
             statListTile(
-                'File Size: ', getFileSizeString(bytes: file.statSync().size)),
-            statListTile('Last Modified: ',
+                'File Size:', getFileSizeString(bytes: file.statSync().size)),
+            statListTile('Last Modified:',
                 getFormattedDate(date: file.statSync().modified)),
-            statListTile('Location: ', file.path),
+            statListTile('Location:', file.path),
             const SizedBox(height: 50)
           ],
         );

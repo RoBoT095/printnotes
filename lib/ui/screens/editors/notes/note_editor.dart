@@ -21,7 +21,7 @@ import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/markdown/editor_field.dart';
 import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
 
-import 'package:printnotes/ui/screens/notes/editor_config_page.dart';
+import 'package:printnotes/ui/screens/editors/notes/editor_config_page.dart';
 
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/centered_page_wrapper.dart';
