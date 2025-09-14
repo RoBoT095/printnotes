@@ -13,6 +13,7 @@
 
 - Changed docker WORKDIR to not be a root path
 - Added Dynamic Color settings (aka Material You on android)
+- Fixed sketch pad not following theme very well
 
 ### (September 12, 2025)
 

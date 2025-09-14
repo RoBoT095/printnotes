@@ -150,6 +150,18 @@ class _SketchPadState extends State<SketchPad> {
           thumbVisibility: true,
           child: SketchBottomBar(
             controller: _sketchController,
+            bottomBarColor: Theme.of(context).colorScheme.surface,
+            moveIcon: SketchToolIcon(
+              enableIcon: Icon(Icons.pinch),
+              disableIcon: Icon(Icons.pinch_outlined),
+            ),
+            pencilIcon: SketchToolIcon(
+              enableIcon: Icon(Icons.mode_edit_outline),
+              disableIcon: Icon(Icons.mode_edit_outline_outlined),
+            ),
+            brushIcon: SketchToolIcon(
+                enableIcon: Icon(Icons.brush),
+                disableIcon: Icon(Icons.brush_outlined)),
             highlighterIcon: SketchToolIcon(
               enableIcon: Icon(
                 FontAwesomeIcons.highlighter,
@@ -170,10 +182,31 @@ class _SketchPadState extends State<SketchPad> {
                 opticalSize: 20,
               ),
             ),
+            lineIcon: SketchToolIcon(
+              enableIcon: Icon(Icons.show_chart),
+              disableIcon: Icon(Icons.show_chart_outlined),
+            ),
+            rectangleIcon: SketchToolIcon(
+              enableIcon: Icon(Icons.rectangle),
+              disableIcon: Icon(Icons.rectangle_outlined),
+            ),
+            circleIcon: SketchToolIcon(
+              enableIcon: Icon(Icons.circle),
+              disableIcon: Icon(Icons.circle_outlined),
+            ),
+            paletteIcon: Icon(Icons.palette),
+            clearIcon: Icon(Icons.cleaning_services_rounded),
             showColorPickerSliderBar: true,
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _sketchController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 }
