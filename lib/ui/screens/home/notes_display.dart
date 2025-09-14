@@ -83,10 +83,9 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   Future<void> _refreshPage() async {
     setState(() => _isLoading = true);
-    await _loadItems();
 
-    Future.delayed(const Duration(milliseconds: 300),
-        () => setState(() => _isLoading = false));
+    Future.delayed(
+        const Duration(milliseconds: 300), () async => await _loadItems());
   }
 
   List<FileSystemEntity> selectedItemsToFileEntity() {
