@@ -55,6 +55,7 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   animated_snack_bar: ^0.4.0
   font_awesome_flutter: ^10.7.0
+  dynamic_color: ^1.8.1
 
 
 dev_dependencies:

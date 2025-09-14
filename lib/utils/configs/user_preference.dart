@@ -57,9 +57,19 @@ class UserThemingPref {
     return prefs.getString('colorScheme') ?? 'default';
   }
 
-  static Future<void> setPureBlackBG(bool pureBlackBG) async {
+  static Future<void> setDynamicColor(bool value) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('usePureBlack', pureBlackBG);
+    await prefs.setBool('useDynamicColor', value);
+  }
+
+  static Future<bool> getDynamicColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('useDynamicColor') ?? false;
+  }
+
+  static Future<void> setPureBlackBG(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('usePureBlack', value);
   }
 
   static Future<bool> getPureBlackBG() async {

@@ -1,7 +1,7 @@
 FROM ghcr.io/cirruslabs/flutter:3.35.1 AS build
 
 # Set up the working directory
-WORKDIR /app
+WORKDIR /app/rpg/Programming/Github
 
 # Copy the project files into the container
 COPY . .
@@ -47,10 +47,10 @@ RUN flutter build apk --release
 RUN flutter build apk --release --split-per-abi
 
 # Make output folder
-RUN mkdir -p /app/output
+RUN mkdir -p /app/rpg/Programming/Github/output
 
 # Move all files from build to output folder
-RUN cp build/app/outputs/flutter-apk/. /app/output/
+RUN cp build/app/outputs/flutter-apk/. /app/rpg/Programming/Github/output/
 
 # The default working directory inside the container
 CMD ["bash"]

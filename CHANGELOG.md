@@ -6,6 +6,7 @@
 
 ### Changes:
 
+- Added a Dynamic Colors option to use systems colors (not supported for iOS)
 - Added sketchpad that saves files as `.bson` files
 - Changed file duplication increments with a number instead of adding `_copy` to name over and over.
 - Added a share button on note editor (for text), and to PDF and Image viewers (to share file)

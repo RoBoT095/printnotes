@@ -9,6 +9,11 @@
 
 ## Day to Day Changes
 
+### (September 13, 2025)
+
+- Changed docker WORKDIR to not be a root path
+- Added Dynamic Color settings (aka Material You on android)
+
 ### (September 12, 2025)
 
 - Clean up and reorganization

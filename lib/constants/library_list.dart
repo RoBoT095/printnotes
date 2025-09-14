@@ -210,6 +210,13 @@ final List<Library> libraries = [
     url: 'https://github.com/Fasoo-DigitalPage/sketch_flow',
     license: 'MIT License',
   ),
+  Library(
+    name: 'dynamic_color',
+    publisher: 'material.io',
+    url:
+        'https://github.com/material-foundation/flutter-packages/tree/main/packages/dynamic_color',
+    license: 'Apache 2.0 License',
+  ),
   // Library(
   //   name: '',
   //   publisher: '',
