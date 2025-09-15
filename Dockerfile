@@ -50,7 +50,7 @@ RUN flutter build apk --release --split-per-abi
 RUN mkdir -p /app/rpg/Programming/Github/output
 
 # Move all files from build to output folder
-RUN cp build/app/outputs/flutter-apk/. /app/rpg/Programming/Github/output/
+RUN cp -r build/app/outputs/flutter-apk/. /app/rpg/Programming/Github/output/
 
 # The default working directory inside the container
 CMD ["bash"]
