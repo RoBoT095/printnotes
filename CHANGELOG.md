@@ -2,7 +2,7 @@
 
 > Moved DevLog into separate file
 
-## v0.10.3 - WIP
+## v0.10.3
 
 ### Changes:
 

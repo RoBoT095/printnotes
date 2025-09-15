@@ -19,10 +19,7 @@
 - Follows system folder structure to better organize notes
 - Can view images and pdf files found in apps directory and from external folders
 - Extensive Customizations
-  - Comes with many colors palettes by default
-  - Changeable layout and sort order
-  - Create your own custom color palettes
-  - Add background images, change opacities, tile shapes, padding and spacing for the best look
+- Draw ideas with a sketchpad saved as `.bson`
 - Toolbar for easy markdown editing (expanded from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor)'s toolbar)
 <!-- - Supports Windows, Mac, Linux, Android, and iOS -->
 
