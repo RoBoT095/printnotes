@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:printnotes/markdown/markdown_widget/config/toc.dart';
@@ -20,7 +21,7 @@ import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/markdown/editor_field.dart';
 import 'package:printnotes/markdown/toolbar/markdown_toolbar.dart';
 
-import 'package:printnotes/ui/screens/notes/editor_config_page.dart';
+import 'package:printnotes/ui/screens/editors/notes/editor_config_page.dart';
 
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/centered_page_wrapper.dart';
@@ -270,6 +271,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const EditorConfigPage())),
+                        ),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: const Icon(Icons.share),
+                            title: Text('Share'),
+                            onTap: () {
+                              SharePlus.instance.share(
+                                  ShareParams(text: _notesController.text));
+                            },
+                          ),
                         ),
                         PopupMenuItem(
                           child: ListTile(

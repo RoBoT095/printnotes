@@ -283,23 +283,29 @@ class StorageSystem {
   }
 
   // Method to duplicate Items (not folders)
-  // adds _copy to end of name, continues adding a num if a copy already exists
+  // adds (num) to end of name, continues adding up if a copy already exists
   static Future<String> duplicateItem(String originalPath) async {
-    final directory = path.dirname(originalPath);
-    final extension = path.extension(originalPath);
-    final nameWithoutExtension = path.basenameWithoutExtension(originalPath);
+    final dir = path.dirname(originalPath);
+    final ext = path.extension(originalPath);
+    String baseName = path.basenameWithoutExtension(originalPath);
 
-    String newName = '${nameWithoutExtension}_copy';
-    String newPath = path.join(directory, '$newName$extension');
+    final regex = RegExp(r'^(.*)\((\d+)\)$');
     int copyNumber = 1;
+
+    // Check for if the filename already ends with (num)
+    final match = regex.firstMatch(baseName);
+    if (match != null) {
+      baseName = match.group(1)!.trim(); // remove (num)
+      copyNumber = int.parse(match.group(2)!) + 1;
+    }
+
+    String newName = '$baseName($copyNumber)';
+    String newPath = path.join(dir, '$newName$ext');
 
     while (await File(newPath).exists()) {
       copyNumber++;
-      newName = '${nameWithoutExtension}_copy';
-      if (copyNumber > 1) {
-        newName += '_$copyNumber';
-      }
-      newPath = path.join(directory, '$newName$extension');
+      newName = '$baseName($copyNumber)';
+      newPath = path.join(dir, '$newName$ext');
     }
 
     final originalFile = File(originalPath);
@@ -408,9 +414,8 @@ class StorageSystem {
       } else {
         // Filter out hidden folders and files
         final filteredContents = contents.where((item) {
-          final pathSegments = item.path
-              .replaceFirst(folderPath, '')
-              .split(Platform.pathSeparator);
+          final pathSegments =
+              path.split(item.path.replaceFirst(folderPath, ''));
           return !pathSegments.any((segment) => segment.startsWith('.'));
         }).toList();
         return filteredContents;

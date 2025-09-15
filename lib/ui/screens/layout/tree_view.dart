@@ -44,7 +44,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
     String mainDir = context.read<SettingsProvider>().mainDir;
 
     _rootNode = TreeNode.root(
-        data: TFolder(mainDir.split(Platform.pathSeparator).last, mainDir));
+        data: TFolder(mainDir.split(path.separator).last, mainDir));
     _rootNode.addAll(await getTree(mainDir));
   }
 
@@ -58,10 +58,16 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
 
     String getFileName(String filePath) {
-      if (useFM && filePath.endsWith('.md')) {
-        String? title = FrontmatterHandleParsing.getTagString(
-            File(filePath).readAsStringSync(), 'title');
-        if (title != null) return title;
+      if (filePath.endsWith('.md')) {
+        if (useFM) {
+          String? title = FrontmatterHandleParsing.getTagString(
+              File(filePath).readAsStringSync(), 'title');
+          if (title != null) return title;
+        }
+        return path.basename(filePath).replaceAll('.md', '');
+      }
+      if (path.extension(filePath) == '.bson') {
+        return path.basename(filePath).replaceAll('.bson', '');
       }
       return path.basename(filePath);
     }
@@ -72,10 +78,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
           FolderNode(data: TFolder(path.basename(item.path), item.path))
             ..addAll(await getTree(item.path))
         else if (item is File)
-          FileNode(
-              data: TFile(getFileName(item.path), item.path,
-                  type:
-                      fileTypeChecker(item) == CFileType.image ? Image : File))
+          FileNode(data: TFile(getFileName(item.path), item.path, type: File))
     ];
   }
 
@@ -150,14 +153,15 @@ extension on ExplorableNode {
 
     if (this is FileNode) {
       final file = data as TFile;
-      if (file.type == Image) {
-        return Icon(
-          Icons.image_outlined,
-          color: Theme.of(context).colorScheme.primary,
-        );
+      if (fileTypeChecker(File(file.path)) == CFileType.image) {
+        return Icon(Icons.image_outlined,
+            color: Theme.of(context).colorScheme.primary);
       }
       if (fileTypeChecker(File(file.path)) == CFileType.pdf) {
         return const Icon(Icons.picture_as_pdf);
+      }
+      if (fileTypeChecker(File(file.path)) == CFileType.sketch) {
+        return const Icon(Icons.draw);
       }
     }
 

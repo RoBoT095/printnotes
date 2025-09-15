@@ -7,8 +7,7 @@ import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 import 'package:printnotes/constants/constants.dart';
 
-import 'package:printnotes/ui/screens/archive/archive_screen.dart';
-import 'package:printnotes/ui/screens/trash/trash_screen.dart';
+import 'package:printnotes/ui/screens/hidden/trash_archive_screens.dart';
 import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
@@ -98,14 +97,18 @@ class DrawerView extends StatelessWidget {
                   title: const Text('Archive'),
                   onTap: () => _navigateToScreen(context,
                       path: context.read<SettingsProvider>().archivePath,
-                      screen: const ArchiveScreen()),
+                      screen: const TrashArchiveScreen(
+                        screenName: 'Archive',
+                      )),
                 ),
                 ListTile(
                   leading: const Icon(Icons.delete_outlined),
                   title: const Text('Trash'),
                   onTap: () => _navigateToScreen(context,
                       path: context.read<SettingsProvider>().trashPath,
-                      screen: const DeletedScreen()),
+                      screen: const TrashArchiveScreen(
+                        screenName: 'Trash',
+                      )),
                 ),
                 const Opacity(opacity: 0.2, child: Divider()),
                 ListTile(

@@ -1,5 +1,5 @@
 output: outputs/
-artifact_name: "Print(Notes)-v{{version}}-{{platform}}.{{ext}}"
+artifact_name: "printnotes-v{{version}}-{{platform}}.{{ext}}"
 variables:
   FLUTTER_ROOT: ~/development/flutter
 releases:

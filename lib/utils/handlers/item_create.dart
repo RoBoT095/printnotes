@@ -23,9 +23,10 @@ class ItemCreationHandler {
       try {
         final newFolderPath = await StorageSystem.createFolder(folderName,
             parentPath: currentPath);
+        final selectedDir = await DataPath.selectedDirectory;
         if (context.mounted) {
           customSnackBar(
-                  'Folder created: ${path.relative(newFolderPath, from: await DataPath.selectedDirectory)}',
+                  'Folder created: ${path.relative(newFolderPath, from: selectedDir)}',
                   type: 'success')
               .show(context);
         }
@@ -62,6 +63,37 @@ class ItemCreationHandler {
       } catch (e) {
         if (context.mounted) {
           customSnackBar('Error creating note: $e', type: 'error')
+              .show(context);
+        }
+      }
+    }
+  }
+
+  static Future<void> handleCreateNewSketch(
+    BuildContext context,
+    String currentPath,
+    Function loadItems,
+  ) async {
+    final dialogResult =
+        await showNameInputDialog(context, 'Enter sketch name');
+    String sketchName = dialogResult['name'];
+    bool noteSubmitted = dialogResult['submitted'];
+    if (noteSubmitted && sketchName.isNotEmpty) {
+      try {
+        await StorageSystem.createFile('$sketchName.bson',
+                parentPath: currentPath)
+            .then((e) {
+          if (context.mounted) {
+            context
+                .read<NavigationProvider>()
+                .routeItemToPage(context, File(e));
+          }
+        });
+
+        loadItems();
+      } catch (e) {
+        if (context.mounted) {
+          customSnackBar('Error creating sketch file: $e', type: 'error')
               .show(context);
         }
       }

@@ -16,12 +16,11 @@
 - Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
 - Supports Frontmatter for metadata and styling like title, description, color, and background
 - Stores notes locally on device
-- Possible to create folders to better organize notes
-- Can view images and pdf files found in selected directory and in external folders
-- Has many colors to choose from by default
-- Changeable layout and sort order
-- Toolbar for easy markdown editing (borrowed from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor))
-- Create your own custom color schemes to better personalize it to your liking
+- Follows system folder structure to better organize notes
+- Can view images and pdf files found in apps directory and from external folders
+- Extensive Customizations
+- Draw ideas with a sketchpad saved as `.bson`
+- Toolbar for easy markdown editing (expanded from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor)'s toolbar)
 <!-- - Supports Windows, Mac, Linux, Android, and iOS -->
 
 ---
@@ -58,17 +57,19 @@
 
 ## Supported Platforms
 
-I will release apps when I feel like the app is more complete!
+I will release to different platforms when I feel like the app is more complete!
 
 - [x] Android:
   - APKs in [Releases](https://github.com/RoBoT095/printnotes/releases)
   - F-Droid through [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.printnotes.printnotes)
-  - Can't get past GooglePlay review due to the use of All File Access permission
+  - Automatically get updates from Github releases with [Obtainium](https://github.com/ImranR98/Obtainium)
+  - Rejected by GooglePlay review due to the use of `MANAGE_EXTERNAL_STORAGE` permission
 - [x] iOS - [App Store](https://apps.apple.com/us/app/print-notes/id6740996365)
 - [ ] Windows `coming later`
 - [ ] MacOS `coming later`
-- [x] Linux:
-  - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases) (currently for testing)
+- [x] Linux: (mainly for testing desktop layout)
+  - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases)
+  - Deb in [Releases](https://github.com/RoBoT095/printnotes/releases)
   - Other options `coming later`
 
 ---
@@ -124,14 +125,14 @@ $ flutter build <target> --release
 
 ### Targets available for flutter:
 
-- `aar`: Build a repository containing an AAR and a POM file.
 - `apk`: Build an Android APK file from app.
-- `appbundle`: Build an Android App Bundle file from app.
+- `appbundle`: Build an Android App Bundle file from app (used for Google Play Store).
+- `aar`: Build a repository containing an AAR and a POM file.
 - `bundle`: Build the Flutter assets directory from app.
 
 ### Device host specific
 
-In other words, compiling can only be done on device you are compiling for (ex: `app.exe` requires windows)
+In other words, compiling can only be done on device you are compiling for (ex: an `.exe` requires windows)
 
 - `linux`: Build a Linux desktop application.
 - `windows`: Build a Windows desktop application.
@@ -164,7 +165,7 @@ On completion you should have an `outputs/` folder with 4 apk files (app-release
 
 </details>
 
-### Known issues with running app as linux application on Linux Mint
+### Known Issues with Developing/Running App as Linux Application on Linux Mint
 
 <details close>
 <summary>Tap to see issue details</summary>

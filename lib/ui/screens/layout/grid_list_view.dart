@@ -35,6 +35,8 @@ class GridListView extends StatefulWidget {
 }
 
 class _GridListViewState extends State<GridListView> {
+  final Map<String, Future<Widget>> _previewCache = {};
+
   Widget _buildItem(BuildContext context, int index) {
     final item = widget.items[index];
     final isDirectory = item is Directory;
@@ -107,15 +109,15 @@ class _GridListViewState extends State<GridListView> {
                   padding: EdgeInsets.all(
                       context.watch<CustomizationProvider>().noteTilePadding),
                   child: FutureBuilder(
-                      future: fileItem(context, item,
+                      future: _previewCache[item.path] ??= fileItem(
+                          context,
+                          item,
                           fmColor != null ? HexColor.fromHex(fmColor) : null),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           return snapshot.data ?? const SizedBox();
                         } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return Center(child: CircularProgressIndicator());
                         }
                       }),
                 ),
@@ -139,8 +141,7 @@ class _GridListViewState extends State<GridListView> {
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
         return Image.file(item);
-      }
-      if (fileTypeChecker(item) == CFileType.pdf) {
+      } else if (fileTypeChecker(item) == CFileType.pdf) {
         return ListTile(
           leading: Icon(
             Icons.picture_as_pdf,
@@ -149,6 +150,19 @@ class _GridListViewState extends State<GridListView> {
           ),
           title: Text(
             itemName,
+            textAlign: TextAlign.start,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      } else if (fileTypeChecker(item) == CFileType.sketch) {
+        return ListTile(
+          leading: Icon(
+            Icons.draw,
+            size: 34,
+          ),
+          title: Text(
+            itemName.replaceAll('.bson', ''),
             textAlign: TextAlign.start,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,

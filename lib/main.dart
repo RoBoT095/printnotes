@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -82,12 +83,20 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(colorScheme: themeProvider.getThemeData(context)),
-          themeMode: themeProvider.themeMode,
-          title: 'Print(Notes)',
-          home: const MainPage(),
+        return DynamicColorBuilder(
+          builder: (lightDynamic, darkDynamic) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                colorScheme: themeProvider.useDynamicColor
+                    ? (themeProvider.getThemeData(context).brightness ==
+                            Brightness.light
+                        ? lightDynamic
+                        : darkDynamic)
+                    : themeProvider.getThemeData(context)),
+            themeMode: themeProvider.themeMode,
+            title: 'Print(Notes)',
+            home: const MainPage(),
+          ),
         );
       },
     );

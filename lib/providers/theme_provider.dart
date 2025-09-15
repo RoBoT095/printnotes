@@ -7,6 +7,7 @@ class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   String _colorScheme = 'default';
   bool _useCustomTheme = false;
+  bool _useDynamicColor = false;
   bool _pureBlack = false;
   String _codeHighlight = '';
 
@@ -14,6 +15,7 @@ class ThemeProvider with ChangeNotifier {
   String get themeModeString => _themeModeToString(_themeMode);
   String get colorScheme => _colorScheme;
   bool get useCustomTheme => _useCustomTheme;
+  bool get useDynamicColor => _useDynamicColor;
   bool get pureBlack => _pureBlack;
   String get codeHighlight => _codeHighlight;
 
@@ -50,12 +52,14 @@ class ThemeProvider with ChangeNotifier {
   void loadPreferences() async {
     final savedTheme = await UserThemingPref.getThemeMode();
     final savedColorScheme = await UserThemingPref.getColorScheme();
+    final useDynamic = await UserThemingPref.getDynamicColor();
     final usePureBlack = await UserThemingPref.getPureBlackBG();
     final codeHighlight = await UserThemingPref.getCodeHighlight();
 
     setThemeMode(savedTheme);
     setColorScheme(savedColorScheme);
     setUseCustomTheme(isThemeCustom(colorScheme));
+    setDynamicColor(useDynamic);
     setPureBlackBG(usePureBlack);
     setCodeHighlight(codeHighlight);
   }
@@ -76,6 +80,12 @@ class ThemeProvider with ChangeNotifier {
 
   void setUseCustomTheme(bool useCustomTheme) {
     _useCustomTheme = useCustomTheme;
+    notifyListeners();
+  }
+
+  void setDynamicColor(bool value) {
+    _useDynamicColor = value;
+    UserThemingPref.setDynamicColor(value);
     notifyListeners();
   }
 

@@ -110,12 +110,7 @@ MarkdownConfig theMarkdownConfigs(
       theme: themeMap[userCodeHighlight] ??
           (isDark ? a11yDarkTheme : a11yLightTheme),
       decoration: BoxDecoration(
-          color: inEditor
-              ? Theme.of(context)
-                  .colorScheme
-                  .surfaceContainer
-                  .withValues(alpha: 0.5)
-              : Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
           borderRadius: BorderRadius.all(Radius.circular(12)),
           border: Border.all(
               width: 1,

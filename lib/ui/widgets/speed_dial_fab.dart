@@ -26,6 +26,12 @@ Widget speedDialFAB(
             context, currentFolder, loadItems),
       ),
       SpeedDialChild(
+        child: const Icon(Icons.draw),
+        label: 'Create Sketch',
+        onTap: () => ItemCreationHandler.handleCreateNewSketch(
+            context, currentFolder, loadItems),
+      ),
+      SpeedDialChild(
         child: const Icon(Icons.folder_copy),
         label: 'Open External File',
         onTap: () =>

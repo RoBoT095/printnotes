@@ -49,6 +49,10 @@ class SettingsScreen extends StatelessWidget {
       return text != null ? Text(text) : null;
     }
 
+    bool canPureDarkMode = Theme.brightnessOf(context) != Brightness.light &&
+        !context.watch<ThemeProvider>().useCustomTheme &&
+        !context.watch<ThemeProvider>().useDynamicColor;
+
     return Scaffold(
       appBar: AppBarDragWrapper(
         child: AppBar(
@@ -208,6 +212,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 ListTile(
+                  enabled: !context.watch<ThemeProvider>().useDynamicColor,
                   leading: const Icon(Icons.color_lens_outlined),
                   title: const Text('Color Scheme'),
                   trailing: DropdownButton(
@@ -225,31 +230,49 @@ class SettingsScreen extends StatelessWidget {
                       // DropdownMenuItem(value: 'dracula', child: Text('Dracula')),
                       DropdownMenuItem(value: 'custom', child: Text('Custom'))
                     ],
-                    onChanged: (value) {
-                      context
-                          .read<ThemeProvider>()
-                          .setColorScheme(value ?? 'default');
-                    },
+                    onChanged: context.watch<ThemeProvider>().useDynamicColor
+                        ? null
+                        : (String? value) {
+                            context
+                                .read<ThemeProvider>()
+                                .setColorScheme(value ?? 'default');
+                          },
                   ),
                 ),
                 if (context.watch<ThemeProvider>().useCustomTheme)
                   ListTile(
+                    enabled: !context.watch<ThemeProvider>().useDynamicColor,
                     leading: const Icon(Icons.draw),
                     title: const Text('Custom Color Scheme'),
                     trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CustomThemePage())),
+                    onTap: context.watch<ThemeProvider>().useDynamicColor
+                        ? null
+                        : () => Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const CustomThemePage())),
                   ),
-                if (context.watch<ThemeProvider>().themeModeString != 'light' &&
-                    !context.watch<ThemeProvider>().useCustomTheme)
+                if (!Platform.isIOS)
                   ListTile(
-                    leading: const Icon(Icons.dark_mode),
-                    title: Text('Pure black dark mode'),
+                    leading: const Icon(Icons.devices),
+                    title: const Text('Use Dynamic Colors'),
+                    subtitle: const Text('Get theme based on your device'),
                     trailing: Switch(
-                        value: context.watch<ThemeProvider>().pureBlack,
-                        onChanged: (val) =>
-                            context.read<ThemeProvider>().setPureBlackBG(val)),
+                      value: context.watch<ThemeProvider>().useDynamicColor,
+                      onChanged: (value) =>
+                          context.read<ThemeProvider>().setDynamicColor(value),
+                    ),
                   ),
+                ListTile(
+                  enabled: canPureDarkMode,
+                  leading: const Icon(Icons.dark_mode),
+                  title: Text('Pure black dark mode'),
+                  trailing: Switch(
+                      value: context.watch<ThemeProvider>().pureBlack,
+                      onChanged: !canPureDarkMode
+                          ? null
+                          : (val) => context
+                              .read<ThemeProvider>()
+                              .setPureBlackBG(val)),
+                ),
                 ListTile(
                   leading: const Icon(Icons.dashboard_customize),
                   title: Text('More Options'),
