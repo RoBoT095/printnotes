@@ -172,7 +172,7 @@ On completion you should have an `outputs/` folder with 4 apk files (app-release
 
 **<u>Note: This doesn't seem to affect other types of distros, or when running in android emulator</u>**
 
-Running as linux application on flutter version _3.24.0-3.24.3_ causes any **TextFields** to <u>slows down</u> or <u>crash</u> the app (ex. editing note, creating note/folder, searching, etc), best workaround currently is to switch to version [3.22.3 following this link](https://docs.flutter.dev/release/upgrade#switching-to-a-specific-flutter-version) and changing all `onPopInvokedWithResult` to just `onPopInvoked` as it doesn't exist in this version, if you are still having issues, try running `flutter clean` then `flutter run lib/main.dart` again, let me know if you have any other issues or need a step-by-step guide.
+Running as a linux application on flutter version _3.24.0 (or newer)_ causes any `TextFields` to **slows down** or **crash** the app (ex. editing note, creating note/folder, searching, etc), best workaround currently is either disabling the "Enable the on-screen keyboard" option in Accessibilty > Keyboard, or wrapping all textfields with `ExcludeSemantics` widget, or downgrading to flutter version _3.22.3_.
 
 </details>
 
