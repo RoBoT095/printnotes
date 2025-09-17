@@ -2,12 +2,18 @@
 
 ## ToDo/Look into List
 
-- Migrating Path String to URI to support SAF for android
+- Migrating File/Path to URI to support SAF for android
   - Do it slowly with maybe a custom string/uri handler
 - Receive text sharing intent from other apps and create a new "untitled" note with contents being the received text
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
+- Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
 
 ## Day to Day Changes
+
+### (September 16, 2025)
+
+- Fixed open file location on notes
+- Changed PDF and Image viewer, as well as, Sketchpad to use Uri instead of File
 
 ### (September 13, 2025)
 

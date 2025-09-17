@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pdfrx/pdfrx.dart';
+import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
+import 'package:pdfrx/pdfrx.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
@@ -11,9 +12,9 @@ import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 
 class PdfViewScreen extends StatefulWidget {
-  const PdfViewScreen({super.key, required this.pdfFile});
+  const PdfViewScreen({super.key, required this.pdfUri});
 
-  final File pdfFile;
+  final Uri pdfUri;
 
   @override
   State<PdfViewScreen> createState() => _PdfViewScreenState();
@@ -100,7 +101,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
         child: AppBar(
           centerTitle: true,
           title: SelectableText(
-            widget.pdfFile.path.split('/').last,
+            path.basename(widget.pdfUri.path),
             maxLines: 1,
           ),
           actions: [
@@ -131,8 +132,8 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
                       leading: const Icon(Icons.share),
                       title: Text('Share'),
                       onTap: () {
-                        SharePlus.instance.share(
-                            ShareParams(files: [XFile(widget.pdfFile.path)]));
+                        SharePlus.instance.share(ShareParams(
+                            files: [XFile(widget.pdfUri.toFilePath())]));
                       },
                     ),
                   ),
@@ -144,7 +145,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
                     textColor: mobileNullColor(context),
                   ),
                   onTap: () async =>
-                      await openExplorer(context, widget.pdfFile.parent.path),
+                      await openExplorer(context, widget.pdfUri.toFilePath()),
                 ),
               ],
             ),
@@ -248,7 +249,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
         ),
       ),
       body: PdfViewer.file(
-        widget.pdfFile.path,
+        widget.pdfUri.toFilePath(),
         controller: pdfController,
         params: PdfViewerParams(
           // Search

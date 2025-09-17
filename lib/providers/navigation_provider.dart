@@ -53,11 +53,11 @@ class NavigationProvider with ChangeNotifier {
       {String? jumpToHeader}) {
     if (item is File) {
       if (fileTypeChecker(item) == CFileType.image) {
-        onImageSelect(context, item);
+        onImageSelect(context, item.uri);
       } else if (fileTypeChecker(item) == CFileType.pdf) {
-        onPdfSelect(context, item);
+        onPdfSelect(context, item.uri);
       } else if (fileTypeChecker(item) == CFileType.sketch) {
-        onSketchSelect(context, item);
+        onSketchSelect(context, item.uri);
       } else {
         onNoteSelect(context, item, jumpToHeader: jumpToHeader);
       }
@@ -80,34 +80,35 @@ class NavigationProvider with ChangeNotifier {
 
   void onImageSelect(
     BuildContext context,
-    File item,
+    Uri item,
   ) {
     addToRouteHistory(item.path);
     Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ImageViewScreen(imageFile: item)))
+                builder: (context) => ImageViewScreen(imageUri: item)))
         .then((_) => navigateBack());
   }
 
   void onPdfSelect(
     BuildContext context,
-    File item,
-  ) {
-    addToRouteHistory(item.path);
-    Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PdfViewScreen(pdfFile: item)))
-        .then((_) => navigateBack());
-  }
-
-  void onSketchSelect(BuildContext context, File item) {
+    Uri item,
+  ) async {
     addToRouteHistory(item.path);
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SketchPad(sketchFile: item),
+            builder: (context) => PdfViewScreen(
+                  pdfUri: item,
+                ))).then((_) => navigateBack());
+  }
+
+  void onSketchSelect(BuildContext context, Uri item) {
+    addToRouteHistory(item.path);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SketchPad(sketchUri: item),
         )).then((_) => navigateBack());
   }
 

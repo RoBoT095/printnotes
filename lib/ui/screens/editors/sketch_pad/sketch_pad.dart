@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sketch_flow/sketch_flow.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class SketchPad extends StatefulWidget {
-  const SketchPad({super.key, required this.sketchFile});
+  const SketchPad({super.key, required this.sketchUri});
 
-  final File sketchFile;
+  final Uri sketchUri;
 
   @override
   State<SketchPad> createState() => _SketchPadState();
@@ -23,6 +23,7 @@ class _SketchPadState extends State<SketchPad> {
   final GlobalKey _repaintKey = GlobalKey();
   final _scrollController = ScrollController();
 
+  bool _isLoading = true;
   bool _isError = false;
 
   @override
@@ -33,12 +34,15 @@ class _SketchPadState extends State<SketchPad> {
 
   Future<void> _loadData() async {
     try {
-      final data = await widget.sketchFile.readAsBytes();
+      setState(() => _isLoading = true);
+      final data = await File.fromUri(widget.sketchUri).readAsBytes();
 
       _sketchController.fromBson(bson: data);
+      setState(() => _isLoading = false);
     } catch (e) {
       debugPrint('Error loading sketch content: $e');
       setState(() {
+        _isLoading = false;
         _isError = true;
       });
     }
@@ -48,7 +52,8 @@ class _SketchPadState extends State<SketchPad> {
     if (_isError) return true;
 
     try {
-      await widget.sketchFile.writeAsBytes(_sketchController.toBson());
+      await File.fromUri(widget.sketchUri)
+          .writeAsBytes(_sketchController.toBson());
       return true;
     } catch (e) {
       debugPrint('Error saving sketch file: $e');
@@ -116,8 +121,8 @@ class _SketchPadState extends State<SketchPad> {
                 //       leading: const Icon(Icons.share),
                 //       title: Text('Share'),
                 //       onTap: () {
-                //         SharePlus.instance.share(
-                //             ShareParams(files: [XFile(widget.sketchFile.path)]));
+                //         SharePlus.instance.share(ShareParams(
+                //             files: [XFile(widget.sketchUri.toFilePath())]));
                 //       },
                 //     ),
                 //   ),
@@ -128,23 +133,27 @@ class _SketchPadState extends State<SketchPad> {
                     iconColor: mobileNullColor(context),
                     textColor: mobileNullColor(context),
                   ),
-                  onTap: () async =>
-                      await openExplorer(context, widget.sketchFile.path),
+                  onTap: () async => await openExplorer(
+                      context, widget.sketchUri.toFilePath()),
                 ),
               ],
             )
           ],
         ),
-        body: _isError
+        body: _isLoading
             ? Center(
-                child: Text('Error loading sketch data'),
+                child: CircularProgressIndicator(),
               )
-            : Center(
-                child: SketchBoard(
-                  controller: _sketchController,
-                  repaintKey: _repaintKey,
-                ),
-              ),
+            : _isError
+                ? Center(
+                    child: Text('Error loading sketch data'),
+                  )
+                : Center(
+                    child: SketchBoard(
+                      controller: _sketchController,
+                      repaintKey: _repaintKey,
+                    ),
+                  ),
         bottomNavigationBar: Scrollbar(
           controller: _scrollController,
           thumbVisibility: true,

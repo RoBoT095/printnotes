@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 
 import 'package:printnotes/utils/file_info.dart';
@@ -9,9 +10,9 @@ import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 
 class ImageViewScreen extends StatelessWidget {
-  const ImageViewScreen({super.key, required this.imageFile});
+  const ImageViewScreen({super.key, required this.imageUri});
 
-  final File imageFile;
+  final Uri imageUri;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class ImageViewScreen extends StatelessWidget {
         child: AppBar(
           centerTitle: true,
           title: SelectableText(
-            imageFile.path.split('/').last,
+            path.basename(imageUri.path),
             maxLines: 1,
           ),
           actions: [
@@ -37,8 +38,8 @@ class ImageViewScreen extends StatelessWidget {
                       leading: const Icon(Icons.share),
                       title: Text('Share'),
                       onTap: () {
-                        SharePlus.instance
-                            .share(ShareParams(files: [XFile(imageFile.path)]));
+                        SharePlus.instance.share(
+                            ShareParams(files: [XFile(imageUri.toFilePath())]));
                       },
                     ),
                   ),
@@ -50,7 +51,7 @@ class ImageViewScreen extends StatelessWidget {
                     textColor: mobileNullColor(context),
                   ),
                   onTap: () async =>
-                      await openExplorer(context, imageFile.parent.path),
+                      await openExplorer(context, imageUri.toFilePath()),
                 ),
               ],
             ),
@@ -64,12 +65,16 @@ class ImageViewScreen extends StatelessWidget {
               : null,
           child: Column(
             children: [
-              Image.file(imageFile),
-              statListTile('File Size: ',
-                  getFileSizeString(bytes: imageFile.statSync().size)),
-              statListTile('Last Modified: ',
-                  getFormattedDate(date: imageFile.statSync().modified)),
-              statListTile('Location: ', imageFile.path),
+              Image.file(File.fromUri(imageUri)),
+              statListTile(
+                  'File Size: ',
+                  getFileSizeString(
+                      bytes: File.fromUri(imageUri).statSync().size)),
+              statListTile(
+                  'Last Modified: ',
+                  getFormattedDate(
+                      date: File.fromUri(imageUri).statSync().modified)),
+              statListTile('Location: ', imageUri.toFilePath()),
               const SizedBox(height: 100)
             ],
           ),
