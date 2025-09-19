@@ -10,6 +10,10 @@
 
 ## Day to Day Changes
 
+### (September 18, 2025)
+
+Updated **pdfrx** to newest version to have it not include Build IDs, required editing build process as pdfrx now bundles WASM modules that are not needed for application and only add extra megabytes to compiled apps.
+
 ### (September 16, 2025)
 
 - Fixed open file location on notes

@@ -136,6 +136,7 @@ In other words, compiling can only be done on device you are compiling for (ex: 
 
 - `linux`: Build a Linux desktop application.
 - `windows`: Build a Windows desktop application.
+  - Read this: https://github.com/espresso3389/pdfrx/tree/master/packages/pdfrx#note-for-windows
 - `macos`: Build a MacOS desktop application.
   - `ipa`: Build an iOS App Store Package from app.
 

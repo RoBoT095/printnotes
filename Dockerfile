@@ -40,6 +40,9 @@ RUN flutter config --no-analytics
 # Get all flutter dependencies
 RUN flutter pub get
 
+# Remove WASM binaries as they are not needed
+RUN dart run pdfrx:remove_wasm_modules
+
 # Build the default APK
 RUN flutter build apk --release
 
