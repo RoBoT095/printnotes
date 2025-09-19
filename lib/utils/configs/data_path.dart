@@ -62,30 +62,33 @@ class DataPath {
 
   // Hidden app config file called .main_config.json
 
-  static File get configFile =>
+  static File get mainConfigFile =>
       File(path.join(hiddenFolderPath, 'main_config.json'));
 
-  // Create and load contents of config file
-  static Map<String, dynamic> loadJsonConfigFile() {
-    if (!configFile.existsSync()) configFile.createSync(recursive: true);
-    if (configFile.readAsStringSync().isEmpty) {
-      configFile.writeAsStringSync('{}');
+  static File get toolbarConfigFile =>
+      File(path.join(hiddenFolderPath, 'toolbar_config.json'));
+
+  // Create and load contents of a config file
+  static Map<String, dynamic> loadJsonConfigFile(File file) {
+    if (!file.existsSync()) file.createSync(recursive: true);
+    if (file.readAsStringSync().isEmpty) {
+      file.writeAsStringSync('{}');
     }
 
-    final configJsonString = configFile.readAsStringSync();
-    return jsonDecode(configJsonString);
+    final fileString = file.readAsStringSync();
+    return jsonDecode(fileString);
   }
 
   // Write to config file
-  static void saveJsonConfigFile(Map<String, dynamic> configData) async {
-    final configJsonString =
-        const JsonEncoder.withIndent('  ').convert(configData);
-    configFile.writeAsStringSync(configJsonString);
+  static void saveJsonConfigFile(
+      File file, Map<String, dynamic> configData) async {
+    final fileString = const JsonEncoder.withIndent('  ').convert(configData);
+    file.writeAsStringSync(fileString);
   }
 
   // Deletes and regenerates json file
-  static void deleteJsonConfigFile() async {
-    configFile.delete().then((_) => loadJsonConfigFile());
+  static void deleteJsonConfigFile(File file) async {
+    file.delete().then((_) => loadJsonConfigFile(file));
   }
 
   // Create a folder to store all the users upload images to use as a background

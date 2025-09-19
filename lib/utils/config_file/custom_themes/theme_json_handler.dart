@@ -4,7 +4,7 @@ import 'package:printnotes/utils/config_file/custom_themes/custom_theme_model.da
 import 'package:printnotes/utils/configs/data_path.dart';
 
 void saveSelectedThemeToConfig(Map<String, dynamic> selectedThemes) {
-  final configFileMap = DataPath.loadJsonConfigFile();
+  final configFileMap = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
 
   // Object existence check for "SelectedCustomThemes", create if null
   configFileMap['SelectedCustomThemes'] ??= {};
@@ -12,11 +12,11 @@ void saveSelectedThemeToConfig(Map<String, dynamic> selectedThemes) {
   // Add the map of selected themes to config
   configFileMap['SelectedCustomThemes'] = selectedThemes;
 
-  DataPath.saveJsonConfigFile(configFileMap);
+  DataPath.saveJsonConfigFile(DataPath.mainConfigFile, configFileMap);
 }
 
 Map<String, dynamic> loadSelectedThemeFromConfig() {
-  final configFileMap = DataPath.loadJsonConfigFile();
+  final configFileMap = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
   if (configFileMap['SelectedCustomThemes'] != null) {
     return configFileMap['SelectedCustomThemes'];
   }
@@ -24,7 +24,7 @@ Map<String, dynamic> loadSelectedThemeFromConfig() {
 }
 
 void addThemeToConfig(CustomThemeJson themeJson) {
-  final configFileMap = DataPath.loadJsonConfigFile();
+  final configFileMap = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
 
   // Array existence check for "UserCustomThemes", create if null
   configFileMap['UserCustomThemes'] ??= [];
@@ -32,33 +32,33 @@ void addThemeToConfig(CustomThemeJson themeJson) {
   // // Add the new theme object to array
   configFileMap['UserCustomThemes'].add(themeJson.toJson());
 
-  DataPath.saveJsonConfigFile(configFileMap);
+  DataPath.saveJsonConfigFile(DataPath.mainConfigFile, configFileMap);
 }
 
 // Identifies theme by name and deletes it
 void deleteCustomTheme(Map<String, dynamic> themeJson) {
-  final configFileMap = DataPath.loadJsonConfigFile();
+  final configFileMap = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
 
   final themes = configFileMap['UserCustomThemes'] as List<dynamic>;
   themes.removeWhere((theme) => theme['name'] == themeJson['name']);
 
-  DataPath.saveJsonConfigFile(configFileMap);
+  DataPath.saveJsonConfigFile(DataPath.mainConfigFile, configFileMap);
 }
 
 // TODO: Maybe merge into addThemeToConfig
 // Adds theme back to list if accidentally deleted, aka theme undo handler
 void restoreCustomTheme(Map<String, dynamic> themeJson) {
-  final configFileMap = DataPath.loadJsonConfigFile();
+  final configFileMap = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
 
   final themes = configFileMap['UserCustomThemes'] as List<dynamic>;
   themes.add(themeJson);
 
-  DataPath.saveJsonConfigFile(configFileMap);
+  DataPath.saveJsonConfigFile(DataPath.mainConfigFile, configFileMap);
 }
 
 // Go through config file and return all themes that are either dark or light
 List<dynamic> listAllThemeFromConfig({required bool isDark}) {
-  final configFileMap = DataPath.loadJsonConfigFile();
+  final configFileMap = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
   final themesList = [];
   if (configFileMap['UserCustomThemes'] != null) {
     final themes = configFileMap['UserCustomThemes'] as List<dynamic>;

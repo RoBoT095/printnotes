@@ -13,6 +13,8 @@
 ### (September 19, 2025)
 
 - Redesigned Settings screens and About screen
+- Moved toolbar_config to a separate json file
+- Minor changes and some clean up
 
 ### (September 18, 2025)
 

@@ -58,7 +58,6 @@ class ItemCreationHandler {
                 .routeItemToPage(context, File(e));
           }
         });
-
         loadItems();
       } catch (e) {
         if (context.mounted) {

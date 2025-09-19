@@ -216,7 +216,8 @@ class _SketchPadState extends State<SketchPad> {
               )
             : _isError
                 ? Center(
-                    child: Text('Error loading sketch data'),
+                    child: Text(
+                        'Error loading sketch data, try reopening file again'),
                   )
                 : Center(
                     child: SketchBoard(

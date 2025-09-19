@@ -408,7 +408,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _isError
-                  ? const Center(child: Text('Error Reading File'))
+                  ? const Center(
+                      child:
+                          Text('Error reading file, try reopening file again'))
                   // Catch if "ctrl+shift+v" was used to switch between
                   // edit and preview mode
                   : Shortcuts(

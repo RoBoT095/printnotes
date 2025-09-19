@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:printnotes/ui/widgets/menu_tile.dart';
 
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 import 'package:printnotes/constants/library_list.dart';
@@ -19,24 +20,22 @@ void showLibrariesDialog(BuildContext context) {
             shrinkWrap: true,
             itemCount: libraries.length,
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                child: ListTile(
-                  title: InkWell(
-                    onTap: () {
-                      urlHandler(context, libraries[index].url);
-                    },
-                    child: Text(
-                        '${libraries[index].name} by ${libraries[index].publisher}'),
-                  ),
-                  subtitle: Text(
-                    libraries[index].license,
-                    style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.5)),
-                  ),
+              return MenuTile(
+                title:
+                    '${libraries[index].name} by ${libraries[index].publisher}',
+                subtitle: Text(
+                  libraries[index].license,
+                  style: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.5)),
                 ),
+                onTap: () {
+                  urlHandler(context, libraries[index].url);
+                },
+                isFirst: index == 0,
+                isLast: index + 1 == libraries.length,
               );
             },
           ),

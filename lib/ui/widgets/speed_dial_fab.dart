@@ -16,26 +16,26 @@ Widget speedDialFAB(
       SpeedDialChild(
         child: const Icon(Icons.create_new_folder_outlined),
         label: 'Create Folder',
-        onTap: () => ItemCreationHandler.handleCreateNewFolder(
+        onTap: () async => await ItemCreationHandler.handleCreateNewFolder(
             context, currentFolder, loadItems),
       ),
       SpeedDialChild(
         child: const Icon(Icons.note_add_outlined),
         label: 'Create Note',
-        onTap: () => ItemCreationHandler.handleCreateNewNote(
+        onTap: () async => await ItemCreationHandler.handleCreateNewNote(
             context, currentFolder, loadItems),
       ),
       SpeedDialChild(
         child: const Icon(Icons.draw),
         label: 'Create Sketch',
-        onTap: () => ItemCreationHandler.handleCreateNewSketch(
+        onTap: () async => await ItemCreationHandler.handleCreateNewSketch(
             context, currentFolder, loadItems),
       ),
       SpeedDialChild(
         child: const Icon(Icons.folder_copy),
         label: 'Open External File',
-        onTap: () =>
-            context.read<NavigationProvider>().openExternalFile(context),
+        onTap: () async =>
+            await context.read<NavigationProvider>().openExternalFile(context),
       )
     ],
   );

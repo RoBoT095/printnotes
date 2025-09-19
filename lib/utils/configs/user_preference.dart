@@ -9,8 +9,8 @@ Future<void> clearAllPrefs() async {
 
 // For layout selection
 
-// Left it as a string in case I want to add more layouts
 class UserLayoutPref {
+  // Left it as a string in case I want to add more layouts
   static Future<void> setLayoutView(String layoutView) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('layoutView', layoutView);
