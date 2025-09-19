@@ -12,12 +12,14 @@
 
 ### (September 18, 2025)
 
-Updated **pdfrx** to newest version to have it not include Build IDs, required editing build process as pdfrx now bundles WASM modules that are not needed for application and only add extra megabytes to compiled apps.
+- Added Share and Export options to sketch pad
+- Updated **pdfrx** to newest version to have it not include Build IDs
+  - Edited build process as pdfrx now bundles WASM modules that are not needed for application and only add extra megabytes to compiled apps.
 
 ### (September 16, 2025)
 
 - Fixed open file location on notes
-- Changed PDF and Image viewer, as well as, Sketchpad to use Uri instead of File
+- Changed PDF, Image viewer, and Sketch pad to use **Uri** instead of **File**
 
 ### (September 13, 2025)
 
@@ -32,8 +34,8 @@ Updated **pdfrx** to newest version to have it not include Build IDs, required e
 
 ### (September 07, 2025)
 
-- Fixed the icons on the sketchpad bottom bar
-- Fixed look of the sketchpad from grid/list/tree modes
+- Fixed the icons on the sketch pad bottom bar
+- Fixed look of the sketch pad from grid/list/tree modes
 
 ### (September 06, 2025)
 
