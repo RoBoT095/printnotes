@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/constants/constants.dart';
+
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/centered_page_wrapper.dart';
 import 'package:printnotes/ui/components/dialogs/libraries_dialog.dart';
+
+import 'package:printnotes/ui/widgets/menu_tile.dart';
+
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -22,43 +26,53 @@ class AboutScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: CenteredPageWrapper(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             children: [
-              ListTile(
+              MenuTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.info_outline),
-                title: const Text('Version'),
-                subtitle: const Text(appVersion),
+                title: 'Version',
+                subtitle: MenuTile.subtitleText(context, text: appVersion),
+                isFirst: true,
+                isLast: true,
               ),
-              ListTile(
+              const SizedBox(height: 12),
+              MenuTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.code),
-                title: const Text('Contribute'),
-                subtitle: const Text('https://github.com/RoBoT095/printnotes'),
+                title: 'Contribute',
+                subtitle: MenuTile.subtitleText(context,
+                    text: 'https://github.com/RoBoT095/printnotes'),
                 onTap: () => urlHandler(
                     context, 'https://github.com/RoBoT095/printnotes'),
                 onLongPress: () => urlHandler(
                     context, 'https://github.com/RoBoT095/printnotes',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
+                isFirst: true,
               ),
-              ListTile(
+              MenuTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.person),
-                title: const Text('Developer'),
-                subtitle: const Text('RoBoT_095 aka Rob'),
+                title: 'Developer',
+                subtitle:
+                    MenuTile.subtitleText(context, text: 'RoBoT_095 aka Rob'),
                 onTap: () => urlHandler(context, 'https://github.com/RoBoT095'),
                 onLongPress: () => urlHandler(
                     context, 'https://github.com/RoBoT095',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
               ),
-              ListTile(
+              MenuTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.favorite_border_rounded),
-                title: const Text('Support'),
-                subtitle: const Text(
-                    "I'm a solo dev working hard on this, \nMaybe buy me some Coffee?"),
+                title: 'Support',
+                subtitle: MenuTile.subtitleText(
+                  context,
+                  text:
+                      "I'm a solo dev working hard on this, \nMaybe buy me some Coffee?",
+                ),
                 onTap: () =>
                     urlHandler(context, 'https://buymeacoffee.com/robot_095'),
                 onLongPress: () => urlHandler(
@@ -66,27 +80,28 @@ class AboutScreen extends StatelessWidget {
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
               ),
-              ListTile(
+              MenuTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.menu_book),
-                title: const Text('Libraries'),
-                subtitle: const Text(
-                    'Click to view third-party libraries and licenses.'),
+                title: 'Libraries',
+                subtitle: MenuTile.subtitleText(context,
+                    text: 'Click to view third-party libraries and licenses.'),
                 onTap: () => showLibrariesDialog(context),
                 trailing: const Icon(Icons.arrow_back_ios_new_rounded),
               ),
-              ListTile(
+              MenuTile(
                 iconColor: Theme.of(context).colorScheme.secondary,
                 leading: const Icon(Icons.article),
-                title: const Text('App License'),
-                subtitle:
-                    const Text("This App is protected under the GPL 3 License"),
+                title: 'App License',
+                subtitle: MenuTile.subtitleText(context,
+                    text: "This App is protected under the GPL 3 License"),
                 onTap: () => urlHandler(
                     context, 'https://www.gnu.org/licenses/gpl-3.0.en.html'),
                 onLongPress: () => urlHandler(
                     context, 'https://www.gnu.org/licenses/gpl-3.0.en.html',
                     copyToClipboard: true),
                 trailing: const Icon(Icons.launch_rounded),
+                isLast: true,
               ),
             ],
           ),

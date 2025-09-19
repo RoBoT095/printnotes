@@ -7,9 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:printnotes/providers/customization_provider.dart';
 
 import 'package:printnotes/utils/handlers/style_handler.dart';
+
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/centered_page_wrapper.dart';
+
 import 'package:printnotes/ui/widgets/list_section_title.dart';
+import 'package:printnotes/ui/widgets/menu_tile.dart';
 
 class MoreDesignOptionsPage extends StatefulWidget {
   const MoreDesignOptionsPage({super.key});
@@ -140,280 +143,287 @@ class _MoreDesignOptionsPageState extends State<MoreDesignOptionsPage> {
         ),
       ),
       body: CenteredPageWrapper(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: ListTileTheme(
-        iconColor: Theme.of(context).colorScheme.secondary,
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : ListView(
-                children: [
-                  sectionTitle(
-                    'Home Screen',
-                    Theme.of(context).colorScheme.secondary,
-                    padding: 10,
-                  ),
-                  Container(
-                    // reflect the selected image
-                    decoration: watchCustomizations.bgImagePath != null
-                        ? BoxDecoration(
-                            image: DecorationImage(
-                              repeat: StyleHandler.getBgImageRepeat(
-                                  watchCustomizations.bgImageRepeat),
-                              fit: StyleHandler.getBgImageFit(
-                                  watchCustomizations.bgImageFit),
-                              opacity: watchCustomizations.bgImageOpacity,
-                              image: FileImage(
-                                  File(watchCustomizations.bgImagePath!)),
-                            ),
-                          )
-                        : null,
-                    child: ListTile(
-                      leading: Icon(Icons.image),
-                      title: Text('Background Image'),
-                      subtitle: isScreenLarge || _bgImgDropItemList.isEmpty
-                          ? Text('Replace background color with image')
-                          : DropdownButton(
-                              items: _bgImgDropItemList,
-                              value: watchCustomizations.bgImagePath,
-                              isExpanded: true,
-                              hint: Text('Select Image'),
-                              onChanged: (value) {
-                                if (value is String?) {
-                                  if (value == 'add new image') {
-                                    _uploadImage(context);
-                                  } else {
-                                    readCustomizations.setBgImagePath(value);
+            iconColor: Theme.of(context).colorScheme.secondary,
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : ListView(
+                    children: [
+                      sectionTitle(
+                        'Home Screen',
+                        Theme.of(context).colorScheme.secondary,
+                        padding: 10,
+                      ),
+                      MenuTile(
+                        decoration: watchCustomizations.bgImagePath != null
+                            ? BoxDecoration(
+                                image: DecorationImage(
+                                  repeat: StyleHandler.getBgImageRepeat(
+                                      watchCustomizations.bgImageRepeat),
+                                  fit: StyleHandler.getBgImageFit(
+                                      watchCustomizations.bgImageFit),
+                                  opacity: watchCustomizations.bgImageOpacity,
+                                  image: FileImage(
+                                      File(watchCustomizations.bgImagePath!)),
+                                ),
+                              )
+                            : null,
+                        leading: Icon(Icons.image),
+                        title: 'Background Image',
+                        subtitle: isScreenLarge || _bgImgDropItemList.isEmpty
+                            ? Text('Replace background color with image')
+                            : DropdownButton(
+                                items: _bgImgDropItemList,
+                                value: watchCustomizations.bgImagePath,
+                                isExpanded: true,
+                                hint: Text('Select Image'),
+                                onChanged: (value) {
+                                  if (value is String?) {
+                                    if (value == 'add new image') {
+                                      _uploadImage(context);
+                                    } else {
+                                      readCustomizations.setBgImagePath(value);
+                                    }
                                   }
-                                }
-                              },
-                            ),
-                      trailing:
-                          // If empty, show icon, otherwise dropdown of images
-                          _bgImgDropItemList.isEmpty
-                              ? IconButton(
-                                  onPressed: () => _uploadImage(context),
-                                  icon: Icon(Icons.add))
-                              : isScreenLarge
-                                  ? DropdownButton(
-                                      items: _bgImgDropItemList,
-                                      value: watchCustomizations.bgImagePath,
-                                      hint: Text('Select Image'),
-                                      onChanged: (value) {
-                                        if (value is String?) {
-                                          if (value == 'add new image') {
-                                            _uploadImage(context);
-                                          } else {
-                                            readCustomizations
-                                                .setBgImagePath(value);
+                                },
+                              ),
+                        trailing:
+                            // If empty, show icon, otherwise dropdown of images
+                            _bgImgDropItemList.isEmpty
+                                ? IconButton(
+                                    onPressed: () => _uploadImage(context),
+                                    icon: Icon(Icons.add))
+                                : isScreenLarge
+                                    ? DropdownButton(
+                                        items: _bgImgDropItemList,
+                                        value: watchCustomizations.bgImagePath,
+                                        hint: Text('Select Image'),
+                                        onChanged: (value) {
+                                          if (value is String?) {
+                                            if (value == 'add new image') {
+                                              _uploadImage(context);
+                                            } else {
+                                              readCustomizations
+                                                  .setBgImagePath(value);
+                                            }
                                           }
-                                        }
-                                      },
-                                    )
-                                  : null,
-                    ),
-                  ),
-                  if (_bgImgDropItemList.isNotEmpty)
-                    ListTile(
-                      leading: Icon(Icons.delete),
-                      title: Text('Delete Image'),
-                      trailing: Icon(Icons.chevron_right),
-                      onTap: () => delImgDialog(context),
-                    ),
-                  if (watchCustomizations.bgImagePath != null)
-                    ListTile(
-                      leading: Icon(Icons.opacity),
-                      title: Text('Background Image Opacity'),
-                      trailing:
-                          Text('${watchCustomizations.bgImageOpacity * 100}%'),
-                      subtitle: Slider(
-                        value: watchCustomizations.bgImageOpacity,
-                        divisions: 10,
-                        min: 0,
-                        max: 1,
-                        onChanged: (opacity) =>
-                            readCustomizations.setBgImageOpacity(opacity),
+                                        },
+                                      )
+                                    : null,
+                        isFirst: true,
                       ),
-                    ),
-                  if (watchCustomizations.bgImagePath != null)
-                    ListTile(
-                      leading: Icon(Icons.format_shapes),
-                      title: Text('Background Image fit'),
-                      trailing: DropdownButton(
-                        value: watchCustomizations.bgImageFit,
-                        items: [
-                          DropdownMenuItem(
-                            value: 'cover',
-                            child: Text('Cover'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'contain',
-                            child: Text('Contain'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'fill',
-                            child: Text('Fill'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'scaleDown',
-                            child: Text('Scale Down'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'fitHeight',
-                            child: Text('Fit Height'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'fitWidth',
-                            child: Text('Fit Width'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'none',
-                            child: Text('None'),
-                          ),
-                        ],
-                        onChanged: (fit) {
-                          if (fit != null)
-                            readCustomizations.setBgImageFit(fit);
-                        },
-                      ),
-                    ),
-                  if (watchCustomizations.bgImagePath != null)
-                    ListTile(
-                      leading: Icon(Icons.loop),
-                      title: Text('Background Image Repeat'),
-                      trailing: DropdownButton(
-                        value: watchCustomizations.bgImageRepeat,
-                        items: [
-                          DropdownMenuItem(
-                            value: 'noRepeat',
-                            child: Text('No Repeat'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'repeat',
-                            child: Text('Repeat'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'repeatX',
-                            child: Text('Repeat X-Axis'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'repeatY',
-                            child: Text('Repeat Y-Axis'),
-                          ),
-                        ],
-                        onChanged: (repeat) {
-                          if (repeat != null) {
-                            readCustomizations.setBgImageRepeat(repeat);
-                          }
-                        },
-                      ),
-                    ),
-                  ListTile(
-                    leading: Icon(Icons.opacity),
-                    title: Text('Note Opacity'),
-                    trailing:
-                        Text('${watchCustomizations.noteTileOpacity * 100}%'),
-                    subtitle: Slider(
-                      value: watchCustomizations.noteTileOpacity,
-                      divisions: 10,
-                      min: 0.0,
-                      max: 1,
-                      onChanged: (opacity) =>
-                          readCustomizations.setNoteTileOpacity(opacity),
-                    ),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.list_alt_rounded),
-                    title: const Text('Note Text Preview Amount'),
-                    subtitle: Slider(
-                      value: watchCustomizations.previewLength.toDouble(),
-                      min: 0,
-                      max: 200,
-                      divisions: 10,
-                      label: sliderLabels(watchCustomizations.previewLength),
-                      onChanged: (value) {
-                        readCustomizations.setPreviewLength(value.toInt());
-                      },
-                    ),
-                  ),
-                  const Divider(),
-                  sectionTitle(
-                    'Grid/List View Specific',
-                    Theme.of(context).colorScheme.secondary,
-                    padding: 10,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.interests),
-                    title: Text('Note Tile Shape'),
-                    trailing: DropdownButton(
-                      value: watchCustomizations.noteTileShape,
-                      items: [
-                        DropdownMenuItem(
-                          value: 'round',
-                          child: Text('Round'),
+                      if (_bgImgDropItemList.isNotEmpty)
+                        MenuTile(
+                          leading: Icon(Icons.delete),
+                          title: 'Delete Image',
+                          trailing: Icon(Icons.chevron_right),
+                          onTap: () => delImgDialog(context),
                         ),
-                        DropdownMenuItem(
-                          value: 'square',
-                          child: Text('Square'),
+                      if (watchCustomizations.bgImagePath != null)
+                        MenuTile(
+                          leading: Icon(Icons.opacity),
+                          title: 'Background Image Opacity',
+                          trailing: Text(
+                              '${watchCustomizations.bgImageOpacity * 100}%'),
+                          subtitle: Slider(
+                            value: watchCustomizations.bgImageOpacity,
+                            divisions: 10,
+                            min: 0,
+                            max: 1,
+                            onChanged: (opacity) =>
+                                readCustomizations.setBgImageOpacity(opacity),
+                          ),
                         ),
-                      ],
-                      onChanged: (shape) {
-                        if (shape != null)
-                          readCustomizations.setNoteTileShape(shape);
-                      },
-                    ),
+                      if (watchCustomizations.bgImagePath != null)
+                        MenuTile(
+                          leading: Icon(Icons.format_shapes),
+                          title: 'Background Image fit',
+                          trailing: DropdownButton(
+                            value: watchCustomizations.bgImageFit,
+                            items: [
+                              DropdownMenuItem(
+                                value: 'cover',
+                                child: Text('Cover'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'contain',
+                                child: Text('Contain'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'fill',
+                                child: Text('Fill'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'scaleDown',
+                                child: Text('Scale Down'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'fitHeight',
+                                child: Text('Fit Height'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'fitWidth',
+                                child: Text('Fit Width'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'none',
+                                child: Text('None'),
+                              ),
+                            ],
+                            onChanged: (fit) {
+                              if (fit != null) {
+                                readCustomizations.setBgImageFit(fit);
+                              }
+                            },
+                          ),
+                        ),
+                      if (watchCustomizations.bgImagePath != null)
+                        MenuTile(
+                          leading: Icon(Icons.loop),
+                          title: 'Background Image Repeat',
+                          trailing: DropdownButton(
+                            value: watchCustomizations.bgImageRepeat,
+                            items: [
+                              DropdownMenuItem(
+                                value: 'noRepeat',
+                                child: Text('No Repeat'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'repeat',
+                                child: Text('Repeat'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'repeatX',
+                                child: Text('Repeat X-Axis'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'repeatY',
+                                child: Text('Repeat Y-Axis'),
+                              ),
+                            ],
+                            onChanged: (repeat) {
+                              if (repeat != null) {
+                                readCustomizations.setBgImageRepeat(repeat);
+                              }
+                            },
+                          ),
+                        ),
+                      MenuTile(
+                        leading: Icon(Icons.opacity),
+                        title: 'Note Opacity',
+                        trailing: Text(
+                            '${watchCustomizations.noteTileOpacity * 100}%'),
+                        subtitle: Slider(
+                          value: watchCustomizations.noteTileOpacity,
+                          divisions: 10,
+                          min: 0.0,
+                          max: 1,
+                          onChanged: (opacity) =>
+                              readCustomizations.setNoteTileOpacity(opacity),
+                        ),
+                      ),
+                      MenuTile(
+                        leading: const Icon(Icons.list_alt_rounded),
+                        title: 'Note Text Preview Amount',
+                        subtitle: Slider(
+                          value: watchCustomizations.previewLength.toDouble(),
+                          min: 0,
+                          max: 200,
+                          divisions: 10,
+                          label:
+                              sliderLabels(watchCustomizations.previewLength),
+                          onChanged: (value) {
+                            readCustomizations.setPreviewLength(value.toInt());
+                          },
+                        ),
+                        isLast: true,
+                      ),
+                      sectionTitle(
+                        'Grid/List View Specific',
+                        Theme.of(context).colorScheme.secondary,
+                        padding: 10,
+                      ),
+                      MenuTile(
+                        leading: Icon(Icons.interests),
+                        title: 'Note Tile Shape',
+                        trailing: DropdownButton(
+                          value: watchCustomizations.noteTileShape,
+                          items: [
+                            DropdownMenuItem(
+                              value: 'round',
+                              child: Text('Round'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'square',
+                              child: Text('Square'),
+                            ),
+                          ],
+                          onChanged: (shape) {
+                            if (shape != null) {
+                              readCustomizations.setNoteTileShape(shape);
+                            }
+                          },
+                        ),
+                        isFirst: true,
+                      ),
+                      MenuTile(
+                        leading: Icon(Icons.padding),
+                        title: 'Note Tile Text Padding',
+                        trailing:
+                            Text('${watchCustomizations.noteTilePadding} px'),
+                        subtitle: Slider(
+                          value: watchCustomizations.noteTilePadding,
+                          divisions: 20,
+                          min: 5,
+                          max: 25,
+                          onChanged: (padding) =>
+                              readCustomizations.setNoteTilePadding(padding),
+                        ),
+                      ),
+                      MenuTile(
+                        leading: Icon(Icons.straighten),
+                        title: 'Note Tile Spacing',
+                        trailing:
+                            Text('${watchCustomizations.noteTileSpacing} px'),
+                        subtitle: Slider(
+                          value: watchCustomizations.noteTileSpacing,
+                          divisions: 20,
+                          min: 0,
+                          max: 20,
+                          onChanged: (spacing) =>
+                              readCustomizations.setNoteTileSpacing(spacing),
+                        ),
+                        isLast: true,
+                      ),
+                      sectionTitle(
+                        'Note Editor',
+                        Theme.of(context).colorScheme.secondary,
+                        padding: 10,
+                      ),
+                      MenuTile(
+                        leading: Icon(Icons.padding_outlined),
+                        title: 'Note Editor Padding',
+                        trailing:
+                            Text('${watchCustomizations.noteEditorPadding} px'),
+                        subtitle: Slider(
+                          value: watchCustomizations.noteEditorPadding,
+                          divisions: 20,
+                          min: 0,
+                          max: 20,
+                          onChanged: (padding) =>
+                              readCustomizations.setNoteEditorPadding(padding),
+                        ),
+                        isFirst: true,
+                        isLast: true,
+                      ),
+                      // const Divider(),
+                      // ListTile(
+                      //   title: Text(''),
+                      // ),
+                    ],
                   ),
-                  ListTile(
-                    leading: Icon(Icons.padding),
-                    title: Text('Note Tile Text Padding'),
-                    trailing: Text('${watchCustomizations.noteTilePadding} px'),
-                    subtitle: Slider(
-                      value: watchCustomizations.noteTilePadding,
-                      divisions: 20,
-                      min: 5,
-                      max: 25,
-                      onChanged: (padding) =>
-                          readCustomizations.setNoteTilePadding(padding),
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.straighten),
-                    title: Text('Note Tile Spacing'),
-                    trailing: Text('${watchCustomizations.noteTileSpacing} px'),
-                    subtitle: Slider(
-                      value: watchCustomizations.noteTileSpacing,
-                      divisions: 20,
-                      min: 0,
-                      max: 20,
-                      onChanged: (spacing) =>
-                          readCustomizations.setNoteTileSpacing(spacing),
-                    ),
-                  ),
-                  const Divider(),
-                  sectionTitle(
-                    'Note Editor',
-                    Theme.of(context).colorScheme.secondary,
-                    padding: 10,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.padding_outlined),
-                    title: Text('Note Editor Padding'),
-                    trailing:
-                        Text('${watchCustomizations.noteEditorPadding} px'),
-                    subtitle: Slider(
-                      value: watchCustomizations.noteEditorPadding,
-                      divisions: 20,
-                      min: 0,
-                      max: 20,
-                      onChanged: (padding) =>
-                          readCustomizations.setNoteEditorPadding(padding),
-                    ),
-                  ),
-                  // const Divider(),
-                  // ListTile(
-                  //   title: Text(''),
-                  // ),
-                ],
-              ),
-      )),
+          )),
     );
   }
 

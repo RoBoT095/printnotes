@@ -10,11 +10,15 @@
 
 ## Day to Day Changes
 
+### (September 19, 2025)
+
+- Redesigned Settings screens and About screen
+
 ### (September 18, 2025)
 
 - Added Share and Export options to sketch pad
 - Updated **pdfrx** to newest version to have it not include Build IDs
-  - Edited build process as pdfrx now bundles WASM modules that are not needed for application and only add extra megabytes to compiled apps.
+  - Edited build process as pdfrx now bundles WASM modules that are not needed for application and only add extra megabytes to compiled apps
 
 ### (September 16, 2025)
 

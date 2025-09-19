@@ -24,7 +24,7 @@ class ImageViewScreen extends StatelessWidget {
         child: AppBar(
           centerTitle: true,
           title: SelectableText(
-            path.basename(imageUri.path),
+            path.basename(imageUri.toFilePath()),
             maxLines: 1,
           ),
           actions: [

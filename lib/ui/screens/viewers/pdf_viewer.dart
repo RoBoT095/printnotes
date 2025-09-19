@@ -101,7 +101,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
         child: AppBar(
           centerTitle: true,
           title: SelectableText(
-            path.basename(widget.pdfUri.path),
+            path.basename(widget.pdfUri.toFilePath()),
             maxLines: 1,
           ),
           actions: [

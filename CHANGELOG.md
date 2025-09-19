@@ -4,6 +4,8 @@
 
 ## v0.10.4 - WIP
 
+- Redesign of the Settings screens and About page
+
 ## v0.10.3
 
 ### Changes:
