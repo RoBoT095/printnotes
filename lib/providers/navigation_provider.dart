@@ -59,19 +59,19 @@ class NavigationProvider with ChangeNotifier {
       } else if (fileTypeChecker(item) == CFileType.sketch) {
         onSketchSelect(context, item.uri);
       } else {
-        onNoteSelect(context, item, jumpToHeader: jumpToHeader);
+        onNoteSelect(context, item.uri, jumpToHeader: jumpToHeader);
       }
     }
   }
 
   // For notes only, won't work with folders
-  void onNoteSelect(BuildContext context, File item, {String? jumpToHeader}) {
-    addToRouteHistory(item.path);
+  void onNoteSelect(BuildContext context, Uri uri, {String? jumpToHeader}) {
+    addToRouteHistory(uri.path);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => NoteEditorScreen(
-          filePath: item.path,
+          fileUri: uri,
           jumpToHeader: jumpToHeader,
         ),
       ),
@@ -80,35 +80,35 @@ class NavigationProvider with ChangeNotifier {
 
   void onImageSelect(
     BuildContext context,
-    Uri item,
+    Uri uri,
   ) {
-    addToRouteHistory(item.path);
+    addToRouteHistory(uri.path);
     Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ImageViewScreen(imageUri: item)))
+                builder: (context) => ImageViewScreen(imageUri: uri)))
         .then((_) => navigateBack());
   }
 
   void onPdfSelect(
     BuildContext context,
-    Uri item,
+    Uri uri,
   ) async {
-    addToRouteHistory(item.path);
+    addToRouteHistory(uri.path);
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PdfViewScreen(
-                  pdfUri: item,
+                  pdfUri: uri,
                 ))).then((_) => navigateBack());
   }
 
-  void onSketchSelect(BuildContext context, Uri item) {
-    addToRouteHistory(item.path);
+  void onSketchSelect(BuildContext context, Uri uri) {
+    addToRouteHistory(uri.path);
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SketchPad(sketchUri: item),
+          builder: (context) => SketchPad(sketchUri: uri),
         )).then((_) => navigateBack());
   }
 

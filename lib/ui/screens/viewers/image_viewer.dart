@@ -50,8 +50,7 @@ class ImageViewScreen extends StatelessWidget {
                     iconColor: mobileNullColor(context),
                     textColor: mobileNullColor(context),
                   ),
-                  onTap: () async =>
-                      await openExplorer(context, imageUri.toFilePath()),
+                  onTap: () async => await openExplorer(context, imageUri),
                 ),
               ],
             ),

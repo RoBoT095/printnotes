@@ -60,7 +60,7 @@ class CodeblockThemePage extends StatelessWidget {
               selectable: false,
               config: theMarkdownConfigs(
                 context,
-                filePath: '',
+                fileUri: Uri(),
                 hideCodeButtons: true,
                 inEditor: true,
               ),

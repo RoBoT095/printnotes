@@ -144,8 +144,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
                     iconColor: mobileNullColor(context),
                     textColor: mobileNullColor(context),
                   ),
-                  onTap: () async =>
-                      await openExplorer(context, widget.pdfUri.toFilePath()),
+                  onTap: () async => await openExplorer(context, widget.pdfUri),
                 ),
               ],
             ),

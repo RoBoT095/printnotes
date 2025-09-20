@@ -10,6 +10,11 @@
 
 ## Day to Day Changes
 
+### (September 20, 2025)
+
+- Migrated more stuff into using [Uri] instead of [File]
+  - That includes the Note editor
+
 ### (September 19, 2025)
 
 - Redesigned Settings screens and About screen
@@ -25,7 +30,7 @@
 ### (September 16, 2025)
 
 - Fixed open file location on notes
-- Changed PDF, Image viewer, and Sketch pad to use **Uri** instead of **File**
+- Changed PDF, Image viewer, and Sketch pad to use [Uri] instead of [File]
 
 ### (September 13, 2025)
 

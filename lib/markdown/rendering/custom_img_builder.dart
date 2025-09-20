@@ -10,10 +10,10 @@ import 'package:printnotes/utils/storage_system.dart';
 
 class CustomImgBuilder extends StatelessWidget {
   final String url;
-  final String filePath;
+  final Uri fileUri;
   final Map<String, String> attributes;
 
-  const CustomImgBuilder(this.url, this.filePath, this.attributes, {super.key});
+  const CustomImgBuilder(this.url, this.fileUri, this.attributes, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CustomImgBuilder extends StatelessWidget {
     Future<File> getLocalImage() async {
       // Check if image (url) is relative to note (filePath)
       File relativeFile = File(join(
-          dirname(filePath),
+          dirname(fileUri.toFilePath()),
           url.startsWith('.$separator')
               ? url.replaceFirst('.$separator', '')
               : url));

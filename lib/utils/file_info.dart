@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 
-String getCharacterCount(String filePath) {
-  File file = File(filePath);
+String getCharacterCount(Uri fileUri) {
+  File file = File.fromUri(fileUri);
   String fileString = file.readAsStringSync();
   return fileString.length.toString();
 }
 
-String getWordCount(String filePath) {
-  File file = File(filePath);
+String getWordCount(Uri fileUri) {
+  File file = File.fromUri(fileUri);
   String fileString = file.readAsStringSync();
   int wordCount =
       RegExp(r'[\w._]+').allMatches(fileString.replaceAll('\n', ' ')).length;

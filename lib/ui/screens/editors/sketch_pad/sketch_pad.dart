@@ -203,8 +203,8 @@ class _SketchPadState extends State<SketchPad> {
                     iconColor: mobileNullColor(context),
                     textColor: mobileNullColor(context),
                   ),
-                  onTap: () async => await openExplorer(
-                      context, widget.sketchUri.toFilePath()),
+                  onTap: () async =>
+                      await openExplorer(context, widget.sketchUri),
                 ),
               ],
             )

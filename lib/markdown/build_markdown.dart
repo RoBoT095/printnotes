@@ -24,7 +24,7 @@ import 'package:printnotes/markdown/link_handler.dart';
 
 MarkdownConfig theMarkdownConfigs(
   BuildContext context, {
-  required String filePath,
+  required Uri fileUri,
   bool? hideCodeButtons,
   bool inEditor = false,
   Color? textColor,
@@ -102,7 +102,7 @@ MarkdownConfig theMarkdownConfigs(
       sideColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
     ),
     ImgConfig(
-      builder: (url, attributes) => CustomImgBuilder(url, filePath, attributes),
+      builder: (url, attributes) => CustomImgBuilder(url, fileUri, attributes),
     ),
     LinkConfig(onTap: (url) => linkHandler(context, url)),
     WikiLinkConfig(onTap: (url) => linkHandler(context, url)),
@@ -168,7 +168,7 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
 Widget buildMarkdownWidget(
   BuildContext context, {
   required String data,
-  required String filePath,
+  required Uri fileUri,
   AutoScrollController? controller,
   TocController? tocController,
   ScrollPhysics? physics,
@@ -182,7 +182,7 @@ Widget buildMarkdownWidget(
     physics: physics,
     shrinkWrap: shrinkWrap,
     selectable: selectable ?? true,
-    config: theMarkdownConfigs(context, filePath: filePath, inEditor: true),
+    config: theMarkdownConfigs(context, fileUri: fileUri, inEditor: true),
     markdownGenerator: theMarkdownGenerators(context),
   );
 }

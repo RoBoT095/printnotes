@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -29,10 +30,9 @@ import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen(
-      {super.key, required this.filePath, this.jumpToHeader});
+  const NoteEditorScreen({super.key, required this.fileUri, this.jumpToHeader});
 
-  final String filePath;
+  final Uri fileUri;
   final String? jumpToHeader;
 
   @override
@@ -87,7 +87,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   /// Load the passed files contents and set the state
   Future<void> _loadFileContent() async {
     try {
-      final file = File(widget.filePath);
+      final file = File.fromUri(widget.fileUri);
       final content = await file.readAsString();
       final lastMod = await file.lastModified();
 
@@ -98,7 +98,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         _hasUnsavedChanges = false;
 
         if (mounted &&
-            !widget.filePath
+            !widget.fileUri
+                .toFilePath()
                 .contains(context.read<SettingsProvider>().mainDir)) {
           _readOnlyMode = true;
         }
@@ -129,7 +130,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     if (_isError || _isLoading) return;
 
     try {
-      final file = File(widget.filePath);
+      final file = File.fromUri(widget.fileUri);
       final lastMod = await file.lastModified();
 
       if (_lastModifiedTime != null &&
@@ -170,7 +171,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   Future<bool> _saveFileContent(BuildContext context) async {
     if (_isError) return true;
     try {
-      final file = File(widget.filePath);
+      final file = File.fromUri(widget.fileUri);
       await file.writeAsString(_notesController.text);
 
       _lastModifiedTime = DateTime.now();
@@ -231,7 +232,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           child: AppBar(
             centerTitle: false,
             title: SelectableText(
-              fmTitle ?? widget.filePath.split('/').last,
+              fmTitle ?? path.basename(widget.fileUri.toFilePath()),
               maxLines: 1,
             ),
             actions: _isError
@@ -260,7 +261,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             title: Text('Info'),
                           ),
                           onTap: () =>
-                              modalShowFileInfo(context, widget.filePath),
+                              modalShowFileInfo(context, widget.fileUri),
                         ),
                         PopupMenuItem(
                           child: const ListTile(
@@ -290,7 +291,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             textColor: mobileNullColor(context),
                           ),
                           onTap: () async =>
-                              await openExplorer(context, widget.filePath),
+                              await openExplorer(context, widget.fileUri),
                         ),
                       ],
                     ),
@@ -369,7 +370,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       );
 
   Widget buildMarkdownView(String previewBody) {
-    if (widget.filePath.endsWith('.csv')) {
+    if (widget.fileUri.toFilePath().endsWith('.csv')) {
       previewBody = csvToMarkdownTable(previewBody);
     }
     return SafeArea(
@@ -461,7 +462,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                           : buildMarkdownWidget(
                                               context,
                                               data: previewBody,
-                                              filePath: widget.filePath,
+                                              fileUri: widget.fileUri,
                                               controller: _autoScrollController,
                                               tocController: _tocController,
                                               physics:

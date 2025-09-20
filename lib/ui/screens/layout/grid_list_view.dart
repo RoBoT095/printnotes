@@ -132,7 +132,7 @@ class _GridListViewState extends State<GridListView> {
     final useFM = context.read<SettingsProvider>().useFrontmatter;
     final previewLength = context.watch<CustomizationProvider>().previewLength;
     final markdownConfigs = theMarkdownConfigs(context,
-        filePath: item.path, hideCodeButtons: true, textColor: color);
+        fileUri: item.uri, hideCodeButtons: true, textColor: color);
     final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
 
     String? fmTitle;
