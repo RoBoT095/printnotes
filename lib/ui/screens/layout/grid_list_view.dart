@@ -64,7 +64,9 @@ class _GridListViewState extends State<GridListView> {
             context.read<NavigationProvider>().addToRouteHistory(item.path);
             widget.onChange();
           } else if (item is File) {
-            context.read<NavigationProvider>().routeItemToPage(context, item);
+            context
+                .read<NavigationProvider>()
+                .routeItemToPage(context, item.uri);
           }
         }
       },
@@ -139,9 +141,9 @@ class _GridListViewState extends State<GridListView> {
     String? fmDescription;
 
     if (item is File) {
-      if (fileTypeChecker(item) == CFileType.image) {
+      if (fileTypeChecker(item.path) == CFileType.image) {
         return Image.file(item);
-      } else if (fileTypeChecker(item) == CFileType.pdf) {
+      } else if (fileTypeChecker(item.path) == CFileType.pdf) {
         return ListTile(
           leading: Icon(
             Icons.picture_as_pdf,
@@ -155,7 +157,7 @@ class _GridListViewState extends State<GridListView> {
             overflow: TextOverflow.ellipsis,
           ),
         );
-      } else if (fileTypeChecker(item) == CFileType.sketch) {
+      } else if (fileTypeChecker(item.path) == CFileType.sketch) {
         return ListTile(
           leading: Icon(
             Icons.draw,
@@ -174,14 +176,14 @@ class _GridListViewState extends State<GridListView> {
       // I am beginning to hate this function, but why create new one when
       // we can add more functionality to it
       String fileText =
-          await StorageSystem.getFilePreview(item.path, isTrimmed: false);
+          await StorageSystem.getFilePreview(item.uri, isTrimmed: false);
       if (fileText != 'No preview available') {
         fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
         fmDescription =
             FrontmatterHandleParsing.getTagString(fileText, 'description');
       }
     }
-    final String previewText = await StorageSystem.getFilePreview(item.path,
+    final String previewText = await StorageSystem.getFilePreview(item.uri,
         parseFrontmatter: useFM, previewLength: previewLength);
 
     return Column(

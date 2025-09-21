@@ -43,7 +43,7 @@ Future<void> linkHandler(BuildContext context, String url) async {
           context.mounted) {
         context
             .read<NavigationProvider>()
-            .routeItemToPage(context, item, jumpToHeader: jumpToHeader);
+            .routeItemToPage(context, item.uri, jumpToHeader: jumpToHeader);
         break;
       }
     }

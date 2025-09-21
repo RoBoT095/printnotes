@@ -52,7 +52,7 @@ void showBottomMenu(
               title: const Text('Move'),
               onTap: () {
                 Navigator.pop(context);
-                ItemMoveHandler.showMoveDialog(context, [item], loadItems);
+                ItemMoveHandler.showMoveDialog(context, [item.uri], loadItems);
               },
             ),
             ListTile(
@@ -75,8 +75,8 @@ void showBottomMenu(
                 title: const Text('Duplicate'),
                 onTap: () {
                   Navigator.pop(context);
-                  ItemDuplicationHandler.handleDuplicateItem(
-                      context, item, loadItems);
+                  ItemDuplicationHandler(context)
+                      .handleDuplicateItem(item, loadItems);
                 },
               ),
             ListTile(
@@ -87,7 +87,7 @@ void showBottomMenu(
               title: const Text('Archive'),
               onTap: () {
                 Navigator.pop(context);
-                ItemArchiveHandler.handleArchiveItem(context, item, loadItems);
+                ItemArchiveHandler(context).handleArchiveItem(item, loadItems);
               },
             ),
             ListTile(
@@ -98,8 +98,8 @@ void showBottomMenu(
               title: const Text('To Trash'),
               onTap: () {
                 Navigator.pop(context);
-                ItemDeletionHandler.showTrashConfirmation(
-                    context, item, loadItems);
+                ItemDeletionHandler(context)
+                    .showTrashConfirmation(item, loadItems);
               },
             ),
             ListTile(
@@ -110,8 +110,8 @@ void showBottomMenu(
               title: const Text('Delete'),
               onTap: () {
                 Navigator.pop(context);
-                ItemDeletionHandler.showPermanentDeleteConfirmation(
-                    context, item, loadItems);
+                ItemDeletionHandler(context)
+                    .showPermanentDeleteConfirmation(item, loadItems);
               },
             ),
           ],

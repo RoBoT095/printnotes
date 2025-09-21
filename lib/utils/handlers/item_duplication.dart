@@ -5,8 +5,11 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemDuplicationHandler {
-  static Future<void> handleDuplicateItem(
-    BuildContext context,
+  final BuildContext context;
+
+  ItemDuplicationHandler(this.context);
+
+  Future<void> handleDuplicateItem(
     FileSystemEntity item,
     Function loadItems,
   ) async {

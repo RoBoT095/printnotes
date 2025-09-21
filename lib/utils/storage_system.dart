@@ -27,7 +27,7 @@ class StorageSystem {
         await StorageSystem.listFolderContents(mainDir, recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
-      return fileTypeChecker(item) == CFileType.note;
+      return fileTypeChecker(item.path) == CFileType.note;
     }).toList();
 
     List<FileSystemEntity> results = [];
@@ -106,7 +106,7 @@ class StorageSystem {
         await StorageSystem.listFolderContents(mainDir, recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
-      return fileTypeChecker(item) == CFileType.note;
+      return fileTypeChecker(item.path) == CFileType.note;
     }).toList();
 
     // Isolate files for compute
@@ -158,7 +158,8 @@ class StorageSystem {
     await destinationItem.parent.create(recursive: true);
 
     if (archivedItem is Directory) {
-      await _copyDirectory(archivedItem, destinationItem as Directory);
+      await _copyDirectory(
+          archivedItem.uri, (destinationItem as Directory).uri);
     } else {
       await (archivedItem as File).copy(destinationItem.path);
     }
@@ -167,26 +168,24 @@ class StorageSystem {
     await archivedItem.delete(recursive: true);
   }
 
-  static Future<void> archiveItem(String itemPath) async {
+  static Future<void> archiveItem(Uri itemUri) async {
     final baseDir = await DataPath.selectedDirectory;
     final archiveDir = path.join(baseDir!, '.archive');
-    final relativePath = path.relative(itemPath, from: baseDir);
+    final relativePath = path.relative(itemUri.toFilePath(), from: baseDir);
     final archivePath = path.join(archiveDir, relativePath);
 
-    final sourceItem =
-        FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
-            ? Directory(itemPath)
-            : File(itemPath);
+    final sourceItem = await FileSystemEntity.isDirectory(itemUri.toFilePath())
+        ? Directory.fromUri(itemUri)
+        : File.fromUri(itemUri);
 
-    final archiveItem =
-        FileSystemEntity.typeSync(itemPath) == FileSystemEntityType.directory
-            ? Directory(archivePath)
-            : File(archivePath);
+    final archiveItem = await FileSystemEntity.isDirectory(itemUri.toFilePath())
+        ? Directory(archivePath)
+        : File(archivePath);
 
     await archiveItem.parent.create(recursive: true);
 
     if (sourceItem is Directory) {
-      await _copyDirectory(sourceItem, Directory(archiveItem.path));
+      await _copyDirectory(sourceItem.uri, Directory(archiveItem.path).uri);
     } else {
       await File(sourceItem.path).copy(archiveItem.path);
     }
@@ -195,15 +194,17 @@ class StorageSystem {
     await sourceItem.delete(recursive: true);
   }
 
-  static Future<void> _copyDirectory(
-      Directory source, Directory destination) async {
+  static Future<void> _copyDirectory(Uri sourceUri, Uri destinationUri) async {
+    final source = Directory.fromUri(sourceUri);
+    final destination = Directory.fromUri(destinationUri);
+
     await destination.create(recursive: true);
 
     await for (FileSystemEntity entity in source.list(recursive: false)) {
       if (entity is Directory) {
         Directory newDirectory =
             Directory(path.join(destination.path, path.basename(entity.path)));
-        await _copyDirectory(entity, newDirectory);
+        await _copyDirectory(entity.uri, newDirectory.uri);
       } else if (entity is File) {
         await entity
             .copy(path.join(destination.path, path.basename(entity.path)));
@@ -244,13 +245,13 @@ class StorageSystem {
   }
 
   static Future<String> getFilePreview(
-    String filePath, {
+    Uri fileUri, {
     bool parseFrontmatter = false,
     bool isTrimmed = true,
     int previewLength = 100,
   }) async {
     try {
-      final file = File(filePath);
+      final file = File.fromUri(fileUri);
       if (await file.exists()) {
         String content = await file.readAsString();
         if (parseFrontmatter) {
@@ -268,7 +269,7 @@ class StorageSystem {
                       : previewLength)
               .trim();
 
-          if (filePath.endsWith('csv')) {
+          if (fileUri.toFilePath().endsWith('csv')) {
             trimmedContent = csvToMarkdownTable(trimmedContent);
           }
           return trimmedContent;
@@ -352,7 +353,7 @@ class StorageSystem {
     await deletedItem.parent.create(recursive: true);
 
     if (sourceItem is Directory) {
-      await _copyDirectory(sourceItem, deletedItem as Directory);
+      await _copyDirectory(sourceItem.uri, (deletedItem as Directory).uri);
     } else {
       await (sourceItem as File).copy(deletedItem.path);
     }
@@ -382,7 +383,7 @@ class StorageSystem {
     await destinationItem.parent.create(recursive: true);
 
     if (deletedItem is Directory) {
-      await _copyDirectory(deletedItem, destinationItem as Directory);
+      await _copyDirectory(deletedItem.uri, (destinationItem as Directory).uri);
     } else {
       await (deletedItem as File).copy(destinationItem.path);
     }
@@ -425,12 +426,14 @@ class StorageSystem {
   }
 
   // For moving files and folders around
-  static Future<void> moveItem(
-      FileSystemEntity item, String newLocation) async {
-    final String itemName = path.basename(item.path);
-    final String newPath = path.join(newLocation, itemName);
+  static Future<void> moveItem(Uri itemUri, Uri newLocationUri) async {
+    final String itemName = path.basename(itemUri.toFilePath());
+    final String newPath = path.join(newLocationUri.toFilePath(), itemName);
 
     try {
+      final item = await FileSystemEntity.isFile(itemUri.toFilePath())
+          ? File.fromUri(itemUri)
+          : Directory.fromUri(itemUri);
       await item.rename(newPath);
     } catch (e) {
       debugPrint('Error moving item: $e');
@@ -438,11 +441,14 @@ class StorageSystem {
   }
 
   static Future<void> moveManyItems(
-      List<FileSystemEntity> items, String newLocation) async {
-    for (FileSystemEntity item in items) {
-      final String itemName = path.basename(item.path);
-      final String newPath = path.join(newLocation, itemName);
+      List<Uri> itemUris, Uri newLocationUri) async {
+    for (Uri itemUri in itemUris) {
+      final String itemName = path.basename(itemUri.toFilePath());
+      final String newPath = path.join(newLocationUri.toFilePath(), itemName);
       try {
+        final item = await FileSystemEntity.isFile(itemUri.toFilePath())
+            ? File.fromUri(itemUri)
+            : Directory.fromUri(itemUri);
         await item.rename(newPath);
       } catch (e) {
         debugPrint('Error moving item: $e');
@@ -451,21 +457,21 @@ class StorageSystem {
   }
 
   // For renaming files and folders (replaced old renameNote() and renameFolder())
-  static Future<bool> renameItem(String oldPath, String newName) async {
+  static Future<bool> renameItem(Uri oldPathUri, String newName) async {
     try {
-      final item =
-          FileSystemEntity.typeSync(oldPath) == FileSystemEntityType.file
-              ? File(oldPath)
-              : Directory(oldPath);
+      final oldPath = oldPathUri.toFilePath();
+      final isFile = await FileSystemEntity.isFile(oldPath);
+      final item = isFile ? File(oldPath) : Directory(oldPath);
+
       if (await item.exists()) {
         final parentDir = path.dirname(oldPath);
-        final newPath = path.join(parentDir, newName);
+        final newPathUri = Uri.file(path.join(parentDir, newName));
 
         if (await nameExists(newName, parentPath: parentDir)) {
           throw Exception('A file or folder with this name already exists.');
         }
 
-        await item.rename(newPath);
+        await item.rename(newPathUri.toFilePath());
         return true;
       }
       return false;

@@ -49,17 +49,17 @@ class NavigationProvider with ChangeNotifier {
     return null;
   }
 
-  void routeItemToPage(BuildContext context, FileSystemEntity item,
-      {String? jumpToHeader}) {
-    if (item is File) {
-      if (fileTypeChecker(item) == CFileType.image) {
-        onImageSelect(context, item.uri);
-      } else if (fileTypeChecker(item) == CFileType.pdf) {
-        onPdfSelect(context, item.uri);
-      } else if (fileTypeChecker(item) == CFileType.sketch) {
-        onSketchSelect(context, item.uri);
+  void routeItemToPage(BuildContext context, Uri item,
+      {String? jumpToHeader}) async {
+    if (await FileSystemEntity.isFile(item.path) && context.mounted) {
+      if (fileTypeChecker(item.path) == CFileType.image) {
+        onImageSelect(context, item);
+      } else if (fileTypeChecker(item.path) == CFileType.pdf) {
+        onPdfSelect(context, item);
+      } else if (fileTypeChecker(item.path) == CFileType.sketch) {
+        onSketchSelect(context, item);
       } else {
-        onNoteSelect(context, item.uri, jumpToHeader: jumpToHeader);
+        onNoteSelect(context, item, jumpToHeader: jumpToHeader);
       }
     }
   }
@@ -125,7 +125,7 @@ class NavigationProvider with ChangeNotifier {
     );
     if (selectedFile != null && context.mounted) {
       File item = File(selectedFile.files.single.path!);
-      routeItemToPage(context, item);
+      routeItemToPage(context, item.uri);
     }
   }
 }

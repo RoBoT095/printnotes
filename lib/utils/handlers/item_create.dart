@@ -10,13 +10,15 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemCreationHandler {
-  static Future<void> handleCreateNewFolder(
-    BuildContext context,
+  final BuildContext context;
+
+  ItemCreationHandler(this.context);
+
+  Future<void> handleCreateNewFolder(
     String currentPath,
     Function loadItems,
   ) async {
-    final dialogResult =
-        await showNameInputDialog(context, 'Enter folder name');
+    final dialogResult = await showNameInputDialog('Enter folder name');
     String folderName = dialogResult['name'];
     bool folderSubmitted = dialogResult['submitted'];
     if (folderSubmitted == true && folderName.isNotEmpty) {
@@ -40,12 +42,11 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<void> handleCreateNewNote(
-    BuildContext context,
+  Future<void> handleCreateNewNote(
     String currentPath,
     Function loadItems,
   ) async {
-    final dialogResult = await showNameInputDialog(context, 'Enter note name');
+    final dialogResult = await showNameInputDialog('Enter note name');
     String noteName = dialogResult['name'];
     bool noteSubmitted = dialogResult['submitted'];
     if (noteSubmitted && noteName.isNotEmpty) {
@@ -55,7 +56,7 @@ class ItemCreationHandler {
           if (context.mounted) {
             context
                 .read<NavigationProvider>()
-                .routeItemToPage(context, File(e));
+                .routeItemToPage(context, File(e).uri);
           }
         });
         loadItems();
@@ -68,13 +69,11 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<void> handleCreateNewSketch(
-    BuildContext context,
+  Future<void> handleCreateNewSketch(
     String currentPath,
     Function loadItems,
   ) async {
-    final dialogResult =
-        await showNameInputDialog(context, 'Enter sketch name');
+    final dialogResult = await showNameInputDialog('Enter sketch name');
     String sketchName = dialogResult['name'];
     bool noteSubmitted = dialogResult['submitted'];
     if (noteSubmitted && sketchName.isNotEmpty) {
@@ -85,7 +84,7 @@ class ItemCreationHandler {
           if (context.mounted) {
             context
                 .read<NavigationProvider>()
-                .routeItemToPage(context, File(e));
+                .routeItemToPage(context, File(e).uri);
           }
         });
 
@@ -99,8 +98,7 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<Map<String, dynamic>> showNameInputDialog(
-      BuildContext context, String title) async {
+  Future<Map<String, dynamic>> showNameInputDialog(String title) async {
     String? name;
     bool submitted = false;
     await showDialog(

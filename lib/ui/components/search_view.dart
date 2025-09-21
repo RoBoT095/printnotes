@@ -92,7 +92,7 @@ class SearchView extends StatelessWidget {
                 if (item is File) {
                   context
                       .read<NavigationProvider>()
-                      .routeItemToPage(context, item);
+                      .routeItemToPage(context, item.uri);
                 }
               },
             );

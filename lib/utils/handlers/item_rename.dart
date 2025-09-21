@@ -45,7 +45,7 @@ class ItemRenameHandler {
       BuildContext context, FileSystemEntity item, String newName,
       {Function? reload, bool? showMessage = true}) async {
     try {
-      await StorageSystem.renameItem(item.path, newName);
+      await StorageSystem.renameItem(item.uri, newName);
       if (reload != null) reload();
       if (context.mounted && showMessage == true) {
         customSnackBar(

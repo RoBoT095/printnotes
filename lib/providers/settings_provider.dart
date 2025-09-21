@@ -163,7 +163,7 @@ class SettingsProvider with ChangeNotifier {
         ? filesWithTags
         : await StorageSystem.listFolderContents(directory);
     final sortedItems =
-        ItemSortHandler.getSortedItems(items, folderPriority, sortOrder);
+        ItemSortHandler(sortOrder, folderPriority).getSortedItems(items);
     if (isTag) {
       currentFolderName = directory;
     } else if (directory != mainPath) {

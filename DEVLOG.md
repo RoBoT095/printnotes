@@ -1,6 +1,6 @@
 # Dev Log
 
-## ToDo/Look into List
+## ToDo/Look into List:
 
 - Migrating File/Path to URI to support SAF for android
   - Do it slowly with maybe a custom string/uri handler
@@ -8,7 +8,12 @@
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
 - Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
 
-## Day to Day Changes
+## Notes:
+
+- https://github.com/flutter-cavalry/saf_stream
+- https://github.com/flutter-cavalry/saf_util
+
+## Day to Day Changes:
 
 ### (September 20, 2025)
 

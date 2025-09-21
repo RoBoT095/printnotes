@@ -73,8 +73,8 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   title: const Text('Unarchive'),
                   onTap: () {
                     Navigator.pop(context);
-                    ItemArchiveHandler.handleUnarchiveItem(
-                        context, item, () => _loadHiddenItems(_currentPath));
+                    ItemArchiveHandler(context).handleUnarchiveItem(
+                        item, () => _loadHiddenItems(_currentPath));
                   },
                 ),
               if (!isTrash)
@@ -86,8 +86,8 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   title: const Text('Delete'),
                   onTap: () {
                     Navigator.pop(context);
-                    ItemDeletionHandler.showTrashConfirmation(
-                        context, item, () => _loadHiddenItems(_currentPath));
+                    ItemDeletionHandler(context).showTrashConfirmation(
+                        item, () => _loadHiddenItems(_currentPath));
                   },
                 ),
               if (isTrash)
@@ -99,8 +99,8 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   title: const Text('Restore'),
                   onTap: () {
                     Navigator.pop(context);
-                    ItemDeletionHandler.handleRestoringDeletedItem(
-                        context, item, () => _loadHiddenItems(_currentPath));
+                    ItemDeletionHandler(context).handleRestoringDeletedItem(
+                        item, () => _loadHiddenItems(_currentPath));
                   },
                 ),
               if (isTrash)
@@ -112,8 +112,9 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   title: const Text('Permanently Delete'),
                   onTap: () {
                     Navigator.pop(context);
-                    ItemDeletionHandler.showPermanentDeleteConfirmation(
-                        context, item, () => _loadHiddenItems(_currentPath));
+                    ItemDeletionHandler(context)
+                        .showPermanentDeleteConfirmation(
+                            item, () => _loadHiddenItems(_currentPath));
                   },
                 ),
             ],
@@ -134,7 +135,7 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
           _loadHiddenItems(item.path);
           context.read<NavigationProvider>().addToRouteHistory(item.path);
         } else {
-          context.read<NavigationProvider>().routeItemToPage(context, item);
+          context.read<NavigationProvider>().routeItemToPage(context, item.uri);
         }
       },
       onLongPress: () => _showBottomSheet(context, item),
@@ -190,8 +191,9 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                     onSelected: (value) {
                       if (value == 'delAll') {
                         for (final item in _hiddenItems) {
-                          ItemDeletionHandler.handlePermanentItemDelete(
-                              context, item, () => _loadHiddenItems());
+                          ItemDeletionHandler(context)
+                              .handlePermanentItemDelete(
+                                  item, () => _loadHiddenItems());
                         }
                       }
                     },

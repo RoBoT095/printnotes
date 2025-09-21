@@ -4,8 +4,12 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemArchiveHandler {
-  static Future<void> handleArchiveItem(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  final BuildContext context;
+
+  ItemArchiveHandler(this.context);
+
+  Future<void> handleArchiveItem(
+      FileSystemEntity item, Function loadItems) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -28,7 +32,7 @@ class ItemArchiveHandler {
             onPressed: () async {
               Navigator.of(context).pop();
               try {
-                await StorageSystem.archiveItem(item.path);
+                await StorageSystem.archiveItem(item.uri);
                 if (context.mounted) {
                   customSnackBar(
                           '${item is Directory ? 'Folder' : 'File'} archived successfully',
@@ -49,8 +53,8 @@ class ItemArchiveHandler {
     );
   }
 
-  static Future<void> handleUnarchiveItem(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  Future<void> handleUnarchiveItem(
+      FileSystemEntity item, Function loadItems) async {
     try {
       await StorageSystem.unarchiveItem(item.path);
       if (context.mounted) {

@@ -5,8 +5,12 @@ import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemDeletionHandler {
-  static Future<void> showTrashConfirmation(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  final BuildContext context;
+
+  ItemDeletionHandler(this.context);
+
+  Future<void> showTrashConfirmation(
+      FileSystemEntity item, Function loadItems) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -28,7 +32,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleItemTrashing(context, item, loadItems);
+              handleItemTrashing(item, loadItems);
             },
           ),
         ],
@@ -36,8 +40,7 @@ class ItemDeletionHandler {
     );
   }
 
-  static Future<void> handleItemTrashing(
-      BuildContext context, FileSystemEntity item, Function loadItems,
+  Future<void> handleItemTrashing(FileSystemEntity item, Function loadItems,
       {int? daysForDeletion}) async {
     try {
       await StorageSystem.trashItem(item.path);
@@ -59,8 +62,8 @@ class ItemDeletionHandler {
     }
   }
 
-  static Future<void> showPermanentDeleteConfirmation(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  Future<void> showPermanentDeleteConfirmation(
+      FileSystemEntity item, Function loadItems) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -82,7 +85,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handlePermanentItemDelete(context, item, loadItems);
+              handlePermanentItemDelete(item, loadItems);
             },
           ),
         ],
@@ -90,8 +93,8 @@ class ItemDeletionHandler {
     );
   }
 
-  static Future<void> handlePermanentItemDelete(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  Future<void> handlePermanentItemDelete(
+      FileSystemEntity item, Function loadItems) async {
     try {
       await StorageSystem.permanentlyDeleteItem(item.path);
 
@@ -112,8 +115,8 @@ class ItemDeletionHandler {
     }
   }
 
-  static Future<void> handleRestoringDeletedItem(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  Future<void> handleRestoringDeletedItem(
+      FileSystemEntity item, Function loadItems) async {
     try {
       await StorageSystem.restoreDeletedItem(item.path);
       if (context.mounted) {
@@ -129,7 +132,7 @@ class ItemDeletionHandler {
     }
   }
 
-  static Future<void> showTrashManyConfirmation(BuildContext context,
+  Future<void> showTrashManyConfirmation(
       List<FileSystemEntity> items, Function loadItems) async {
     showDialog(
       context: context,
@@ -152,7 +155,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleManyItemTrashing(context, items, loadItems);
+              handleManyItemTrashing(items, loadItems);
             },
           ),
         ],
@@ -160,8 +163,8 @@ class ItemDeletionHandler {
     );
   }
 
-  static Future<void> handleManyItemTrashing(
-      BuildContext context, List<FileSystemEntity> items, Function loadItems,
+  Future<void> handleManyItemTrashing(
+      List<FileSystemEntity> items, Function loadItems,
       {int? daysForDeletion}) async {
     try {
       for (FileSystemEntity item in items) {

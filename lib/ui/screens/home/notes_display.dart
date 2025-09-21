@@ -88,12 +88,12 @@ class _NotesDisplayState extends State<NotesDisplay> {
         const Duration(milliseconds: 300), () async => await _loadItems());
   }
 
-  List<FileSystemEntity> selectedItemsToFileEntity() {
-    List<FileSystemEntity> fileList = [];
+  List<Uri> selectedItemsToFileEntity() {
+    List<Uri> fileUriList = [];
     for (String item in context.read<SelectingProvider>().selectedItems) {
-      fileList.add(File(item));
+      fileUriList.add(Uri.parse(item));
     }
-    return fileList;
+    return fileUriList;
   }
 
   void _checkMediaIntent() {
@@ -141,7 +141,9 @@ class _NotesDisplayState extends State<NotesDisplay> {
         _sharedFilePath = null;
         Future.delayed(const Duration(microseconds: 500), () {
           if (context.mounted) {
-            context.read<NavigationProvider>().routeItemToPage(context, file);
+            context
+                .read<NavigationProvider>()
+                .routeItemToPage(context, file.uri);
           }
         });
       }
@@ -210,8 +212,14 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     IconButton(
                       tooltip: 'Delete Selected',
                       onPressed: () {
-                        ItemDeletionHandler.showTrashManyConfirmation(
-                            context, selectedItemsToFileEntity(), _loadItems);
+                        ItemDeletionHandler(context).showTrashManyConfirmation(
+                            selectedItemsToFileEntity()
+                                .map((e) =>
+                                    FileSystemEntity.isFileSync(e.toFilePath())
+                                        ? File.fromUri(e)
+                                        : Directory.fromUri(e))
+                                .toList(),
+                            _loadItems);
                         context
                             .read<SelectingProvider>()
                             .setSelectingMode(mode: false);
