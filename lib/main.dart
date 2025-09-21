@@ -54,23 +54,33 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    App.init();
-    _checkStorageAccess();
-    _setTitleBarVisibility();
+    loadApp();
   }
 
-  void _setTitleBarVisibility() async {
-    final isTitleBarHidden = await UserAdvancedPref.getTitleBarVisibility();
+  void loadApp() async {
+    await App.init().then(
+      (value) async {
+        await _setTitleBarVisibility();
+        await _checkStorageAccess();
+        setState(() => _isLoading = false);
+      },
+    );
+  }
+
+  Future<void> _setTitleBarVisibility() async {
+    final isTitleBarHidden = UserAdvancedPref.getTitleBarVisibility();
     if (Platform.isLinux || Platform.isWindows) {
-      windowManager.setTitleBarStyle(
+      await windowManager.setTitleBarStyle(
           isTitleBarHidden ? TitleBarStyle.hidden : TitleBarStyle.normal);
     }
   }
 
-  void _checkStorageAccess() async {
+  Future<void> _checkStorageAccess() async {
     final String? mainDir = await DataPath.selectedDirectory;
     final Directory defaultDir = await getApplicationDocumentsDirectory();
     final bool isNewUser = UserFirstTime.getShowIntro;
@@ -89,6 +99,11 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return DynamicColorBuilder(
