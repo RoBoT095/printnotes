@@ -19,6 +19,7 @@
 
 - Migrated more stuff into using [Uri] instead of [File]
   - That includes the Note editor
+- Moved loading of SharedPreference to main on startup rather than each time it is checked or set
 
 ### (September 19, 2025)
 

@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
+import 'package:printnotes/providers/customization_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/handlers/file_extensions.dart';
@@ -19,10 +24,13 @@ class SearchPayload {
 // better to rewrite and clean up everything but this sand castle is already held by hot glue
 // and it can only grow now
 class StorageSystem {
+  final BuildContext context;
+
+  StorageSystem(this.context);
   // For searching
 
-  static Future<List<FileSystemEntity>> searchItems(
-      String query, String mainDir) async {
+  Future<List<FileSystemEntity>> searchItems(String query) async {
+    final String mainDir = context.watch<SettingsProvider>().mainDir;
     List<FileSystemEntity> allItems =
         await StorageSystem.listFolderContents(mainDir, recursive: true);
 
@@ -244,13 +252,13 @@ class StorageSystem {
     return '';
   }
 
-  static Future<String> getFilePreview(
+  Future<String> getFilePreview(
     Uri fileUri, {
     bool parseFrontmatter = false,
     bool isTrimmed = true,
-    int previewLength = 100,
   }) async {
     try {
+      int previewLength = context.watch<CustomizationProvider>().previewLength;
       final file = File.fromUri(fileUri);
       if (await file.exists()) {
         String content = await file.readAsString();

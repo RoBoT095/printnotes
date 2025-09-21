@@ -65,15 +65,17 @@ class _NotesDisplayState extends State<NotesDisplay> {
     final sortOrder = readSettings.sortOrder;
     final folderPriority = readSettings.folderPriority;
 
-    setState(() {
-      _items = loadedItems['items'];
-      _currentPath = loadedItems['currentPath'];
-      _currentFolderName = loadedItems['currentFolderName'];
-      _currentSortOrder = sortOrder;
-      _currentFolderPriority = folderPriority;
+    if (mounted) {
+      setState(() {
+        _items = loadedItems['items'];
+        _currentPath = loadedItems['currentPath'];
+        _currentFolderName = loadedItems['currentFolderName'];
+        _currentSortOrder = sortOrder;
+        _currentFolderPriority = folderPriority;
 
-      _isLoading = false;
-    });
+        _isLoading = false;
+      });
+    }
   }
 
   void _navBack() async {

@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
@@ -19,10 +20,10 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/ui/screens/home/main_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isLinux || Platform.isWindows) {
-    await windowManager.ensureInitialized();
+    windowManager.ensureInitialized();
   }
   runApp(
     MultiProvider(
@@ -42,6 +43,12 @@ void main() async {
 class App extends StatefulWidget {
   const App({super.key});
 
+  static late SharedPreferences localStorage;
+
+  static Future init() async {
+    localStorage = await SharedPreferences.getInstance();
+  }
+
   @override
   State<App> createState() => _AppState();
 }
@@ -50,6 +57,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    App.init();
     _checkStorageAccess();
     _setTitleBarVisibility();
   }
@@ -65,7 +73,7 @@ class _AppState extends State<App> {
   void _checkStorageAccess() async {
     final String? mainDir = await DataPath.selectedDirectory;
     final Directory defaultDir = await getApplicationDocumentsDirectory();
-    final bool isNewUser = await UserFirstTime.getShowIntro;
+    final bool isNewUser = UserFirstTime.getShowIntro;
 
     if (mainDir != null) {
       if (Platform.isAndroid &&

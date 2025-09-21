@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:printnotes/main.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/storage_system.dart';
@@ -40,14 +40,13 @@ class DataPath {
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_prefKey, dirPath);
+
+    App.localStorage.setString(_prefKey, dirPath);
   }
 
   static Future<String?> get selectedDirectory async {
     if (_selectedDirectory == null) {
-      final prefs = await SharedPreferences.getInstance();
-      _selectedDirectory = prefs.getString(_prefKey);
+      _selectedDirectory = App.localStorage.getString(_prefKey);
       if (_selectedDirectory == null) {
         final appDir = await getApplicationDocumentsDirectory();
         return _selectedDirectory = appDir.path;

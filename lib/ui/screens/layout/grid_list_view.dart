@@ -132,7 +132,6 @@ class _GridListViewState extends State<GridListView> {
       BuildContext context, FileSystemEntity item, Color? color) async {
     final itemName = path.basename(item.path);
     final useFM = context.read<SettingsProvider>().useFrontmatter;
-    final previewLength = context.watch<CustomizationProvider>().previewLength;
     final markdownConfigs = theMarkdownConfigs(context,
         fileUri: item.uri, hideCodeButtons: true, textColor: color);
     final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
@@ -175,16 +174,16 @@ class _GridListViewState extends State<GridListView> {
     if (useFM) {
       // I am beginning to hate this function, but why create new one when
       // we can add more functionality to it
-      String fileText =
-          await StorageSystem.getFilePreview(item.uri, isTrimmed: false);
+      String fileText = await StorageSystem(context)
+          .getFilePreview(item.uri, isTrimmed: false);
       if (fileText != 'No preview available') {
         fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
         fmDescription =
             FrontmatterHandleParsing.getTagString(fileText, 'description');
       }
     }
-    final String previewText = await StorageSystem.getFilePreview(item.uri,
-        parseFrontmatter: useFM, previewLength: previewLength);
+    final String previewText = await StorageSystem(context)
+        .getFilePreview(item.uri, parseFrontmatter: useFM);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

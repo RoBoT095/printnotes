@@ -66,8 +66,7 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foundItemsList = StorageSystem.searchItems(
-        searchQuery, context.watch<SettingsProvider>().mainDir);
+    final foundItemsList = StorageSystem(context).searchItems(searchQuery);
 
     return FutureBuilder(
       future: foundItemsList,

@@ -42,7 +42,7 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void getShowIntro() async {
-    final showIntro = await UserFirstTime.getShowIntro;
+    final showIntro = UserFirstTime.getShowIntro;
     setShowIntro(showIntro);
   }
 
@@ -64,12 +64,12 @@ class SettingsProvider with ChangeNotifier {
 
   void loadSettings() async {
     final mainDir = await DataPath.selectedDirectory;
-    final layout = await UserLayoutPref.getLayoutView();
-    final folderPriority = await UserSortPref.getFolderPriority();
-    final sortOrder = await UserSortPref.getSortOrder();
-    final titleBar = await UserAdvancedPref.getTitleBarVisibility();
-    final useLatex = await UserAdvancedPref.getLatexSupport();
-    final useFM = await UserAdvancedPref.getFrontmatterSupport();
+    final layout = UserLayoutPref.getLayoutView();
+    final folderPriority = UserSortPref.getFolderPriority();
+    final sortOrder = UserSortPref.getSortOrder();
+    final titleBar = UserAdvancedPref.getTitleBarVisibility();
+    final useLatex = UserAdvancedPref.getLatexSupport();
+    final useFM = UserAdvancedPref.getFrontmatterSupport();
 
     if (mainDir != null) setHiddenFolders(mainDir);
 

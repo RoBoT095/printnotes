@@ -49,12 +49,12 @@ class ThemeProvider with ChangeNotifier {
     return colorScheme == 'custom' ? true : false;
   }
 
-  void loadPreferences() async {
-    final savedTheme = await UserThemingPref.getThemeMode();
-    final savedColorScheme = await UserThemingPref.getColorScheme();
-    final useDynamic = await UserThemingPref.getDynamicColor();
-    final usePureBlack = await UserThemingPref.getPureBlackBG();
-    final codeHighlight = await UserThemingPref.getCodeHighlight();
+  void loadPreferences() {
+    final savedTheme = UserThemingPref.getThemeMode();
+    final savedColorScheme = UserThemingPref.getColorScheme();
+    final useDynamic = UserThemingPref.getDynamicColor();
+    final usePureBlack = UserThemingPref.getPureBlackBG();
+    final codeHighlight = UserThemingPref.getCodeHighlight();
 
     setThemeMode(savedTheme);
     setColorScheme(savedColorScheme);
