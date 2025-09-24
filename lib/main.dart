@@ -67,6 +67,11 @@ class _AppState extends State<App> {
       (value) async {
         await _setTitleBarVisibility();
         await _checkStorageAccess();
+        if (mounted) {
+          final readSettings = context.read<SettingsProvider>();
+          final readNavProv = context.read<NavigationProvider>();
+          readNavProv.initRouteHistory(readSettings.mainDir);
+        }
         setState(() => _isLoading = false);
       },
     );
@@ -100,8 +105,24 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Center(
-        child: CircularProgressIndicator(),
+      // Splash Screen to make sure everything loads in
+      return Container(
+        color: Color.fromRGBO(77, 143, 255, 1),
+        width: double.maxFinite,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/app_icon_no-bg.png",
+              height: 200,
+              width: 200,
+            ),
+            SizedBox(height: 100),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.white),
+            ),
+          ],
+        ),
       );
     }
     return Consumer<ThemeProvider>(

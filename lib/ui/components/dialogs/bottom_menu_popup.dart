@@ -63,7 +63,7 @@ void showBottomMenu(
               title: const Text('Rename'),
               onTap: () {
                 Navigator.pop(context);
-                ItemRenameHandler.showRenameDialog(context, item, loadItems);
+                ItemRenameHandler.showRenameDialog(context, item);
               },
             ),
             if (item is! Directory)
@@ -75,8 +75,7 @@ void showBottomMenu(
                 title: const Text('Duplicate'),
                 onTap: () {
                   Navigator.pop(context);
-                  ItemDuplicationHandler(context)
-                      .handleDuplicateItem(item, loadItems);
+                  ItemDuplicationHandler(context).handleDuplicateItem(item);
                 },
               ),
             ListTile(
@@ -87,7 +86,7 @@ void showBottomMenu(
               title: const Text('Archive'),
               onTap: () {
                 Navigator.pop(context);
-                ItemArchiveHandler(context).handleArchiveItem(item, loadItems);
+                ItemArchiveHandler(context).handleArchiveItem(item);
               },
             ),
             ListTile(

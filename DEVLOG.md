@@ -7,6 +7,8 @@
 - Receive text sharing intent from other apps and create a new "untitled" note with contents being the received text
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
 - Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
+- Add "Find in File" feature
+- Maybe a toggle to disable markdown rendering from Grid/List view
 
 ## Notes:
 
@@ -14,6 +16,15 @@
 - https://github.com/flutter-cavalry/saf_util
 
 ## Day to Day Changes:
+
+### (September 23, 2025)
+
+- Refactored some code like making [SettingsProvider] `loadItems` function into more of a provider like function (it was from old days before I used provider)
+- Fixed bug I made in current release with new files not opening when created (just added a 50 milliseconds delay)
+  - Possibly fixed the "Error loading file" error but it might need a longer delay if device is really slow
+- Changed look of fake splash screen
+- Made [NavigationProviders] `initRouteHistory` only trigger on launch rather every time [NoteDisplay] rebuilt
+- Fixed preview length not reflecting changes in [StorageSystem]
 
 ### (September 20, 2025)
 

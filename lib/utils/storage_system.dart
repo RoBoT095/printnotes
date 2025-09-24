@@ -30,7 +30,7 @@ class StorageSystem {
   // For searching
 
   Future<List<FileSystemEntity>> searchItems(String query) async {
-    final String mainDir = context.watch<SettingsProvider>().mainDir;
+    final String mainDir = context.read<SettingsProvider>().mainDir;
     List<FileSystemEntity> allItems =
         await StorageSystem.listFolderContents(mainDir, recursive: true);
 
@@ -258,7 +258,7 @@ class StorageSystem {
     bool isTrimmed = true,
   }) async {
     try {
-      int previewLength = context.watch<CustomizationProvider>().previewLength;
+      int previewLength = context.read<CustomizationProvider>().previewLength;
       final file = File.fromUri(fileUri);
       if (await file.exists()) {
         String content = await file.readAsString();

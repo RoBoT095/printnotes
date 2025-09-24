@@ -23,6 +23,7 @@ class NavigationProvider with ChangeNotifier {
       _routeHistory.clear();
       _routeHistory.add(initDir);
     }
+    debugPrint('RouteHistory init: $_routeHistory');
   }
 
   void addToRouteHistory(String route) {
@@ -36,6 +37,7 @@ class NavigationProvider with ChangeNotifier {
     if (_routeHistory.last != route) {
       _routeHistory.add(route);
     }
+    debugPrint('RouteHistory add: $_routeHistory');
   }
 
   // Removes last entry in folder history and return path of previous location
@@ -51,17 +53,23 @@ class NavigationProvider with ChangeNotifier {
 
   void routeItemToPage(BuildContext context, Uri item,
       {String? jumpToHeader}) async {
-    if (await FileSystemEntity.isFile(item.path) && context.mounted) {
-      if (fileTypeChecker(item.path) == CFileType.image) {
-        onImageSelect(context, item);
-      } else if (fileTypeChecker(item.path) == CFileType.pdf) {
-        onPdfSelect(context, item);
-      } else if (fileTypeChecker(item.path) == CFileType.sketch) {
-        onSketchSelect(context, item);
+    Future.delayed(const Duration(milliseconds: 50), () async {
+      bool fileExists = await File.fromUri(item).exists();
+      if (fileExists && context.mounted) {
+        if (fileTypeChecker(item.path) == CFileType.image) {
+          onImageSelect(context, item);
+        } else if (fileTypeChecker(item.path) == CFileType.pdf) {
+          onPdfSelect(context, item);
+        } else if (fileTypeChecker(item.path) == CFileType.sketch) {
+          onSketchSelect(context, item);
+        } else {
+          onNoteSelect(context, item, jumpToHeader: jumpToHeader);
+        }
       } else {
-        onNoteSelect(context, item, jumpToHeader: jumpToHeader);
+        debugPrint(
+            'NavigationProvider routeItemToPage: Item doesn\'t exist or isn\'t a File');
       }
-    }
+    });
   }
 
   // For notes only, won't work with folders

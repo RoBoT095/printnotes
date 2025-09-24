@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:path/path.dart' as path;
+// import 'package:provider/provider.dart';
 
+// import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/components/dialogs/select_location.dart';
@@ -31,6 +33,10 @@ class ItemMoveHandler {
         } else {
           await StorageSystem.moveManyItems(itemUris, newLocationUri);
         }
+        // if (context.mounted) {
+        //   final readSettProv = context.read<SettingsProvider>();
+        //   readSettProv.loadItems(context, readSettProv.currentPath);
+        // }
         loadItems();
       }
     }

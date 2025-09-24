@@ -39,12 +39,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
   late StreamSubscription _intentSub;
   String? _sharedFilePath;
 
-  List<FileSystemEntity> _items = [];
-  String? _currentPath;
-  String _currentFolderName = 'Notes';
-  String _currentSortOrder = '';
-  String _currentFolderPriority = '';
-
   bool _isLoading = false;
 
   @override
@@ -58,24 +52,13 @@ class _NotesDisplayState extends State<NotesDisplay> {
   Future<void> _loadItems() async {
     setState(() => _isLoading = true);
     final readSettings = context.read<SettingsProvider>();
-    context.read<NavigationProvider>().initRouteHistory(readSettings.mainDir);
+    final readNavProv = context.read<NavigationProvider>();
 
-    final loadedItems = await readSettings.loadItems(
-        context, context.read<NavigationProvider>().routeHistory.last);
-    final sortOrder = readSettings.sortOrder;
-    final folderPriority = readSettings.folderPriority;
+    // readNavProv.initRouteHistory(readSettings.mainDir);
 
-    if (mounted) {
-      setState(() {
-        _items = loadedItems['items'];
-        _currentPath = loadedItems['currentPath'];
-        _currentFolderName = loadedItems['currentFolderName'];
-        _currentSortOrder = sortOrder;
-        _currentFolderPriority = folderPriority;
+    await readSettings.loadItems(context, readNavProv.routeHistory.last);
 
-        _isLoading = false;
-      });
-    }
+    if (mounted) setState(() => _isLoading = false);
   }
 
   void _navBack() async {
@@ -91,11 +74,11 @@ class _NotesDisplayState extends State<NotesDisplay> {
   }
 
   List<Uri> selectedItemsToFileEntity() {
-    List<Uri> fileUriList = [];
-    for (String item in context.read<SelectingProvider>().selectedItems) {
-      fileUriList.add(Uri.parse(item));
-    }
-    return fileUriList;
+    return context
+        .read<SelectingProvider>()
+        .selectedItems
+        .map((item) => Uri.parse(item))
+        .toList();
   }
 
   void _checkMediaIntent() {
@@ -132,33 +115,28 @@ class _NotesDisplayState extends State<NotesDisplay> {
   @override
   Widget build(BuildContext context) {
     bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
-    final watchSettings = context.watch<SettingsProvider>();
 
-    List<String> routeHistory =
+    final watchSettings = context.watch<SettingsProvider>();
+    final items = watchSettings.items;
+    final currentPath = watchSettings.currentPath;
+    final currentFolderName = watchSettings.currentFolderName;
+    final List<String> routeHistory =
         context.watch<NavigationProvider>().routeHistory;
 
     if (_sharedFilePath != null) {
       File file = File(_sharedFilePath!);
       if (file.existsSync()) {
         _sharedFilePath = null;
-        Future.delayed(const Duration(microseconds: 500), () {
-          if (context.mounted) {
-            context
-                .read<NavigationProvider>()
-                .routeItemToPage(context, file.uri);
-          }
-        });
+
+        if (context.mounted) {
+          context.read<NavigationProvider>().routeItemToPage(context, file.uri);
+        }
       }
     }
 
     Widget layoutView = watchSettings.layout == 'tree'
         ? TreeLayoutView(onChange: _loadItems)
-        : GridListView(items: _items, onChange: _loadItems);
-
-    if (watchSettings.sortOrder != _currentSortOrder ||
-        watchSettings.folderPriority != _currentFolderPriority) {
-      _loadItems();
-    }
+        : GridListView(items: items, onChange: _loadItems);
 
     return PopScope(
       canPop: false,
@@ -177,7 +155,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
             centerTitle: true,
-            title: Text(_currentFolderName),
+            title: Text(currentFolderName),
             leading: context.watch<SelectingProvider>().selectingMode
                 ? IconButton(
                     onPressed: () =>
@@ -196,7 +174,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       onPressed: () {
                         context
                             .read<SelectingProvider>()
-                            .selectAll(_currentPath!);
+                            .selectAll(currentPath);
                       },
                       icon: const Icon(Icons.select_all),
                     ),
@@ -240,7 +218,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : _items.isEmpty
+            : items.isEmpty
                 ? const Center(
                     child: Text('Nothing here!'),
                   )
@@ -279,8 +257,9 @@ class _NotesDisplayState extends State<NotesDisplay> {
                   ),
         floatingActionButton: speedDialFAB(
             context,
-            _currentPath ?? context.read<SettingsProvider>().mainDir,
-            _loadItems),
+            currentPath.isNotEmpty
+                ? currentPath
+                : context.read<SettingsProvider>().mainDir),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
