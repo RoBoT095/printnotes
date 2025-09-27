@@ -12,15 +12,14 @@
 
 ## Features
 
-- Supports Markdown... obviously
-- Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
+- Supports extended Markdown syntax
+- Supports LaTeX used for math notation: <a target='_blank' href='https://quickref.me/latex'>cheatsheet</a>
 - Supports Frontmatter for metadata and styling like title, description, color, and background
-- Stores notes locally on device
+- All notes/files are stored locally on device
+- Draw ideas with a sketchpad saved as `.bson` files
 - Follows system folder structure to better organize notes
 - Can view images and pdf files found in apps directory and from external folders
-- Extensive Customizations
-- Draw ideas with a sketchpad saved as `.bson`
-- Toolbar for easy markdown editing (expanded from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor)'s toolbar)
+- Extensive customizations from custom themes to wallpapers
 <!-- - Supports Windows, Mac, Linux, Android, and iOS -->
 
 ---

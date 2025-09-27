@@ -49,7 +49,6 @@ class ItemCreationHandler {
     bool noteSubmitted = dialogResult['submitted'];
     if (noteSubmitted && noteName.isNotEmpty) {
       try {
-        debugPrint('Create note: $noteName $currentPath');
         await StorageSystem.createFile(noteName, parentPath: currentPath)
             .then((e) {
           if (context.mounted) {
@@ -84,6 +83,7 @@ class ItemCreationHandler {
           if (context.mounted) {
             final readSettProv = context.read<SettingsProvider>();
             readSettProv.loadItems(context, readSettProv.currentPath);
+
             context
                 .read<NavigationProvider>()
                 .routeItemToPage(context, File(e).uri);
