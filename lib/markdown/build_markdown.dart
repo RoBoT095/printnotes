@@ -148,7 +148,6 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
     generators: [
       if (context.watch<SettingsProvider>().useLatex) latexGenerator,
       noteTagGenerator,
-      // wikiLinkGeneratorWithTag,
       highlighterGeneratorWithTag,
       underlineGeneratorWithTag,
       strikethroughGeneratorWithTag,

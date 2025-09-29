@@ -9,7 +9,7 @@
 - Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
 - Add "Find in File" feature
 - Maybe a toggle to disable markdown rendering from Grid/List view
-- Add more markdown syntax: [definition lists](https://www.markdownguide.org/extended-syntax/#definition-lists), and [footnotes](https://www.markdownguide.org/extended-syntax/)
+- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
 
 ## Notes:
 
@@ -22,6 +22,7 @@
 
 - Added Superscript and Subscript markdown syntax
   - Needed to add strikethrough due to it being `~strike~` instead of `~~strike~~`
+- Added extra whitespace at the bottom to note editor
 
 ### (September 23, 2025)
 
