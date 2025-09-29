@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:printnotes/markdown/rendering/strikethrough.dart';
+import 'package:printnotes/markdown/rendering/subscript.dart';
+import 'package:printnotes/markdown/rendering/superscript.dart';
 import 'package:provider/provider.dart';
 import './markdown_widget/markdown_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -144,17 +147,23 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
   return MarkdownGenerator(
     generators: [
       if (context.watch<SettingsProvider>().useLatex) latexGenerator,
+      noteTagGenerator,
       // wikiLinkGeneratorWithTag,
       highlighterGeneratorWithTag,
       underlineGeneratorWithTag,
-      noteTagGenerator,
+      strikethroughGeneratorWithTag,
+      superscriptGeneratorWithTag,
+      subscriptGeneratorWithTag,
     ],
     inlineSyntaxList: [
       if (context.watch<SettingsProvider>().useLatex) LatexSyntax(),
+      NoteTagSyntax(),
       WikiLinkSyntax(),
       HighlighterSyntax(),
       UnderlineSyntax(),
-      NoteTagSyntax()
+      StrikethroughSyntax(),
+      SuperscriptSyntax(),
+      SubscriptSyntax(),
     ],
     textGenerator: (node, config, visitor) =>
         CustomTextNode(node.textContent, config, visitor),

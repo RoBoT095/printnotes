@@ -9,6 +9,7 @@
 - Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
 - Add "Find in File" feature
 - Maybe a toggle to disable markdown rendering from Grid/List view
+- Add more markdown syntax: [definition lists](https://www.markdownguide.org/extended-syntax/#definition-lists), and [footnotes](https://www.markdownguide.org/extended-syntax/)
 
 ## Notes:
 
@@ -16,6 +17,11 @@
 - https://github.com/flutter-cavalry/saf_util
 
 ## Day to Day Changes:
+
+### (September 28, 2025)
+
+- Added Superscript and Subscript markdown syntax
+  - Needed to add strikethrough due to it being `~strike~` instead of `~~strike~~`
 
 ### (September 23, 2025)
 
