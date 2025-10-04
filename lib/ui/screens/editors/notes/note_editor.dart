@@ -52,7 +52,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late final TextEditingController _notesController;
   late final AutoScrollController _autoScrollController;
   late final TocController _tocController;
-  late final FocusNode _focusNode;
+  late final FocusNode _noteFocusNode;
   late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -76,7 +76,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _notesController = TextEditingController();
     _autoScrollController = AutoScrollController();
     _tocController = TocController();
-    _focusNode = FocusNode();
+    _noteFocusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
 
@@ -263,16 +263,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                           onTap: () =>
                               modalShowFileInfo(context, widget.fileUri),
                         ),
-                        PopupMenuItem(
-                          child: const ListTile(
-                            leading: Icon(Icons.tune),
-                            title: Text('Configure'),
-                          ),
-                          onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditorConfigPage())),
-                        ),
+                        // PopupMenuItem(
+                        //   child: ListTile(
+                        //     leading: const Icon(Icons.share),
+                        //     title: Text('Find in page...'),
+                        //     onTap: () {},
+                        //   ),
+                        // ),
                         PopupMenuItem(
                           child: ListTile(
                             leading: const Icon(Icons.share),
@@ -282,6 +279,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                   ShareParams(text: _notesController.text));
                             },
                           ),
+                        ),
+                        PopupMenuItem(
+                          child: const ListTile(
+                            leading: Icon(Icons.tune),
+                            title: Text('Configure'),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditorConfigPage())),
                         ),
                         PopupMenuItem(
                           child: ListTile(
@@ -429,7 +436,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         },
                         child: Focus(
                           autofocus: true,
-                          focusNode: _focusNode,
+                          focusNode: _noteFocusNode,
                           child: ListView(
                               shrinkWrap: true,
                               controller: _autoScrollController,
@@ -490,7 +497,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
 
     _notesController.dispose();
-    _focusNode.dispose();
+    _autoScrollController.dispose();
+    _noteFocusNode.dispose();
+    _tocController.dispose();
+    _undoHistoryController.dispose();
+
     _fileCheckTimer?.cancel();
     _autoSaveTimer?.cancel();
     _scrollToHeader?.cancel();
