@@ -8,9 +8,12 @@
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
 - Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
 - Add "Find in File" feature
+  - Will probably need to clone [TocController] to accept any node and limit to searching only in markdown preview mode, more work will be needed to make it work in edit mode
 - Maybe a toggle to disable markdown rendering from Grid/List view
 - Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
+  - Current footnote that came from library `markdown_widget` is somewhat broken
 - Add spell checker that has multi-platform support
+  - Needs offline support to not rely on apis
 
 ## Notes:
 

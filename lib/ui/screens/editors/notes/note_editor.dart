@@ -265,7 +265,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         ),
                         // PopupMenuItem(
                         //   child: ListTile(
-                        //     leading: const Icon(Icons.share),
+                        //     leading: const Icon(Icons.find_in_page_outlined),
                         //     title: Text('Find in page...'),
                         //     onTap: () {},
                         //   ),
@@ -498,8 +498,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
     _notesController.dispose();
     _autoScrollController.dispose();
-    _noteFocusNode.dispose();
     _tocController.dispose();
+    _noteFocusNode.dispose();
     _undoHistoryController.dispose();
 
     _fileCheckTimer?.cancel();
