@@ -5,6 +5,7 @@
 ## v0.10.4 - WIP
 
 - Redesign of the Settings screens and About page
+- Improved tag parsing
 
 ## v0.10.3
 

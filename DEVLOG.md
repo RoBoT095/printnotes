@@ -10,6 +10,7 @@
 - Add "Find in File" feature
 - Maybe a toggle to disable markdown rendering from Grid/List view
 - Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
+- Add spell checker that has multi-platform support
 
 ## Notes:
 
@@ -17,6 +18,10 @@
 - https://github.com/flutter-cavalry/saf_util
 
 ## Day to Day Changes:
+
+### (October 3, 2025)
+
+- Changed tag regex to only work if the tag is on a new line without any text in front
 
 ### (September 28, 2025)
 

@@ -23,6 +23,8 @@ class EditorField extends StatelessWidget {
       scrollController: scrollController,
       maxLines: null,
       keyboardType: TextInputType.multiline,
+      enableSuggestions: true,
+      autocorrect: true,
       autofocus: false,
       onChanged: onChanged,
       undoController: undoController,
