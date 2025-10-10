@@ -32,7 +32,7 @@ class SelectingProvider with ChangeNotifier {
 
   Future<void> selectAll(String dir) async {
     final List<FileSystemEntity> items =
-        await StorageSystem.listFolderContents(dir);
+        await StorageSystem.listFolderContents(Uri.parse(dir));
     List<String> itemPathsList = [];
     for (FileSystemEntity item in items) {
       if (item is File) itemPathsList.add(item.path);

@@ -12,10 +12,13 @@ dependencies:
   flutter:
     sdk: flutter
   
+  provider: ^6.1.2
+
   path: ^1.9.0
   path_provider: ^2.1.3
-  provider: ^6.1.2
+  docman: ^1.2.0
   file_picker: ^10.1.9
+  
   listen_sharing_intent: ^1.9.2
   window_manager: ^0.5.0
   share_plus: ^12.0.0
@@ -61,7 +64,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  flutter_lints: ^5.0.0
+  dart_pubspec_licenses: ^3.0.14
 
 flutter_icons:
   image_path: 'assets/app_icon.png'

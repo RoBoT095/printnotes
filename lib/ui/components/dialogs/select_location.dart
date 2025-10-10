@@ -29,7 +29,8 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
   }
 
   Future<void> _loadDirectories() async {
-    final contents = await StorageSystem.listFolderContents(_currentDir);
+    final contents =
+        await StorageSystem.listFolderContents(Uri.parse(_currentDir));
     final isDirectory =
         await FileSystemEntity.isDirectory(widget.itemUris.first.toFilePath());
     setState(() {

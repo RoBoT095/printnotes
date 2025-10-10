@@ -5,6 +5,9 @@
 # Exit if a command has a non zero status
 set -e
 
+# Generate file with library licenses
+dart run dart_pubspec_licenses:generate
+
 # Get all the apk files
 sh ./docker-build.sh
 

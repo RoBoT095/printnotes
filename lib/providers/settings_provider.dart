@@ -153,14 +153,15 @@ class SettingsProvider with ChangeNotifier {
   }
 
   Future<void> loadTrash(String trashPath) async {
-    _trashItems =
-        await StorageSystem.listFolderContents(trashPath, showHidden: true);
+    _trashItems = await StorageSystem.listFolderContents(Uri.parse(trashPath),
+        showHidden: true);
     notifyListeners();
   }
 
   Future<void> loadArchive(String archivePath) async {
-    _archiveItems =
-        await StorageSystem.listFolderContents(archivePath, showHidden: true);
+    _archiveItems = await StorageSystem.listFolderContents(
+        Uri.parse(archivePath),
+        showHidden: true);
     notifyListeners();
   }
 
@@ -189,8 +190,9 @@ class SettingsProvider with ChangeNotifier {
       }
     }
 
-    final items =
-        isTag ? filesWithTags : await StorageSystem.listFolderContents(folder);
+    final items = isTag
+        ? filesWithTags
+        : await StorageSystem.listFolderContents(Uri.parse(folder));
     final sortedItems =
         ItemSortHandler(sortOrder, folderPriority).getSortedItems(items);
     if (isTag) {

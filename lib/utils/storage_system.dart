@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+// import 'package:docman/docman.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
@@ -27,12 +28,14 @@ class StorageSystem {
   final BuildContext context;
 
   StorageSystem(this.context);
+
   // For searching
 
   Future<List<FileSystemEntity>> searchItems(String query) async {
     final String mainDir = context.read<SettingsProvider>().mainDir;
-    List<FileSystemEntity> allItems =
-        await StorageSystem.listFolderContents(mainDir, recursive: true);
+    List<FileSystemEntity> allItems = await StorageSystem.listFolderContents(
+        Uri.parse(mainDir),
+        recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
       return fileTypeChecker(item.path) == CFileType.note;
@@ -110,8 +113,9 @@ class StorageSystem {
   }
 
   static Future<Map<String, List<String>>> getAllTags(String mainDir) async {
-    List<FileSystemEntity> allItems =
-        await StorageSystem.listFolderContents(mainDir, recursive: true);
+    List<FileSystemEntity> allItems = await StorageSystem.listFolderContents(
+        Uri.parse(mainDir),
+        recursive: true);
 
     final List<FileSystemEntity> filteredItems = allItems.where((item) {
       return fileTypeChecker(item.path) == CFileType.note;
@@ -413,9 +417,9 @@ class StorageSystem {
 
   // Get files (and folders) of a folder
 
-  static Future<List<FileSystemEntity>> listFolderContents(String folderPath,
+  static Future<List<FileSystemEntity>> listFolderContents(Uri folderUri,
       {bool recursive = false, bool showHidden = false}) async {
-    final folder = Directory(folderPath);
+    final folder = Directory.fromUri(folderUri);
     if (await folder.exists()) {
       final contents = await folder.list(recursive: recursive).toList();
       if (showHidden) {
@@ -424,7 +428,7 @@ class StorageSystem {
         // Filter out hidden folders and files
         final filteredContents = contents.where((item) {
           final pathSegments =
-              path.split(item.path.replaceFirst(folderPath, ''));
+              path.split(item.path.replaceFirst(folderUri.toFilePath(), ''));
           return !pathSegments.any((segment) => segment.startsWith('.'));
         }).toList();
         return filteredContents;
@@ -470,6 +474,18 @@ class StorageSystem {
       final oldPath = oldPathUri.toFilePath();
       final isFile = await FileSystemEntity.isFile(oldPath);
       final item = isFile ? File(oldPath) : Directory(oldPath);
+
+      // if (Platform.isAndroid) {
+      //   if (DocumentFile(uri: oldPath.toString()).exists) {
+      //     final parentDir = path.dirname(oldPath);
+      //     final newPathUri = Uri.file(path.join(parentDir, newName));
+      //     var e = await DocumentFile.fromUri(oldPath);
+      //     // no rename feature so need to copy and delete
+      //     e?.copyTo(newPathUri.toString());
+      //     e?.delete();
+      //     return true;
+      //   }
+      // }
 
       if (await item.exists()) {
         final parentDir = path.dirname(oldPath);

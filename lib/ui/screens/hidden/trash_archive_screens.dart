@@ -43,7 +43,7 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
     final currentPath = folderPath ?? hiddenPath;
 
     final items = await StorageSystem.listFolderContents(
-      currentPath,
+      Uri.parse(currentPath),
       showHidden: true,
     );
 

@@ -49,7 +49,8 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
   }
 
   Future<List<Node>> getTree(String dir) async {
-    List<FileSystemEntity> items = await StorageSystem.listFolderContents(dir);
+    List<FileSystemEntity> items =
+        await StorageSystem.listFolderContents(Uri.parse(dir));
     items = ItemSortHandler(context.read<SettingsProvider>().sortOrder,
             context.read<SettingsProvider>().folderPriority)
         .getSortedItems(

@@ -32,7 +32,7 @@ class CustomImgBuilder extends StatelessWidget {
 
       // Otherwise, go through all files in mainDir to find by exact name
       final allFiles = await StorageSystem.listFolderContents(
-        context.read<SettingsProvider>().mainDir,
+        Uri.parse(context.read<SettingsProvider>().mainDir),
         recursive: true,
         showHidden: true,
       );

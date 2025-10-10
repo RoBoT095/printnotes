@@ -120,7 +120,7 @@ class DataPath {
       await Directory(bgImagesFolderPath).create(recursive: true);
     }
     final imagesDir =
-        await StorageSystem.listFolderContents(bgImagesFolderPath);
+        await StorageSystem.listFolderContents(Uri.parse(bgImagesFolderPath));
     for (FileSystemEntity item in imagesDir) {
       if (allowedImageExtensions.any((ext) => item.path.endsWith(ext))) {
         imgList.add(item.path);
