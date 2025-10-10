@@ -17,10 +17,14 @@
 
 ## Notes:
 
-- https://github.com/flutter-cavalry/saf_stream
-- https://github.com/flutter-cavalry/saf_util
+- https://github.com/devdfcom/docman
 
 ## Day to Day Changes:
+
+### (October 10, 2025)
+
+- Changed [StorageSystem.listFolderContents] to use uri instead of path string
+- Automated library/package usage details with `dart_pubspec_licenses` library
 
 ### (October 3, 2025)
 
