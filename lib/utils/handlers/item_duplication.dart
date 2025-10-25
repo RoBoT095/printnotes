@@ -1,15 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemDuplicationHandler {
-  static Future<void> handleDuplicateItem(
-    BuildContext context,
-    FileSystemEntity item,
-    Function loadItems,
-  ) async {
+  final BuildContext context;
+
+  ItemDuplicationHandler(this.context);
+
+  Future<void> handleDuplicateItem(FileSystemEntity item) async {
     // Fallback in case user somehow tries to duplicate a folder
     if (item is! File) {
       customSnackBar('Only files can be duplicated.', type: 'warning')
@@ -21,9 +24,10 @@ class ItemDuplicationHandler {
       final newPath = await StorageSystem.duplicateItem(item.path);
       final newFileName = path.basename(newPath);
 
-      loadItems();
-
       if (context.mounted) {
+        final readSettProv = context.read<SettingsProvider>();
+        readSettProv.loadItems(context, readSettProv.currentPath);
+
         customSnackBar('file duplicated: $newFileName', type: 'success')
             .show(context);
       }

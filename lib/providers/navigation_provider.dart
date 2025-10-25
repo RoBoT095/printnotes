@@ -23,6 +23,7 @@ class NavigationProvider with ChangeNotifier {
       _routeHistory.clear();
       _routeHistory.add(initDir);
     }
+    debugPrint('RouteHistory init: $_routeHistory');
   }
 
   void addToRouteHistory(String route) {
@@ -36,6 +37,7 @@ class NavigationProvider with ChangeNotifier {
     if (_routeHistory.last != route) {
       _routeHistory.add(route);
     }
+    debugPrint('RouteHistory add: $_routeHistory');
   }
 
   // Removes last entry in folder history and return path of previous location
@@ -49,29 +51,35 @@ class NavigationProvider with ChangeNotifier {
     return null;
   }
 
-  void routeItemToPage(BuildContext context, FileSystemEntity item,
-      {String? jumpToHeader}) {
-    if (item is File) {
-      if (fileTypeChecker(item) == CFileType.image) {
-        onImageSelect(context, item);
-      } else if (fileTypeChecker(item) == CFileType.pdf) {
-        onPdfSelect(context, item);
-      } else if (fileTypeChecker(item) == CFileType.sketch) {
-        onSketchSelect(context, item);
+  void routeItemToPage(BuildContext context, Uri item,
+      {String? jumpToHeader}) async {
+    Future.delayed(const Duration(milliseconds: 50), () async {
+      bool fileExists = await File.fromUri(item).exists();
+      if (fileExists && context.mounted) {
+        if (fileTypeChecker(item.path) == CFileType.image) {
+          onImageSelect(context, item);
+        } else if (fileTypeChecker(item.path) == CFileType.pdf) {
+          onPdfSelect(context, item);
+        } else if (fileTypeChecker(item.path) == CFileType.sketch) {
+          onSketchSelect(context, item);
+        } else {
+          onNoteSelect(context, item, jumpToHeader: jumpToHeader);
+        }
       } else {
-        onNoteSelect(context, item, jumpToHeader: jumpToHeader);
+        debugPrint(
+            'NavigationProvider routeItemToPage: Item doesn\'t exist or isn\'t a File');
       }
-    }
+    });
   }
 
   // For notes only, won't work with folders
-  void onNoteSelect(BuildContext context, File item, {String? jumpToHeader}) {
-    addToRouteHistory(item.path);
+  void onNoteSelect(BuildContext context, Uri uri, {String? jumpToHeader}) {
+    addToRouteHistory(uri.path);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => NoteEditorScreen(
-          filePath: item.path,
+          fileUri: uri,
           jumpToHeader: jumpToHeader,
         ),
       ),
@@ -80,34 +88,35 @@ class NavigationProvider with ChangeNotifier {
 
   void onImageSelect(
     BuildContext context,
-    File item,
+    Uri uri,
   ) {
-    addToRouteHistory(item.path);
+    addToRouteHistory(uri.path);
     Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ImageViewScreen(imageFile: item)))
+                builder: (context) => ImageViewScreen(imageUri: uri)))
         .then((_) => navigateBack());
   }
 
   void onPdfSelect(
     BuildContext context,
-    File item,
-  ) {
-    addToRouteHistory(item.path);
-    Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PdfViewScreen(pdfFile: item)))
-        .then((_) => navigateBack());
-  }
-
-  void onSketchSelect(BuildContext context, File item) {
-    addToRouteHistory(item.path);
+    Uri uri,
+  ) async {
+    addToRouteHistory(uri.path);
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SketchPad(sketchFile: item),
+            builder: (context) => PdfViewScreen(
+                  pdfUri: uri,
+                ))).then((_) => navigateBack());
+  }
+
+  void onSketchSelect(BuildContext context, Uri uri) {
+    addToRouteHistory(uri.path);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SketchPad(sketchUri: uri),
         )).then((_) => navigateBack());
   }
 
@@ -124,7 +133,7 @@ class NavigationProvider with ChangeNotifier {
     );
     if (selectedFile != null && context.mounted) {
       File item = File(selectedFile.files.single.path!);
-      routeItemToPage(context, item);
+      routeItemToPage(context, item.uri);
     }
   }
 }

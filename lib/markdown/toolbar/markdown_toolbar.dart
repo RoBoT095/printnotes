@@ -1,3 +1,4 @@
+// Toolbar taken and expanded upon from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor)
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

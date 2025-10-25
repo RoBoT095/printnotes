@@ -1,13 +1,76 @@
 # Dev Log
 
-## ToDo/Look into List
+## ToDo/Look into List:
 
-- Migrating Path String to URI to support SAF for android
+- Migrating File/Path to URI to support SAF for android
   - Do it slowly with maybe a custom string/uri handler
 - Receive text sharing intent from other apps and create a new "untitled" note with contents being the received text
 - Import/Export for individual files with a "Export All" button in settings that lets user download a `.zip` with everything (useful more for ios users)
+- Wait on files to be created before opening screen to avoid "Error loading file" on certain devices
+- Add "Find in File" feature
+  - Will probably need to clone [TocController] to accept any node and limit to searching only in markdown preview mode, more work will be needed to make it work in edit mode
+- Maybe a toggle to disable markdown rendering from Grid/List view
+- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
+  - Current footnote that came from library `markdown_widget` is somewhat broken
+- Add spell checker that has multi-platform support
+  - Needs offline support to not rely on apis
 
-## Day to Day Changes
+## Notes:
+
+- https://github.com/devdfcom/docman
+
+## Day to Day Changes:
+
+### (October 25, 2025)
+
+- Automated the fetching of app version number
+
+### (October 10, 2025)
+
+- Changed [StorageSystem.listFolderContents] to use uri instead of path string
+- Automated library/package usage details with `dart_pubspec_licenses` library
+
+### (October 3, 2025)
+
+- Changed tag regex to only work if the tag is on a new line without any text in front
+
+### (September 28, 2025)
+
+- Added Superscript and Subscript markdown syntax
+  - Needed to add strikethrough due to it being `~strike~` instead of `~~strike~~`
+- Added extra whitespace at the bottom to note editor
+
+### (September 23, 2025)
+
+- Refactored some code like making [SettingsProvider] `loadItems` function into more of a provider like function (it was from old days before I used provider)
+- Fixed bug I made in current release with new files not opening when created (just added a 50 milliseconds delay)
+  - Possibly fixed the "Error loading file" error but it might need a longer delay if device is really slow
+- Changed look of fake splash screen
+- Made [NavigationProviders] `initRouteHistory` only trigger on launch rather every time [NoteDisplay] rebuilt
+- Fixed preview length not reflecting changes in [StorageSystem]
+
+### (September 20, 2025)
+
+- Migrated more stuff into using [Uri] instead of [File]
+  - That includes the Note editor
+- Moved loading of SharedPreference to main on startup rather than each time it is checked or set
+
+### (September 19, 2025)
+
+- Redesigned Settings screens and About screen
+- Moved toolbar_config to a separate json file
+- Minor changes and some clean up
+
+### (September 18, 2025)
+
+- Added Share and Export options to sketch pad
+- Updated **pdfrx** to newest version to have it not include Build IDs
+  - Edited build process as pdfrx now bundles WASM modules that are not needed for application and only add extra megabytes to compiled apps
+
+### (September 16, 2025)
+
+- Fixed open file location on notes
+- Changed PDF, Image viewer, and Sketch pad to use [Uri] instead of [File]
 
 ### (September 13, 2025)
 
@@ -22,8 +85,8 @@
 
 ### (September 07, 2025)
 
-- Fixed the icons on the sketchpad bottom bar
-- Fixed look of the sketchpad from grid/list/tree modes
+- Fixed the icons on the sketch pad bottom bar
+- Fixed look of the sketch pad from grid/list/tree modes
 
 ### (September 06, 2025)
 

@@ -6,7 +6,7 @@ import 'package:printnotes/utils/configs/data_path.dart';
 
 bool validateCustomThemeName(String name) {
   try {
-    final configFile = DataPath.loadJsonConfigFile();
+    final configFile = DataPath.loadJsonConfigFile(DataPath.mainConfigFile);
     if (configFile['UserCustomThemes'] != null) {
       final themes = configFile['UserCustomThemes'] as List<dynamic>;
       for (final theme in themes) {

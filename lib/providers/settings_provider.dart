@@ -13,28 +13,46 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 
 class SettingsProvider with ChangeNotifier {
   bool _showIntro = true;
-  String _mainDir = '';
-  String _archivePath = '';
-  String _trashPath = '';
-  String _layout = 'grid';
-  String _folderPriority = 'none';
-  String _sortOrder = 'default';
   bool _hideTitleBar = false;
   bool _useLatex = false;
   bool _useFrontmatter = false;
+
+  String _mainDir = '';
+  String _archivePath = '';
+  String _trashPath = '';
+
+  String _layout = 'grid';
+  String _folderPriority = 'none';
+  String _sortOrder = 'default';
+
+  String _currentPath = '';
+  String _currentFolderName = 'Notes';
+  List<FileSystemEntity> _items = [];
   List<String> _tagList = [];
+  List<FileSystemEntity> _trashItems = [];
+  List<FileSystemEntity> _archiveItems = [];
+
+  // ===========================
 
   bool get showIntro => _showIntro;
-  String get mainDir => _mainDir;
-  String get archivePath => _archivePath;
-  String get trashPath => _trashPath;
-  String get layout => _layout;
-  String get folderPriority => _folderPriority;
-  String get sortOrder => _sortOrder;
   bool get hideTitleBar => _hideTitleBar;
   bool get useLatex => _useLatex;
   bool get useFrontmatter => _useFrontmatter;
+
+  String get mainDir => _mainDir;
+  String get archivePath => _archivePath;
+  String get trashPath => _trashPath;
+
+  String get layout => _layout;
+  String get folderPriority => _folderPriority;
+  String get sortOrder => _sortOrder;
+
+  String get currentPath => _currentPath;
+  String get currentFolderName => _currentFolderName;
+  List<FileSystemEntity> get items => _items;
   List<String> get tagList => _tagList;
+  List<FileSystemEntity> get trashItems => _trashItems;
+  List<FileSystemEntity> get archiveItems => _archiveItems;
 
   SettingsProvider() {
     loadSettings();
@@ -42,7 +60,7 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void getShowIntro() async {
-    final showIntro = await UserFirstTime.getShowIntro;
+    final showIntro = UserFirstTime.getShowIntro;
     setShowIntro(showIntro);
   }
 
@@ -64,12 +82,12 @@ class SettingsProvider with ChangeNotifier {
 
   void loadSettings() async {
     final mainDir = await DataPath.selectedDirectory;
-    final layout = await UserLayoutPref.getLayoutView();
-    final folderPriority = await UserSortPref.getFolderPriority();
-    final sortOrder = await UserSortPref.getSortOrder();
-    final titleBar = await UserAdvancedPref.getTitleBarVisibility();
-    final useLatex = await UserAdvancedPref.getLatexSupport();
-    final useFM = await UserAdvancedPref.getFrontmatterSupport();
+    final layout = UserLayoutPref.getLayoutView();
+    final folderPriority = UserSortPref.getFolderPriority();
+    final sortOrder = UserSortPref.getSortOrder();
+    final titleBar = UserAdvancedPref.getTitleBarVisibility();
+    final useLatex = UserAdvancedPref.getLatexSupport();
+    final useFM = UserAdvancedPref.getFrontmatterSupport();
 
     if (mainDir != null) setHiddenFolders(mainDir);
 
@@ -103,12 +121,14 @@ class SettingsProvider with ChangeNotifier {
   void setFolderPriority(String folderPriority) {
     _folderPriority = folderPriority;
     UserSortPref.setFolderPriority(folderPriority);
+    loadItems(null, _currentPath);
     notifyListeners();
   }
 
   void setSortOrder(String sortOrder) {
     _sortOrder = sortOrder;
     UserSortPref.setSortOrder(sortOrder);
+    loadItems(null, _currentPath);
     notifyListeners();
   }
 
@@ -121,61 +141,72 @@ class SettingsProvider with ChangeNotifier {
   void setLatexUse(bool useLatex) {
     _useLatex = useLatex;
     UserAdvancedPref.setLatexSupport(useLatex);
+    loadItems(null, _currentPath);
     notifyListeners();
   }
 
   void setFrontMatterUse(bool useFM) {
     _useFrontmatter = useFM;
     UserAdvancedPref.setFrontmatterSupport(useFM);
+    loadItems(null, _currentPath);
     notifyListeners();
   }
 
-  Future<Map<String, dynamic>> loadItems(
-    BuildContext context,
-    String? folderPath,
+  Future<void> loadTrash(String trashPath) async {
+    _trashItems = await StorageSystem.listFolderContents(Uri.parse(trashPath),
+        showHidden: true);
+    notifyListeners();
+  }
+
+  Future<void> loadArchive(String archivePath) async {
+    _archiveItems = await StorageSystem.listFolderContents(
+        Uri.parse(archivePath),
+        showHidden: true);
+    notifyListeners();
+  }
+
+  Future<void> loadItems(
+    BuildContext? context,
+    String folder,
   ) async {
-    final mainPath = context.read<SettingsProvider>().mainDir;
-    String directory = folderPath ?? mainPath;
-    String folderPriority = context.read<SettingsProvider>().folderPriority;
-    String sortOrder = context.read<SettingsProvider>().sortOrder;
     String currentFolderName = 'Notes';
     bool isTag = false;
     List<FileSystemEntity> filesWithTags = [];
 
     // Check if path not a file, if not, check if it is a tag, if not, return to mainDir
-    if (!await FileSystemEntity.isDirectory(directory)) {
-      if (directory.startsWith('#')) {
+    if (!await FileSystemEntity.isDirectory(folder)) {
+      if (folder.startsWith('#')) {
         isTag = true;
         Map<String, List<String>> tagMap = await getTagMap();
-        if (tagMap[directory] != null) {
-          filesWithTags.addAll(tagMap[directory]!.map((e) => File(e)));
+        if (tagMap[folder] != null) {
+          filesWithTags.addAll(tagMap[folder]!.map((e) => File(e)));
         }
       } else {
-        if (context.mounted) {
+        if (context != null && context.mounted) {
           context.read<NavigationProvider>().routeHistory.clear();
-          context.read<NavigationProvider>().routeHistory.add(mainPath);
+          context.read<NavigationProvider>().routeHistory.add(mainDir);
         }
-        directory = mainPath;
+        folder = mainDir;
       }
     }
 
     final items = isTag
         ? filesWithTags
-        : await StorageSystem.listFolderContents(directory);
+        : await StorageSystem.listFolderContents(Uri.parse(folder));
     final sortedItems =
-        ItemSortHandler.getSortedItems(items, folderPriority, sortOrder);
+        ItemSortHandler(sortOrder, folderPriority).getSortedItems(items);
     if (isTag) {
-      currentFolderName = directory;
-    } else if (directory != mainPath) {
-      currentFolderName = path.basename(directory);
+      currentFolderName = folder;
+    } else if (folder != mainDir) {
+      currentFolderName = path.basename(folder);
     } else {
       currentFolderName;
     }
 
-    return {
-      'items': sortedItems,
-      'currentPath': directory,
-      'currentFolderName': currentFolderName,
-    };
+    _items = sortedItems;
+    _currentPath = folder;
+    _currentFolderName = currentFolderName;
+
+    notifyListeners();
   }
 }

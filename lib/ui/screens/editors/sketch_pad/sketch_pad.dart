@@ -1,17 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path;
 import 'package:sketch_flow/sketch_flow.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class SketchPad extends StatefulWidget {
-  const SketchPad({super.key, required this.sketchFile});
+  const SketchPad({super.key, required this.sketchUri});
 
-  final File sketchFile;
+  final Uri sketchUri;
 
   @override
   State<SketchPad> createState() => _SketchPadState();
@@ -23,6 +26,7 @@ class _SketchPadState extends State<SketchPad> {
   final GlobalKey _repaintKey = GlobalKey();
   final _scrollController = ScrollController();
 
+  bool _isLoading = true;
   bool _isError = false;
 
   @override
@@ -33,12 +37,15 @@ class _SketchPadState extends State<SketchPad> {
 
   Future<void> _loadData() async {
     try {
-      final data = await widget.sketchFile.readAsBytes();
+      setState(() => _isLoading = true);
+      final data = await File.fromUri(widget.sketchUri).readAsBytes();
 
       _sketchController.fromBson(bson: data);
+      setState(() => _isLoading = false);
     } catch (e) {
       debugPrint('Error loading sketch content: $e');
       setState(() {
+        _isLoading = false;
         _isError = true;
       });
     }
@@ -48,7 +55,8 @@ class _SketchPadState extends State<SketchPad> {
     if (_isError) return true;
 
     try {
-      await widget.sketchFile.writeAsBytes(_sketchController.toBson());
+      await File.fromUri(widget.sketchUri)
+          .writeAsBytes(_sketchController.toBson());
       return true;
     } catch (e) {
       debugPrint('Error saving sketch file: $e');
@@ -95,32 +103,99 @@ class _SketchPadState extends State<SketchPad> {
             ),
             PopupMenuButton(
               itemBuilder: (context) => <PopupMenuEntry>[
-                // PopupMenuItem(
-                //     child: ListTile(
-                //   leading: Icon(Icons.image_outlined),
-                //   title: Text('Export PNG'),
-                //   onTap: () {}, // TODO: make it work
-                // )),
-                // PopupMenuItem(
-                //     child: ListTile(
-                //   leading: Icon(Icons.format_shapes),
-                //   title: Text('Export SVG'),
-                //   onTap: () {}, // TODO: make it work
-                // )),
-
-                // TODO: make another popup menu to share as SVG or PNG
-                // if (!Platform
-                //     .isLinux) // Is currently files not supported by SharePlus
-                //   PopupMenuItem(
-                //     child: ListTile(
-                //       leading: const Icon(Icons.share),
-                //       title: Text('Share'),
-                //       onTap: () {
-                //         SharePlus.instance.share(
-                //             ShareParams(files: [XFile(widget.sketchFile.path)]));
-                //       },
-                //     ),
-                //   ),
+                PopupMenuItem(
+                  child: PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          child: ListTile(
+                        leading: Icon(Icons.image_outlined),
+                        title: Text('Export PNG'),
+                        onTap: () async {
+                          Uint8List? pngBytes = await _sketchController
+                              .extractPNG(repaintKey: _repaintKey);
+                          await FilePicker.platform.saveFile(
+                            dialogTitle: 'Save Sketch',
+                            fileName: path.basename(widget.sketchUri
+                                .toFilePath()
+                                .replaceFirst('.bson', '.png')),
+                            bytes: pngBytes!,
+                            type: FileType.image,
+                          );
+                        },
+                      )),
+                      PopupMenuItem(
+                          child: ListTile(
+                        leading: Icon(Icons.format_shapes),
+                        title: Text('Export SVG'),
+                        onTap: () async {
+                          Uint8List svgBytes = Uint8List.fromList(
+                              _sketchController
+                                  .extractSVG(
+                                      width: MediaQuery.sizeOf(context).width,
+                                      height: MediaQuery.sizeOf(context).height)
+                                  .codeUnits);
+                          await FilePicker.platform.saveFile(
+                            dialogTitle: 'Save Sketch',
+                            fileName: path.basename(widget.sketchUri
+                                .toFilePath()
+                                .replaceFirst('.bson', '.svg')),
+                            bytes: svgBytes,
+                            type: FileType.image,
+                          );
+                        },
+                      )),
+                    ],
+                    child: ListTile(
+                      leading: Icon(Icons.file_download),
+                      title: const Text('Export'),
+                    ),
+                  ),
+                ),
+                if (!Platform
+                    .isLinux) // Is currently files not supported by SharePlus
+                  PopupMenuItem(
+                    child: PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                            child: ListTile(
+                          leading: Icon(Icons.image_outlined),
+                          title: const Text('Share PNG'),
+                          onTap: () async {
+                            Uint8List? pngBytes = await _sketchController
+                                .extractPNG(repaintKey: _repaintKey);
+                            SharePlus.instance.share(ShareParams(files: [
+                              XFile.fromData(pngBytes!,
+                                  name: 'sketch', mimeType: 'image/png'),
+                            ]));
+                          },
+                        )),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: Icon(Icons.format_shapes),
+                            title: const Text('Share SVG'),
+                            onTap: () {
+                              Uint8List svgBytes = Uint8List.fromList(
+                                  _sketchController
+                                      .extractSVG(
+                                          width:
+                                              MediaQuery.sizeOf(context).width,
+                                          height:
+                                              MediaQuery.sizeOf(context).height)
+                                      .codeUnits);
+                              SharePlus.instance.share(ShareParams(files: [
+                                XFile.fromData(svgBytes,
+                                    name: 'sketch', mimeType: 'image/svg+xml'),
+                              ]));
+                            },
+                          ),
+                        ),
+                      ],
+                      child: ListTile(
+                        leading: const Icon(Icons.share),
+                        title: Text('Share'),
+                      ),
+                    ),
+                  ),
                 PopupMenuItem(
                   child: ListTile(
                     leading: const Icon(Icons.folder_open),
@@ -129,22 +204,27 @@ class _SketchPadState extends State<SketchPad> {
                     textColor: mobileNullColor(context),
                   ),
                   onTap: () async =>
-                      await openExplorer(context, widget.sketchFile.path),
+                      await openExplorer(context, widget.sketchUri),
                 ),
               ],
             )
           ],
         ),
-        body: _isError
+        body: _isLoading
             ? Center(
-                child: Text('Error loading sketch data'),
+                child: CircularProgressIndicator(),
               )
-            : Center(
-                child: SketchBoard(
-                  controller: _sketchController,
-                  repaintKey: _repaintKey,
-                ),
-              ),
+            : _isError
+                ? Center(
+                    child: Text(
+                        'Error loading sketch data, try reopening file again'),
+                  )
+                : Center(
+                    child: SketchBoard(
+                      controller: _sketchController,
+                      repaintKey: _repaintKey,
+                    ),
+                  ),
         bottomNavigationBar: Scrollbar(
           controller: _scrollController,
           thumbVisibility: true,

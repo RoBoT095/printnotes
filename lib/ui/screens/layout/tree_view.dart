@@ -49,11 +49,12 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
   }
 
   Future<List<Node>> getTree(String dir) async {
-    List<FileSystemEntity> items = await StorageSystem.listFolderContents(dir);
-    items = ItemSortHandler.getSortedItems(
+    List<FileSystemEntity> items =
+        await StorageSystem.listFolderContents(Uri.parse(dir));
+    items = ItemSortHandler(context.read<SettingsProvider>().sortOrder,
+            context.read<SettingsProvider>().folderPriority)
+        .getSortedItems(
       items,
-      context.read<SettingsProvider>().folderPriority,
-      context.read<SettingsProvider>().sortOrder,
     );
     bool useFM = context.read<SettingsProvider>().useFrontmatter;
 
@@ -110,7 +111,7 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
               onTap: node is FileNode
                   ? () => context
                       .read<NavigationProvider>()
-                      .routeItemToPage(context, File(node.data!.path))
+                      .routeItemToPage(context, File(node.data!.path).uri)
                   : null,
               onLongPress: () => showBottomMenu(
                 context,
@@ -153,14 +154,14 @@ extension on ExplorableNode {
 
     if (this is FileNode) {
       final file = data as TFile;
-      if (fileTypeChecker(File(file.path)) == CFileType.image) {
+      if (fileTypeChecker(file.path) == CFileType.image) {
         return Icon(Icons.image_outlined,
             color: Theme.of(context).colorScheme.primary);
       }
-      if (fileTypeChecker(File(file.path)) == CFileType.pdf) {
+      if (fileTypeChecker(file.path) == CFileType.pdf) {
         return const Icon(Icons.picture_as_pdf);
       }
-      if (fileTypeChecker(File(file.path)) == CFileType.sketch) {
+      if (fileTypeChecker(file.path) == CFileType.sketch) {
         return const Icon(Icons.draw);
       }
     }

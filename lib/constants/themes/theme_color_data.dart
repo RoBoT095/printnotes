@@ -19,7 +19,7 @@ class AppThemes {
     primary: Color.fromRGBO(0, 67, 179, 1),
     onPrimary: Colors.white,
     secondary: Color.fromRGBO(68, 138, 255, 1),
-    onSecondary: Colors.black,
+    onSecondary: Colors.white,
     surface: Color.fromRGBO(33, 33, 33, 1),
     onSurface: Colors.white,
     surfaceContainer: Color.fromRGBO(41, 43, 44, 1),

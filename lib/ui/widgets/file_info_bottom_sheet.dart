@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:printnotes/utils/file_info.dart';
 
-Future modalShowFileInfo(BuildContext context, String filePath) =>
+Future modalShowFileInfo(BuildContext context, Uri fileUri) =>
     showModalBottomSheet(
       context: context,
       useSafeArea: true,
       isScrollControlled: true,
       builder: (context) {
-        File file = File(filePath);
+        File file = File.fromUri(fileUri);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -21,13 +21,13 @@ Future modalShowFileInfo(BuildContext context, String filePath) =>
                 textAlign: TextAlign.center,
               ),
             ),
-            statListTile('Character Count:', getCharacterCount(filePath)),
-            statListTile('Word Count:', getWordCount(filePath)),
+            statListTile('Character Count:', getCharacterCount(fileUri)),
+            statListTile('Word Count:', getWordCount(fileUri)),
             statListTile(
                 'File Size:', getFileSizeString(bytes: file.statSync().size)),
             statListTile('Last Modified:',
                 getFormattedDate(date: file.statSync().modified)),
-            statListTile('Location:', file.path),
+            statListTile('Location:', fileUri.toFilePath()),
             const SizedBox(height: 50)
           ],
         );

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:printnotes/constants/constants.dart';
 
 enum CFileType {
@@ -9,14 +9,15 @@ enum CFileType {
   unknown,
 }
 
-CFileType fileTypeChecker(FileSystemEntity file) {
-  if (allowedNoteExtensions.any((ext) => file.path.endsWith(ext))) {
+CFileType fileTypeChecker(String itemPath) {
+  String extension = path.extension(itemPath);
+  if (allowedNoteExtensions.any((ext) => ext == extension)) {
     return CFileType.note;
-  } else if (allowedImageExtensions.any((ext) => file.path.endsWith(ext))) {
+  } else if (allowedImageExtensions.any((ext) => ext == extension)) {
     return CFileType.image;
-  } else if (allowedPdfExtensions.any((ext) => file.path.endsWith(ext))) {
+  } else if (allowedPdfExtensions.any((ext) => ext == extension)) {
     return CFileType.pdf;
-  } else if (allowedSketchExtensions.any((ext) => file.path.endsWith(ext))) {
+  } else if (allowedSketchExtensions.any((ext) => ext == extension)) {
     return CFileType.sketch;
   } else {
     return CFileType.unknown;

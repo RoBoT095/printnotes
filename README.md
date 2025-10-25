@@ -12,15 +12,14 @@
 
 ## Features
 
-- Supports Markdown... obviously
-- Supports LaTeX used for math notation: <a href='https://quickref.me/latex'>cheatsheet</a>
+- Supports extended Markdown syntax
+- Supports LaTeX used for math notation: <a target='_blank' href='https://quickref.me/latex'>cheatsheet</a>
 - Supports Frontmatter for metadata and styling like title, description, color, and background
-- Stores notes locally on device
+- All notes/files are stored locally on device
+- Draw ideas with a sketchpad saved as `.bson` files
 - Follows system folder structure to better organize notes
 - Can view images and pdf files found in apps directory and from external folders
-- Extensive Customizations
-- Draw ideas with a sketchpad saved as `.bson`
-- Toolbar for easy markdown editing (expanded from [simple_markdown_editor](https://github.com/zahniar88/simple_markdown_editor)'s toolbar)
+- Extensive customizations from custom themes to wallpapers
 <!-- - Supports Windows, Mac, Linux, Android, and iOS -->
 
 ---
@@ -136,6 +135,7 @@ In other words, compiling can only be done on device you are compiling for (ex: 
 
 - `linux`: Build a Linux desktop application.
 - `windows`: Build a Windows desktop application.
+  - Read this: https://github.com/espresso3389/pdfrx/tree/master/packages/pdfrx#note-for-windows
 - `macos`: Build a MacOS desktop application.
   - `ipa`: Build an iOS App Store Package from app.
 

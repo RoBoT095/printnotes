@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:printnotes/main.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:printnotes/constants/constants.dart';
 import 'package:printnotes/utils/storage_system.dart';
@@ -40,14 +40,13 @@ class DataPath {
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_prefKey, dirPath);
+
+    App.localStorage.setString(_prefKey, dirPath);
   }
 
   static Future<String?> get selectedDirectory async {
     if (_selectedDirectory == null) {
-      final prefs = await SharedPreferences.getInstance();
-      _selectedDirectory = prefs.getString(_prefKey);
+      _selectedDirectory = App.localStorage.getString(_prefKey);
       if (_selectedDirectory == null) {
         final appDir = await getApplicationDocumentsDirectory();
         return _selectedDirectory = appDir.path;
@@ -62,30 +61,33 @@ class DataPath {
 
   // Hidden app config file called .main_config.json
 
-  static File get configFile =>
+  static File get mainConfigFile =>
       File(path.join(hiddenFolderPath, 'main_config.json'));
 
-  // Create and load contents of config file
-  static Map<String, dynamic> loadJsonConfigFile() {
-    if (!configFile.existsSync()) configFile.createSync(recursive: true);
-    if (configFile.readAsStringSync().isEmpty) {
-      configFile.writeAsStringSync('{}');
+  static File get toolbarConfigFile =>
+      File(path.join(hiddenFolderPath, 'toolbar_config.json'));
+
+  // Create and load contents of a config file
+  static Map<String, dynamic> loadJsonConfigFile(File file) {
+    if (!file.existsSync()) file.createSync(recursive: true);
+    if (file.readAsStringSync().isEmpty) {
+      file.writeAsStringSync('{}');
     }
 
-    final configJsonString = configFile.readAsStringSync();
-    return jsonDecode(configJsonString);
+    final fileString = file.readAsStringSync();
+    return jsonDecode(fileString);
   }
 
   // Write to config file
-  static void saveJsonConfigFile(Map<String, dynamic> configData) async {
-    final configJsonString =
-        const JsonEncoder.withIndent('  ').convert(configData);
-    configFile.writeAsStringSync(configJsonString);
+  static void saveJsonConfigFile(
+      File file, Map<String, dynamic> configData) async {
+    final fileString = const JsonEncoder.withIndent('  ').convert(configData);
+    file.writeAsStringSync(fileString);
   }
 
   // Deletes and regenerates json file
-  static void deleteJsonConfigFile() async {
-    configFile.delete().then((_) => loadJsonConfigFile());
+  static void deleteJsonConfigFile(File file) async {
+    file.delete().then((_) => loadJsonConfigFile(file));
   }
 
   // Create a folder to store all the users upload images to use as a background
@@ -118,7 +120,7 @@ class DataPath {
       await Directory(bgImagesFolderPath).create(recursive: true);
     }
     final imagesDir =
-        await StorageSystem.listFolderContents(bgImagesFolderPath);
+        await StorageSystem.listFolderContents(Uri.parse(bgImagesFolderPath));
     for (FileSystemEntity item in imagesDir) {
       if (allowedImageExtensions.any((ext) => item.path.endsWith(ext))) {
         imgList.add(item.path);

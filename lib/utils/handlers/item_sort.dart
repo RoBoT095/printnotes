@@ -2,12 +2,16 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 
 class ItemSortHandler {
-  static List<FileSystemEntity> getSortedItems(
-      List<FileSystemEntity> items, String folderPriority, String sortOrder) {
+  final String sortOrder;
+  final String folderPriority;
+
+  ItemSortHandler(this.sortOrder, this.folderPriority);
+
+  List<FileSystemEntity> getSortedItems(List<FileSystemEntity> items) {
     return _folderPrioritySort(items, folderPriority, sortOrder);
   }
 
-  static List<FileSystemEntity> _folderPrioritySort(
+  List<FileSystemEntity> _folderPrioritySort(
       List<FileSystemEntity> items, String folderPriority, String sortOrder) {
     List<FileSystemEntity> folders = [];
     List<FileSystemEntity> files = [];
@@ -20,8 +24,8 @@ class ItemSortHandler {
       }
     }
 
-    folders = _sortItems(folders, sortOrder);
-    files = _sortItems(files, sortOrder);
+    folders = _sortItems(folders);
+    files = _sortItems(files);
 
     switch (folderPriority) {
       case 'above':
@@ -29,12 +33,11 @@ class ItemSortHandler {
       case 'below':
         return [...files, ...folders];
       default:
-        return _sortItems(items, sortOrder);
+        return _sortItems(items);
     }
   }
 
-  static List<FileSystemEntity> _sortItems(
-      List<FileSystemEntity> items, String sortOrder) {
+  List<FileSystemEntity> _sortItems(List<FileSystemEntity> items) {
     switch (sortOrder) {
       case 'default':
         return items;

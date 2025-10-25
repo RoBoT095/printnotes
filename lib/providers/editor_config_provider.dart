@@ -17,8 +17,8 @@ class EditorConfigProvider with ChangeNotifier {
     loadEditorConfig();
   }
 
-  void loadEditorConfig() async {
-    final fontSize = await UserEditorConfig.getFontSize();
+  void loadEditorConfig() {
+    final fontSize = UserEditorConfig.getFontSize();
     final toolbarConfig = loadToolbarLoadout();
 
     setFontSize(fontSize);

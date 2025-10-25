@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
+
 import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemCreationHandler {
-  static Future<void> handleCreateNewFolder(
-    BuildContext context,
-    String currentPath,
-    Function loadItems,
-  ) async {
-    final dialogResult =
-        await showNameInputDialog(context, 'Enter folder name');
+  final BuildContext context;
+
+  ItemCreationHandler(this.context);
+
+  Future<void> handleCreateNewFolder(String currentPath) async {
+    final dialogResult = await showNameInputDialog('Enter folder name');
     String folderName = dialogResult['name'];
     bool folderSubmitted = dialogResult['submitted'];
     if (folderSubmitted == true && folderName.isNotEmpty) {
@@ -25,12 +26,14 @@ class ItemCreationHandler {
             parentPath: currentPath);
         final selectedDir = await DataPath.selectedDirectory;
         if (context.mounted) {
+          final readSettProv = context.read<SettingsProvider>();
+          readSettProv.loadItems(context, readSettProv.currentPath);
+
           customSnackBar(
                   'Folder created: ${path.relative(newFolderPath, from: selectedDir)}',
                   type: 'success')
               .show(context);
         }
-        loadItems();
       } catch (e) {
         if (context.mounted) {
           customSnackBar('Error creating folder: $e', type: 'error')
@@ -40,12 +43,8 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<void> handleCreateNewNote(
-    BuildContext context,
-    String currentPath,
-    Function loadItems,
-  ) async {
-    final dialogResult = await showNameInputDialog(context, 'Enter note name');
+  Future<void> handleCreateNewNote(String currentPath) async {
+    final dialogResult = await showNameInputDialog('Enter note name');
     String noteName = dialogResult['name'];
     bool noteSubmitted = dialogResult['submitted'];
     if (noteSubmitted && noteName.isNotEmpty) {
@@ -53,13 +52,14 @@ class ItemCreationHandler {
         await StorageSystem.createFile(noteName, parentPath: currentPath)
             .then((e) {
           if (context.mounted) {
+            final readSettProv = context.read<SettingsProvider>();
+            readSettProv.loadItems(context, readSettProv.currentPath);
+
             context
                 .read<NavigationProvider>()
-                .routeItemToPage(context, File(e));
+                .routeItemToPage(context, File(e).uri);
           }
         });
-
-        loadItems();
       } catch (e) {
         if (context.mounted) {
           customSnackBar('Error creating note: $e', type: 'error')
@@ -69,13 +69,10 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<void> handleCreateNewSketch(
-    BuildContext context,
+  Future<void> handleCreateNewSketch(
     String currentPath,
-    Function loadItems,
   ) async {
-    final dialogResult =
-        await showNameInputDialog(context, 'Enter sketch name');
+    final dialogResult = await showNameInputDialog('Enter sketch name');
     String sketchName = dialogResult['name'];
     bool noteSubmitted = dialogResult['submitted'];
     if (noteSubmitted && sketchName.isNotEmpty) {
@@ -84,13 +81,14 @@ class ItemCreationHandler {
                 parentPath: currentPath)
             .then((e) {
           if (context.mounted) {
+            final readSettProv = context.read<SettingsProvider>();
+            readSettProv.loadItems(context, readSettProv.currentPath);
+
             context
                 .read<NavigationProvider>()
-                .routeItemToPage(context, File(e));
+                .routeItemToPage(context, File(e).uri);
           }
         });
-
-        loadItems();
       } catch (e) {
         if (context.mounted) {
           customSnackBar('Error creating sketch file: $e', type: 'error')
@@ -100,8 +98,7 @@ class ItemCreationHandler {
     }
   }
 
-  static Future<Map<String, dynamic>> showNameInputDialog(
-      BuildContext context, String title) async {
+  Future<Map<String, dynamic>> showNameInputDialog(String title) async {
     String? name;
     bool submitted = false;
     await showDialog(

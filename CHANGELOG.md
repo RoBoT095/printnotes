@@ -2,7 +2,16 @@
 
 > Moved DevLog into separate file
 
-## v0.10.3
+## v0.10.4 - Oct 25, 2025
+
+### Changes:
+
+- Redesign of the Settings screens and About page
+- Improved tag parsing
+- Added Superscript and Subscript markdown syntax
+- Moved toolbar config to separate json file
+
+## v0.10.3 - Sept 14, 2025
 
 ### Changes:
 

@@ -26,17 +26,17 @@ class CustomizationProvider with ChangeNotifier {
   double get noteEditorPadding => _noteEditorPadding;
   int get previewLength => _previewLength;
 
-  void loadCustomizations() async {
-    final bgImgPath = await UserStylePref.getBgImagePath();
-    final bgImgOpacity = await UserStylePref.getBgImageOpacity();
-    final bgImgFit = await UserStylePref.getBgImageFit();
-    final bgImgRepeat = await UserStylePref.getBgImageRepeat();
-    final noteTileOpacity = await UserStylePref.getNoteTileOpacity();
-    final noteTileShape = await UserStylePref.getNoteTileShape();
-    final noteTilePadding = await UserStylePref.getNoteTilePadding();
-    final noteTileSpacing = await UserStylePref.getNoteTileSpacing();
-    final noteEditorPadding = await UserStylePref.getNoteEditorPadding();
-    final previewLength = await UserLayoutPref.getNotePreviewLength();
+  void loadCustomizations() {
+    final bgImgPath = UserStylePref.getBgImagePath();
+    final bgImgOpacity = UserStylePref.getBgImageOpacity();
+    final bgImgFit = UserStylePref.getBgImageFit();
+    final bgImgRepeat = UserStylePref.getBgImageRepeat();
+    final noteTileOpacity = UserStylePref.getNoteTileOpacity();
+    final noteTileShape = UserStylePref.getNoteTileShape();
+    final noteTilePadding = UserStylePref.getNoteTilePadding();
+    final noteTileSpacing = UserStylePref.getNoteTileSpacing();
+    final noteEditorPadding = UserStylePref.getNoteEditorPadding();
+    final previewLength = UserLayoutPref.getNotePreviewLength();
 
     setBgImagePath(bgImgPath);
     setBgImageOpacity(bgImgOpacity);

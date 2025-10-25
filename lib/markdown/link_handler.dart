@@ -31,7 +31,7 @@ Future<void> linkHandler(BuildContext context, String url) async {
     launchUrl(parsedUri);
   } else {
     final allFiles = await StorageSystem.listFolderContents(
-      context.read<SettingsProvider>().mainDir,
+      Uri.parse(context.read<SettingsProvider>().mainDir),
       recursive: true,
       showHidden: true,
     );
@@ -43,7 +43,7 @@ Future<void> linkHandler(BuildContext context, String url) async {
           context.mounted) {
         context
             .read<NavigationProvider>()
-            .routeItemToPage(context, item, jumpToHeader: jumpToHeader);
+            .routeItemToPage(context, item.uri, jumpToHeader: jumpToHeader);
         break;
       }
     }

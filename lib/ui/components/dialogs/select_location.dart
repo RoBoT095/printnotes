@@ -7,11 +7,11 @@ class SelectLocationDialog extends StatefulWidget {
   const SelectLocationDialog({
     super.key,
     required this.baseDir,
-    required this.items,
+    required this.itemUris,
   });
 
   final String baseDir;
-  final List<FileSystemEntity> items;
+  final List<Uri> itemUris;
 
   @override
   State<SelectLocationDialog> createState() => _SelectLocationDialogState();
@@ -29,14 +29,17 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
   }
 
   Future<void> _loadDirectories() async {
-    final contents = await StorageSystem.listFolderContents(_currentDir);
+    final contents =
+        await StorageSystem.listFolderContents(Uri.parse(_currentDir));
+    final isDirectory =
+        await FileSystemEntity.isDirectory(widget.itemUris.first.toFilePath());
     setState(() {
       _directories = contents.whereType<Directory>().toList();
       // Removes the item if it's a directory to prevent moving into itself
-      if (widget.items.length == 1) {
-        FileSystemEntity item = widget.items.first;
-        if (item is Directory) {
-          _directories.removeWhere((dir) => dir.path == item.path);
+      if (widget.itemUris.length == 1) {
+        if (isDirectory) {
+          _directories.removeWhere(
+              (dir) => dir.path == widget.itemUris.first.toFilePath());
         }
       }
     });
@@ -110,7 +113,8 @@ class _SelectLocationDialogState extends State<SelectLocationDialog> {
         ),
         TextButton(
           child: const Text('Move here'),
-          onPressed: () => Navigator.of(context).pop(_currentDir),
+          onPressed: () =>
+              Navigator.of(context).pop(Uri.directory(_currentDir)),
         ),
       ],
     );

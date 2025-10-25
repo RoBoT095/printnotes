@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:printnotes/markdown/rendering/strikethrough.dart';
+import 'package:printnotes/markdown/rendering/subscript.dart';
+import 'package:printnotes/markdown/rendering/superscript.dart';
 import 'package:provider/provider.dart';
 import './markdown_widget/markdown_widget.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -24,7 +27,7 @@ import 'package:printnotes/markdown/link_handler.dart';
 
 MarkdownConfig theMarkdownConfigs(
   BuildContext context, {
-  required String filePath,
+  required Uri fileUri,
   bool? hideCodeButtons,
   bool inEditor = false,
   Color? textColor,
@@ -102,7 +105,7 @@ MarkdownConfig theMarkdownConfigs(
       sideColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
     ),
     ImgConfig(
-      builder: (url, attributes) => CustomImgBuilder(url, filePath, attributes),
+      builder: (url, attributes) => CustomImgBuilder(url, fileUri, attributes),
     ),
     LinkConfig(onTap: (url) => linkHandler(context, url)),
     WikiLinkConfig(onTap: (url) => linkHandler(context, url)),
@@ -144,17 +147,22 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
   return MarkdownGenerator(
     generators: [
       if (context.watch<SettingsProvider>().useLatex) latexGenerator,
-      // wikiLinkGeneratorWithTag,
+      noteTagGenerator,
       highlighterGeneratorWithTag,
       underlineGeneratorWithTag,
-      noteTagGenerator,
+      strikethroughGeneratorWithTag,
+      superscriptGeneratorWithTag,
+      subscriptGeneratorWithTag,
     ],
     inlineSyntaxList: [
       if (context.watch<SettingsProvider>().useLatex) LatexSyntax(),
+      NoteTagSyntax(),
       WikiLinkSyntax(),
       HighlighterSyntax(),
       UnderlineSyntax(),
-      NoteTagSyntax()
+      StrikethroughSyntax(),
+      SuperscriptSyntax(),
+      SubscriptSyntax(),
     ],
     textGenerator: (node, config, visitor) =>
         CustomTextNode(node.textContent, config, visitor),
@@ -168,7 +176,7 @@ MarkdownGenerator theMarkdownGenerators(BuildContext context,
 Widget buildMarkdownWidget(
   BuildContext context, {
   required String data,
-  required String filePath,
+  required Uri fileUri,
   AutoScrollController? controller,
   TocController? tocController,
   ScrollPhysics? physics,
@@ -182,7 +190,7 @@ Widget buildMarkdownWidget(
     physics: physics,
     shrinkWrap: shrinkWrap,
     selectable: selectable ?? true,
-    config: theMarkdownConfigs(context, filePath: filePath, inEditor: true),
+    config: theMarkdownConfigs(context, fileUri: fileUri, inEditor: true),
     markdownGenerator: theMarkdownGenerators(context),
   );
 }

@@ -1,11 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemArchiveHandler {
-  static Future<void> handleArchiveItem(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  final BuildContext context;
+
+  ItemArchiveHandler(this.context);
+
+  Future<void> handleArchiveItem(FileSystemEntity item) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -28,14 +34,16 @@ class ItemArchiveHandler {
             onPressed: () async {
               Navigator.of(context).pop();
               try {
-                await StorageSystem.archiveItem(item.path);
+                await StorageSystem.archiveItem(item.uri);
                 if (context.mounted) {
+                  final readSettProv = context.read<SettingsProvider>();
+                  readSettProv.loadItems(context, readSettProv.currentPath);
+
                   customSnackBar(
                           '${item is Directory ? 'Folder' : 'File'} archived successfully',
                           type: 'success')
                       .show(context);
                 }
-                loadItems();
               } catch (e) {
                 if (context.mounted) {
                   customSnackBar('Error archiving item: $e', type: 'error')
@@ -49,8 +57,8 @@ class ItemArchiveHandler {
     );
   }
 
-  static Future<void> handleUnarchiveItem(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+  Future<void> handleUnarchiveItem(
+      FileSystemEntity item, Function loadItems) async {
     try {
       await StorageSystem.unarchiveItem(item.path);
       if (context.mounted) {

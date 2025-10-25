@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
 import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -29,10 +30,9 @@ import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen(
-      {super.key, required this.filePath, this.jumpToHeader});
+  const NoteEditorScreen({super.key, required this.fileUri, this.jumpToHeader});
 
-  final String filePath;
+  final Uri fileUri;
   final String? jumpToHeader;
 
   @override
@@ -52,7 +52,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   late final TextEditingController _notesController;
   late final AutoScrollController _autoScrollController;
   late final TocController _tocController;
-  late final FocusNode _focusNode;
+  late final FocusNode _noteFocusNode;
   late final UndoHistoryController _undoHistoryController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -76,7 +76,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _notesController = TextEditingController();
     _autoScrollController = AutoScrollController();
     _tocController = TocController();
-    _focusNode = FocusNode();
+    _noteFocusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
 
@@ -87,7 +87,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   /// Load the passed files contents and set the state
   Future<void> _loadFileContent() async {
     try {
-      final file = File(widget.filePath);
+      final file = File.fromUri(widget.fileUri);
       final content = await file.readAsString();
       final lastMod = await file.lastModified();
 
@@ -98,7 +98,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         _hasUnsavedChanges = false;
 
         if (mounted &&
-            !widget.filePath
+            !widget.fileUri
+                .toFilePath()
                 .contains(context.read<SettingsProvider>().mainDir)) {
           _readOnlyMode = true;
         }
@@ -129,7 +130,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     if (_isError || _isLoading) return;
 
     try {
-      final file = File(widget.filePath);
+      final file = File.fromUri(widget.fileUri);
       final lastMod = await file.lastModified();
 
       if (_lastModifiedTime != null &&
@@ -170,7 +171,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   Future<bool> _saveFileContent(BuildContext context) async {
     if (_isError) return true;
     try {
-      final file = File(widget.filePath);
+      final file = File.fromUri(widget.fileUri);
       await file.writeAsString(_notesController.text);
 
       _lastModifiedTime = DateTime.now();
@@ -231,7 +232,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           child: AppBar(
             centerTitle: false,
             title: SelectableText(
-              fmTitle ?? widget.filePath.split('/').last,
+              fmTitle ?? path.basename(widget.fileUri.toFilePath()),
               maxLines: 1,
             ),
             actions: _isError
@@ -260,7 +261,24 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             title: Text('Info'),
                           ),
                           onTap: () =>
-                              modalShowFileInfo(context, widget.filePath),
+                              modalShowFileInfo(context, widget.fileUri),
+                        ),
+                        // PopupMenuItem(
+                        //   child: ListTile(
+                        //     leading: const Icon(Icons.find_in_page_outlined),
+                        //     title: Text('Find in page...'),
+                        //     onTap: () {},
+                        //   ),
+                        // ),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: const Icon(Icons.share),
+                            title: Text('Share'),
+                            onTap: () {
+                              SharePlus.instance.share(
+                                  ShareParams(text: _notesController.text));
+                            },
+                          ),
                         ),
                         PopupMenuItem(
                           child: const ListTile(
@@ -274,23 +292,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         ),
                         PopupMenuItem(
                           child: ListTile(
-                            leading: const Icon(Icons.share),
-                            title: Text('Share'),
-                            onTap: () {
-                              SharePlus.instance.share(
-                                  ShareParams(text: _notesController.text));
-                            },
-                          ),
-                        ),
-                        PopupMenuItem(
-                          child: ListTile(
                             leading: const Icon(Icons.folder_open),
                             title: const Text("Open Location"),
                             iconColor: mobileNullColor(context),
                             textColor: mobileNullColor(context),
                           ),
                           onTap: () async =>
-                              await openExplorer(context, widget.filePath),
+                              await openExplorer(context, widget.fileUri),
                         ),
                       ],
                     ),
@@ -369,7 +377,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       );
 
   Widget buildMarkdownView(String previewBody) {
-    if (widget.filePath.endsWith('.csv')) {
+    if (widget.fileUri.toFilePath().endsWith('.csv')) {
       previewBody = csvToMarkdownTable(previewBody);
     }
     return SafeArea(
@@ -408,7 +416,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _isError
-                  ? const Center(child: Text('Error Reading File'))
+                  ? const Center(
+                      child:
+                          Text('Error reading file, try reopening file again'))
                   // Catch if "ctrl+shift+v" was used to switch between
                   // edit and preview mode
                   : Shortcuts(
@@ -426,49 +436,52 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         },
                         child: Focus(
                           autofocus: true,
-                          focusNode: _focusNode,
-                          child: SingleChildScrollView(
-                            controller: _autoScrollController,
-                            child: Padding(
+                          focusNode: _noteFocusNode,
+                          child: ListView(
+                              shrinkWrap: true,
+                              controller: _autoScrollController,
                               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              child: _isEditingFile
-                                  ? EditorField(
-                                      controller: _notesController,
-                                      onChanged: (value) => _setUpAutoSave(),
-                                      undoController: _undoHistoryController,
-                                      fontSize: context
-                                          .watch<EditorConfigProvider>()
-                                          .fontSize,
-                                    )
-                                  : GestureDetector(
-                                      // Check if double tap to change to edit mode
-                                      onDoubleTap: _toggleMode,
-                                      child: _notesController.text.isEmpty
-                                          // If note is empty so message
-                                          ? SizedBox(
-                                              height: MediaQuery.sizeOf(context)
-                                                  .height,
-                                              child: Text(
-                                                'Double click screen or hit the pencil icon in the top right corner to write!',
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .hintColor),
+                              children: [
+                                _isEditingFile
+                                    ? EditorField(
+                                        controller: _notesController,
+                                        onChanged: (value) => _setUpAutoSave(),
+                                        undoController: _undoHistoryController,
+                                        fontSize: context
+                                            .watch<EditorConfigProvider>()
+                                            .fontSize,
+                                      )
+                                    : GestureDetector(
+                                        // Check if double tap to change to edit mode
+                                        onDoubleTap: _toggleMode,
+                                        child: _notesController.text.isEmpty
+                                            // If note is empty so message
+                                            ? SizedBox(
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                        .height,
+                                                child: Text(
+                                                  'Double click screen or hit the pencil icon in the top right corner to write!',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .hintColor),
+                                                ),
+                                              )
+                                            // Parse and render the markdown text
+                                            : buildMarkdownWidget(
+                                                context,
+                                                data: previewBody,
+                                                fileUri: widget.fileUri,
+                                                controller:
+                                                    _autoScrollController,
+                                                tocController: _tocController,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
                                               ),
-                                            )
-                                          // Parse and render the markdown text
-                                          : buildMarkdownWidget(
-                                              context,
-                                              data: previewBody,
-                                              filePath: widget.filePath,
-                                              controller: _autoScrollController,
-                                              tocController: _tocController,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                            ),
-                                    ),
-                            ),
-                          ),
+                                      ),
+                                SizedBox(height: 100),
+                              ]),
                         ),
                       ),
                     ),
@@ -484,7 +497,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
 
     _notesController.dispose();
-    _focusNode.dispose();
+    _autoScrollController.dispose();
+    _tocController.dispose();
+    _noteFocusNode.dispose();
+    _undoHistoryController.dispose();
+
     _fileCheckTimer?.cancel();
     _autoSaveTimer?.cancel();
     _scrollToHeader?.cancel();

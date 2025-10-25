@@ -15,6 +15,9 @@ else
   exit 1
 fi
 
+# Remove WASM binaries as they are not needed
+dart run pdfrx:remove_wasm_modules
+
 # Build linux binaries 
 flutter build linux --release || { echo "Flutter build failed"; exit 1; }
 

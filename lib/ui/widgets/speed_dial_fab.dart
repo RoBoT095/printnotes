@@ -5,37 +5,38 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/utils/handlers/item_create.dart';
 
-Widget speedDialFAB(
-    BuildContext context, String currentFolder, Function loadItems) {
+Widget speedDialFAB(BuildContext context, String currentFolder) {
   return SpeedDial(
     icon: Icons.add,
     activeIcon: Icons.close,
     childPadding: const EdgeInsets.all(5),
     spaceBetweenChildren: 10,
+    backgroundColor: Theme.of(context).colorScheme.secondary,
+    foregroundColor: Theme.of(context).colorScheme.onSecondary,
     children: [
       SpeedDialChild(
         child: const Icon(Icons.create_new_folder_outlined),
         label: 'Create Folder',
-        onTap: () => ItemCreationHandler.handleCreateNewFolder(
-            context, currentFolder, loadItems),
+        onTap: () async => await ItemCreationHandler(context)
+            .handleCreateNewFolder(currentFolder),
       ),
       SpeedDialChild(
         child: const Icon(Icons.note_add_outlined),
         label: 'Create Note',
-        onTap: () => ItemCreationHandler.handleCreateNewNote(
-            context, currentFolder, loadItems),
+        onTap: () async => await ItemCreationHandler(context)
+            .handleCreateNewNote(currentFolder),
       ),
       SpeedDialChild(
         child: const Icon(Icons.draw),
         label: 'Create Sketch',
-        onTap: () => ItemCreationHandler.handleCreateNewSketch(
-            context, currentFolder, loadItems),
+        onTap: () async => await ItemCreationHandler(context)
+            .handleCreateNewSketch(currentFolder),
       ),
       SpeedDialChild(
         child: const Icon(Icons.folder_copy),
         label: 'Open External File',
-        onTap: () =>
-            context.read<NavigationProvider>().openExternalFile(context),
+        onTap: () async =>
+            await context.read<NavigationProvider>().openExternalFile(context),
       )
     ],
   );

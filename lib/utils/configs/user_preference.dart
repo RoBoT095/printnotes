@@ -1,265 +1,220 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:printnotes/main.dart';
 
 // TODO: Add button to reset all settings including config file
 // Delete all set preferences
-Future<void> clearAllPrefs() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.clear();
+void clearAllPrefs() {
+  App.localStorage.clear();
 }
 
 // For layout selection
 
-// Left it as a string in case I want to add more layouts
 class UserLayoutPref {
-  static Future<void> setLayoutView(String layoutView) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('layoutView', layoutView);
+  // Left it as a string in case I want to add more layouts
+  static void setLayoutView(String layoutView) {
+    App.localStorage.setString('layoutView', layoutView);
   }
 
-  static Future<String> getLayoutView() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('layoutView') ?? 'grid';
+  static String getLayoutView() {
+    return App.localStorage.getString('layoutView') ?? 'grid';
   }
 
   // Note preview length is for how many characters are displayed for each note
   // body on home screen before they get cut off
-  static Future<void> setNotePreviewLength(int viewLength) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('notePreview', viewLength);
+  static void setNotePreviewLength(int viewLength) {
+    App.localStorage.setInt('notePreview', viewLength);
   }
 
-  static Future<int> getNotePreviewLength() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('notePreview') ?? 100;
+  static int getNotePreviewLength() {
+    return App.localStorage.getInt('notePreview') ?? 100;
   }
 }
 
 // For styling of app
 
 class UserThemingPref {
-  static Future<void> setThemeMode(String themeMode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('themeMode', themeMode);
+  static void setThemeMode(String themeMode) {
+    App.localStorage.setString('themeMode', themeMode);
   }
 
-  static Future<String> getThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('themeMode') ?? 'system';
+  static String getThemeMode() {
+    return App.localStorage.getString('themeMode') ?? 'system';
   }
 
-  static Future<void> setColorScheme(String colorScheme) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('colorScheme', colorScheme);
+  static void setColorScheme(String colorScheme) {
+    App.localStorage.setString('colorScheme', colorScheme);
   }
 
-  static Future<String> getColorScheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('colorScheme') ?? 'default';
+  static String getColorScheme() {
+    return App.localStorage.getString('colorScheme') ?? 'default';
   }
 
-  static Future<void> setDynamicColor(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('useDynamicColor', value);
+  static void setDynamicColor(bool value) {
+    App.localStorage.setBool('useDynamicColor', value);
   }
 
-  static Future<bool> getDynamicColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('useDynamicColor') ?? false;
+  static bool getDynamicColor() {
+    return App.localStorage.getBool('useDynamicColor') ?? false;
   }
 
-  static Future<void> setPureBlackBG(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('usePureBlack', value);
+  static void setPureBlackBG(bool value) {
+    App.localStorage.setBool('usePureBlack', value);
   }
 
-  static Future<bool> getPureBlackBG() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('usePureBlack') ?? false;
+  static bool getPureBlackBG() {
+    return App.localStorage.getBool('usePureBlack') ?? false;
   }
 
-  static Future<void> setCodeHighlight(String highlight) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('codeHighlight', highlight);
+  static void setCodeHighlight(String highlight) {
+    App.localStorage.setString('codeHighlight', highlight);
   }
 
-  static Future<String> getCodeHighlight() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('codeHighlight') ?? '';
+  static String getCodeHighlight() {
+    return App.localStorage.getString('codeHighlight') ?? '';
   }
 }
 
 class UserStylePref {
-  static Future<void> setBgImagePath(String? path) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bgImgPath', path ?? '');
+  static void setBgImagePath(String? path) {
+    App.localStorage.setString('bgImgPath', path ?? '');
   }
 
-  static Future<String?> getBgImagePath() async {
-    final prefs = await SharedPreferences.getInstance();
-    final path = prefs.getString('bgImgPath');
+  static String? getBgImagePath() {
+    final path = App.localStorage.getString('bgImgPath');
     return path == '' ? null : path;
   }
 
-  static Future<void> setBgImageOpacity(double opacity) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('bgImgOpacity', opacity);
+  static void setBgImageOpacity(double opacity) {
+    App.localStorage.setDouble('bgImgOpacity', opacity);
   }
 
-  static Future<double> getBgImageOpacity() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('bgImgOpacity') ?? 0.5;
+  static double getBgImageOpacity() {
+    return App.localStorage.getDouble('bgImgOpacity') ?? 0.5;
   }
 
-  static Future<void> setBgImageFit(String fit) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bgImgFit', fit);
+  static void setBgImageFit(String fit) {
+    App.localStorage.setString('bgImgFit', fit);
   }
 
-  static Future<String> getBgImageFit() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('bgImgFit') ?? 'cover';
+  static String getBgImageFit() {
+    return App.localStorage.getString('bgImgFit') ?? 'cover';
   }
 
-  static Future<void> setBgImageRepeat(String repeat) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bgImgRepeat', repeat);
+  static void setBgImageRepeat(String repeat) {
+    App.localStorage.setString('bgImgRepeat', repeat);
   }
 
-  static Future<String> getBgImageRepeat() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('bgImgRepeat') ?? 'noRepeat';
+  static String getBgImageRepeat() {
+    return App.localStorage.getString('bgImgRepeat') ?? 'noRepeat';
   }
 
-  static Future<void> setNoteTileOpacity(double opacity) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('noteTileOpacity', opacity);
+  static void setNoteTileOpacity(double opacity) {
+    App.localStorage.setDouble('noteTileOpacity', opacity);
   }
 
-  static Future<double> getNoteTileOpacity() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('noteTileOpacity') ?? 1;
+  static double getNoteTileOpacity() {
+    return App.localStorage.getDouble('noteTileOpacity') ?? 1;
   }
 
-  static Future<void> setNoteTileShape(String shape) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('noteTileShape', shape);
+  static void setNoteTileShape(String shape) {
+    App.localStorage.setString('noteTileShape', shape);
   }
 
-  static Future<String> getNoteTileShape() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('noteTileShape') ?? 'round';
+  static String getNoteTileShape() {
+    return App.localStorage.getString('noteTileShape') ?? 'round';
   }
 
-  static Future<void> setNoteTilePadding(double padding) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('noteTilePadding', padding);
+  static void setNoteTilePadding(double padding) {
+    App.localStorage.setDouble('noteTilePadding', padding);
   }
 
-  static Future<double> getNoteTilePadding() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('noteTilePadding') ?? 10;
+  static double getNoteTilePadding() {
+    return App.localStorage.getDouble('noteTilePadding') ?? 10;
   }
 
-  static Future<void> setNoteTileSpacing(double spacing) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('noteTileSpacing', spacing);
+  static void setNoteTileSpacing(double spacing) {
+    App.localStorage.setDouble('noteTileSpacing', spacing);
   }
 
-  static Future<double> getNoteTileSpacing() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('noteTileSpacing') ?? 4;
+  static double getNoteTileSpacing() {
+    return App.localStorage.getDouble('noteTileSpacing') ?? 4;
   }
 
-  static Future<void> setNoteEditorPadding(double padding) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('noteEditorPadding', padding);
+  static void setNoteEditorPadding(double padding) {
+    App.localStorage.setDouble('noteEditorPadding', padding);
   }
 
-  static Future<double> getNoteEditorPadding() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('noteEditorPadding') ?? 8;
+  static double getNoteEditorPadding() {
+    return App.localStorage.getDouble('noteEditorPadding') ?? 8;
   }
 }
 
 // For saving what order items should be displayed in
 
 class UserSortPref {
-  static Future<void> setFolderPriority(String folderPriority) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('folderPriority', folderPriority);
+  static void setFolderPriority(String folderPriority) {
+    App.localStorage.setString('folderPriority', folderPriority);
   }
 
-  static Future<String> getFolderPriority() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('folderPriority') ?? 'none';
+  static String getFolderPriority() {
+    return App.localStorage.getString('folderPriority') ?? 'none';
   }
 
-  static Future<void> setSortOrder(String sortOrder) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('sortOrder', sortOrder);
+  static void setSortOrder(String sortOrder) {
+    App.localStorage.setString('sortOrder', sortOrder);
   }
 
-  static Future<String> getSortOrder() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('sortOrder') ?? 'default';
+  static String getSortOrder() {
+    return App.localStorage.getString('sortOrder') ?? 'default';
   }
 }
 
 class UserAdvancedPref {
   // For hiding and showing title bar on desktop
-  static Future<void> setTitleBarVisibility(bool visibility) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('titleBarVisibility', visibility);
+  static void setTitleBarVisibility(bool visibility) {
+    App.localStorage.setBool('titleBarVisibility', visibility);
   }
 
-  static Future<bool> getTitleBarVisibility() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('titleBarVisibility') ?? false;
+  static bool getTitleBarVisibility() {
+    return App.localStorage.getBool('titleBarVisibility') ?? false;
   }
 
   // For having LaTeX rendered or not
-  static Future<void> setLatexSupport(bool latexRendering) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('useLatex', latexRendering);
+  static void setLatexSupport(bool latexRendering) {
+    App.localStorage.setBool('useLatex', latexRendering);
   }
 
-  static Future<bool> getLatexSupport() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('useLatex') ?? false;
+  static bool getLatexSupport() {
+    return App.localStorage.getBool('useLatex') ?? false;
   }
 
   // For using Frontmatter for metadata of not
-  static Future<void> setFrontmatterSupport(bool useFM) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('useFrontmatter', useFM);
+  static void setFrontmatterSupport(bool useFM) {
+    App.localStorage.setBool('useFrontmatter', useFM);
   }
 
-  static Future<bool> getFrontmatterSupport() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('useFrontmatter') ?? false;
+  static bool getFrontmatterSupport() {
+    return App.localStorage.getBool('useFrontmatter') ?? false;
   }
 }
 
 // For Editor settings
 
 class UserEditorConfig {
-  static Future<void> setFontSize(double fontSize) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('editorConfigFontSize', fontSize);
+  static void setFontSize(double fontSize) {
+    App.localStorage.setDouble('editorConfigFontSize', fontSize);
   }
 
-  static Future<double> getFontSize() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble('editorConfigFontSize') ?? 16;
+  static double getFontSize() {
+    return App.localStorage.getDouble('editorConfigFontSize') ?? 16;
   }
 
-  // static Future<void> setToolbarConfig(String config) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('toolbar_config', config);
+  // static void setToolbarConfig(String config)  {
+  //
+  //   App.localStorage.setString('toolbar_config', config);
   // }
 
-  // static Future<String?> getToolbarConfig() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('toolbar_config');
+  // static String? getToolbarConfig()  {
+  //
+  //   return App.localStorage.getString('toolbar_config');
   // }
 }

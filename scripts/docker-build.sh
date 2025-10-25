@@ -28,7 +28,7 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 fi
 
 # Copy the APKs out from container to host machines build dir
-docker cp printnotes-build:/app/output/. $OUTPUT_DIR || { echo "Failed to copy from container"; exit 1; }
+docker cp printnotes-build:/app/rpg/Programming/Github/output/. $OUTPUT_DIR || { echo "Failed to copy from container"; exit 1; }
 
 # Remove the container
 docker rm printnotes-build || { echo "Failed to remove docker container"; exit 1; }

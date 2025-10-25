@@ -23,7 +23,8 @@ class ToolbarConfigItem {
 }
 
 void saveToolbarLoadout(List<ToolbarConfigItem> toolbarConfigList) {
-  final Map<String, dynamic> configFileMap = DataPath.loadJsonConfigFile();
+  final Map<String, dynamic> configFileMap =
+      DataPath.loadJsonConfigFile(DataPath.toolbarConfigFile);
 
   // Object existence check for "toolbarConfig", create if null
   configFileMap['toolbarConfig'] ??= [];
@@ -34,11 +35,12 @@ void saveToolbarLoadout(List<ToolbarConfigItem> toolbarConfigList) {
   // Add to toolbar configurations to json
   configFileMap['toolbarConfig'] = jsonList;
 
-  DataPath.saveJsonConfigFile(configFileMap);
+  DataPath.saveJsonConfigFile(DataPath.toolbarConfigFile, configFileMap);
 }
 
 List<ToolbarConfigItem>? loadToolbarLoadout() {
-  final Map<String, dynamic> configFileMap = DataPath.loadJsonConfigFile();
+  final Map<String, dynamic> configFileMap =
+      DataPath.loadJsonConfigFile(DataPath.toolbarConfigFile);
   if (configFileMap['toolbarConfig'] != null) {
     return (configFileMap['toolbarConfig'] as List)
         .map((e) => ToolbarConfigItem.fromJson(e))

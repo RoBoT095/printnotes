@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
@@ -19,10 +20,10 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
 import 'package:printnotes/ui/screens/home/main_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isLinux || Platform.isWindows) {
-    await windowManager.ensureInitialized();
+    windowManager.ensureInitialized();
   }
   runApp(
     MultiProvider(
@@ -42,30 +43,52 @@ void main() async {
 class App extends StatefulWidget {
   const App({super.key});
 
+  static late SharedPreferences localStorage;
+
+  static Future init() async {
+    localStorage = await SharedPreferences.getInstance();
+  }
+
   @override
   State<App> createState() => _AppState();
 }
 
 class _AppState extends State<App> {
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _checkStorageAccess();
-    _setTitleBarVisibility();
+    loadApp();
   }
 
-  void _setTitleBarVisibility() async {
-    final isTitleBarHidden = await UserAdvancedPref.getTitleBarVisibility();
+  void loadApp() async {
+    await App.init().then(
+      (value) async {
+        await _setTitleBarVisibility();
+        await _checkStorageAccess();
+        if (mounted) {
+          final readSettings = context.read<SettingsProvider>();
+          final readNavProv = context.read<NavigationProvider>();
+          readNavProv.initRouteHistory(readSettings.mainDir);
+        }
+        setState(() => _isLoading = false);
+      },
+    );
+  }
+
+  Future<void> _setTitleBarVisibility() async {
+    final isTitleBarHidden = UserAdvancedPref.getTitleBarVisibility();
     if (Platform.isLinux || Platform.isWindows) {
-      windowManager.setTitleBarStyle(
+      await windowManager.setTitleBarStyle(
           isTitleBarHidden ? TitleBarStyle.hidden : TitleBarStyle.normal);
     }
   }
 
-  void _checkStorageAccess() async {
+  Future<void> _checkStorageAccess() async {
     final String? mainDir = await DataPath.selectedDirectory;
     final Directory defaultDir = await getApplicationDocumentsDirectory();
-    final bool isNewUser = await UserFirstTime.getShowIntro;
+    final bool isNewUser = UserFirstTime.getShowIntro;
 
     if (mainDir != null) {
       if (Platform.isAndroid &&
@@ -81,6 +104,27 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      // Splash Screen to make sure everything loads in
+      return Container(
+        color: Color.fromRGBO(77, 143, 255, 1),
+        width: double.maxFinite,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/app_icon_no-bg.png",
+              height: 200,
+              width: 200,
+            ),
+            SizedBox(height: 100),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.white),
+            ),
+          ],
+        ),
+      );
+    }
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return DynamicColorBuilder(

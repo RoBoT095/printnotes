@@ -66,8 +66,7 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foundItemsList = StorageSystem.searchItems(
-        searchQuery, context.watch<SettingsProvider>().mainDir);
+    final foundItemsList = StorageSystem(context).searchItems(searchQuery);
 
     return FutureBuilder(
       future: foundItemsList,
@@ -92,7 +91,7 @@ class SearchView extends StatelessWidget {
                 if (item is File) {
                   context
                       .read<NavigationProvider>()
-                      .routeItemToPage(context, item);
+                      .routeItemToPage(context, item.uri);
                 }
               },
             );

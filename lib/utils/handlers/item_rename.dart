@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class ItemRenameHandler {
   static Future<void> showRenameDialog(
-      BuildContext context, FileSystemEntity item, Function loadItems) async {
+      BuildContext context, FileSystemEntity item) async {
     final TextEditingController controller = TextEditingController(
       text: item.path.split('/').last,
     );
@@ -32,8 +35,7 @@ class ItemRenameHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleItemRename(context, item, controller.text,
-                  reload: loadItems);
+              handleItemRename(context, item, controller.text);
             },
           ),
         ],
@@ -43,15 +45,19 @@ class ItemRenameHandler {
 
   static Future<void> handleItemRename(
       BuildContext context, FileSystemEntity item, String newName,
-      {Function? reload, bool? showMessage = true}) async {
+      {bool? showMessage = true}) async {
     try {
-      await StorageSystem.renameItem(item.path, newName);
-      if (reload != null) reload();
-      if (context.mounted && showMessage == true) {
-        customSnackBar(
-                '${item is Directory ? 'Folder' : 'File'} renamed successfully',
-                type: 'success')
-            .show(context);
+      await StorageSystem.renameItem(item.uri, newName);
+      if (context.mounted) {
+        final readSettProv = context.read<SettingsProvider>();
+        readSettProv.loadItems(context, readSettProv.currentPath);
+
+        if (showMessage == true) {
+          customSnackBar(
+                  '${item is Directory ? 'Folder' : 'File'} renamed successfully',
+                  type: 'success')
+              .show(context);
+        }
       }
     } catch (e) {
       if (context.mounted) {
