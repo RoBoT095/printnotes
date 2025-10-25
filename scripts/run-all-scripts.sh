@@ -6,7 +6,9 @@
 set -e
 
 # Generate file with library licenses
+cd ../
 dart run dart_pubspec_licenses:generate
+cd scripts/
 
 # Get all the apk files
 sh ./docker-build.sh
