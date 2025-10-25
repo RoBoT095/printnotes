@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (October 25, 2025)
+
+- Automated the fetching of app version number
+
 ### (October 10, 2025)
 
 - Changed [StorageSystem.listFolderContents] to use uri instead of path string

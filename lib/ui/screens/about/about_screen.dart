@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:printnotes/constants/constants.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/centered_page_wrapper.dart';
@@ -10,8 +9,26 @@ import 'package:printnotes/ui/widgets/menu_tile.dart';
 
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  String appVersion = '0.0.0';
+
+  @override
+  void initState() {
+    _getPackageInfo();
+    super.initState();
+  }
+
+  void _getPackageInfo() async {
+    final package = await PackageInfo.fromPlatform();
+    setState(() => appVersion = package.version);
+  }
 
   @override
   Widget build(BuildContext context) {
