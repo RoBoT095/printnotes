@@ -8,7 +8,6 @@ COPY . .
 
 # Install Android SDK and other dependencies for building APKs and AppImage
 RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
     libglu1-mesa \
     libssl-dev \
     wget \
@@ -26,10 +25,6 @@ RUN apt-get update && apt-get install -y \
 
 # Accept android licenses
 RUN yes | flutter doctor --android-licenses
-
-# Set Java 17 as the default version instead of 21
-RUN update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
-RUN update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
 
 # Ensure flutter is available and up-to-date
 RUN flutter doctor --verbose
