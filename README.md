@@ -69,6 +69,7 @@ I will release to different platforms when I feel like the app is more complete!
 - [x] Linux: (mainly for testing desktop layout)
   - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases)
   - Deb in [Releases](https://github.com/RoBoT095/printnotes/releases)
+  - AUR [-git](https://aur.archlinux.org/packages/printnotes-git) ([source](https://github.com/Pdzly/PrintNotesAUR), updates every Monday), [-bin](https://aur.archlinux.org/packages/printnotes-bin) (it install the AppImage)
   - Other options `coming later`
 
 ---
