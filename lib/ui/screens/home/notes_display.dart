@@ -227,7 +227,9 @@ class _NotesDisplayState extends State<NotesDisplay> {
                     child: isScreenLarge
                         ? Row(
                             children: [
-                              SizedBox(width: 50, child: DrawerRailView()),
+                              SizedBox(
+                                  width: 50,
+                                  child: DrawerRailView(reload: _refreshPage)),
                               Expanded(child: layoutView),
                             ],
                           )

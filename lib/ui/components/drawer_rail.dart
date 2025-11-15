@@ -6,12 +6,14 @@ import 'package:printnotes/providers/settings_provider.dart';
 
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 
-import 'package:printnotes/ui/screens/hidden/trash_archive_screens.dart';
+import 'package:printnotes/ui/screens/trash_archive_screens.dart';
 import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
 class DrawerRailView extends StatelessWidget {
-  const DrawerRailView({super.key});
+  const DrawerRailView({super.key, required this.reload});
+
+  final VoidCallback reload;
 
   void _navigateToScreen(BuildContext context, {Widget? screen, String? path}) {
     if (path != null) {
@@ -37,12 +39,22 @@ class DrawerRailView extends StatelessWidget {
         child: ListView(
           children: [
             IconButton(
-                icon: const Icon(Icons.article_outlined),
-                tooltip: 'All Notes',
-                onPressed: () {
-                  _navigateToScreen(context,
-                      path: context.read<SettingsProvider>().mainDir);
-                }),
+              icon: const Icon(Icons.article_outlined),
+              tooltip: 'All Notes',
+              onPressed: () {
+                _navigateToScreen(context,
+                    path: context.read<SettingsProvider>().mainDir);
+                reload();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.history),
+              tooltip: 'Recent',
+              onPressed: () {
+                _navigateToScreen(context, path: '⏱');
+                reload();
+              },
+            ),
             const Opacity(opacity: 0.2, child: Divider()),
             IconButton(
               icon: const Icon(Icons.archive_outlined),

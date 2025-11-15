@@ -175,12 +175,18 @@ class SettingsProvider with ChangeNotifier {
 
     // Check if path not a file, if not, check if it is a tag, if not, return to mainDir
     if (!await FileSystemEntity.isDirectory(folder)) {
-      if (folder.startsWith('#')) {
+      if (folder.startsWith('※')) {
+        // Tag UTF-8 icon unicode value: U+203B aka REFERENCE MARK
+        folder = folder.replaceFirst('※', '');
         isTag = true;
         Map<String, List<String>> tagMap = await getTagMap();
         if (tagMap[folder] != null) {
           filesWithTags.addAll(tagMap[folder]!.map((e) => File(e)));
         }
+      } else if (folder.startsWith('⏱')) {
+        // Recent UTF-8 icon unicode value: U+23F1 aka STOPWATCH
+        folder = 'Recently Opened';
+        // TODO: List all recently opened files
       } else {
         if (context != null && context.mounted) {
           context.read<NavigationProvider>().routeHistory.clear();

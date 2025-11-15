@@ -7,7 +7,7 @@ import 'package:printnotes/providers/settings_provider.dart';
 
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 
-import 'package:printnotes/ui/screens/hidden/trash_archive_screens.dart';
+import 'package:printnotes/ui/screens/trash_archive_screens.dart';
 import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
@@ -83,6 +83,13 @@ class _DrawerViewState extends State<DrawerView> {
                           path: context.read<SettingsProvider>().mainDir);
                       widget.reload();
                     }),
+                ListTile(
+                    leading: const Icon(Icons.history),
+                    title: Text('Recent'),
+                    onTap: () {
+                      _navigateToScreen(context, path: '⏱');
+                      widget.reload();
+                    }),
                 ExpansionTile(
                   leading: Icon(Icons.tag),
                   title: Text('Tags'),
@@ -95,7 +102,7 @@ class _DrawerViewState extends State<DrawerView> {
                             (tag) => ListTile(
                                 title: Text(tag),
                                 onTap: () {
-                                  _navigateToScreen(context, path: tag);
+                                  _navigateToScreen(context, path: '※$tag');
                                   widget.reload();
                                 }),
                           )

@@ -21,6 +21,12 @@
 
 ## Day to Day Changes:
 
+### (November 14, 2025)
+
+- Fixed 'All Notes' button on drawer rail for desktop
+- Changed how drawer tag list works to not have issues with real folders that start with #
+- Added 'Recent' tab, still needs logic to save last opened files
+
 ### (October 25, 2025)
 
 - Automated the fetching of app version number

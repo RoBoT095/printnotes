@@ -16,7 +16,6 @@ dependencies:
 
   path: ^1.9.0
   path_provider: ^2.1.3
-  docman: ^1.2.0
   file_picker: ^10.1.9
   
   listen_sharing_intent: ^1.9.2
