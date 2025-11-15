@@ -4,6 +4,10 @@
 
 ## v0.10.5 - WIP
 
+### Changes:
+
+- AUR packages available [#46](https://github.com/RoBoT095/printnotes/pull/46)
+
 ## v0.10.4 - Oct 25, 2025
 
 ### Changes:

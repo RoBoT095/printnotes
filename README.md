@@ -46,7 +46,6 @@
 
 <p>
   <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopGridView.png?raw=true" alt="desktop grid view" width=500 />
-  <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopListView.png?raw=true" alt="desktop list view" width=500 />
   <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopTreeView.png?raw=true" alt="desktop tree view" width=500 />
   <img src="https://github.com/RoBoT095/printnotes/blob/main/images/Desktop/DesktopEditor.png?raw=true" alt="desktop editor" width=500 />
 </p>
@@ -66,10 +65,12 @@ I will release to different platforms when I feel like the app is more complete!
 - [x] iOS - [App Store](https://apps.apple.com/us/app/print-notes/id6740996365)
 - [ ] Windows `coming later`
 - [ ] MacOS `coming later`
-- [x] Linux: (mainly for testing desktop layout)
+- [x] Linux:
   - AppImage in [Releases](https://github.com/RoBoT095/printnotes/releases)
   - Deb in [Releases](https://github.com/RoBoT095/printnotes/releases)
-  - AUR [-git](https://aur.archlinux.org/packages/printnotes-git) ([source](https://github.com/Pdzly/PrintNotesAUR), updates every Monday [![Packaging Status](https://github.com/Pdzly/PrintNotesAUR/actions/workflows/update-aur.yml/badge.svg)](https://github.com/Pdzly/PrintNotesAUR/actions/workflows/update-aur.yml)), [-bin](https://aur.archlinux.org/packages/printnotes-bin) (it install the AppImage)
+  - AUR:
+    - [-git](https://aur.archlinux.org/packages/printnotes-git) ([source](https://github.com/Pdzly/PrintNotesAUR), updates every Monday [![Packaging Status](https://github.com/Pdzly/PrintNotesAUR/actions/workflows/update-aur.yml/badge.svg)](https://github.com/Pdzly/PrintNotesAUR/actions/workflows/update-aur.yml))
+    - [-bin](https://aur.archlinux.org/packages/printnotes-bin) (it install the AppImage)
   - Other options `coming later`
 
 ---
