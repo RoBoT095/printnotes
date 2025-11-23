@@ -29,6 +29,8 @@ class SettingsProvider with ChangeNotifier {
   String _currentFolderName = 'Notes';
   List<FileSystemEntity> _items = [];
   List<String> _tagList = [];
+  List<String> _recentFilesList = [];
+
   List<FileSystemEntity> _trashItems = [];
   List<FileSystemEntity> _archiveItems = [];
 
@@ -51,6 +53,7 @@ class SettingsProvider with ChangeNotifier {
   String get currentFolderName => _currentFolderName;
   List<FileSystemEntity> get items => _items;
   List<String> get tagList => _tagList;
+  List<String> get recentFilesList => _recentFilesList;
   List<FileSystemEntity> get trashItems => _trashItems;
   List<FileSystemEntity> get archiveItems => _archiveItems;
 
@@ -77,6 +80,15 @@ class SettingsProvider with ChangeNotifier {
   void getTagList() async {
     Map<String, List<String>> tagMap = await getTagMap();
     _tagList = tagMap.keys.toList();
+    notifyListeners();
+  }
+
+  void addRecentFile(String path) {
+    DataPath.addRecentFile(path);
+  }
+
+  void loadRecentFiles() {
+    _recentFilesList = DataPath.loadRecentFiles(Duration(days: 7));
     notifyListeners();
   }
 
@@ -172,6 +184,7 @@ class SettingsProvider with ChangeNotifier {
     String currentFolderName = 'Notes';
     bool isTag = false;
     List<FileSystemEntity> filesWithTags = [];
+    bool isRecentFiles = false;
 
     // Check if path not a file, if not, check if it is a tag, if not, return to mainDir
     if (!await FileSystemEntity.isDirectory(folder)) {
@@ -186,7 +199,8 @@ class SettingsProvider with ChangeNotifier {
       } else if (folder.startsWith('⏱')) {
         // Recent UTF-8 icon unicode value: U+23F1 aka STOPWATCH
         folder = 'Recently Opened';
-        // TODO: List all recently opened files
+        isRecentFiles = true;
+        loadRecentFiles();
       } else {
         if (context != null && context.mounted) {
           context.read<NavigationProvider>().routeHistory.clear();
@@ -196,9 +210,16 @@ class SettingsProvider with ChangeNotifier {
       }
     }
 
-    final items = isTag
+    final List<FileSystemEntity> items = isTag
         ? filesWithTags
-        : await StorageSystem.listFolderContents(Uri.parse(folder));
+        : isRecentFiles
+            ? recentFilesList
+                .map(
+                  (e) => File(e),
+                )
+                .toList()
+            : await StorageSystem.listFolderContents(Uri.parse(folder));
+
     final sortedItems =
         ItemSortHandler(sortOrder, folderPriority).getSortedItems(items);
     if (isTag) {

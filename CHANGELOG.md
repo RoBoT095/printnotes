@@ -2,10 +2,11 @@
 
 > Moved DevLog into separate file
 
-## v0.10.5 - WIP
+## v0.10.5
 
 ### Changes:
 
+- Added a recently opened notes tab in drawer to see notes viewed the past week
 - AUR packages available [#46](https://github.com/RoBoT095/printnotes/pull/46)
 
 ### Fixed:

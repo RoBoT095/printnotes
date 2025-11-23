@@ -59,6 +59,38 @@ class DataPath {
     return _selectedDirectory;
   }
 
+  static void addRecentFile(String path) {
+    final recentList = App.localStorage.getStringList('recentFilesList') ?? [];
+
+    final list = recentList.map((e) => jsonDecode(e)).toList();
+
+    // Remove old entry with same path
+    list.removeWhere((e) => e['path'] == path);
+
+    // Add entry to the top of the list
+    list.insert(
+        0, {'path': path, 'openedAt': DateTime.now().millisecondsSinceEpoch});
+
+    App.localStorage
+        .setStringList('recentFilesList', list.map(jsonEncode).toList());
+  }
+
+  static List<String> loadRecentFiles(Duration within) {
+    final recentList = App.localStorage.getStringList('recentFilesList') ?? [];
+    final now = DateTime.now().millisecondsSinceEpoch;
+
+    final items = recentList
+        .map((e) => jsonDecode(e))
+        .where((entry) {
+          final openedAt = entry['openedAt'] as int;
+          return (now - openedAt) <= within.inMilliseconds;
+        })
+        .map((e) => e['path'] as String)
+        .toList();
+
+    return items;
+  }
+
   // Hidden app config file called .main_config.json
 
   static File get mainConfigFile =>

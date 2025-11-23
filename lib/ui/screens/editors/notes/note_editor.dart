@@ -86,6 +86,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   /// Load the passed files contents and set the state
   Future<void> _loadFileContent() async {
+    context.read<SettingsProvider>().addRecentFile(widget.fileUri.toFilePath());
     try {
       final file = File.fromUri(widget.fileUri);
       final content = await file.readAsString();
