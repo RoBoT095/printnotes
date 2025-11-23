@@ -23,6 +23,7 @@
 
 ### (November 22, 2025)
 
+- Fixed tags incorrectly shown in tag menu inside drawer
 - Removed `package_info_plus` due to issues with RB (Reproducible Builds)
 
 ### (November 14, 2025)

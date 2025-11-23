@@ -8,6 +8,10 @@
 
 - AUR packages available [#46](https://github.com/RoBoT095/printnotes/pull/46)
 
+### Fixed:
+
+- Tags showing up incorrectly in drawer tag menu
+
 ## v0.10.4 - Oct 25, 2025
 
 ### Changes:
