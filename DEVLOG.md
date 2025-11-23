@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (November 22, 2025)
+
+- Removed `package_info_plus` due to issues with RB (Reproducible Builds)
+
 ### (November 14, 2025)
 
 - Fixed 'All Notes' button on drawer rail for desktop
