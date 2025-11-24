@@ -45,23 +45,17 @@ class ThemeProvider with ChangeNotifier {
     }
   }
 
-  bool isThemeCustom(String colorScheme) {
-    return colorScheme == 'custom' ? true : false;
-  }
+  bool isThemeCustom(String colorScheme) => colorScheme == 'custom';
 
   void loadPreferences() {
-    final savedTheme = UserThemingPref.getThemeMode();
-    final savedColorScheme = UserThemingPref.getColorScheme();
-    final useDynamic = UserThemingPref.getDynamicColor();
-    final usePureBlack = UserThemingPref.getPureBlackBG();
-    final codeHighlight = UserThemingPref.getCodeHighlight();
+    _themeMode = _stringToThemeMode(UserThemingPref.getThemeMode());
+    _colorScheme = UserThemingPref.getColorScheme();
+    _useCustomTheme = isThemeCustom(colorScheme);
+    _useDynamicColor = UserThemingPref.getDynamicColor();
+    _pureBlack = UserThemingPref.getPureBlackBG();
+    _codeHighlight = UserThemingPref.getCodeHighlight();
 
-    setThemeMode(savedTheme);
-    setColorScheme(savedColorScheme);
-    setUseCustomTheme(isThemeCustom(colorScheme));
-    setDynamicColor(useDynamic);
-    setPureBlackBG(usePureBlack);
-    setCodeHighlight(codeHighlight);
+    notifyListeners();
   }
 
   void setThemeMode(String theme) {
@@ -74,7 +68,7 @@ class ThemeProvider with ChangeNotifier {
     _colorScheme = colorScheme;
     UserThemingPref.setColorScheme(colorScheme);
 
-    setUseCustomTheme(isThemeCustom(colorScheme));
+    _useCustomTheme = isThemeCustom(colorScheme);
     notifyListeners();
   }
 
@@ -108,7 +102,9 @@ class ThemeProvider with ChangeNotifier {
             ? Brightness.light
             : Brightness.dark;
     bool isDark = brightness == Brightness.dark;
+
     Color? pureBlack = isDark && _pureBlack ? Colors.black : null;
+
     switch (_colorScheme) {
       case 'nordic':
         return !isDark

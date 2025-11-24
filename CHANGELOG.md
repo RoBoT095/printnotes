@@ -8,6 +8,7 @@
 
 - Added a recently opened notes tab in drawer to see notes viewed the past week
 - AUR packages available [#46](https://github.com/RoBoT095/printnotes/pull/46)
+- Minor optimizations
 
 ### Fixed:
 

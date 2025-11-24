@@ -18,11 +18,12 @@ class EditorConfigProvider with ChangeNotifier {
   }
 
   void loadEditorConfig() {
-    final fontSize = UserEditorConfig.getFontSize();
     final toolbarConfig = loadToolbarLoadout();
 
-    setFontSize(fontSize);
-    setToolbarConfig(toolbarConfig);
+    _toolbarItemList = toolbarConfig ?? List.from(defaultToolbarList);
+    _fontSize = UserEditorConfig.getFontSize();
+
+    notifyListeners();
   }
 
   void setFontSize(double fontSize) {
@@ -40,13 +41,10 @@ class EditorConfigProvider with ChangeNotifier {
     if (configList == null || configList.isEmpty) {
       _toolbarItemList = defaultToolbarList;
     } else if (configList.length > defaultToolbarList.length) {
-      for (ToolbarConfigItem item in configList) {
-        if (!defaultToolbarList.contains(item)) {
-          debugPrint('Removed $item from Toolbar configList');
-          configList.remove(item);
-        }
-      }
+      // Remove toolbar items if they don't exist in default list
+      configList.removeWhere((item) => !defaultToolbarList.contains(item));
     } else if (configList.length < defaultToolbarList.length) {
+      // If default list longer than config list, add to it
       for (ToolbarConfigItem item in defaultToolbarList) {
         if (!configList.contains(item)) {
           debugPrint('Added $item from Toolbar configList');

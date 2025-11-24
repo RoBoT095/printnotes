@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (November 24, 2025)
+
+- Provider optimizations and code cleaning
+
 ### (November 22, 2025)
 
 - Finished recent opened notes feature

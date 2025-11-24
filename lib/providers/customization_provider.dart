@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 
 class CustomizationProvider with ChangeNotifier {
-  String? _bgImagePath;
-  double _bgImageOpacity = 0.5;
-  String _bgImageFit = 'cover';
-  String _bgImageRepeat = 'noRepeat';
+  String? _bgImgPath;
+  double _bgImgOpacity = 0.5;
+  String _bgImgFit = 'cover';
+  String _bgImgRepeat = 'noRepeat';
   double _noteTileOpacity = 1;
   String _noteTileShape = 'round';
   double _noteTilePadding = 10;
@@ -15,10 +15,10 @@ class CustomizationProvider with ChangeNotifier {
   double _noteEditorPadding = 8;
   int _previewLength = 100;
 
-  String? get bgImagePath => _bgImagePath;
-  double get bgImageOpacity => _bgImageOpacity;
-  String get bgImageFit => _bgImageFit;
-  String get bgImageRepeat => _bgImageRepeat;
+  String? get bgImagePath => _bgImgPath;
+  double get bgImageOpacity => _bgImgOpacity;
+  String get bgImageFit => _bgImgFit;
+  String get bgImageRepeat => _bgImgRepeat;
   double get noteTileOpacity => _noteTileOpacity;
   String get noteTileShape => _noteTileShape;
   double get noteTilePadding => _noteTilePadding;
@@ -27,61 +27,49 @@ class CustomizationProvider with ChangeNotifier {
   int get previewLength => _previewLength;
 
   void loadCustomizations() {
-    final bgImgPath = UserStylePref.getBgImagePath();
-    final bgImgOpacity = UserStylePref.getBgImageOpacity();
-    final bgImgFit = UserStylePref.getBgImageFit();
-    final bgImgRepeat = UserStylePref.getBgImageRepeat();
-    final noteTileOpacity = UserStylePref.getNoteTileOpacity();
-    final noteTileShape = UserStylePref.getNoteTileShape();
-    final noteTilePadding = UserStylePref.getNoteTilePadding();
-    final noteTileSpacing = UserStylePref.getNoteTileSpacing();
-    final noteEditorPadding = UserStylePref.getNoteEditorPadding();
-    final previewLength = UserLayoutPref.getNotePreviewLength();
+    _bgImgPath = UserStylePref.getBgImagePath();
+    _bgImgOpacity = UserStylePref.getBgImageOpacity();
+    _bgImgFit = UserStylePref.getBgImageFit();
+    _bgImgRepeat = UserStylePref.getBgImageRepeat();
+    _noteTileOpacity = UserStylePref.getNoteTileOpacity();
+    _noteTileShape = UserStylePref.getNoteTileShape();
+    _noteTilePadding = UserStylePref.getNoteTilePadding();
+    _noteTileSpacing = UserStylePref.getNoteTileSpacing();
+    _noteEditorPadding = UserStylePref.getNoteEditorPadding();
+    _previewLength = UserLayoutPref.getNotePreviewLength();
 
-    setBgImagePath(bgImgPath);
-    setBgImageOpacity(bgImgOpacity);
-    setBgImageFit(bgImgFit);
-    setBgImageRepeat(bgImgRepeat);
-    setNoteTileOpacity(noteTileOpacity);
-    setNoteTileShape(noteTileShape);
-    setNoteTilePadding(noteTilePadding);
-    setNoteTileSpacing(noteTileSpacing);
-    setNoteEditorPadding(noteEditorPadding);
-    setPreviewLength(previewLength);
+    notifyListeners();
   }
 
   void setBgImagePath(String? path) {
-    String? imgPath;
-    if (path != null && File(path).existsSync()) {
-      imgPath = path;
-    }
-    _bgImagePath = imgPath;
+    final imgPath = path != null && File(path).existsSync() ? path : null;
+
+    _bgImgPath = imgPath;
     UserStylePref.setBgImagePath(imgPath);
     notifyListeners();
   }
 
   /// Opacity must be a value between 0.0 and 1
   void setBgImageOpacity(double opacity) {
-    _bgImageOpacity = opacity;
+    _bgImgOpacity = opacity;
     UserStylePref.setBgImageOpacity(opacity);
     notifyListeners();
   }
 
   void setBgImageFit(String fit) {
-    _bgImageFit = fit;
+    _bgImgFit = fit;
     UserStylePref.setBgImageFit(fit);
     notifyListeners();
   }
 
   void setBgImageRepeat(String repeat) {
-    _bgImageRepeat = repeat;
+    _bgImgRepeat = repeat;
     UserStylePref.setBgImageRepeat(repeat);
     notifyListeners();
   }
 
   /// Opacity must be a value between 0.0 and 1
   void setNoteTileOpacity(double opacity) {
-    opacity = opacity;
     _noteTileOpacity = opacity;
     UserStylePref.setNoteTileOpacity(opacity);
     notifyListeners();
