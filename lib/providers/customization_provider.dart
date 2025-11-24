@@ -26,6 +26,10 @@ class CustomizationProvider with ChangeNotifier {
   double get noteEditorPadding => _noteEditorPadding;
   int get previewLength => _previewLength;
 
+  CustomizationProvider() {
+    loadCustomizations();
+  }
+
   void loadCustomizations() {
     _bgImgPath = UserStylePref.getBgImagePath();
     _bgImgOpacity = UserStylePref.getBgImageOpacity();

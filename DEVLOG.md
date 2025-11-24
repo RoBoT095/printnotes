@@ -23,6 +23,7 @@
 
 ### (November 24, 2025)
 
+- Fixed custom settings not being loaded on startup
 - Provider optimizations and code cleaning
 
 ### (November 22, 2025)

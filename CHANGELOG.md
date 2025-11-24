@@ -12,6 +12,7 @@
 
 ### Fixed:
 
+- Custom style settings not being loaded on startup
 - Tags showing up incorrectly in drawer tag menu
 
 ## v0.10.4 - Oct 25, 2025
