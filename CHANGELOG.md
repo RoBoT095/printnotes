@@ -2,7 +2,9 @@
 
 > Moved DevLog into separate file
 
-## v0.10.5
+## v0.10.6 - WIP
+
+## v0.10.5 - Nov 29, 2025
 
 ### Changes:
 

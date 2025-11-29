@@ -10204,12 +10204,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.''',
   );
 
-/// printnotes 0.10.4+13
+/// printnotes 0.10.6+15
 const _printnotes = Package(
     name: 'printnotes',
     description: 'A Markdown Notes app made with Flutter',
     authors: [],
-    version: '0.10.4+13',
+    version: '0.10.6+15',
     spdxIdentifiers: ['GPL-3.0'],
     isMarkdown: false,
     isSdk: false,
