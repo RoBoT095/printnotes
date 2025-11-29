@@ -4,6 +4,10 @@
 
 ## v0.10.6 - WIP
 
+### Changes:
+
+- Checkboxes now edit text and save when toggling them from preview mode
+
 ## v0.10.5 - Nov 29, 2025
 
 ### Changes:

@@ -21,6 +21,12 @@
 
 ## Day to Day Changes:
 
+### (November 29, 2025)
+
+Forgive me for I have sinned, I have tried an IDE AI using local LLM, and it just added working checkboxes in 3 short prompts. I will resist the urge to always use it, but I want to at least mention it every time I use it and keep commits of purely ai work separate from my changes to make sure it doesn't ruin anything. I'll add tag here to list item and "AICode" to commit to help differentiate it.
+
+- Added working checkboxes that save file from preview mode #AICode
+
 ### (November 24, 2025)
 
 - Fixed custom settings not being loaded on startup

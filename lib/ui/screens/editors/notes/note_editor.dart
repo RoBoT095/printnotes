@@ -479,6 +479,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                                 physics:
                                                     NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
+                                                editingController:
+                                                    _notesController,
+                                                onCheckboxToggle: () =>
+                                                    _saveFileContent(context),
                                               ),
                                       ),
                                 SizedBox(height: 100),

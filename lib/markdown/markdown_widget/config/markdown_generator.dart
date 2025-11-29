@@ -55,7 +55,35 @@ class MarkdownGenerator {
     );
     final regExp = splitRegExp ?? WidgetVisitor.defaultSplitRegExp;
     final List<String> lines = data.split(regExp);
-    final List<m.Node> nodes = document.parseLines(lines);
+
+    // Preprocess lines to replace task list markers "- [ ]" / "- [x]" with
+    // an HTML input element that includes a data-line attribute so we can
+    // identify which source line the checkbox originated from.
+    final taskRegex = RegExp(r'^(\s*[-\*\+]\s*)\[([ xX])\]\s*(.*)');
+    final List<String> processed = List<String>.from(lines);
+    // When splitting by `regExp` we get newline tokens as their own entries.
+    // Keep a separate plainLine counter so the data-line maps to the
+    // visual line number in the original text (split by "\n").
+    int plainLine = 0;
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      // skip newline tokens from split
+      if (line == '\r' || line == '\n' || line == '\r\n') {
+        continue;
+      }
+      final m = taskRegex.firstMatch(line);
+      if (m != null) {
+        final prefix = m.group(1) ?? '';
+        final mark = m.group(2) ?? ' ';
+        final rest = m.group(3) ?? '';
+        final checkedAttr = (mark.toLowerCase() == 'x') ? ' checked="true"' : '';
+        // inject an inline HTML input; keep the list prefix so markdown list parsing remains
+        processed[i] = '$prefix<input type="checkbox" data-line="$plainLine"$checkedAttr /> $rest';
+      }
+      plainLine++;
+    }
+
+    final List<m.Node> nodes = document.parseLines(processed);
     final List<Toc> tocList = [];
     final visitor = WidgetVisitor(
         config: mdConfig,
