@@ -92,8 +92,6 @@ const allDependencies = <Package>[
   _nested,
   _node_preamble,
   _package_config,
-  _package_info_plus,
-  _package_info_plus_platform_interface,
   _packages_extensions,
   _pana,
   _path,
@@ -200,7 +198,6 @@ const dependencies = <Package>[
   _share_plus,
   _shared_preferences,
   _permission_handler,
-  _package_info_plus,
   _url_launcher,
   _http,
   _intl,
@@ -5785,90 +5782,6 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// package_info_plus 9.0.0
-const _package_info_plus = Package(
-    name: 'package_info_plus',
-    description: 'Flutter plugin for querying information about the application package, such as CFBundleVersion on iOS or versionCode on Android.',
-    homepage: 'https://github.com/fluttercommunity/plus_plugins',
-    repository: 'https://github.com/fluttercommunity/plus_plugins/tree/main/packages/package_info_plus/package_info_plus',
-    authors: [],
-    version: '9.0.0',
-    spdxIdentifiers: ['BSD-3-Clause'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('ffi'), PackageRef('flutter'), PackageRef('flutter_web_plugins'), PackageRef('http'), PackageRef('meta'), PackageRef('path'), PackageRef('package_info_plus_platform_interface'), PackageRef('web'), PackageRef('win32'), PackageRef('clock')],
-    devDependencies: [PackageRef('flutter_lints'), PackageRef('test')],
-    license: '''Copyright 2017 The Chromium Authors. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
-  );
-
-/// package_info_plus_platform_interface 3.2.1
-const _package_info_plus_platform_interface = Package(
-    name: 'package_info_plus_platform_interface',
-    description: 'A common platform interface for the package_info_plus plugin.',
-    homepage: 'https://github.com/fluttercommunity/plus_plugins',
-    repository: 'https://github.com/fluttercommunity/plus_plugins/tree/main/packages/',
-    authors: [],
-    version: '3.2.1',
-    spdxIdentifiers: ['BSD-3-Clause'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('flutter'), PackageRef('meta'), PackageRef('plugin_platform_interface')],
-    devDependencies: [PackageRef('flutter_lints')],
-    license: '''Copyright 2017 The Chromium Authors. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
-  );
-
 /// packages_extensions 0.1.1
 const _packages_extensions = Package(
     name: 'packages_extensions',
@@ -10300,7 +10213,7 @@ const _printnotes = Package(
     spdxIdentifiers: ['GPL-3.0'],
     isMarkdown: false,
     isSdk: false,
-    dependencies: [PackageRef('flutter'), PackageRef('provider'), PackageRef('path'), PackageRef('path_provider'), PackageRef('file_picker'), PackageRef('listen_sharing_intent'), PackageRef('window_manager'), PackageRef('share_plus'), PackageRef('shared_preferences'), PackageRef('permission_handler'), PackageRef('package_info_plus'), PackageRef('url_launcher'), PackageRef('http'), PackageRef('intl'), PackageRef('markdown'), PackageRef('flutter_math_fork'), PackageRef('flutter_widget_from_html_core'), PackageRef('html'), PackageRef('flutter_highlight'), PackageRef('highlight'), PackageRef('cosmic_frontmatter'), PackageRef('visibility_detector'), PackageRef('expandable'), PackageRef('scroll_to_index'), PackageRef('keyboard_attachable'), PackageRef('introduction_screen'), PackageRef('flutter_staggered_grid_view'), PackageRef('animated_tree_view'), PackageRef('pdfrx'), PackageRef('sketch_flow'), PackageRef('flutter_speed_dial'), PackageRef('animated_snack_bar'), PackageRef('font_awesome_flutter'), PackageRef('dynamic_color')],
+    dependencies: [PackageRef('flutter'), PackageRef('provider'), PackageRef('path'), PackageRef('path_provider'), PackageRef('file_picker'), PackageRef('listen_sharing_intent'), PackageRef('window_manager'), PackageRef('share_plus'), PackageRef('shared_preferences'), PackageRef('permission_handler'), PackageRef('url_launcher'), PackageRef('http'), PackageRef('intl'), PackageRef('markdown'), PackageRef('flutter_math_fork'), PackageRef('flutter_widget_from_html_core'), PackageRef('html'), PackageRef('flutter_highlight'), PackageRef('highlight'), PackageRef('cosmic_frontmatter'), PackageRef('visibility_detector'), PackageRef('expandable'), PackageRef('scroll_to_index'), PackageRef('keyboard_attachable'), PackageRef('introduction_screen'), PackageRef('flutter_staggered_grid_view'), PackageRef('animated_tree_view'), PackageRef('pdfrx'), PackageRef('sketch_flow'), PackageRef('flutter_speed_dial'), PackageRef('animated_snack_bar'), PackageRef('font_awesome_flutter'), PackageRef('dynamic_color')],
     devDependencies: [PackageRef('flutter_lints'), PackageRef('dart_pubspec_licenses')],
     license: '''GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
