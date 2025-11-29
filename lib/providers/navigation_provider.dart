@@ -9,7 +9,6 @@ import 'package:printnotes/utils/handlers/file_extensions.dart';
 import 'package:printnotes/ui/screens/viewers/image_viewer.dart';
 import 'package:printnotes/ui/screens/editors/notes/note_editor.dart';
 import 'package:printnotes/ui/screens/viewers/pdf_viewer.dart';
-// import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NavigationProvider with ChangeNotifier {
   final List<String> _routeHistory = [];
@@ -17,9 +16,7 @@ class NavigationProvider with ChangeNotifier {
   List<String> get routeHistory => _routeHistory;
 
   void initRouteHistory(String initDir) {
-    if (_routeHistory.isEmpty) {
-      _routeHistory.add(initDir);
-    } else if (_routeHistory.first != initDir) {
+    if (_routeHistory.isEmpty || _routeHistory.first != initDir) {
       _routeHistory.clear();
       _routeHistory.add(initDir);
     }
@@ -57,13 +54,17 @@ class NavigationProvider with ChangeNotifier {
       bool fileExists = await File.fromUri(item).exists();
       if (fileExists && context.mounted) {
         if (fileTypeChecker(item.path) == CFileType.image) {
-          onImageSelect(context, item);
+          _openPage(context, item, () => ImageViewScreen(imageUri: item));
         } else if (fileTypeChecker(item.path) == CFileType.pdf) {
-          onPdfSelect(context, item);
+          _openPage(context, item, () => PdfViewScreen(pdfUri: item));
         } else if (fileTypeChecker(item.path) == CFileType.sketch) {
-          onSketchSelect(context, item);
+          _openPage(context, item, () => SketchPad(sketchUri: item));
         } else {
-          onNoteSelect(context, item, jumpToHeader: jumpToHeader);
+          _openPage(
+            context,
+            item,
+            () => NoteEditorScreen(fileUri: item, jumpToHeader: jumpToHeader),
+          );
         }
       } else {
         debugPrint(
@@ -72,52 +73,11 @@ class NavigationProvider with ChangeNotifier {
     });
   }
 
-  // For notes only, won't work with folders
-  void onNoteSelect(BuildContext context, Uri uri, {String? jumpToHeader}) {
+  void _openPage(BuildContext context, Uri uri, Widget Function() page) async {
     addToRouteHistory(uri.path);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NoteEditorScreen(
-          fileUri: uri,
-          jumpToHeader: jumpToHeader,
-        ),
-      ),
-    ).then((_) => navigateBack());
-  }
-
-  void onImageSelect(
-    BuildContext context,
-    Uri uri,
-  ) {
-    addToRouteHistory(uri.path);
-    Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ImageViewScreen(imageUri: uri)))
+    await Navigator.push(
+            context, MaterialPageRoute(builder: (context) => page()))
         .then((_) => navigateBack());
-  }
-
-  void onPdfSelect(
-    BuildContext context,
-    Uri uri,
-  ) async {
-    addToRouteHistory(uri.path);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PdfViewScreen(
-                  pdfUri: uri,
-                ))).then((_) => navigateBack());
-  }
-
-  void onSketchSelect(BuildContext context, Uri uri) {
-    addToRouteHistory(uri.path);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SketchPad(sketchUri: uri),
-        )).then((_) => navigateBack());
   }
 
   // Open files outside selected app directory

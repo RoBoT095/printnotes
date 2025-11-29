@@ -12,11 +12,12 @@ class SelectingProvider with ChangeNotifier {
   List<String> get selectedItems => _selectedItems;
 
   void updateSelectedList(FileSystemEntity item) {
-    if (_selectedItems.contains(item.path)) {
-      _selectedItems.remove(item.path);
-    } else {
-      _selectedItems.add(item.path);
-    }
+    final path = item.path;
+
+    _selectedItems.contains(path)
+        ? _selectedItems.remove(path)
+        : _selectedItems.add(path);
+
     notifyListeners();
   }
 
@@ -33,21 +34,16 @@ class SelectingProvider with ChangeNotifier {
   Future<void> selectAll(String dir) async {
     final List<FileSystemEntity> items =
         await StorageSystem.listFolderContents(Uri.parse(dir));
-    List<String> itemPathsList = [];
-    for (FileSystemEntity item in items) {
-      if (item is File) itemPathsList.add(item.path);
-    }
+
+    final filePaths = items.whereType<File>().map((file) => file.path).toList();
 
     // If ALL already selected, then deselect all
-    if (Set.of(_selectedItems).containsAll(itemPathsList)) {
+    if (_selectedItems.toSet().containsAll(filePaths)) {
       _selectedItems.clear();
     } else {
       // else select all
-      for (String item in itemPathsList) {
-        if (!_selectedItems.contains(item)) {
-          _selectedItems.add(item);
-        }
-      }
+      final missing = filePaths.where((path) => !_selectedItems.contains(path));
+      _selectedItems.addAll(missing);
     }
     notifyListeners();
   }

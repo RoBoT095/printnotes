@@ -16,7 +16,6 @@ dependencies:
 
   path: ^1.9.0
   path_provider: ^2.1.3
-  docman: ^1.2.0
   file_picker: ^10.1.9
   
   listen_sharing_intent: ^1.9.2
@@ -25,7 +24,6 @@ dependencies:
   shared_preferences: ^2.2.3
   permission_handler: ^12.0.0+1
   
-  package_info_plus: ^9.0.0
   url_launcher: ^6.3.0
   http: ^1.2.2
   intl: ^0.20.2

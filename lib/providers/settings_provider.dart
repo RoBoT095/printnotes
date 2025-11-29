@@ -28,7 +28,13 @@ class SettingsProvider with ChangeNotifier {
   String _currentPath = '';
   String _currentFolderName = 'Notes';
   List<FileSystemEntity> _items = [];
+
   List<String> _tagList = [];
+  List<String> _recentFilesList = [];
+
+  bool _isTagFolder(String folder) => folder.startsWith('※');
+  bool _isRecentFolder(String folder) => folder.startsWith('⏱');
+
   List<FileSystemEntity> _trashItems = [];
   List<FileSystemEntity> _archiveItems = [];
 
@@ -50,7 +56,10 @@ class SettingsProvider with ChangeNotifier {
   String get currentPath => _currentPath;
   String get currentFolderName => _currentFolderName;
   List<FileSystemEntity> get items => _items;
+
   List<String> get tagList => _tagList;
+  List<String> get recentFilesList => _recentFilesList;
+
   List<FileSystemEntity> get trashItems => _trashItems;
   List<FileSystemEntity> get archiveItems => _archiveItems;
 
@@ -59,7 +68,7 @@ class SettingsProvider with ChangeNotifier {
     getShowIntro();
   }
 
-  void getShowIntro() async {
+  void getShowIntro() {
     final showIntro = UserFirstTime.getShowIntro;
     setShowIntro(showIntro);
   }
@@ -70,34 +79,33 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Map<String, List<String>>> getTagMap() async {
-    return await StorageSystem.getAllTags(mainDir);
+  void getTagList() async {
+    Map<String, List<String>> tagMap = await StorageSystem.getAllTags(mainDir);
+    _tagList = tagMap.keys.toList();
+    notifyListeners();
   }
 
-  void getTagList() async {
-    Map<String, List<String>> tagMap = await getTagMap();
-    _tagList = tagMap.keys.toList();
+  void addRecentFile(String path) {
+    DataPath.addRecentFile(path);
+  }
+
+  void loadRecentFiles() {
+    _recentFilesList = DataPath.loadRecentFiles(Duration(days: 7));
     notifyListeners();
   }
 
   void loadSettings() async {
     final mainDir = await DataPath.selectedDirectory;
-    final layout = UserLayoutPref.getLayoutView();
-    final folderPriority = UserSortPref.getFolderPriority();
-    final sortOrder = UserSortPref.getSortOrder();
-    final titleBar = UserAdvancedPref.getTitleBarVisibility();
-    final useLatex = UserAdvancedPref.getLatexSupport();
-    final useFM = UserAdvancedPref.getFrontmatterSupport();
 
     if (mainDir != null) setHiddenFolders(mainDir);
 
     setMainDir(mainDir ?? '');
-    setLayout(layout);
-    setFolderPriority(folderPriority);
-    setSortOrder(sortOrder);
-    setTitleBarVisibility(titleBar);
-    setLatexUse(useLatex);
-    setFrontMatterUse(useFM);
+    setLayout(UserLayoutPref.getLayoutView());
+    setFolderPriority(UserSortPref.getFolderPriority());
+    setSortOrder(UserSortPref.getSortOrder());
+    setTitleBarVisibility(UserAdvancedPref.getTitleBarVisibility());
+    setLatexUse(UserAdvancedPref.getLatexSupport());
+    setFrontMatterUse(UserAdvancedPref.getFrontmatterSupport());
   }
 
   void setMainDir(String dir) {
@@ -108,8 +116,8 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void setHiddenFolders(String dir) {
-    _archivePath = path.join(mainDir, '.archive');
-    _trashPath = path.join(mainDir, '.trash');
+    _archivePath = path.join(dir, '.archive');
+    _trashPath = path.join(dir, '.trash');
   }
 
   void setLayout(String layout) {
@@ -172,15 +180,24 @@ class SettingsProvider with ChangeNotifier {
     String currentFolderName = 'Notes';
     bool isTag = false;
     List<FileSystemEntity> filesWithTags = [];
+    bool isRecentFiles = false;
 
     // Check if path not a file, if not, check if it is a tag, if not, return to mainDir
     if (!await FileSystemEntity.isDirectory(folder)) {
-      if (folder.startsWith('#')) {
+      if (_isTagFolder(folder)) {
+        // Tag UTF-8 icon unicode value: U+203B aka REFERENCE MARK
+        folder = folder.replaceFirst('※', '');
         isTag = true;
-        Map<String, List<String>> tagMap = await getTagMap();
+        Map<String, List<String>> tagMap =
+            await StorageSystem.getAllTags(mainDir);
         if (tagMap[folder] != null) {
           filesWithTags.addAll(tagMap[folder]!.map((e) => File(e)));
         }
+      } else if (_isRecentFolder(folder)) {
+        // Recent UTF-8 icon unicode value: U+23F1 aka STOPWATCH
+        folder = 'Recently Opened';
+        isRecentFiles = true;
+        loadRecentFiles();
       } else {
         if (context != null && context.mounted) {
           context.read<NavigationProvider>().routeHistory.clear();
@@ -190,9 +207,16 @@ class SettingsProvider with ChangeNotifier {
       }
     }
 
-    final items = isTag
+    final List<FileSystemEntity> items = isTag
         ? filesWithTags
-        : await StorageSystem.listFolderContents(Uri.parse(folder));
+        : isRecentFiles
+            ? recentFilesList
+                .map(
+                  (e) => File(e),
+                )
+                .toList()
+            : await StorageSystem.listFolderContents(Uri.parse(folder));
+
     final sortedItems =
         ItemSortHandler(sortOrder, folderPriority).getSortedItems(items);
     if (isTag) {

@@ -10,7 +10,7 @@
 - Add "Find in File" feature
   - Will probably need to clone [TocController] to accept any node and limit to searching only in markdown preview mode, more work will be needed to make it work in edit mode
 - Maybe a toggle to disable markdown rendering from Grid/List view
-- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
+- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-sy ntax/)
   - Current footnote that came from library `markdown_widget` is somewhat broken
 - Add spell checker that has multi-platform support
   - Needs offline support to not rely on apis
@@ -20,6 +20,24 @@
 - https://github.com/devdfcom/docman
 
 ## Day to Day Changes:
+
+### (November 24, 2025)
+
+- Fixed custom settings not being loaded on startup
+- Provider optimizations and code cleaning
+
+### (November 22, 2025)
+
+- Finished recent opened notes feature
+- Fixed tags incorrectly shown in tag menu inside drawer
+- Removed `package_info_plus` due to issues with RB (Reproducible Builds)
+
+### (November 14, 2025)
+
+- Fixed 'All Notes' button on drawer rail for desktop
+- Changed how drawer tag list works to not have issues with real folders that start with #
+- Added 'Recent' tab, still needs logic to save last opened files
+- Refreshed desktop images in README
 
 ### (October 25, 2025)
 

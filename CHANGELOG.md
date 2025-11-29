@@ -2,6 +2,19 @@
 
 > Moved DevLog into separate file
 
+## v0.10.5
+
+### Changes:
+
+- Added a recently opened notes tab in drawer to see notes viewed the past week
+- AUR packages available [#46](https://github.com/RoBoT095/printnotes/pull/46)
+- Minor optimizations
+
+### Fixed:
+
+- Custom style settings not being loaded on startup
+- Tags showing up incorrectly in drawer tag menu
+
 ## v0.10.4 - Oct 25, 2025
 
 ### Changes:

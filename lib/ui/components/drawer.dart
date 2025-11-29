@@ -1,38 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/settings_provider.dart';
 
 import 'package:printnotes/utils/handlers/open_url_link.dart';
 
-import 'package:printnotes/ui/screens/hidden/trash_archive_screens.dart';
+import 'package:printnotes/ui/screens/trash_archive_screens.dart';
 import 'package:printnotes/ui/screens/settings/settings_screen.dart';
 import 'package:printnotes/ui/screens/about/about_screen.dart';
 
-class DrawerView extends StatefulWidget {
+import 'package:printnotes/constants/constants.dart';
+
+class DrawerView extends StatelessWidget {
   const DrawerView({super.key, required this.reload});
 
   final VoidCallback reload;
-
-  @override
-  State<DrawerView> createState() => _DrawerViewState();
-}
-
-class _DrawerViewState extends State<DrawerView> {
-  String appVersion = '0.0.0';
-
-  @override
-  void initState() {
-    _getPackageInfo();
-    super.initState();
-  }
-
-  void _getPackageInfo() async {
-    final package = await PackageInfo.fromPlatform();
-    setState(() => appVersion = package.version);
-  }
 
   void _navigateToScreen(BuildContext context, {Widget? screen, String? path}) {
     Navigator.pop(context);
@@ -81,7 +64,14 @@ class _DrawerViewState extends State<DrawerView> {
                     onTap: () {
                       _navigateToScreen(context,
                           path: context.read<SettingsProvider>().mainDir);
-                      widget.reload();
+                      reload();
+                    }),
+                ListTile(
+                    leading: const Icon(Icons.history),
+                    title: Text('Recent'),
+                    onTap: () {
+                      _navigateToScreen(context, path: '⏱');
+                      reload();
                     }),
                 ExpansionTile(
                   leading: Icon(Icons.tag),
@@ -95,8 +85,8 @@ class _DrawerViewState extends State<DrawerView> {
                             (tag) => ListTile(
                                 title: Text(tag),
                                 onTap: () {
-                                  _navigateToScreen(context, path: tag);
-                                  widget.reload();
+                                  _navigateToScreen(context, path: '※$tag');
+                                  reload();
                                 }),
                           )
                           .toList()
