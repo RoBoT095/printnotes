@@ -23,12 +23,13 @@
 
 ### (December 1, 2025)
 
+- Note content from grid/list screen that is trimmed now ends with ellipsis
 - Removed toolbar url maker automatically adding `http://` if none in url
 - Added option to open notes automatically in edit mode in editor config page
 - Notes without names can be created and will be titled "untitled"
 - Fixed file name duplication appending additional (num) to existing (num) or (num)(num)
 - Changed note title from selectable text to regular text
-- Note title overflows with ellipse (...) and file extension is now hidden
+- Note title overflows with ellipsis (...) and file extension is now hidden
 
 ### (November 29, 2025)
 

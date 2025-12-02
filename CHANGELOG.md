@@ -11,6 +11,7 @@
 - File names in editor are not longer selectable to copy text
 - Added option for notes to default to edit mode on open instead of preview
   - To find setting, open any note > select 3 vertical dots > select **Configure**
+- And other minor changes...
 
 ### Fixed:
 

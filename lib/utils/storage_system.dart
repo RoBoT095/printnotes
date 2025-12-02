@@ -284,7 +284,7 @@ class StorageSystem {
           if (fileUri.toFilePath().endsWith('csv')) {
             trimmedContent = csvToMarkdownTable(trimmedContent);
           }
-          return trimmedContent;
+          return '$trimmedContent...';
         } else {
           return content;
         }
