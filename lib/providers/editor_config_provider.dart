@@ -6,10 +6,12 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 
 class EditorConfigProvider with ChangeNotifier {
   double _fontSize = 16;
+  bool _defaultEditorMode = false;
   bool _isEditing = false;
   List<ToolbarConfigItem> _toolbarItemList = [];
 
   double get fontSize => _fontSize;
+  bool get defaultEditorMode => _defaultEditorMode;
   bool get isEditing => _isEditing;
   List<ToolbarConfigItem> get toolbarItemList => _toolbarItemList;
 
@@ -22,6 +24,7 @@ class EditorConfigProvider with ChangeNotifier {
 
     _toolbarItemList = toolbarConfig ?? List.from(defaultToolbarList);
     _fontSize = UserEditorConfig.getFontSize();
+    _defaultEditorMode = UserEditorConfig.getDefaultEditorMode();
 
     notifyListeners();
   }
@@ -29,6 +32,12 @@ class EditorConfigProvider with ChangeNotifier {
   void setFontSize(double fontSize) {
     _fontSize = fontSize;
     UserEditorConfig.setFontSize(fontSize);
+    notifyListeners();
+  }
+
+  void setAutoEditMode(bool setMode) {
+    _defaultEditorMode = setMode;
+    UserEditorConfig.setDefaultEditorMode(setMode);
     notifyListeners();
   }
 

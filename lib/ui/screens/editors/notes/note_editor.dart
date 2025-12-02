@@ -79,9 +79,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _noteFocusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
+    _loadConfig();
 
     _fileCheckTimer = Timer.periodic(
         fileCheckInterval, (_) => _checkForExternalChanges(context));
+  }
+
+  Future<void> _loadConfig() async {
+    bool defaultEditMode =
+        context.read<EditorConfigProvider>().defaultEditorMode;
+    if (defaultEditMode) setState(() => _isEditingFile = defaultEditMode);
   }
 
   /// Load the passed files contents and set the state

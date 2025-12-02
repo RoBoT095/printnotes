@@ -9,6 +9,8 @@
 - Checkboxes now edit text and save when toggling them from preview mode
 - Creating notes without a name automatically gives it "untitled" name
 - File names in editor are not longer selectable to copy text
+- Added option for notes to default to edit mode on open instead of preview
+  - To find setting, open any note > select 3 vertical dots > select **Configure**
 
 ### Fixed:
 
