@@ -47,9 +47,10 @@ class ItemCreationHandler {
     final dialogResult = await showNameInputDialog('Enter note name');
     String noteName = dialogResult['name'];
     bool noteSubmitted = dialogResult['submitted'];
-    if (noteSubmitted && noteName.isNotEmpty) {
+    if (noteSubmitted) {
       try {
-        await StorageSystem.createFile(noteName, parentPath: currentPath)
+        await StorageSystem.createFile(noteName.isEmpty ? 'untitled' : noteName,
+                parentPath: currentPath)
             .then((e) {
           if (context.mounted) {
             final readSettProv = context.read<SettingsProvider>();
@@ -99,7 +100,7 @@ class ItemCreationHandler {
   }
 
   Future<Map<String, dynamic>> showNameInputDialog(String title) async {
-    String? name;
+    String name = '';
     bool submitted = false;
     await showDialog(
       context: context,

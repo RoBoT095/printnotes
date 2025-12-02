@@ -238,8 +238,9 @@ class StorageSystem {
       {String? parentPath}) async {
     final baseDir = parentPath ?? await DataPath.selectedDirectory;
     if (await nameExists(fileName, parentPath: baseDir)) {
-      throw Exception('A file or folder with this name already exists.');
+      fileName = await resolveUniqueFileName(path.join(baseDir!, fileName));
     }
+
     String ext = path.extension(fileName);
     final filePath =
         path.join(baseDir!, ext.isEmpty ? '$fileName.md' : fileName);
@@ -294,31 +295,10 @@ class StorageSystem {
     return 'No preview available';
   }
 
-  // Method to duplicate Items (not folders)
-  // adds (num) to end of name, continues adding up if a copy already exists
+  /// Method to duplicate files (not folders), adds (num) to duplicated files
+  /// in between name and file extension eg. 'name(1).md'
   static Future<String> duplicateItem(String originalPath) async {
-    final dir = path.dirname(originalPath);
-    final ext = path.extension(originalPath);
-    String baseName = path.basenameWithoutExtension(originalPath);
-
-    final regex = RegExp(r'^(.*)\((\d+)\)$');
-    int copyNumber = 1;
-
-    // Check for if the filename already ends with (num)
-    final match = regex.firstMatch(baseName);
-    if (match != null) {
-      baseName = match.group(1)!.trim(); // remove (num)
-      copyNumber = int.parse(match.group(2)!) + 1;
-    }
-
-    String newName = '$baseName($copyNumber)';
-    String newPath = path.join(dir, '$newName$ext');
-
-    while (await File(newPath).exists()) {
-      copyNumber++;
-      newName = '$baseName($copyNumber)';
-      newPath = path.join(dir, '$newName$ext');
-    }
+    final newPath = await resolveUniqueFileName(originalPath);
 
     final originalFile = File(originalPath);
     await originalFile.copy(newPath);
@@ -414,8 +394,10 @@ class StorageSystem {
     }
   }
 
-  // Get files (and folders) of a folder
-
+  /// Get files (and other folders) of a folder
+  ///
+  /// Use [recursive] to get files from nested folders and [showHidden] if you
+  /// want the files/folders that start with dot eg '.config/'
   static Future<List<FileSystemEntity>> listFolderContents(Uri folderUri,
       {bool recursive = false, bool showHidden = false}) async {
     final folder = Directory.fromUri(folderUri);
@@ -436,7 +418,7 @@ class StorageSystem {
     return [];
   }
 
-  // For moving files and folders around
+  /// For moving files and folders around
   static Future<void> moveItem(Uri itemUri, Uri newLocationUri) async {
     final String itemName = path.basename(itemUri.toFilePath());
     final String newPath = path.join(newLocationUri.toFilePath(), itemName);
@@ -467,7 +449,7 @@ class StorageSystem {
     }
   }
 
-  // For renaming files and folders (replaced old renameNote() and renameFolder())
+  /// For renaming files and folders (replaced old renameNote() and renameFolder())
   static Future<bool> renameItem(Uri oldPathUri, String newName) async {
     try {
       final oldPath = oldPathUri.toFilePath();
@@ -502,5 +484,36 @@ class StorageSystem {
       debugPrint('Error renaming item: $e');
       return false;
     }
+  }
+
+  /// If file name exists adds (num) to end of name, continues adding up if a
+  /// copy already exists eg. "untitled(1).md"
+  ///
+  /// Pass in full file path and get new file path.
+  static Future<String> resolveUniqueFileName(String filePath) async {
+    String baseName = path.basenameWithoutExtension(filePath);
+    final String parentDir = path.dirname(filePath);
+    final String fileExt = path.extension(filePath);
+
+    final regex = RegExp(r'^(.*)\((\d+)\)$');
+    int copyNumber = 1;
+
+    // Check for if the filename already ends with (num)
+    final match = regex.firstMatch(baseName);
+    if (match != null) {
+      baseName = match.group(1)!.trim(); // remove (num)
+      copyNumber = int.parse(match.group(2)!) + 1;
+    }
+
+    String newName = '$baseName($copyNumber)';
+    String newPath = path.join(parentDir, '$newName$fileExt');
+
+    while (await nameExists(newName, parentPath: parentDir)) {
+      copyNumber++;
+      newName = '$baseName($copyNumber)';
+      newPath = path.join(parentDir, '$newName$fileExt');
+    }
+
+    return newPath;
   }
 }

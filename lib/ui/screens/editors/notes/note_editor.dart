@@ -232,9 +232,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         appBar: AppBarDragWrapper(
           child: AppBar(
             centerTitle: false,
-            title: SelectableText(
-              fmTitle ?? path.basename(widget.fileUri.toFilePath()),
-              maxLines: 1,
+            title: Text(
+              fmTitle ??
+                  path.basenameWithoutExtension(widget.fileUri.toFilePath()),
+              style: TextStyle(overflow: TextOverflow.ellipsis),
             ),
             actions: _isError
                 ? null

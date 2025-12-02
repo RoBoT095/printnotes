@@ -27,6 +27,13 @@ Forgive me for I have sinned, I have tried an IDE AI using local LLM, and it jus
 
 - Added working checkboxes that save file from preview mode #AICode
 
+### (December 1, 2025)
+
+- Notes without names can be created and will be titled "untitled"
+- Fixed file name duplication appending additional (num) to existing (num) or (num)(num)
+- Changed note title from selectable text to regular text
+- Note title overflows with ellipse (...) and file extension is now hidden
+
 ### (November 24, 2025)
 
 - Fixed custom settings not being loaded on startup

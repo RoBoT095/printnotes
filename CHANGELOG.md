@@ -7,6 +7,12 @@
 ### Changes:
 
 - Checkboxes now edit text and save when toggling them from preview mode
+- Creating notes without a name automatically gives it "untitled" name
+- File names in editor are not longer selectable to copy text
+
+### Fixed:
+
+- Fixed file duplication appending additional numbers if duplicating a duplicate
 
 ## v0.10.5 - Nov 29, 2025
 
