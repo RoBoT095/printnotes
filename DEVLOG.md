@@ -21,19 +21,20 @@
 
 ## Day to Day Changes:
 
-### (November 29, 2025)
-
-Forgive me for I have sinned, I have tried an IDE AI using local LLM, and it just added working checkboxes in 3 short prompts. I will resist the urge to always use it, but I want to at least mention it every time I use it and keep commits of purely ai work separate from my changes to make sure it doesn't ruin anything. I'll add tag here to list item and "AICode" to commit to help differentiate it.
-
-- Added working checkboxes that save file from preview mode #AICode
-
 ### (December 1, 2025)
 
+- Removed toolbar url maker automatically adding `http://` if none in url
 - Added option to open notes automatically in edit mode in editor config page
 - Notes without names can be created and will be titled "untitled"
 - Fixed file name duplication appending additional (num) to existing (num) or (num)(num)
 - Changed note title from selectable text to regular text
 - Note title overflows with ellipse (...) and file extension is now hidden
+
+### (November 29, 2025)
+
+Forgive me for I have sinned, I have tried an IDE AI using local LLM, and it just added working checkboxes in 3 short prompts. I will resist the urge to always use it, but I want to at least mention it every time I use it and keep commits of purely ai work separate from my changes to make sure it doesn't ruin anything. I'll add tag here to list item and "AICode" to commit to help differentiate it.
+
+- Added working checkboxes that save file from preview mode #AICode
 
 ### (November 24, 2025)
 
