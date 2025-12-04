@@ -23,6 +23,7 @@
 
 ### (December 3, 2025)
 
+- Fixed recently opened files list trying to show deleted files
 - Changed home screen showing folder path like a breadcrumb rather than only folder name
 
 ### (December 1, 2025)

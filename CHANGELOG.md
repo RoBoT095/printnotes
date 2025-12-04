@@ -15,7 +15,8 @@
 
 ### Fixed:
 
-- Fixed file duplication appending additional numbers if duplicating a duplicate
+- Recently opened files list trying to show files that don't exist
+- File duplication appending additional numbers if duplicating a duplicate
 
 ## v0.10.5 - Nov 29, 2025
 
