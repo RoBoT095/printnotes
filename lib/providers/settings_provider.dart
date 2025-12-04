@@ -222,7 +222,7 @@ class SettingsProvider with ChangeNotifier {
     if (isTag) {
       currentFolderName = folder;
     } else if (folder != mainDir) {
-      currentFolderName = path.basename(folder);
+      currentFolderName = folder.replaceFirst(mainDir, '');
     } else {
       currentFolderName;
     }

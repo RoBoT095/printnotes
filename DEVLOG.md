@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (December 3, 2025)
+
+- Changed home screen showing folder path like a breadcrumb rather than only folder name
+
 ### (December 1, 2025)
 
 - Note content from grid/list screen that is trimmed now ends with ellipsis
