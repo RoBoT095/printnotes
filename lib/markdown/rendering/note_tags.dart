@@ -54,7 +54,7 @@ class NoteTagNode extends SpanNode {
 }
 
 class NoteTagSyntax extends m.InlineSyntax {
-  NoteTagSyntax() : super(r'^\s*(#\w+)');
+  NoteTagSyntax() : super(r'(?<!\S)(#[\w-]+)(?!\S)');
 
   @override
   bool onMatch(m.InlineParser parser, Match match) {

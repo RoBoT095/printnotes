@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (December 13, 2025)
+
+- Fixed tag markdown... again, drawer wasn't seeming most of the tags and I don't understand regex that well
+
 ### (December 3, 2025)
 
 - Fixed recently opened files list trying to show deleted files

@@ -17,6 +17,7 @@
 
 - Recently opened files list trying to show files that don't exist
 - File duplication appending additional numbers if duplicating a duplicate
+- Drawer not seeing most tags
 
 ## v0.10.5 - Nov 29, 2025
 

@@ -133,7 +133,7 @@ class StorageSystem {
 
       String contents = await file.readAsString();
 
-      final matches = RegExp(r'^\s*(#\w+)').allMatches(contents);
+      final matches = RegExp(r'(?<!\S)(#[\w-]+)(?!\S)').allMatches(contents);
 
       for (final match in matches) {
         final tag = contents.substring(match.start, match.end);
