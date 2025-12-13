@@ -23,6 +23,7 @@
 
 ### (December 13, 2025)
 
+- Added menu item to settings on where to report issues
 - Fixed tag markdown... again, drawer wasn't seeming most of the tags and I don't understand regex that well
 
 ### (December 3, 2025)

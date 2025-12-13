@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/theme_provider.dart';
@@ -9,6 +10,7 @@ import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
 
 import 'package:printnotes/utils/configs/data_path.dart';
+import 'package:printnotes/utils/handlers/open_url_link.dart';
 
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
 import 'package:printnotes/ui/components/centered_page_wrapper.dart';
@@ -347,6 +349,18 @@ class SettingsScreen extends StatelessWidget {
                     onChanged: (value) {
                       context.read<SettingsProvider>().setFrontMatterUse(value);
                     }),
+              ),
+              MenuTile(
+                leading: const Icon(Icons.report_outlined),
+                title: 'Report Issue',
+                subtitle: MenuTile.subtitleText(context,
+                    text:
+                        'Open issue on github or email at:\n RoBoT095@printnotes.app'),
+                trailing: Icon(Icons.launch_outlined),
+                onTap: () => urlHandler(
+                    context, 'https://github.com/RoBoT095/printnotes/issues'),
+                onLongPress: () async => await Clipboard.setData(
+                    ClipboardData(text: 'robot095@printnotes.app')),
                 isLast: true,
               ),
               const SizedBox(height: 12),
