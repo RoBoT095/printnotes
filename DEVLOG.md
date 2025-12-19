@@ -10,7 +10,7 @@
 - Add "Find in File" feature
   - Will probably need to clone [TocController] to accept any node and limit to searching only in markdown preview mode, more work will be needed to make it work in edit mode
 - Maybe a toggle to disable markdown rendering from Grid/List view
-- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-sy ntax/)
+- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
   - Current footnote that came from library `markdown_widget` is somewhat broken
 - Add spell checker that has multi-platform support
   - Needs offline support to not rely on apis
@@ -20,6 +20,10 @@
 - https://github.com/devdfcom/docman
 
 ## Day to Day Changes:
+
+### (December 18, 2025)
+
+- Bumped flutter version from `3.35.1` to `3.38.5`
 
 ### (December 13, 2025)
 

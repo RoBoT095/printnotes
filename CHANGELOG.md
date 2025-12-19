@@ -266,7 +266,7 @@
 
   - Code blocks are now colored if coding language specified
   - Now supports LaTeX math notions
-  - Desktop supports **crtl+s** for saving and **crtl+shift+v** to switch between edit and preview mode
+  - Desktop supports **ctrl+s** for saving and **ctrl+shift+v** to switch between edit and preview mode
 
 - Changed look on snackbar popups
 - Added undo/redo buttons to note editor
