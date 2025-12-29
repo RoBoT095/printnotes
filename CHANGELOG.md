@@ -6,6 +6,7 @@
 
 ### Changes:
 
+- On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
 - Checkboxes now edit text and save when toggling them from preview mode
 - Creating notes without a name automatically gives it "untitled" name
 - File names in editor are not longer selectable to copy text

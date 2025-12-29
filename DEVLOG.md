@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (December 29, 2025)
+
+- On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
+
 ### (December 18, 2025)
 
 - Bumped flutter version from `3.35.1` to `3.38.5`
