@@ -178,6 +178,10 @@ Running as a linux application on flutter version _3.24.0 (or newer)_ causes any
 
 </details>
 
+## Reporting Issues and Bugs
+
+To report a bug you can always file an issue on github or contact me via **robot095@printnotes.app**
+
 ## Donations & Support
 
 Feel free to support me and my work through any of these platforms:
