@@ -152,98 +152,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
           bottom: searchToggled
               ? PreferredSize(
                   preferredSize: const Size.fromHeight(kToolbarHeight),
-                  child: Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          border: Border(
-                              top: BorderSide(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface))),
-                      child: Column(
-                        children: [
-                          textSearcher.isSearching
-                              ? LinearProgressIndicator(
-                                  value: textSearcher.searchProgress,
-                                  minHeight: 4,
-                                )
-                              : const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Stack(
-                                  alignment: Alignment.centerLeft,
-                                  children: [
-                                    TextField(
-                                      autofocus: true,
-                                      focusNode: focusNode,
-                                      controller: searchTextController,
-                                      decoration: const InputDecoration(
-                                        contentPadding:
-                                            EdgeInsets.only(right: 50),
-                                      ),
-                                      textInputAction: TextInputAction.search,
-                                      onChanged: (value) {
-                                        textSearcher.startTextSearch(
-                                          searchTextController.text,
-                                          searchImmediately: true,
-                                        );
-                                      },
-                                      onSubmitted: (value) {},
-                                    ),
-                                    if (textSearcher.hasMatches)
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          '${textSearcher.currentIndex! + 1} / ${textSearcher.matches.length}',
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              IconButton(
-                                onPressed: (textSearcher.currentIndex ?? 0) > 0
-                                    ? () async {
-                                        await textSearcher.goToPrevMatch();
-                                        _update();
-                                      }
-                                    : null,
-                                icon: const Icon(Icons.arrow_upward),
-                                iconSize: 20,
-                              ),
-                              IconButton(
-                                onPressed: (textSearcher.currentIndex ?? 0) <
-                                        textSearcher.matches.length
-                                    ? () async {
-                                        await textSearcher.goToNextMatch();
-                                        _update();
-                                      }
-                                    : null,
-                                icon: const Icon(Icons.arrow_downward),
-                                iconSize: 20,
-                              ),
-                              IconButton(
-                                onPressed: searchTextController.text.isNotEmpty
-                                    ? () {
-                                        searchTextController.text = '';
-                                        textSearcher.resetTextSearch();
-                                        focusNode.requestFocus();
-                                      }
-                                    : null,
-                                icon: const Icon(Icons.close),
-                                iconSize: 20,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                        ],
-                      )))
+                  child: searchBar(textSearcher))
               : null,
         ),
       ),
@@ -251,8 +160,12 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
         widget.pdfUri.toFilePath(),
         controller: pdfController,
         params: PdfViewerParams(
+          // onViewerReady: (document, controller) {},
           // Search
-          pagePaintCallbacks: [textSearcher.pageTextMatchPaintCallback],
+          pagePaintCallbacks: [
+            // if (textSearcher.value != null)
+            textSearcher.pageTextMatchPaintCallback
+          ],
           // Clickable Links
           linkHandlerParams: linkHighlight
               ? PdfLinkHandlerParams(
@@ -313,6 +226,98 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
       ),
       floatingActionButton:
           pdfSpeedDial(isOpen: MediaQuery.sizeOf(context).width >= 800),
+    );
+  }
+
+  Widget searchBar(PdfTextSearcher textSearcher) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(
+              top: BorderSide(color: Theme.of(context).colorScheme.onSurface))),
+      child: Column(
+        children: [
+          textSearcher.isSearching
+              ? LinearProgressIndicator(
+                  value: textSearcher.searchProgress,
+                  minHeight: 4,
+                )
+              : const SizedBox(height: 4),
+          Row(
+            children: [
+              const SizedBox(width: 8),
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    TextField(
+                      autofocus: true,
+                      focusNode: focusNode,
+                      controller: searchTextController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(right: 50),
+                      ),
+                      textInputAction: TextInputAction.search,
+                      onChanged: (value) {
+                        textSearcher.startTextSearch(
+                          searchTextController.text,
+                          searchImmediately: true,
+                        );
+                      },
+                      onSubmitted: (value) {},
+                    ),
+                    if (textSearcher.hasMatches)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          '${textSearcher.currentIndex! + 1} / ${textSearcher.matches.length}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 4),
+              IconButton(
+                onPressed: (textSearcher.currentIndex ?? 0) > 0
+                    ? () async {
+                        await textSearcher.goToPrevMatch();
+                        _update();
+                      }
+                    : null,
+                icon: const Icon(Icons.arrow_upward),
+                iconSize: 20,
+              ),
+              IconButton(
+                onPressed: (textSearcher.currentIndex ?? 0) <
+                        textSearcher.matches.length
+                    ? () async {
+                        await textSearcher.goToNextMatch();
+                        _update();
+                      }
+                    : null,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 20,
+              ),
+              IconButton(
+                onPressed: searchTextController.text.isNotEmpty
+                    ? () {
+                        searchTextController.text = '';
+                        textSearcher.resetTextSearch();
+                        focusNode.requestFocus();
+                      }
+                    : null,
+                icon: const Icon(Icons.close),
+                iconSize: 20,
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+        ],
+      ),
     );
   }
 }

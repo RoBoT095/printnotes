@@ -2,7 +2,9 @@
 
 > Moved DevLog into separate file
 
-## v0.10.6 - WIP
+## vv0.10.7 - WIP
+
+## v0.10.6 - (Jan 24, 2026)
 
 ### Changes:
 
@@ -264,7 +266,6 @@
 - Delete is now permanent by default
 - Made styling changes to drawer
 - Replaced markdown rendering library to `markdown_widget`
-
   - Code blocks are now colored if coding language specified
   - Now supports LaTeX math notions
   - Desktop supports **ctrl+s** for saving and **ctrl+shift+v** to switch between edit and preview mode

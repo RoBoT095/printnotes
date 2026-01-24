@@ -21,6 +21,11 @@
 
 ## Day to Day Changes:
 
+### (January 24, 2026)
+
+- Moved PDF search bar into separate widget
+- Updated README.md to remove quote about quillpad
+
 ### (December 29, 2025)
 
 - On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
@@ -268,7 +273,6 @@ Been working on new styling options and forgot to write changelog
 ### (April 12-13, 2025)
 
 - Added Frontmatter support for tags: (**Note:** colors can only be hex values in quotation marks ex. '#cbff90')
-
   - title -> Displays set title rather then file name
   - description -> Overrides preview of file content with set description
   - color -> Changes the color of the text
