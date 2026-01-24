@@ -12,8 +12,6 @@
 .swiftpm/
 migrate_working_dir/
 
-.testing/
-
 # IntelliJ related
 *.iml
 *.ipr
@@ -54,3 +52,4 @@ app.*.map.json
 
 outputs/
 scripts/*.txt
+.*/

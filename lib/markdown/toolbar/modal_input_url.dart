@@ -56,8 +56,8 @@ class ModalInputUrl extends StatelessWidget {
               onSubmitted: (String value) {
                 Navigator.pop(context);
 
-                /// check if the user entered an empty input
-                if (value.isEmpty) {
+                // check if the user entered an empty input
+                if (value.trim().isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: const Text(
@@ -70,16 +70,14 @@ class ModalInputUrl extends StatelessWidget {
                       duration: const Duration(milliseconds: 700),
                     ),
                   );
-                } else {
-                  if (!value.contains(RegExp(r'https?:\/\/(www.)?([^\s]+)'))) {
-                    value = "http://$value";
-                  }
-                  toolbar.action(
-                    "$leftText$value)",
-                    "",
-                    textSelection: selection,
-                  );
+                  return;
                 }
+
+                toolbar.action(
+                  "$leftText$value)",
+                  "",
+                  textSelection: selection,
+                );
               },
             ),
           ),

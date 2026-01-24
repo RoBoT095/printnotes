@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,9 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isLinux || Platform.isWindows) {
     windowManager.ensureInitialized();
+  }
+  if (Platform.isAndroid) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
   runApp(
     MultiProvider(

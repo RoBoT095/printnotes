@@ -208,6 +208,14 @@ class UserEditorConfig {
     return App.localStorage.getDouble('editorConfigFontSize') ?? 16;
   }
 
+  static setDefaultEditorMode(bool setMode) {
+    App.localStorage.setBool('defaultEditorMode', setMode);
+  }
+
+  static bool getDefaultEditorMode() {
+    return App.localStorage.getBool('defaultEditorMode') ?? false;
+  }
+
   // static void setToolbarConfig(String config)  {
   //
   //   App.localStorage.setString('toolbar_config', config);

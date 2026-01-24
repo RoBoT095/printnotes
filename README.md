@@ -6,8 +6,6 @@
 
 **Inspired by Google Keep and Obsidian**
 
-> I will make <a href='https://github.com/quillpad/quillpad'>QuillPad</a> cry for not going cross-platform, but they got me beat on checkboxes, jk nice app
-
 <img src="https://github.com/RoBoT095/printnotes/blob/main/images/AllThemes2-smaller.png?raw=true" alt="all themes" />
 
 ## Features
@@ -177,6 +175,10 @@ On completion you should have an `outputs/` folder with 4 apk files (app-release
 Running as a linux application on flutter version _3.24.0 (or newer)_ causes any `TextFields` to **slows down** or **crash** the app (ex. editing note, creating note/folder, searching, etc), best workaround currently is either disabling the "Enable the on-screen keyboard" option in Accessibilty > Keyboard, or wrapping all textfields with `ExcludeSemantics` widget, or downgrading to flutter version _3.22.3_.
 
 </details>
+
+## Reporting Issues and Bugs
+
+To report a bug you can always file an issue on github or contact me via **robot095@printnotes.app**
 
 ## Donations & Support
 

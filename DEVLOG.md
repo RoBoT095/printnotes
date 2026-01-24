@@ -10,7 +10,7 @@
 - Add "Find in File" feature
   - Will probably need to clone [TocController] to accept any node and limit to searching only in markdown preview mode, more work will be needed to make it work in edit mode
 - Maybe a toggle to disable markdown rendering from Grid/List view
-- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-sy ntax/)
+- Add more markdown syntax: [footnotes](https://www.markdownguide.org/extended-syntax/)
   - Current footnote that came from library `markdown_widget` is somewhat broken
 - Add spell checker that has multi-platform support
   - Needs offline support to not rely on apis
@@ -20,6 +20,45 @@
 - https://github.com/devdfcom/docman
 
 ## Day to Day Changes:
+
+### (January 24, 2026)
+
+- Moved PDF search bar into separate widget
+- Updated README.md to remove quote about quillpad
+
+### (December 29, 2025)
+
+- On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
+
+### (December 18, 2025)
+
+- Bumped flutter version from `3.35.1` to `3.38.5`
+
+### (December 13, 2025)
+
+- Added menu item to settings on where to report issues
+- Fixed tag markdown... again, drawer wasn't seeming most of the tags and I don't understand regex that well
+
+### (December 3, 2025)
+
+- Fixed recently opened files list trying to show deleted files
+- Changed home screen showing folder path like a breadcrumb rather than only folder name
+
+### (December 1, 2025)
+
+- Note content from grid/list screen that is trimmed now ends with ellipsis
+- Removed toolbar url maker automatically adding `http://` if none in url
+- Added option to open notes automatically in edit mode in editor config page
+- Notes without names can be created and will be titled "untitled"
+- Fixed file name duplication appending additional (num) to existing (num) or (num)(num)
+- Changed note title from selectable text to regular text
+- Note title overflows with ellipsis (...) and file extension is now hidden
+
+### (November 29, 2025)
+
+Forgive me for I have sinned, I have tried an IDE AI using local LLM, and it just added working checkboxes in 3 short prompts. I will resist the urge to always use it, but I want to at least mention it every time I use it and keep commits of purely ai work separate from my changes to make sure it doesn't ruin anything. I'll add tag here to list item and "AICode" to commit to help differentiate it.
+
+- Added working checkboxes that save file from preview mode #AICode
 
 ### (November 24, 2025)
 
@@ -234,7 +273,6 @@ Been working on new styling options and forgot to write changelog
 ### (April 12-13, 2025)
 
 - Added Frontmatter support for tags: (**Note:** colors can only be hex values in quotation marks ex. '#cbff90')
-
   - title -> Displays set title rather then file name
   - description -> Overrides preview of file content with set description
   - color -> Changes the color of the text

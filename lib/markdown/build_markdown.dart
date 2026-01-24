@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:printnotes/markdown/rendering/strikethrough.dart';
 import 'package:printnotes/markdown/rendering/subscript.dart';
@@ -31,6 +33,8 @@ MarkdownConfig theMarkdownConfigs(
   bool? hideCodeButtons,
   bool inEditor = false,
   Color? textColor,
+  TextEditingController? editingController,
+  Future<void> Function()? onCheckboxToggle,
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   final config =
@@ -87,7 +91,30 @@ MarkdownConfig theMarkdownConfigs(
       ),
     ),
     ListConfig(marginLeft: editorFontSize * 1.5),
-    CheckBoxConfig(size: inEditor ? editorFontSize * 1.25 : null),
+    CheckBoxConfig(
+      size: inEditor ? editorFontSize * 1.25 : null,
+      onToggle: (event) {
+        final lineIdx = event.line;
+        if (editingController == null || lineIdx == null) return;
+        final lines = editingController.text.split('\n');
+        if (lineIdx < 0 || lineIdx >= lines.length) return;
+        final line = lines[lineIdx];
+        final taskRegex = RegExp(r'^(\s*[-\*\+]\s*)\[[ xX]\]\s*(.*)');
+        final m = taskRegex.firstMatch(line);
+        if (m != null) {
+          final prefix = m.group(1) ?? '';
+          final rest = m.group(2) ?? '';
+          final newMark = event.checked ? '[x]' : '[ ]';
+          lines[lineIdx] = '$prefix$newMark $rest';
+          editingController.text = lines.join('\n');
+
+          // call save callback if provided
+          if (onCheckboxToggle != null) {
+            unawaited(onCheckboxToggle());
+          }
+        }
+      },
+    ),
     TableConfig(
       wrapper: (table) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -182,6 +209,8 @@ Widget buildMarkdownWidget(
   ScrollPhysics? physics,
   bool shrinkWrap = false,
   bool? selectable,
+  TextEditingController? editingController,
+  Future<void> Function()? onCheckboxToggle,
 }) {
   return MarkdownWidget(
     data: data,
@@ -190,7 +219,13 @@ Widget buildMarkdownWidget(
     physics: physics,
     shrinkWrap: shrinkWrap,
     selectable: selectable ?? true,
-    config: theMarkdownConfigs(context, fileUri: fileUri, inEditor: true),
+    config: theMarkdownConfigs(
+      context,
+      fileUri: fileUri,
+      inEditor: true,
+      editingController: editingController,
+      onCheckboxToggle: onCheckboxToggle,
+    ),
     markdownGenerator: theMarkdownGenerators(context),
   );
 }

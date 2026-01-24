@@ -79,16 +79,25 @@ class DataPath {
     final recentList = App.localStorage.getStringList('recentFilesList') ?? [];
     final now = DateTime.now().millisecondsSinceEpoch;
 
-    final items = recentList
-        .map((e) => jsonDecode(e))
-        .where((entry) {
-          final openedAt = entry['openedAt'] as int;
-          return (now - openedAt) <= within.inMilliseconds;
-        })
-        .map((e) => e['path'] as String)
-        .toList();
+    final List<String> validEntries = [];
+    final List<String> cleanedList = <String>[];
 
-    return items;
+    for (final item in recentList) {
+      final entry = jsonDecode(item);
+      final openedAt = entry['openedAt'] as int;
+      final path = entry['path'] as String;
+
+      final isRecent = (now - openedAt) <= within.inMicroseconds;
+      final exists = File(path).existsSync();
+
+      if (isRecent && exists) {
+        validEntries.add(path);
+        cleanedList.add(item);
+      }
+    }
+
+    App.localStorage.setStringList('recentFilesList', cleanedList);
+    return validEntries;
   }
 
   // Hidden app config file called .main_config.json

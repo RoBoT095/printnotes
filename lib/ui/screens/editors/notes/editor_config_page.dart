@@ -15,8 +15,11 @@ class EditorConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double userFontSize = context.watch<EditorConfigProvider>().fontSize;
-    bool isEditingToolbar = context.watch<EditorConfigProvider>().isEditing;
+    final watchProvider = context.watch<EditorConfigProvider>();
+
+    double userFontSize = watchProvider.fontSize;
+    bool isEditingToolbar = watchProvider.isEditing;
+    bool autoEditMode = watchProvider.defaultEditorMode;
 
     return Scaffold(
       appBar: AppBarDragWrapper(
@@ -43,6 +46,7 @@ class EditorConfigPage extends StatelessWidget {
                 'Font Size',
                 style: TextStyle(fontSize: userFontSize),
               ),
+              subtitle: const Text('Change font size of all text in note'),
               trailing: DropdownButton(
                   value: userFontSize,
                   items: const [
@@ -60,6 +64,17 @@ class EditorConfigPage extends StatelessWidget {
                           .setFontSize(value.toDouble());
                     }
                   }),
+            ),
+            ListTile(
+              iconColor: Theme.of(context).colorScheme.secondary,
+              leading: const Icon(Icons.edit),
+              title: const Text('Default to Edit Mode'),
+              subtitle:
+                  const Text('Open note in edit mode rather than preview'),
+              trailing: Switch(
+                  value: autoEditMode,
+                  onChanged:
+                      context.read<EditorConfigProvider>().setAutoEditMode),
             ),
             const Divider(),
             sectionTitle(

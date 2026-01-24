@@ -2,7 +2,28 @@
 
 > Moved DevLog into separate file
 
-## v0.10.5
+## vv0.10.7 - WIP
+
+## v0.10.6 - (Jan 24, 2026)
+
+### Changes:
+
+- On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
+- Checkboxes now edit text and save when toggling them from preview mode
+- Creating notes without a name automatically gives it "untitled" name
+- File names in editor are not longer selectable to copy text
+- Added option for notes to default to edit mode on open instead of preview
+  - To find setting, open any note > select 3 vertical dots > select **Configure**
+- Added button in settings for where to report issues
+- And other minor changes...
+
+### Fixed:
+
+- Recently opened files list trying to show files that don't exist
+- File duplication appending additional numbers if duplicating a duplicate
+- Drawer not seeing most tags
+
+## v0.10.5 - Nov 29, 2025
 
 ### Changes:
 
@@ -245,10 +266,9 @@
 - Delete is now permanent by default
 - Made styling changes to drawer
 - Replaced markdown rendering library to `markdown_widget`
-
   - Code blocks are now colored if coding language specified
   - Now supports LaTeX math notions
-  - Desktop supports **crtl+s** for saving and **crtl+shift+v** to switch between edit and preview mode
+  - Desktop supports **ctrl+s** for saving and **ctrl+shift+v** to switch between edit and preview mode
 
 - Changed look on snackbar popups
 - Added undo/redo buttons to note editor

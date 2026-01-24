@@ -79,9 +79,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _noteFocusNode = FocusNode();
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
+    _loadConfig();
 
     _fileCheckTimer = Timer.periodic(
         fileCheckInterval, (_) => _checkForExternalChanges(context));
+  }
+
+  Future<void> _loadConfig() async {
+    bool defaultEditMode =
+        context.read<EditorConfigProvider>().defaultEditorMode;
+    if (defaultEditMode) setState(() => _isEditingFile = defaultEditMode);
   }
 
   /// Load the passed files contents and set the state
@@ -232,9 +239,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         appBar: AppBarDragWrapper(
           child: AppBar(
             centerTitle: false,
-            title: SelectableText(
-              fmTitle ?? path.basename(widget.fileUri.toFilePath()),
-              maxLines: 1,
+            title: Text(
+              fmTitle ??
+                  path.basenameWithoutExtension(widget.fileUri.toFilePath()),
+              style: TextStyle(overflow: TextOverflow.ellipsis),
             ),
             actions: _isError
                 ? null
@@ -479,6 +487,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                                 physics:
                                                     NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
+                                                editingController:
+                                                    _notesController,
+                                                onCheckboxToggle: () =>
+                                                    _saveFileContent(context),
                                               ),
                                       ),
                                 SizedBox(height: 100),

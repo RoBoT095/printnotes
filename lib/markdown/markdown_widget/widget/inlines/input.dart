@@ -23,11 +23,21 @@ class InputNode extends SpanNode {
         (parentStyle?.fontSize ?? config.p.textStyle.fontSize ?? 16.0) *
             (parentStyle?.height ?? config.p.textStyle.height ?? 1.5);
     final marginTop = max((parentStyleHeight / 2) - 12, 0.0);
+    int? dataLine;
+    if (attr['data-line'] != null) {
+      dataLine = int.tryParse(attr['data-line']!);
+    }
+
     return WidgetSpan(
       child: config.input.builder?.call(checked) ??
           Padding(
             padding: EdgeInsets.fromLTRB(2, marginTop, 2, 0),
-            child: MCheckBox(checked: checked),
+            child: MCheckBox(
+              checked: checked,
+              size: config.input.size,
+              onChanged: (newValue) => config.input.onToggle
+                  ?.call(CheckBoxToggleEvent(line: dataLine, checked: newValue)),
+            ),
           ),
     );
   }
@@ -37,11 +47,18 @@ class InputNode extends SpanNode {
 typedef CheckBoxBuilder = Widget Function(bool checked);
 
 ///config class for checkbox, tag: input
+class CheckBoxToggleEvent {
+  final int? line;
+  final bool checked;
+  const CheckBoxToggleEvent({this.line, required this.checked});
+}
+
 class CheckBoxConfig implements InlineConfig {
   final CheckBoxBuilder? builder;
   final double? size;
+  final void Function(CheckBoxToggleEvent event)? onToggle;
 
-  const CheckBoxConfig({this.builder, this.size});
+  const CheckBoxConfig({this.builder, this.size, this.onToggle});
 
   @nonVirtual
   @override
@@ -49,27 +66,54 @@ class CheckBoxConfig implements InlineConfig {
 }
 
 ///the check box widget
-class MCheckBox extends StatelessWidget {
+class MCheckBox extends StatefulWidget {
   final bool checked;
   final double? size;
+  final ValueChanged<bool>? onChanged;
 
   const MCheckBox({
     super.key,
     required this.checked,
     this.size,
+    this.onChanged,
   });
+
+  @override
+  State<MCheckBox> createState() => _MCheckBoxState();
+}
+
+class _MCheckBoxState extends State<MCheckBox> {
+  late bool _checked;
+
+  @override
+  void initState() {
+    super.initState();
+    _checked = widget.checked;
+  }
+
+  @override
+  void didUpdateWidget(covariant MCheckBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.checked != widget.checked) {
+      _checked = widget.checked;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: size ?? 20,
-      height: size ?? 20,
+      width: widget.size ?? 20,
+      height: widget.size ?? 20,
       child: Checkbox(
-        value: checked,
+        value: _checked,
         hoverColor: null,
         focusColor: null,
         splashRadius: 0,
-        onChanged: (value) {},
+        onChanged: (value) {
+          if (value == null) return;
+          setState(() => _checked = value);
+          widget.onChanged?.call(value);
+        },
       ),
     );
   }
