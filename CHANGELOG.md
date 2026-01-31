@@ -2,7 +2,7 @@
 
 > Moved DevLog into separate file
 
-## vv0.10.7 - WIP
+## v0.10.7 - WIP
 
 ## v0.10.6 - (Jan 24, 2026)
 
@@ -11,7 +11,7 @@
 - On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
 - Checkboxes now edit text and save when toggling them from preview mode
 - Creating notes without a name automatically gives it "untitled" name
-- File names in editor are not longer selectable to copy text
+- File names in editor are no longer selectable to copy text
 - Added option for notes to default to edit mode on open instead of preview
   - To find setting, open any note > select 3 vertical dots > select **Configure**
 - Added button in settings for where to report issues
