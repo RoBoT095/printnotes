@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (March 29, 2026)
+
+- Removed drag from right side to open table of contents, interfered with back gesture on gesture navigation for android
+
 ### (January 24, 2026)
 
 - Moved PDF search bar into separate widget

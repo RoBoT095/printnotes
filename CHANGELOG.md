@@ -4,6 +4,10 @@
 
 ## v0.10.7 - WIP
 
+### Changes:
+
+- Swipe from right side on note screen no longer opens table of contents, now only accessible through bottom button on mobile or from top bar on desktop
+
 ## v0.10.6 - (Jan 24, 2026)
 
 ### Changes:

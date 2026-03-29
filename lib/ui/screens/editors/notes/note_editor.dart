@@ -331,6 +331,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             Expanded(child: buildMarkdownView(fmBody ?? _notesController.text)),
           ],
         ),
+        endDrawerEnableOpenDragGesture: false,
         endDrawer: _isError
             ? null
             // Drawer for table of contents
