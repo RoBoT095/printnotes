@@ -55,8 +55,7 @@ class SettingsScreen extends StatelessWidget {
     }
 
     bool canPureDarkMode = Theme.brightnessOf(context) != Brightness.light &&
-        !context.watch<ThemeProvider>().useCustomTheme &&
-        !context.watch<ThemeProvider>().useDynamicColor;
+        !context.watch<ThemeProvider>().useCustomTheme;
     return Scaffold(
       appBar: AppBarDragWrapper(
         child: AppBar(

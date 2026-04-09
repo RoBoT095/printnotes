@@ -139,7 +139,11 @@ class _AppState extends State<App> {
                     ? (themeProvider.getThemeData(context).brightness ==
                             Brightness.light
                         ? lightDynamic
-                        : darkDynamic)
+                        : darkDynamic?.copyWith(
+                            surface:
+                                Provider.of<ThemeProvider>(context).pureBlack
+                                    ? Colors.black
+                                    : null))
                     : themeProvider.getThemeData(context)),
             themeMode: themeProvider.themeMode,
             title: 'Print(Notes)',

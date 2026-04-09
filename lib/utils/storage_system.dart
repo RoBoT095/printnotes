@@ -272,7 +272,7 @@ class StorageSystem {
         }
 
         // Limit to previewLength then trim whitespace
-        if (isTrimmed) {
+        if (isTrimmed && content.isNotEmpty) {
           String trimmedContent = content
               .substring(
                   0,

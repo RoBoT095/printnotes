@@ -21,6 +21,12 @@
 
 ## Day to Day Changes:
 
+### (April 09, 2026)
+
+- Upgrading libraries to work on flutter version 3.41.2 and fixed changes to FontAwesomeIcons and FilePicker
+- Fixed issues with empty notes showing "..." in preview due to text preview trimming logic not checking if text was empty
+- Added pure black mode to dynamic color mode.
+
 ### (March 29, 2026)
 
 - Removed drag from right side to open table of contents, interfered with back gesture on gesture navigation for android
