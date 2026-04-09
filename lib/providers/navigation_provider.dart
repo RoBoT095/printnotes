@@ -82,7 +82,7 @@ class NavigationProvider with ChangeNotifier {
 
   // Open files outside selected app directory
   Future<void> openExternalFile(BuildContext context) async {
-    FilePickerResult? selectedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? selectedFile = await FilePicker.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
       allowedExtensions: [

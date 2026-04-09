@@ -27,79 +27,79 @@ List<ToolbarConfigItem> defaultToolbarList = [
 
 final Map<String, Map<String, dynamic>> toolbarReference = {
   'toolbar_view_item': {
-    'icon': FontAwesomeIcons.eye,
+    'icon': FaIcon(FontAwesomeIcons.eye),
     'text': 'Preview',
   },
   'toolbar_undo_redo_actions': {
-    'icon': FontAwesomeIcons.arrowRotateLeft,
+    'icon': FaIcon(FontAwesomeIcons.arrowRotateLeft),
     'text': 'Undo/Redo',
   },
   'toolbar_selection_action': {
-    'icon': FontAwesomeIcons.textWidth,
+    'icon': FaIcon(FontAwesomeIcons.textWidth),
     'text': 'Select current line',
   },
   'toolbar_bold_action': {
-    'icon': FontAwesomeIcons.bold,
+    'icon': FaIcon(FontAwesomeIcons.bold),
     'text': 'Make text bold',
   },
   'toolbar_italic_action': {
-    'icon': FontAwesomeIcons.italic,
+    'icon': FaIcon(FontAwesomeIcons.italic),
     'text': 'Make text italic',
   },
   'toolbar_highlight_action': {
-    'icon': FontAwesomeIcons.highlighter,
+    'icon': FaIcon(FontAwesomeIcons.highlighter),
     'text': 'Highlight text',
   },
   'toolbar_strikethrough_action': {
-    'icon': FontAwesomeIcons.strikethrough,
+    'icon': FaIcon(FontAwesomeIcons.strikethrough),
     'text': 'Strikethrough text',
   },
   'toolbar_heading_action': {
-    'icon': FontAwesomeIcons.heading,
+    'icon': FaIcon(FontAwesomeIcons.heading),
     'text': 'Insert Heading',
   },
   'toolbar_indent_action': {
-    'icon': Icons.format_indent_increase,
+    'icon': Icon(Icons.format_indent_increase),
     'text': 'Indent line',
   },
   'toolbar_unindent_action': {
-    'icon': Icons.format_indent_decrease,
+    'icon': Icon(Icons.format_indent_decrease),
     'text': 'Unindent line',
   },
   'toolbar_unordered_list_action': {
-    'icon': FontAwesomeIcons.listUl,
+    'icon': FaIcon(FontAwesomeIcons.listUl),
     'text': 'Unordered list',
   },
   'toolbar_checkbox_list_action': {
-    'icon': FontAwesomeIcons.listCheck,
+    'icon': FaIcon(FontAwesomeIcons.listCheck),
     'text': 'Checkboxes',
   },
   'toolbar_underline_action': {
-    'icon': FontAwesomeIcons.underline,
+    'icon': FaIcon(FontAwesomeIcons.underline),
     'text': 'Underline text',
   },
   'toolbar_insert_table': {
-    'icon': FontAwesomeIcons.table,
+    'icon': FaIcon(FontAwesomeIcons.table),
     'text': 'Insert table',
   },
   'toolbar_link_action': {
-    'icon': FontAwesomeIcons.link,
+    'icon': FaIcon(FontAwesomeIcons.link),
     'text': 'Insert hyperlink',
   },
   'toolbar_image_action': {
-    'icon': FontAwesomeIcons.image,
+    'icon': FaIcon(FontAwesomeIcons.image),
     'text': 'Insert image',
   },
   'toolbar_blockquote_action': {
-    'icon': FontAwesomeIcons.quoteLeft,
+    'icon': FaIcon(FontAwesomeIcons.quoteLeft),
     'text': 'Blockquote',
   },
   'toolbar_code_action': {
-    'icon': FontAwesomeIcons.code,
+    'icon': FaIcon(FontAwesomeIcons.code),
     'text': 'Code syntax/font',
   },
   'toolbar_line_action': {
-    'icon': FontAwesomeIcons.rulerHorizontal,
+    'icon': FaIcon(FontAwesomeIcons.rulerHorizontal),
     'text': 'Add horizontal line',
   },
 };

@@ -38,7 +38,7 @@ class MarkdownToolbar extends StatelessWidget {
       // preview
       'toolbar_view_item': ToolbarItem(
         key: const ValueKey<String>("toolbar_view_item"),
-        icon: FontAwesomeIcons.eye,
+        icon: FaIcon(FontAwesomeIcons.eye),
         tooltip: 'Show/Hide markdown preview',
         onPressedButton: () {
           onPreviewChanged.call();
@@ -53,7 +53,7 @@ class MarkdownToolbar extends StatelessWidget {
               // undo
               ToolbarItem(
                 key: const ValueKey<String>("toolbar_undo_action"),
-                icon: FontAwesomeIcons.arrowRotateLeft,
+                icon: FaIcon(FontAwesomeIcons.arrowRotateLeft),
                 tooltip: 'Undo previous action',
                 onPressedButton:
                     value.canUndo ? () => undoController.undo() : null,
@@ -61,7 +61,7 @@ class MarkdownToolbar extends StatelessWidget {
               // redo
               ToolbarItem(
                 key: const ValueKey<String>("toolbar_redo_action"),
-                icon: FontAwesomeIcons.arrowRotateRight,
+                icon: FaIcon(FontAwesomeIcons.arrowRotateRight),
                 tooltip: 'Redo previous action',
                 onPressedButton:
                     value.canRedo ? () => undoController.redo() : null,
@@ -73,7 +73,7 @@ class MarkdownToolbar extends StatelessWidget {
       // select single line
       'toolbar_selection_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_selection_action"),
-        icon: FontAwesomeIcons.textWidth,
+        icon: FaIcon(FontAwesomeIcons.textWidth),
         tooltip: 'Select single line',
         onPressedButton: () {
           toolbar.selectSingleLine();
@@ -82,7 +82,7 @@ class MarkdownToolbar extends StatelessWidget {
       // bold
       'toolbar_bold_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_bold_action"),
-        icon: FontAwesomeIcons.bold,
+        icon: FaIcon(FontAwesomeIcons.bold),
         tooltip: 'Make text bold',
         onPressedButton: () {
           toolbar.action("**", "**");
@@ -91,7 +91,7 @@ class MarkdownToolbar extends StatelessWidget {
       // italic
       'toolbar_italic_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_italic_action"),
-        icon: FontAwesomeIcons.italic,
+        icon: FaIcon(FontAwesomeIcons.italic),
         tooltip: 'Make text italic',
         onPressedButton: () {
           toolbar.action("_", "_");
@@ -100,7 +100,7 @@ class MarkdownToolbar extends StatelessWidget {
       // highlighter
       'toolbar_highlight_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_highlight_action"),
-        icon: FontAwesomeIcons.highlighter,
+        icon: FaIcon(FontAwesomeIcons.highlighter),
         tooltip: 'Highlight text',
         onPressedButton: () {
           toolbar.action("==", "==");
@@ -109,7 +109,7 @@ class MarkdownToolbar extends StatelessWidget {
       // strikethrough
       'toolbar_strikethrough_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_strikethrough_action"),
-        icon: FontAwesomeIcons.strikethrough,
+        icon: FaIcon(FontAwesomeIcons.strikethrough),
         tooltip: 'Strikethrough text',
         onPressedButton: () {
           toolbar.action("~~", "~~");
@@ -118,7 +118,7 @@ class MarkdownToolbar extends StatelessWidget {
       // heading
       'toolbar_heading_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_heading_action"),
-        icon: FontAwesomeIcons.heading,
+        icon: FaIcon(FontAwesomeIcons.heading),
         isExpandable: true,
         tooltip: 'Insert Heading',
         expandableBackground: expandableBackground,
@@ -164,7 +164,7 @@ class MarkdownToolbar extends StatelessWidget {
       // unordered list
       'toolbar_unordered_list_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_unordered_list_action"),
-        icon: FontAwesomeIcons.listUl,
+        icon: FaIcon(FontAwesomeIcons.listUl),
         tooltip: 'Unordered list',
         onPressedButton: () {
           toolbar.action("- ", "");
@@ -173,13 +173,13 @@ class MarkdownToolbar extends StatelessWidget {
       // checkbox list
       'toolbar_checkbox_list_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_checkbox_list_action"),
-        icon: FontAwesomeIcons.listCheck,
+        icon: FaIcon(FontAwesomeIcons.listCheck),
         isExpandable: true,
         expandableBackground: expandableBackground,
         items: [
           ToolbarItem(
             key: const ValueKey<String>("checkbox"),
-            icon: FontAwesomeIcons.solidSquareCheck,
+            icon: FaIcon(FontAwesomeIcons.solidSquareCheck),
             tooltip: 'Checked checkbox',
             onPressedButton: () {
               toolbar.action("- [x] ", "");
@@ -187,7 +187,7 @@ class MarkdownToolbar extends StatelessWidget {
           ),
           ToolbarItem(
             key: const ValueKey<String>("uncheckbox"),
-            icon: FontAwesomeIcons.square,
+            icon: FaIcon(FontAwesomeIcons.square),
             tooltip: 'Unchecked checkbox',
             onPressedButton: () {
               toolbar.action("- [ ] ", "");
@@ -198,7 +198,7 @@ class MarkdownToolbar extends StatelessWidget {
       // underline
       'toolbar_underline_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_underline_action"),
-        icon: FontAwesomeIcons.underline,
+        icon: FaIcon(FontAwesomeIcons.underline),
         tooltip: 'Underline text',
         onPressedButton: () {
           toolbar.action("__", "__");
@@ -207,7 +207,7 @@ class MarkdownToolbar extends StatelessWidget {
 
       'toolbar_insert_table': ToolbarItem(
         key: const ValueKey<String>('toolbar_insert_table'),
-        icon: FontAwesomeIcons.table,
+        icon: FaIcon(FontAwesomeIcons.table),
         tooltip: 'Insert Table',
         onPressedButton: () async {
           if (toolbar.hasSelection) {
@@ -220,7 +220,7 @@ class MarkdownToolbar extends StatelessWidget {
       // link
       'toolbar_link_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_link_action"),
-        icon: FontAwesomeIcons.link,
+        icon: FaIcon(FontAwesomeIcons.link),
         tooltip: 'Add hyperlink',
         onPressedButton: () async {
           if (toolbar.hasSelection) {
@@ -234,7 +234,7 @@ class MarkdownToolbar extends StatelessWidget {
       // image
       'toolbar_image_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_image_action"),
-        icon: FontAwesomeIcons.image,
+        icon: FaIcon(FontAwesomeIcons.image),
         tooltip: 'Add image',
         onPressedButton: () async {
           if (toolbar.hasSelection) {
@@ -251,7 +251,7 @@ class MarkdownToolbar extends StatelessWidget {
       // blockquote
       'toolbar_blockquote_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_blockquote_action"),
-        icon: FontAwesomeIcons.quoteLeft,
+        icon: FaIcon(FontAwesomeIcons.quoteLeft),
         tooltip: 'Blockquote',
         onPressedButton: () {
           toolbar.action("> ", "");
@@ -260,7 +260,7 @@ class MarkdownToolbar extends StatelessWidget {
       // code
       'toolbar_code_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_code_action"),
-        icon: FontAwesomeIcons.code,
+        icon: FaIcon(FontAwesomeIcons.code),
         tooltip: 'Code syntax/font',
         onPressedButton: () {
           toolbar.action("`", "`");
@@ -269,7 +269,7 @@ class MarkdownToolbar extends StatelessWidget {
       // line
       'toolbar_line_action': ToolbarItem(
         key: const ValueKey<String>("toolbar_line_action"),
-        icon: FontAwesomeIcons.rulerHorizontal,
+        icon: FaIcon(FontAwesomeIcons.rulerHorizontal),
         tooltip: 'Add line',
         onPressedButton: () {
           toolbar.action("___", "");

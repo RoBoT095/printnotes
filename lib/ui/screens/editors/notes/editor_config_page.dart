@@ -136,7 +136,7 @@ class EditorConfigPage extends StatelessWidget {
                         : null,
                     title: Row(
                       children: [
-                        Icon(toolbarReference[toolbarList[index].key]!['icon']),
+                        toolbarReference[toolbarList[index].key]!['icon'],
                         const SizedBox(width: 15),
                         Text(toolbarReference[toolbarList[index].key]!['text']),
                       ],
