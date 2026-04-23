@@ -59,7 +59,7 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
   void _showBottomSheet(BuildContext context, FileSystemEntity item) {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext sheetContext) {
         return SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -68,11 +68,11 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                 ListTile(
                   leading: Icon(
                     Icons.unarchive,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(sheetContext).colorScheme.secondary,
                   ),
                   title: const Text('Unarchive'),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(sheetContext);
                     ItemArchiveHandler(context).handleUnarchiveItem(
                         item, () => _loadHiddenItems(_currentPath));
                   },
@@ -85,22 +85,23 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   ),
                   title: const Text('Delete'),
                   onTap: () {
-                    Navigator.pop(context);
-                    ItemDeletionHandler(context).showTrashConfirmation(
-                        item, () => _loadHiddenItems(_currentPath));
+                    Navigator.pop(sheetContext);
+                    ItemDeletionHandler(context).showTrashConfirmation(item,
+                        onComplete: () => _loadHiddenItems(_currentPath));
                   },
                 ),
               if (isTrash)
                 ListTile(
                   leading: Icon(
                     Icons.unarchive,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(sheetContext).colorScheme.secondary,
                   ),
                   title: const Text('Restore'),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(sheetContext);
                     ItemDeletionHandler(context).handleRestoringDeletedItem(
-                        item, () => _loadHiddenItems(_currentPath));
+                        item,
+                        onComplete: () => _loadHiddenItems(_currentPath));
                   },
                 ),
               if (isTrash)
@@ -111,10 +112,10 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   ),
                   title: const Text('Permanently Delete'),
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(sheetContext);
                     ItemDeletionHandler(context)
-                        .showPermanentDeleteConfirmation(
-                            item, () => _loadHiddenItems(_currentPath));
+                        .showPermanentDeleteConfirmation(item,
+                            onComplete: () => _loadHiddenItems(_currentPath));
                   },
                 ),
             ],
@@ -192,8 +193,8 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                       if (value == 'delAll') {
                         for (final item in _hiddenItems) {
                           ItemDeletionHandler(context)
-                              .handlePermanentItemDelete(
-                                  item, () => _loadHiddenItems());
+                              .handlePermanentItemDelete(item,
+                                  onComplete: () => _loadHiddenItems());
                         }
                       }
                     },

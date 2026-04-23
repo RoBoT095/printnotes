@@ -193,13 +193,13 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       tooltip: 'Delete Selected',
                       onPressed: () {
                         ItemDeletionHandler(context).showTrashManyConfirmation(
-                            selectedItemsToFileEntity()
-                                .map((e) =>
-                                    FileSystemEntity.isFileSync(e.toFilePath())
-                                        ? File.fromUri(e)
-                                        : Directory.fromUri(e))
-                                .toList(),
-                            _loadItems);
+                          selectedItemsToFileEntity()
+                              .map((e) =>
+                                  FileSystemEntity.isFileSync(e.toFilePath())
+                                      ? File.fromUri(e)
+                                      : Directory.fromUri(e))
+                              .toList(),
+                        );
                         context
                             .read<SelectingProvider>()
                             .setSelectingMode(mode: false);
