@@ -9,6 +9,7 @@
 - Updated libraries and fixed any breaking changes
 - Swipe from right side on note screen no longer opens table of contents, now only accessible through bottom button on mobile or from top bar on desktop
 - Allowed pure black mode to be enabled in dynamic colors mode
+- Bottom messages from actions now shows file/folder name
 
 ### Fixed:
 

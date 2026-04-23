@@ -53,7 +53,7 @@ void showBottomMenu(
               title: const Text('Move'),
               onTap: () {
                 Navigator.pop(sheetContext);
-                ItemMoveHandler.showMoveDialog(context, [item.uri], loadItems);
+                ItemMoveHandler.showMoveDialog(context, [item.uri]);
               },
             ),
             ListTile(

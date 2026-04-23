@@ -25,6 +25,7 @@
 
 - Moved `_buildItem` in GridListView into a separate file as a StatelessWidget it which seems to fix the tile not updating preview text
 - Upgraded flutter version from `3.38.5` to `3.41.7`
+- Refactored some of the handlers to remove `loadItems` to use provider instead and changed messages on dialog and snackbar messages
 
 ### (April 09, 2026)
 

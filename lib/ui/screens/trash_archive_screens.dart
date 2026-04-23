@@ -73,8 +73,8 @@ class _TrashArchiveScreenState extends State<TrashArchiveScreen> {
                   title: const Text('Unarchive'),
                   onTap: () {
                     Navigator.pop(sheetContext);
-                    ItemArchiveHandler(context).handleUnarchiveItem(
-                        item, () => _loadHiddenItems(_currentPath));
+                    ItemArchiveHandler(context).handleUnarchiveItem(item,
+                        onComplete: () => _loadHiddenItems(_currentPath));
                   },
                 ),
               if (!isTrash)

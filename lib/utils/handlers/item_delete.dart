@@ -20,7 +20,7 @@ class ItemDeletionHandler {
       builder: (context) => AlertDialog(
         title: const Text('Move To Trash?'),
         content: Text(
-            'Are you sure you want to trash "${path.basename(item.path)}"?'),
+            'Are you sure you want to trash "${path.basename(item.path)}"${item is Directory ? " folder" : ""}?'),
         actions: [
           TextButton(
             child: Text(
@@ -55,7 +55,8 @@ class ItemDeletionHandler {
 
         onComplete?.call();
 
-        customSnackBar('${path.basename(item.path)} was moved to the trash bin',
+        customSnackBar(
+                '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} was moved to the trash bin',
                 type: 'info')
             .show(context);
       }
@@ -75,7 +76,7 @@ class ItemDeletionHandler {
       builder: (context) => AlertDialog(
         title: const Text('Confirm Deletion'),
         content: Text(
-            'Are you sure you want to delete "${path.basename(item.path)}" forever?'),
+            'Are you sure you want to delete "${path.basename(item.path)}"${item is Directory ? " folder" : ""} forever?'),
         actions: [
           TextButton(
             child: Text(
@@ -110,13 +111,15 @@ class ItemDeletionHandler {
 
         onComplete?.call();
 
-        customSnackBar('${path.basename(item.path)} was deleted', type: 'info')
+        customSnackBar(
+                '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} was deleted',
+                type: 'info')
             .show(context);
       }
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error permanently deleting "${path.basename(item.path)}": $e',
+                'Error permanently deleting "${path.basename(item.path)}"${item is Directory ? " folder" : ""}: $e',
                 type: 'error')
             .show(context);
       }
@@ -128,7 +131,8 @@ class ItemDeletionHandler {
     try {
       await StorageSystem.restoreDeletedItem(item.path);
       if (context.mounted) {
-        customSnackBar('${path.basename(item.path)} was restored successfully',
+        customSnackBar(
+                '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} was restored successfully',
                 type: 'success')
             .show(context);
 
@@ -140,7 +144,7 @@ class ItemDeletionHandler {
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error restoring deleted "${path.basename(item.path)}": $e',
+                'Error restoring deleted "${path.basename(item.path)}"${item is Directory ? " folder" : ""}: $e',
                 type: 'error')
             .show(context);
       }
