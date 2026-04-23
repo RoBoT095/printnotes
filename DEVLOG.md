@@ -21,6 +21,11 @@
 
 ## Day to Day Changes:
 
+### (April 23, 2026)
+
+- Moved `_buildItem` in GridListView into a separate file as a StatelessWidget it which seems to fix the tile not updating preview text
+- Upgraded flutter version from `3.38.5` to `3.41.7`
+
 ### (April 09, 2026)
 
 - Upgrading libraries to work on flutter version 3.41.2 and fixed changes to FontAwesomeIcons and FilePicker

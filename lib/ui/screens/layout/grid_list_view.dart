@@ -1,24 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as path;
+import 'package:printnotes/ui/screens/layout/grid_tile_item.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:printnotes/markdown/markdown_widget/markdown_widget.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
 import 'package:printnotes/providers/selecting_provider.dart';
-import 'package:printnotes/providers/navigation_provider.dart';
 import 'package:printnotes/providers/customization_provider.dart';
-
-import 'package:printnotes/utils/storage_system.dart';
-import 'package:printnotes/utils/handlers/style_handler.dart';
-import 'package:printnotes/utils/handlers/file_extensions.dart';
-import 'package:printnotes/utils/parsers/frontmatter_parser.dart';
-import 'package:printnotes/utils/parsers/hex_color_extension.dart';
-
-import 'package:printnotes/markdown/build_markdown.dart';
-import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
 class GridListView extends StatefulWidget {
   const GridListView({
@@ -35,184 +24,6 @@ class GridListView extends StatefulWidget {
 }
 
 class _GridListViewState extends State<GridListView> {
-  final Map<String, Future<Widget>> _previewCache = {};
-
-  Widget _buildItem(BuildContext context, int index) {
-    final item = widget.items[index];
-    final isDirectory = item is Directory;
-    final isSelected =
-        context.read<SelectingProvider>().selectedItems.contains(item.path);
-    final useFM = context.read<SettingsProvider>().useFrontmatter;
-    String? fmColor;
-    String? fmBgColor;
-
-    if (useFM && item.path.endsWith('.md')) {
-      fmColor = FrontmatterHandleParsing.getTagString(
-          File(item.path).readAsStringSync(), 'color');
-      fmBgColor = FrontmatterHandleParsing.getTagString(
-          File(item.path).readAsStringSync(), 'background');
-    }
-
-    return GestureDetector(
-      onTap: () {
-        if (context.read<SelectingProvider>().selectingMode) {
-          if (!isDirectory) {
-            context.read<SelectingProvider>().updateSelectedList(item);
-          }
-        } else {
-          if (isDirectory) {
-            context.read<NavigationProvider>().addToRouteHistory(item.path);
-            widget.onChange();
-          } else if (item is File) {
-            context
-                .read<NavigationProvider>()
-                .routeItemToPage(context, item.uri);
-          }
-        }
-      },
-      onLongPress: () => showBottomMenu(context, item, widget.onChange),
-      child: AbsorbPointer(
-        child: Card(
-          color:
-              (isDirectory && context.watch<SelectingProvider>().selectingMode)
-                  ? Theme.of(context).disabledColor.withValues(alpha: 0.1)
-                  : (fmBgColor != null
-                          ? HexColor.fromHex(fmBgColor)
-                          : Theme.of(context).colorScheme.surfaceContainer)
-                      ?.withValues(
-                          alpha: context
-                              .watch<CustomizationProvider>()
-                              .noteTileOpacity),
-          shape: isSelected
-              ? StyleHandler.getNoteTileShape(
-                  context.watch<CustomizationProvider>().noteTileShape,
-                  side: BorderSide(
-                      color: Theme.of(context).colorScheme.primary, width: 5),
-                  borderRadius: BorderRadius.circular(12))
-              : StyleHandler.getNoteTileShape(
-                  context.watch<CustomizationProvider>().noteTileShape),
-          child: isDirectory
-              ? ListTile(
-                  leading: Icon(
-                    Icons.folder,
-                    size: 34,
-                    color: context.watch<SelectingProvider>().selectingMode
-                        ? Theme.of(context).disabledColor
-                        : Theme.of(context).colorScheme.secondary,
-                  ),
-                  title: Text(
-                    path.basename(item.path),
-                    textAlign: TextAlign.start,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
-              : Padding(
-                  padding: EdgeInsets.all(
-                      context.watch<CustomizationProvider>().noteTilePadding),
-                  child: FutureBuilder(
-                      future: _previewCache[item.path] ??= fileItem(
-                          context,
-                          item,
-                          fmColor != null ? HexColor.fromHex(fmColor) : null),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return snapshot.data ?? const SizedBox();
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }),
-                ),
-        ),
-      ),
-    );
-  }
-
-  Future<Widget> fileItem(
-      BuildContext context, FileSystemEntity item, Color? color) async {
-    final itemName = path.basename(item.path);
-    final useFM = context.read<SettingsProvider>().useFrontmatter;
-    final markdownConfigs = theMarkdownConfigs(context,
-        fileUri: item.uri, hideCodeButtons: true, textColor: color);
-    final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
-
-    String? fmTitle;
-    String? fmDescription;
-
-    if (item is File) {
-      if (fileTypeChecker(item.path) == CFileType.image) {
-        return Image.file(item);
-      } else if (fileTypeChecker(item.path) == CFileType.pdf) {
-        return ListTile(
-          leading: Icon(
-            Icons.picture_as_pdf,
-            size: 34,
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          title: Text(
-            itemName,
-            textAlign: TextAlign.start,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-        );
-      } else if (fileTypeChecker(item.path) == CFileType.sketch) {
-        return ListTile(
-          leading: Icon(
-            Icons.draw,
-            size: 34,
-          ),
-          title: Text(
-            itemName.replaceAll('.bson', ''),
-            textAlign: TextAlign.start,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-        );
-      }
-    }
-    if (useFM) {
-      // I am beginning to hate this function, but why create new one when
-      // we can add more functionality to it
-      String fileText = await StorageSystem(context)
-          .getFilePreview(item.uri, isTrimmed: false);
-      if (fileText != 'No preview available') {
-        fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
-        fmDescription =
-            FrontmatterHandleParsing.getTagString(fileText, 'description');
-      }
-    }
-    final String previewText = await StorageSystem(context)
-        .getFilePreview(item.uri, parseFrontmatter: useFM);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          fmTitle ?? itemName.replaceAll(".md", ''),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: color,
-            fontSize: 16,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        const SizedBox(height: 4),
-        fmDescription != null
-            ? Text(
-                fmDescription,
-                style: TextStyle(color: color),
-              )
-            : MarkdownBlock(
-                selectable: false,
-                data: previewText,
-                config: markdownConfigs,
-                generator: markdownGenerators,
-              ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!context.watch<SelectingProvider>().selectingMode) {
@@ -230,7 +41,8 @@ class _GridListViewState extends State<GridListView> {
             crossAxisSpacing:
                 context.watch<CustomizationProvider>().noteTileSpacing,
             childCount: widget.items.length,
-            itemBuilder: (context, index) => _buildItem(context, index),
+            itemBuilder: (context, index) => GridTileItem(
+                item: widget.items[index], onChange: widget.onChange),
           ),
         ),
         // Adds empty space at bottom, helps when in list view

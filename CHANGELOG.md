@@ -8,8 +8,12 @@
 
 - Updated libraries and fixed any breaking changes
 - Swipe from right side on note screen no longer opens table of contents, now only accessible through bottom button on mobile or from top bar on desktop
-- Empty notes no longer show "..." when it is empty
 - Allowed pure black mode to be enabled in dynamic colors mode
+
+### Fixed:
+
+- Notes not updating after editing
+- Empty notes no longer show "..." when it is empty
 
 ## v0.10.6 - (Jan 24, 2026)
 
