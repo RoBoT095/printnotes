@@ -26,9 +26,6 @@ void main() {
   if (Platform.isLinux || Platform.isWindows) {
     windowManager.ensureInitialized();
   }
-  if (Platform.isAndroid) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  }
   runApp(
     MultiProvider(
       providers: [
@@ -70,6 +67,7 @@ class _AppState extends State<App> {
     await App.init().then(
       (value) async {
         await _setTitleBarVisibility();
+        await _setBottomBarVisibility();
         await _checkStorageAccess();
         if (mounted) {
           final readSettings = context.read<SettingsProvider>();
@@ -86,6 +84,17 @@ class _AppState extends State<App> {
     if (Platform.isLinux || Platform.isWindows) {
       await windowManager.setTitleBarStyle(
           isTitleBarHidden ? TitleBarStyle.hidden : TitleBarStyle.normal);
+    }
+  }
+
+  Future<void> _setBottomBarVisibility() async {
+    final isBottomBarVisible = UserAdvancedPref.getBottomBarPersistence();
+    if (Platform.isAndroid) {
+      SystemChrome.setEnabledSystemUIMode(
+          isBottomBarVisible
+              ? SystemUiMode.manual
+              : SystemUiMode.immersiveSticky,
+          overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     }
   }
 

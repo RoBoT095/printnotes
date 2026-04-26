@@ -314,6 +314,23 @@ class SettingsScreen extends StatelessWidget {
                               .setTitleBarVisibility(value);
                         }),
                     isFirst: true),
+              if (Platform.isAndroid)
+                MenuTile(
+                    leading: const Icon(Icons.gesture),
+                    title: 'Always Show Bottom Navigation',
+                    subtitle: MenuTile.subtitleText(context,
+                        text:
+                            'Only applies to bottom button navigation mode.\nReload app to see changes'),
+                    trailing: Switch(
+                        value: context
+                            .watch<SettingsProvider>()
+                            .bottomBarPersistence,
+                        onChanged: (value) {
+                          context
+                              .read<SettingsProvider>()
+                              .setBottomBarPersistence(value);
+                        }),
+                    isFirst: true),
               MenuTile(
                 leading: const Icon(Icons.code),
                 title: 'Code Wrapper Theme',

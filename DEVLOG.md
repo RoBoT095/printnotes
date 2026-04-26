@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (April 26, 2026)
+
+- Added toggle in settings to allow 3-button navigation bar to always be visible on android
+
 ### (April 23, 2026)
 
 - Moved `_buildItem` in GridListView into a separate file as a StatelessWidget it which seems to fix the tile not updating preview text
