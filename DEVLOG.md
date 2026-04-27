@@ -24,6 +24,7 @@
 ### (April 26, 2026)
 
 - Added toggle in settings to allow 3-button navigation bar to always be visible on android
+- Added function to go into edit mode and focus on textfield for newly created notes
 
 ### (April 23, 2026)
 

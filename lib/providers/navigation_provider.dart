@@ -49,7 +49,7 @@ class NavigationProvider with ChangeNotifier {
   }
 
   void routeItemToPage(BuildContext context, Uri item,
-      {String? jumpToHeader}) async {
+      {bool? newItem, String? jumpToHeader}) async {
     Future.delayed(const Duration(milliseconds: 50), () async {
       bool fileExists = await File.fromUri(item).exists();
       if (fileExists && context.mounted) {
@@ -63,7 +63,11 @@ class NavigationProvider with ChangeNotifier {
           _openPage(
             context,
             item,
-            () => NoteEditorScreen(fileUri: item, jumpToHeader: jumpToHeader),
+            () => NoteEditorScreen(
+              fileUri: item,
+              newNote: newItem,
+              jumpToHeader: jumpToHeader,
+            ),
           );
         }
       } else {

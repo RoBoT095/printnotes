@@ -8,6 +8,7 @@
 
 - Added toggle in settings to keep androids 3-button navigation bar always visible
 - Updated libraries and fixed any breaking changes
+- When creating new note, automatically goes into edit mode and opens keyboard
 - Swipe from right side on note screen no longer opens table of contents, now only accessible through bottom button on mobile or from top bar on desktop
 - Allowed pure black mode to be enabled in dynamic colors mode
 - Bottom messages from actions now shows file/folder name

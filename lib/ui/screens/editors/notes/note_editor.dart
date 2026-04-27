@@ -30,9 +30,11 @@ import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen({super.key, required this.fileUri, this.jumpToHeader});
+  const NoteEditorScreen(
+      {super.key, required this.fileUri, this.newNote, this.jumpToHeader});
 
   final Uri fileUri;
+  final bool? newNote;
   final String? jumpToHeader;
 
   @override
@@ -80,6 +82,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
     _loadConfig();
+
+    if (widget.newNote == true) {
+      _isEditingFile = true;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) _noteFocusNode.requestFocus();
+        });
+      });
+    }
 
     _fileCheckTimer = Timer.periodic(
         fileCheckInterval, (_) => _checkForExternalChanges(context));
@@ -444,9 +456,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               onInvoke: (SwitchModeIntent intent) =>
                                   _toggleMode()),
                         },
-                        child: Focus(
+                        child: FocusableActionDetector(
                           autofocus: true,
-                          focusNode: _noteFocusNode,
                           child: ListView(
                               shrinkWrap: true,
                               controller: _autoScrollController,
@@ -455,6 +466,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                 _isEditingFile
                                     ? EditorField(
                                         controller: _notesController,
+                                        focusNode: _noteFocusNode,
                                         onChanged: (value) => _setUpAutoSave(),
                                         undoController: _undoHistoryController,
                                         fontSize: context
