@@ -2,7 +2,7 @@
 
 > Moved DevLog into separate file
 
-## v0.10.7 - WIP
+## v0.10.7
 
 ### Changes:
 
@@ -15,7 +15,8 @@
 
 ### Fixed:
 
-- Notes not updating after editing
+- Note preview not updating after editing
+- Fixed issue with note editors text selection extending across full width of screen instead of only around text
 - Empty notes no longer show "..." when it is empty
 
 ## v0.10.6 - (Jan 24, 2026)

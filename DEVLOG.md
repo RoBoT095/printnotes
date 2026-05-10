@@ -21,6 +21,10 @@
 
 ## Day to Day Changes:
 
+### (May 05, 2026)
+
+- Fixed issue with note editor text selection extending across full width instead of only around text
+
 ### (April 26, 2026)
 
 - Added toggle in settings to allow 3-button navigation bar to always be visible on android

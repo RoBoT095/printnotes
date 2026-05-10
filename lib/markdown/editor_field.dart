@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class EditorField extends StatelessWidget {
@@ -26,6 +28,8 @@ class EditorField extends StatelessWidget {
       scrollController: scrollController,
       maxLines: null,
       keyboardType: TextInputType.multiline,
+      selectionWidthStyle: BoxWidthStyle.tight,
+      selectionHeightStyle: BoxHeightStyle.tight,
       enableSuggestions: true,
       autocorrect: true,
       autofocus: false,
@@ -33,9 +37,10 @@ class EditorField extends StatelessWidget {
       undoController: undoController,
       style: TextStyle(fontSize: fontSize),
       decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Type something...',
-          hintStyle: TextStyle(color: Theme.of(context).hintColor)),
+        border: InputBorder.none,
+        hintText: 'Type something...',
+        hintStyle: TextStyle(color: Theme.of(context).hintColor),
+      ),
     );
   }
 }
