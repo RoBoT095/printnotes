@@ -21,6 +21,31 @@
 
 ## Day to Day Changes:
 
+### (May 05, 2026)
+
+- Fixed issue with note editor text selection extending across full width instead of only around text
+
+### (April 26, 2026)
+
+- Added toggle in settings to allow 3-button navigation bar to always be visible on android
+- Added function to go into edit mode and focus on textfield for newly created notes
+
+### (April 23, 2026)
+
+- Moved `_buildItem` in GridListView into a separate file as a StatelessWidget it which seems to fix the tile not updating preview text
+- Upgraded flutter version from `3.38.5` to `3.41.7`
+- Refactored some of the handlers to remove `loadItems` to use provider instead and changed messages on dialog and snackbar messages
+
+### (April 09, 2026)
+
+- Upgrading libraries to work on flutter version 3.41.2 and fixed changes to FontAwesomeIcons and FilePicker
+- Fixed issues with empty notes showing "..." in preview due to text preview trimming logic not checking if text was empty
+- Added pure black mode to dynamic color mode.
+
+### (March 29, 2026)
+
+- Removed drag from right side to open table of contents, interfered with back gesture on gesture navigation for android
+
 ### (January 24, 2026)
 
 - Moved PDF search bar into separate widget

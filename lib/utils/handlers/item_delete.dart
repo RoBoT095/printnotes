@@ -1,5 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+
+import 'package:printnotes/providers/settings_provider.dart';
 
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
@@ -9,14 +13,14 @@ class ItemDeletionHandler {
 
   ItemDeletionHandler(this.context);
 
-  Future<void> showTrashConfirmation(
-      FileSystemEntity item, Function loadItems) async {
+  Future<void> showTrashConfirmation(FileSystemEntity item,
+      {VoidCallback? onComplete}) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Move To Trash?'),
         content: Text(
-            'Are you sure you want to trash this ${item is Directory ? 'folder' : 'file'}?'),
+            'Are you sure you want to trash "${path.basename(item.path)}"${item is Directory ? " folder" : ""}?'),
         actions: [
           TextButton(
             child: Text(
@@ -32,7 +36,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleItemTrashing(item, loadItems);
+              handleItemTrashing(item, onComplete: onComplete);
             },
           ),
         ],
@@ -40,36 +44,39 @@ class ItemDeletionHandler {
     );
   }
 
-  Future<void> handleItemTrashing(FileSystemEntity item, Function loadItems,
-      {int? daysForDeletion}) async {
+  Future<void> handleItemTrashing(FileSystemEntity item,
+      {VoidCallback? onComplete}) async {
     try {
       await StorageSystem.trashItem(item.path);
 
-      loadItems();
       if (context.mounted) {
+        final readSettProv = context.read<SettingsProvider>();
+        readSettProv.loadItems(context, readSettProv.currentPath);
+
+        onComplete?.call();
+
         customSnackBar(
-                '${item is Directory ? 'Folder' : 'File'} was moved to the trash bin',
+                '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} was moved to the trash bin',
                 type: 'info')
             .show(context);
       }
     } catch (e) {
       if (context.mounted) {
-        customSnackBar(
-                'Error deleting ${item is Directory ? 'folder' : 'file'}: $e',
+        customSnackBar('Error deleting "${path.basename(item.path)}": $e',
                 type: 'error')
             .show(context);
       }
     }
   }
 
-  Future<void> showPermanentDeleteConfirmation(
-      FileSystemEntity item, Function loadItems) async {
+  Future<void> showPermanentDeleteConfirmation(FileSystemEntity item,
+      {VoidCallback? onComplete}) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Permanent Deletion'),
+        title: const Text('Confirm Deletion'),
         content: Text(
-            'Are you sure you want to delete this ${item is Directory ? 'folder' : 'file'} forever?'),
+            'Are you sure you want to delete "${path.basename(item.path)}"${item is Directory ? " folder" : ""} forever?'),
         actions: [
           TextButton(
             child: Text(
@@ -85,7 +92,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handlePermanentItemDelete(item, loadItems);
+              handlePermanentItemDelete(item, onComplete: onComplete);
             },
           ),
         ],
@@ -93,47 +100,59 @@ class ItemDeletionHandler {
     );
   }
 
-  Future<void> handlePermanentItemDelete(
-      FileSystemEntity item, Function loadItems) async {
+  Future<void> handlePermanentItemDelete(FileSystemEntity item,
+      {VoidCallback? onComplete}) async {
     try {
       await StorageSystem.permanentlyDeleteItem(item.path);
 
-      loadItems();
       if (context.mounted) {
+        final readSettProv = context.read<SettingsProvider>();
+        readSettProv.loadItems(context, readSettProv.currentPath);
+
+        onComplete?.call();
+
         customSnackBar(
-                '${item is Directory ? 'Folder' : 'File'} was permanently deleted',
+                '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} was deleted',
                 type: 'info')
             .show(context);
       }
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error permanently deleting ${item is Directory ? 'folder' : 'file'}: $e',
+                'Error permanently deleting "${path.basename(item.path)}"${item is Directory ? " folder" : ""}: $e',
                 type: 'error')
             .show(context);
       }
     }
   }
 
-  Future<void> handleRestoringDeletedItem(
-      FileSystemEntity item, Function loadItems) async {
+  Future<void> handleRestoringDeletedItem(FileSystemEntity item,
+      {VoidCallback? onComplete}) async {
     try {
       await StorageSystem.restoreDeletedItem(item.path);
       if (context.mounted) {
-        customSnackBar('Item was restored successfully', type: 'success')
+        customSnackBar(
+                '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} was restored successfully',
+                type: 'success')
             .show(context);
+
+        onComplete?.call();
+
+        final readSettProv = context.read<SettingsProvider>();
+        readSettProv.loadItems(context, readSettProv.currentPath);
       }
-      loadItems();
     } catch (e) {
       if (context.mounted) {
-        customSnackBar('Error restoring deleted item: $e', type: 'error')
+        customSnackBar(
+                'Error restoring deleted "${path.basename(item.path)}"${item is Directory ? " folder" : ""}: $e',
+                type: 'error')
             .show(context);
       }
     }
   }
 
-  Future<void> showTrashManyConfirmation(
-      List<FileSystemEntity> items, Function loadItems) async {
+  Future<void> showTrashManyConfirmation(List<FileSystemEntity> items,
+      {VoidCallback? onComplete}) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -155,7 +174,7 @@ class ItemDeletionHandler {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              handleManyItemTrashing(items, loadItems);
+              handleManyItemTrashing(items, onComplete: onComplete);
             },
           ),
         ],
@@ -163,16 +182,19 @@ class ItemDeletionHandler {
     );
   }
 
-  Future<void> handleManyItemTrashing(
-      List<FileSystemEntity> items, Function loadItems,
-      {int? daysForDeletion}) async {
+  Future<void> handleManyItemTrashing(List<FileSystemEntity> items,
+      {VoidCallback? onComplete}) async {
     try {
       for (FileSystemEntity item in items) {
         await StorageSystem.trashItem(item.path);
       }
 
-      loadItems();
       if (context.mounted) {
+        final readSettProv = context.read<SettingsProvider>();
+        readSettProv.loadItems(context, readSettProv.currentPath);
+
+        onComplete?.call();
+
         customSnackBar('All items were moved to the trash bin', type: 'info')
             .show(context);
       }

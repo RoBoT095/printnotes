@@ -55,8 +55,7 @@ class SettingsScreen extends StatelessWidget {
     }
 
     bool canPureDarkMode = Theme.brightnessOf(context) != Brightness.light &&
-        !context.watch<ThemeProvider>().useCustomTheme &&
-        !context.watch<ThemeProvider>().useDynamicColor;
+        !context.watch<ThemeProvider>().useCustomTheme;
     return Scaffold(
       appBar: AppBarDragWrapper(
         child: AppBar(
@@ -313,6 +312,23 @@ class SettingsScreen extends StatelessWidget {
                           context
                               .read<SettingsProvider>()
                               .setTitleBarVisibility(value);
+                        }),
+                    isFirst: true),
+              if (Platform.isAndroid)
+                MenuTile(
+                    leading: const Icon(Icons.gesture),
+                    title: 'Always Show Bottom Navigation',
+                    subtitle: MenuTile.subtitleText(context,
+                        text:
+                            'Only applies to bottom button navigation mode.\nReload app to see changes'),
+                    trailing: Switch(
+                        value: context
+                            .watch<SettingsProvider>()
+                            .bottomBarPersistence,
+                        onChanged: (value) {
+                          context
+                              .read<SettingsProvider>()
+                              .setBottomBarPersistence(value);
                         }),
                     isFirst: true),
               MenuTile(

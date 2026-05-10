@@ -2,7 +2,22 @@
 
 > Moved DevLog into separate file
 
-## vv0.10.7 - WIP
+## v0.10.7
+
+### Changes:
+
+- Added toggle in settings to keep androids 3-button navigation bar always visible
+- Updated libraries and fixed any breaking changes
+- When creating new note, automatically goes into edit mode and opens keyboard
+- Swipe from right side on note screen no longer opens table of contents, now only accessible through bottom button on mobile or from top bar on desktop
+- Allowed pure black mode to be enabled in dynamic colors mode
+- Bottom messages from actions now shows file/folder name
+
+### Fixed:
+
+- Note preview not updating after editing
+- Fixed issue with note editors text selection extending across full width of screen instead of only around text
+- Empty notes no longer show "..." when it is empty
 
 ## v0.10.6 - (Jan 24, 2026)
 
@@ -11,7 +26,7 @@
 - On Android, bottom navigation bar now will auto hide to not cover UI due to forced edge-to-edge view
 - Checkboxes now edit text and save when toggling them from preview mode
 - Creating notes without a name automatically gives it "untitled" name
-- File names in editor are not longer selectable to copy text
+- File names in editor are no longer selectable to copy text
 - Added option for notes to default to edit mode on open instead of preview
   - To find setting, open any note > select 3 vertical dots > select **Configure**
 - Added button in settings for where to report issues

@@ -178,6 +178,15 @@ class UserAdvancedPref {
     return App.localStorage.getBool('titleBarVisibility') ?? false;
   }
 
+  // For keeping bottom navigation bar always visible on android 15+
+  static void setBottomBarPersistence(bool visibility) {
+    App.localStorage.setBool('bottomBarPersistence', visibility);
+  }
+
+  static bool getBottomBarPersistence() {
+    return App.localStorage.getBool('bottomBarPersistence') ?? false;
+  }
+
   // For having LaTeX rendered or not
   static void setLatexSupport(bool latexRendering) {
     App.localStorage.setBool('useLatex', latexRendering);

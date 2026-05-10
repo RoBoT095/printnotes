@@ -49,7 +49,7 @@ class NavigationProvider with ChangeNotifier {
   }
 
   void routeItemToPage(BuildContext context, Uri item,
-      {String? jumpToHeader}) async {
+      {bool? newItem, String? jumpToHeader}) async {
     Future.delayed(const Duration(milliseconds: 50), () async {
       bool fileExists = await File.fromUri(item).exists();
       if (fileExists && context.mounted) {
@@ -63,7 +63,11 @@ class NavigationProvider with ChangeNotifier {
           _openPage(
             context,
             item,
-            () => NoteEditorScreen(fileUri: item, jumpToHeader: jumpToHeader),
+            () => NoteEditorScreen(
+              fileUri: item,
+              newNote: newItem,
+              jumpToHeader: jumpToHeader,
+            ),
           );
         }
       } else {
@@ -82,7 +86,7 @@ class NavigationProvider with ChangeNotifier {
 
   // Open files outside selected app directory
   Future<void> openExternalFile(BuildContext context) async {
-    FilePickerResult? selectedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? selectedFile = await FilePicker.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
       allowedExtensions: [

@@ -14,6 +14,7 @@ import 'package:printnotes/utils/configs/user_preference.dart';
 class SettingsProvider with ChangeNotifier {
   bool _showIntro = true;
   bool _hideTitleBar = false;
+  bool _bottomBarPersistence = false;
   bool _useLatex = false;
   bool _useFrontmatter = false;
 
@@ -42,6 +43,7 @@ class SettingsProvider with ChangeNotifier {
 
   bool get showIntro => _showIntro;
   bool get hideTitleBar => _hideTitleBar;
+  bool get bottomBarPersistence => _bottomBarPersistence;
   bool get useLatex => _useLatex;
   bool get useFrontmatter => _useFrontmatter;
 
@@ -104,6 +106,7 @@ class SettingsProvider with ChangeNotifier {
     setFolderPriority(UserSortPref.getFolderPriority());
     setSortOrder(UserSortPref.getSortOrder());
     setTitleBarVisibility(UserAdvancedPref.getTitleBarVisibility());
+    setBottomBarPersistence(UserAdvancedPref.getBottomBarPersistence());
     setLatexUse(UserAdvancedPref.getLatexSupport());
     setFrontMatterUse(UserAdvancedPref.getFrontmatterSupport());
   }
@@ -143,6 +146,12 @@ class SettingsProvider with ChangeNotifier {
   void setTitleBarVisibility(bool visibility) {
     _hideTitleBar = visibility;
     UserAdvancedPref.setTitleBarVisibility(visibility);
+    notifyListeners();
+  }
+
+  void setBottomBarPersistence(bool visibility) {
+    _bottomBarPersistence = visibility;
+    UserAdvancedPref.setBottomBarPersistence(visibility);
     notifyListeners();
   }
 

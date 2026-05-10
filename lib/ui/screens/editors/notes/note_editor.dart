@@ -30,9 +30,11 @@ import 'package:printnotes/ui/widgets/file_info_bottom_sheet.dart';
 import 'package:printnotes/ui/widgets/custom_snackbar.dart';
 
 class NoteEditorScreen extends StatefulWidget {
-  const NoteEditorScreen({super.key, required this.fileUri, this.jumpToHeader});
+  const NoteEditorScreen(
+      {super.key, required this.fileUri, this.newNote, this.jumpToHeader});
 
   final Uri fileUri;
+  final bool? newNote;
   final String? jumpToHeader;
 
   @override
@@ -80,6 +82,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     _undoHistoryController = UndoHistoryController();
     _loadFileContent();
     _loadConfig();
+
+    if (widget.newNote == true) {
+      _isEditingFile = true;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) _noteFocusNode.requestFocus();
+        });
+      });
+    }
 
     _fileCheckTimer = Timer.periodic(
         fileCheckInterval, (_) => _checkForExternalChanges(context));
@@ -331,6 +343,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             Expanded(child: buildMarkdownView(fmBody ?? _notesController.text)),
           ],
         ),
+        endDrawerEnableOpenDragGesture: false,
         endDrawer: _isError
             ? null
             // Drawer for table of contents
@@ -443,58 +456,52 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               onInvoke: (SwitchModeIntent intent) =>
                                   _toggleMode()),
                         },
-                        child: Focus(
+                        child: FocusableActionDetector(
                           autofocus: true,
-                          focusNode: _noteFocusNode,
-                          child: ListView(
-                              shrinkWrap: true,
-                              controller: _autoScrollController,
-                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              children: [
-                                _isEditingFile
-                                    ? EditorField(
-                                        controller: _notesController,
-                                        onChanged: (value) => _setUpAutoSave(),
-                                        undoController: _undoHistoryController,
-                                        fontSize: context
-                                            .watch<EditorConfigProvider>()
-                                            .fontSize,
-                                      )
-                                    : GestureDetector(
-                                        // Check if double tap to change to edit mode
-                                        onDoubleTap: _toggleMode,
-                                        child: _notesController.text.isEmpty
-                                            // If note is empty so message
-                                            ? SizedBox(
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                        .height,
-                                                child: Text(
-                                                  'Double click screen or hit the pencil icon in the top right corner to write!',
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .hintColor),
-                                                ),
-                                              )
-                                            // Parse and render the markdown text
-                                            : buildMarkdownWidget(
-                                                context,
-                                                data: previewBody,
-                                                fileUri: widget.fileUri,
-                                                controller:
-                                                    _autoScrollController,
-                                                tocController: _tocController,
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                editingController:
-                                                    _notesController,
-                                                onCheckboxToggle: () =>
-                                                    _saveFileContent(context),
-                                              ),
-                                      ),
-                                SizedBox(height: 100),
-                              ]),
+                          child: SingleChildScrollView(
+                            controller: _autoScrollController,
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 100),
+                            child: _isEditingFile
+                                ? EditorField(
+                                    controller: _notesController,
+                                    focusNode: _noteFocusNode,
+                                    onChanged: (value) => _setUpAutoSave(),
+                                    undoController: _undoHistoryController,
+                                    fontSize: context
+                                        .watch<EditorConfigProvider>()
+                                        .fontSize,
+                                  )
+                                : GestureDetector(
+                                    // Check if double tap to change to edit mode
+                                    onDoubleTap: _toggleMode,
+                                    child: _notesController.text.isEmpty
+                                        // If note is empty so message
+                                        ? SizedBox(
+                                            height: MediaQuery.sizeOf(context)
+                                                .height,
+                                            child: Text(
+                                              'Double click screen or hit the pencil icon in the top right corner to write!',
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .hintColor),
+                                            ),
+                                          )
+                                        // Parse and render the markdown text
+                                        : buildMarkdownWidget(
+                                            context,
+                                            data: previewBody,
+                                            fileUri: widget.fileUri,
+                                            controller: _autoScrollController,
+                                            tocController: _tocController,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            editingController: _notesController,
+                                            onCheckboxToggle: () =>
+                                                _saveFileContent(context),
+                                          ),
+                                  ),
+                          ),
                         ),
                       ),
                     ),

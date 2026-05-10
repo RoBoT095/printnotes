@@ -113,7 +113,7 @@ class _SketchPadState extends State<SketchPad> {
                         onTap: () async {
                           Uint8List? pngBytes = await _sketchController
                               .extractPNG(repaintKey: _repaintKey);
-                          await FilePicker.platform.saveFile(
+                          await FilePicker.saveFile(
                             dialogTitle: 'Save Sketch',
                             fileName: path.basename(widget.sketchUri
                                 .toFilePath()
@@ -134,7 +134,7 @@ class _SketchPadState extends State<SketchPad> {
                                       width: MediaQuery.sizeOf(context).width,
                                       height: MediaQuery.sizeOf(context).height)
                                   .codeUnits);
-                          await FilePicker.platform.saveFile(
+                          await FilePicker.saveFile(
                             dialogTitle: 'Save Sketch',
                             fileName: path.basename(widget.sketchUri
                                 .toFilePath()
@@ -243,21 +243,21 @@ class _SketchPadState extends State<SketchPad> {
                 enableIcon: Icon(Icons.brush),
                 disableIcon: Icon(Icons.brush_outlined)),
             highlighterIcon: SketchToolIcon(
-              enableIcon: Icon(
+              enableIcon: FaIcon(
                 FontAwesomeIcons.highlighter,
                 opticalSize: 20,
               ),
-              disableIcon: Icon(
+              disableIcon: FaIcon(
                 FontAwesomeIcons.highlighter,
                 opticalSize: 20,
               ),
             ),
             eraserIcon: SketchToolIcon(
-              enableIcon: Icon(
+              enableIcon: FaIcon(
                 FontAwesomeIcons.eraser,
                 opticalSize: 20,
               ),
-              disableIcon: Icon(
+              disableIcon: FaIcon(
                 FontAwesomeIcons.eraser,
                 opticalSize: 20,
               ),

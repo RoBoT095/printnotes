@@ -37,10 +37,12 @@ class ToolbarItem extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                     ),
                   )
-                : Icon(
-                    icon,
-                    size: 20,
-                  ),
+                : icon is IconData
+                    ? Icon(
+                        icon,
+                        size: 20,
+                      )
+                    : icon,
             tooltip: tooltip,
           )
         : ExpandableNotifier(
@@ -57,10 +59,12 @@ class ToolbarItem extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         )
-                      : Icon(
-                          icon,
-                          size: 16,
-                        ),
+                      : icon is IconData
+                          ? Icon(
+                              icon,
+                              size: 16,
+                            )
+                          : icon,
                 ),
               ),
               expanded: Container(
@@ -74,7 +78,7 @@ class ToolbarItem extends StatelessWidget {
                       ExpandableButton(
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Icon(
+                          child: FaIcon(
                             FontAwesomeIcons.solidCircleXmark,
                             size: 16,
                             color: Colors.red,

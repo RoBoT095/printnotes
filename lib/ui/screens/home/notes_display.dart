@@ -46,7 +46,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     super.initState();
     if (Platform.isAndroid) _checkMediaIntent();
     _loadItems();
-    widget.onReload(_loadItems);
+    // widget.onReload(_loadItems);
   }
 
   Future<void> _loadItems() async {
@@ -182,7 +182,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       tooltip: 'Move Selected',
                       onPressed: () {
                         ItemMoveHandler.showMoveDialog(
-                            context, selectedItemsToFileEntity(), _loadItems);
+                            context, selectedItemsToFileEntity());
                         context
                             .read<SelectingProvider>()
                             .setSelectingMode(mode: false);
@@ -193,13 +193,13 @@ class _NotesDisplayState extends State<NotesDisplay> {
                       tooltip: 'Delete Selected',
                       onPressed: () {
                         ItemDeletionHandler(context).showTrashManyConfirmation(
-                            selectedItemsToFileEntity()
-                                .map((e) =>
-                                    FileSystemEntity.isFileSync(e.toFilePath())
-                                        ? File.fromUri(e)
-                                        : Directory.fromUri(e))
-                                .toList(),
-                            _loadItems);
+                          selectedItemsToFileEntity()
+                              .map((e) =>
+                                  FileSystemEntity.isFileSync(e.toFilePath())
+                                      ? File.fromUri(e)
+                                      : Directory.fromUri(e))
+                              .toList(),
+                        );
                         context
                             .read<SelectingProvider>()
                             .setSelectingMode(mode: false);

@@ -57,15 +57,15 @@ class ItemArchiveHandler {
     );
   }
 
-  Future<void> handleUnarchiveItem(
-      FileSystemEntity item, Function loadItems) async {
+  Future<void> handleUnarchiveItem(FileSystemEntity item,
+      {VoidCallback? onComplete}) async {
     try {
       await StorageSystem.unarchiveItem(item.path);
       if (context.mounted) {
         customSnackBar('Item unarchived successfully', type: 'success')
             .show(context);
       }
-      loadItems();
+      onComplete?.call();
     } catch (e) {
       if (context.mounted) {
         customSnackBar('Error unarchiving item: $e', type: 'error')

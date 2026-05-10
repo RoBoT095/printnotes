@@ -21,7 +21,7 @@ class DataPath {
       final appDir = await getApplicationDocumentsDirectory();
       return appDir.path;
     }
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    String? selectedDirectory = await FilePicker.getDirectoryPath();
     if (Platform.isAndroid) {
       final status = await Permission.manageExternalStorage.request();
       if (!status.isGranted) {
@@ -142,8 +142,8 @@ class DataPath {
       await Directory(bgImagesFolderPath).create(recursive: true);
     }
 
-    final pickedImage = await FilePicker.platform
-        .pickFiles(type: FileType.image, allowMultiple: false, withData: true);
+    final pickedImage = await FilePicker.pickFiles(
+        type: FileType.image, allowMultiple: false, withData: true);
     if (pickedImage != null) {
       final data = pickedImage.files.single.bytes!;
       final file = await File(

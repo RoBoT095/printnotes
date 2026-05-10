@@ -18,28 +18,29 @@ void showBottomMenu(
 ) {
   showModalBottomSheet(
     context: context,
-    builder: (BuildContext context) {
-      bool isTreeView = context.read<SettingsProvider>().layout == 'tree';
+    builder: (BuildContext sheetContext) {
+      bool isTreeView = sheetContext.read<SettingsProvider>().layout == 'tree';
       return SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             if (item is! Directory)
               ListTile(
-                textColor: isTreeView ? Theme.of(context).disabledColor : null,
+                textColor:
+                    isTreeView ? Theme.of(sheetContext).disabledColor : null,
                 iconColor: isTreeView
-                    ? Theme.of(context).disabledColor
-                    : Theme.of(context).colorScheme.secondary,
+                    ? Theme.of(sheetContext).disabledColor
+                    : Theme.of(sheetContext).colorScheme.secondary,
                 leading: const Icon(Icons.check),
                 title: const Text('Select'),
                 onTap: isTreeView
                     ? null
                     : () {
-                        Navigator.pop(context);
-                        context
+                        Navigator.pop(sheetContext);
+                        sheetContext
                             .read<SelectingProvider>()
                             .setSelectingMode(mode: true);
-                        context
+                        sheetContext
                             .read<SelectingProvider>()
                             .updateSelectedList(item);
                       },
@@ -47,22 +48,22 @@ void showBottomMenu(
             ListTile(
               leading: Icon(
                 Icons.drive_file_move_outline,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('Move'),
               onTap: () {
-                Navigator.pop(context);
-                ItemMoveHandler.showMoveDialog(context, [item.uri], loadItems);
+                Navigator.pop(sheetContext);
+                ItemMoveHandler.showMoveDialog(context, [item.uri]);
               },
             ),
             ListTile(
               leading: Icon(
                 Icons.edit,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('Rename'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(sheetContext);
                 ItemRenameHandler.showRenameDialog(context, item);
               },
             ),
@@ -70,35 +71,34 @@ void showBottomMenu(
               ListTile(
                 leading: Icon(
                   Icons.copy,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(sheetContext).colorScheme.secondary,
                 ),
                 title: const Text('Duplicate'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(sheetContext);
                   ItemDuplicationHandler(context).handleDuplicateItem(item);
                 },
               ),
             ListTile(
               leading: Icon(
                 Icons.archive_outlined,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('Archive'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(sheetContext);
                 ItemArchiveHandler(context).handleArchiveItem(item);
               },
             ),
             ListTile(
               leading: Icon(
                 Icons.delete_sweep,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('To Trash'),
               onTap: () {
-                Navigator.pop(context);
-                ItemDeletionHandler(context)
-                    .showTrashConfirmation(item, loadItems);
+                Navigator.pop(sheetContext);
+                ItemDeletionHandler(context).showTrashConfirmation(item);
               },
             ),
             ListTile(
@@ -108,9 +108,9 @@ void showBottomMenu(
               ),
               title: const Text('Delete'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(sheetContext);
                 ItemDeletionHandler(context)
-                    .showPermanentDeleteConfirmation(item, loadItems);
+                    .showPermanentDeleteConfirmation(item);
               },
             ),
           ],

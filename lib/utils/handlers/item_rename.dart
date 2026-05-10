@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/settings_provider.dart';
@@ -54,7 +55,7 @@ class ItemRenameHandler {
 
         if (showMessage == true) {
           customSnackBar(
-                  '${item is Directory ? 'Folder' : 'File'} renamed successfully',
+                  '"${path.basename(item.path)}"${item is Directory ? " folder" : ""} renamed successfully',
                   type: 'success')
               .show(context);
         }
@@ -62,7 +63,7 @@ class ItemRenameHandler {
     } catch (e) {
       if (context.mounted) {
         customSnackBar(
-                'Error renaming ${item is Directory ? 'folder' : 'file'}: $e',
+                'Error renaming "${path.basename(item.path)}"${item is Directory ? " folder" : ""}: $e',
                 type: 'error')
             .show(context);
       }

@@ -58,7 +58,7 @@ class ItemCreationHandler {
 
             context
                 .read<NavigationProvider>()
-                .routeItemToPage(context, File(e).uri);
+                .routeItemToPage(context, File(e).uri, newItem: true);
           }
         });
       } catch (e) {
