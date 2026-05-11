@@ -23,7 +23,7 @@
 
 ### (May 05, 2026)
 
-- Fixed issue with note editor text selection extending across full width instead of only around text
+- Fixed issue with note editors text selection extending across full width of screen instead of only around text
 
 ### (April 26, 2026)
 
