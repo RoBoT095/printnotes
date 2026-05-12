@@ -20,15 +20,14 @@ import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
 class GridTileItem extends StatelessWidget {
-  const GridTileItem({super.key, required this.item, required this.onChange});
+  const GridTileItem(
+      {super.key, required this.item, required this.previewCache});
 
   final FileSystemEntity item;
-  final VoidCallback onChange;
+  final Map<String, Future<Widget>> previewCache;
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, Future<Widget>> previewCache = {};
-
     final isDirectory = item is Directory;
     final isSelected =
         context.read<SelectingProvider>().selectedItems.contains(item.path);
@@ -52,7 +51,6 @@ class GridTileItem extends StatelessWidget {
         } else {
           if (isDirectory) {
             context.read<NavigationProvider>().addToRouteHistory(item.path);
-            onChange();
           } else if (item is File) {
             context
                 .read<NavigationProvider>()
@@ -60,7 +58,7 @@ class GridTileItem extends StatelessWidget {
           }
         }
       },
-      onLongPress: () => showBottomMenu(context, item, onChange),
+      onLongPress: () => showBottomMenu(context, item),
       child: AbsorbPointer(
         child: Card(
           color:

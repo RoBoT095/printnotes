@@ -23,6 +23,7 @@
 
 ### (May 11, 2026)
 
+- Fixed tree list view not updating when modifying files
 - Fixed drawers "All Notes" button... again
 - Upgrade flutter version from `3.41.7` to `3.41.9`
 

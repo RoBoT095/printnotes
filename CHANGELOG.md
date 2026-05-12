@@ -8,6 +8,7 @@
 
 ### Fixed:
 
+- Tree list view was not reloading when files were modified
 - "All Notes" button in drawer now reloads screen properly
 
 ## v0.10.7 - May 05, 2026

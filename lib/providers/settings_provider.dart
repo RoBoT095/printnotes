@@ -144,7 +144,7 @@ class SettingsProvider with ChangeNotifier {
     _sortOrder = sortOrder;
     UserSortPref.setSortOrder(sortOrder);
     loadItems(_currentPath);
-    notifyListeners();
+    // notifyListeners(); // Not needed because loadItems has notifier too
   }
 
   void setTitleBarVisibility(bool visibility) {
@@ -163,14 +163,14 @@ class SettingsProvider with ChangeNotifier {
     _useLatex = useLatex;
     UserAdvancedPref.setLatexSupport(useLatex);
     loadItems(_currentPath);
-    notifyListeners();
+    // notifyListeners(); // Not needed because loadItems has notifier too
   }
 
   void setFrontMatterUse(bool useFM) {
     _useFrontmatter = useFM;
     UserAdvancedPref.setFrontmatterSupport(useFM);
     loadItems(_currentPath);
-    notifyListeners();
+    // notifyListeners(); // Not needed because loadItems has notifier too
   }
 
   Future<void> loadTrash(String trashPath) async {

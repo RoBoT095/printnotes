@@ -133,8 +133,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
     }
 
     Widget layoutView = watchSettings.layout == 'tree'
-        ? TreeLayoutView(onChange: _loadItems)
-        : GridListView(items: items, onChange: _loadItems);
+        ? TreeLayoutView()
+        : GridListView(items: items);
 
     return PopScope(
       canPop: false,
