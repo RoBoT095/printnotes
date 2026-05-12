@@ -1,5 +1,5 @@
 // TODO: Remember to update here
-const appVersion = '0.10.7';
+const appVersion = '0.10.8';
 
 const allowedNoteExtensions = ['.md', '.markdown', '.txt', '.me'];
 const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.bmp', '.gif'];

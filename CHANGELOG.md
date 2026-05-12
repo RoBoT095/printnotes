@@ -2,6 +2,14 @@
 
 > Moved DevLog into separate file
 
+## v0.10.8 - WIP
+
+### Changes:
+
+### Fixed:
+
+- "All Notes" button in drawer now reloads screen properly
+
 ## v0.10.7 - May 05, 2026
 
 ### Changes:

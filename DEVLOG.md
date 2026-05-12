@@ -21,7 +21,12 @@
 
 ## Day to Day Changes:
 
-### (May 05, 2026)
+### (May 11, 2026)
+
+- Fixed drawers "All Notes" button... again
+- Upgrade flutter version from `3.41.7` to `3.41.9`
+
+### (May 10, 2026)
 
 - Fixed issue with note editors text selection extending across full width of screen instead of only around text
 

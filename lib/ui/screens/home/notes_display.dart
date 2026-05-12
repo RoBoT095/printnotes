@@ -46,7 +46,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
     super.initState();
     if (Platform.isAndroid) _checkMediaIntent();
     _loadItems();
-    // widget.onReload(_loadItems);
   }
 
   Future<void> _loadItems() async {
@@ -114,6 +113,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    widget.onReload(_loadItems);
     bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
 
     final watchSettings = context.watch<SettingsProvider>();
