@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+
 import 'package:printnotes/constants/constants.dart';
-import 'package:printnotes/ui/screens/editors/sketch_pad/sketch_pad.dart';
 
 import 'package:printnotes/utils/handlers/file_extensions.dart';
+
 import 'package:printnotes/ui/screens/viewers/image_viewer.dart';
 import 'package:printnotes/ui/screens/editors/notes/note_editor.dart';
 import 'package:printnotes/ui/screens/viewers/pdf_viewer.dart';
+import 'package:printnotes/ui/screens/editors/sketch_pad/sketch_pad.dart';
 
 class NavigationProvider with ChangeNotifier {
   final List<String> _routeHistory = [];
@@ -29,6 +31,7 @@ class NavigationProvider with ChangeNotifier {
       _routeHistory.clear();
       _routeHistory.add(route);
       notifyListeners();
+      return;
     }
     // Prevent the addition of the same route to list again
     if (_routeHistory.last != route) {

@@ -44,6 +44,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
   @override
   void initState() {
     super.initState();
+    widget.onReload(_loadItems);
     if (Platform.isAndroid) _checkMediaIntent();
     _loadItems();
   }
@@ -53,9 +54,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     final readSettings = context.read<SettingsProvider>();
     final readNavProv = context.read<NavigationProvider>();
 
-    // readNavProv.initRouteHistory(readSettings.mainDir);
-
-    await readSettings.loadItems(context, readNavProv.routeHistory.last);
+    await readSettings.loadItems(readNavProv.routeHistory.last);
 
     if (mounted) setState(() => _isLoading = false);
   }
@@ -113,7 +112,6 @@ class _NotesDisplayState extends State<NotesDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    widget.onReload(_loadItems);
     bool isScreenLarge = MediaQuery.sizeOf(context).width >= 1000.0;
 
     final watchSettings = context.watch<SettingsProvider>();

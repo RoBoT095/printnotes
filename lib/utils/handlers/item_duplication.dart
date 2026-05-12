@@ -26,7 +26,7 @@ class ItemDuplicationHandler {
 
       if (context.mounted) {
         final readSettProv = context.read<SettingsProvider>();
-        readSettProv.loadItems(context, readSettProv.currentPath);
+        readSettProv.loadItems(readSettProv.currentPath);
 
         customSnackBar('file duplicated: $newFileName', type: 'success')
             .show(context);

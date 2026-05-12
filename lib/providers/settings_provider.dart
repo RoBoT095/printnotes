@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
-import 'package:provider/provider.dart';
 
 import 'package:printnotes/providers/navigation_provider.dart';
+
 import 'package:printnotes/utils/storage_system.dart';
 import 'package:printnotes/utils/handlers/item_sort.dart';
 import 'package:printnotes/utils/configs/user_intro.dart';
@@ -12,6 +12,10 @@ import 'package:printnotes/utils/configs/data_path.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 
 class SettingsProvider with ChangeNotifier {
+  NavigationProvider? _navProvider;
+
+  // ===========================
+
   bool _showIntro = true;
   bool _hideTitleBar = false;
   bool _bottomBarPersistence = false;
@@ -132,14 +136,14 @@ class SettingsProvider with ChangeNotifier {
   void setFolderPriority(String folderPriority) {
     _folderPriority = folderPriority;
     UserSortPref.setFolderPriority(folderPriority);
-    loadItems(null, _currentPath);
-    notifyListeners();
+    loadItems(_currentPath);
+    // notifyListeners(); // Not needed because loadItems has notifier too
   }
 
   void setSortOrder(String sortOrder) {
     _sortOrder = sortOrder;
     UserSortPref.setSortOrder(sortOrder);
-    loadItems(null, _currentPath);
+    loadItems(_currentPath);
     notifyListeners();
   }
 
@@ -158,14 +162,14 @@ class SettingsProvider with ChangeNotifier {
   void setLatexUse(bool useLatex) {
     _useLatex = useLatex;
     UserAdvancedPref.setLatexSupport(useLatex);
-    loadItems(null, _currentPath);
+    loadItems(_currentPath);
     notifyListeners();
   }
 
   void setFrontMatterUse(bool useFM) {
     _useFrontmatter = useFM;
     UserAdvancedPref.setFrontmatterSupport(useFM);
-    loadItems(null, _currentPath);
+    loadItems(_currentPath);
     notifyListeners();
   }
 
@@ -182,10 +186,11 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadItems(
-    BuildContext? context,
-    String folder,
-  ) async {
+  void setNavigationProvider(NavigationProvider nav) {
+    _navProvider = nav;
+  }
+
+  Future<void> loadItems(String folder) async {
     String currentFolderName = 'Notes';
     bool isTag = false;
     List<FileSystemEntity> filesWithTags = [];
@@ -208,10 +213,8 @@ class SettingsProvider with ChangeNotifier {
         isRecentFiles = true;
         loadRecentFiles();
       } else {
-        if (context != null && context.mounted) {
-          context.read<NavigationProvider>().routeHistory.clear();
-          context.read<NavigationProvider>().routeHistory.add(mainDir);
-        }
+        _navProvider?.routeHistory.clear();
+        _navProvider?.routeHistory.add(mainDir);
         folder = mainDir;
       }
     }
@@ -233,7 +236,7 @@ class SettingsProvider with ChangeNotifier {
     } else if (folder != mainDir) {
       currentFolderName = folder.replaceFirst(mainDir, '');
     } else {
-      currentFolderName;
+      currentFolderName = 'Notes';
     }
 
     _items = sortedItems;

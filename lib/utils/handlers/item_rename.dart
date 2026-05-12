@@ -51,7 +51,7 @@ class ItemRenameHandler {
       await StorageSystem.renameItem(item.uri, newName);
       if (context.mounted) {
         final readSettProv = context.read<SettingsProvider>();
-        readSettProv.loadItems(context, readSettProv.currentPath);
+        readSettProv.loadItems(readSettProv.currentPath);
 
         if (showMessage == true) {
           customSnackBar(

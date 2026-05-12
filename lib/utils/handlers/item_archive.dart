@@ -37,7 +37,7 @@ class ItemArchiveHandler {
                 await StorageSystem.archiveItem(item.uri);
                 if (context.mounted) {
                   final readSettProv = context.read<SettingsProvider>();
-                  readSettProv.loadItems(context, readSettProv.currentPath);
+                  readSettProv.loadItems(readSettProv.currentPath);
 
                   customSnackBar(
                           '${item is Directory ? 'Folder' : 'File'} archived successfully',

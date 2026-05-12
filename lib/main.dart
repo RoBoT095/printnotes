@@ -30,8 +30,11 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProxyProvider<NavigationProvider, SettingsProvider>(
+          create: (_) => SettingsProvider(),
+          update: (_, nav, settings) => settings!..setNavigationProvider(nav),
+        ),
         ChangeNotifierProvider(create: (_) => EditorConfigProvider()),
         ChangeNotifierProvider(create: (_) => SelectingProvider()),
         ChangeNotifierProvider(create: (_) => CustomizationProvider()),
