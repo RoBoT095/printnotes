@@ -1,4 +1,4 @@
-# Print(Notes) A Better way to take Notes
+# Print(Notes) a better way to take Notes
 
 [![GitHub](https://img.shields.io/github/license/RoBoT095/printnotes)](https://github.com/RoBoT095/printnotes/blob/main/LICENSE)
 [![IzzyOnDroid](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.printnotes.printnotes)](https://apt.izzysoft.de/fdroid/index/apk/com.printnotes.printnotes)
