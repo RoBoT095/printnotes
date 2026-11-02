@@ -22,10 +22,19 @@ class GridListView extends StatefulWidget {
 }
 
 class _GridListViewState extends State<GridListView> {
+  final Map<String, Future<PreviewData>> previewCache = {};
+
+  @override
+  void didUpdateWidget(covariant GridListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.items != oldWidget.items) {
+      previewCache.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, Future<Widget>> previewCache = {};
-
     if (!context.watch<SelectingProvider>().selectingMode) {
       context.read<SelectingProvider>().selectedItems.clear();
     }

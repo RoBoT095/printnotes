@@ -23,6 +23,8 @@
 
 ### (November 02, 2026)
 
+- Fixed grid/list view clicking on a folder did not reload screen, broke it when fixing tree view (probably, it has been 6 months)
+- Fixed issue where file preview wasn't cached properly and caused text off the screen to be disposes prematurely
 - Failed to upgrade to flutter `3.44` or `3.47` due to many library dependencies lacking the required changes
 - Migrated android/app/build.gradle to gradle.kts
 - Replaced PDF viewer to one that works and isn't vibe coded so much that every version breaks something

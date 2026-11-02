@@ -6,6 +6,8 @@
 
 ### Changes:
 
+- PDF Viewer looks different
+
 ### Fixed:
 
 - Replaced PDF viewer to a working one

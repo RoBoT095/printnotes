@@ -19,12 +19,24 @@ import 'package:printnotes/utils/parsers/hex_color_extension.dart';
 import 'package:printnotes/markdown/build_markdown.dart';
 import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 
+class PreviewData {
+  const PreviewData({
+    this.fmTitle,
+    this.fmDescription,
+    this.previewText = '',
+  });
+
+  final String? fmTitle;
+  final String? fmDescription;
+  final String previewText;
+}
+
 class GridTileItem extends StatelessWidget {
   const GridTileItem(
       {super.key, required this.item, required this.previewCache});
 
   final FileSystemEntity item;
-  final Map<String, Future<Widget>> previewCache;
+  final Map<String, Future<PreviewData>> previewCache;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +63,7 @@ class GridTileItem extends StatelessWidget {
         } else {
           if (isDirectory) {
             context.read<NavigationProvider>().addToRouteHistory(item.path);
+            context.read<SettingsProvider>().loadItems(item.path);
           } else if (item is File) {
             context
                 .read<NavigationProvider>()
@@ -98,39 +111,25 @@ class GridTileItem extends StatelessWidget {
               : Padding(
                   padding: EdgeInsets.all(
                       context.watch<CustomizationProvider>().noteTilePadding),
-                  child: FutureBuilder(
-                      future: previewCache[item.path] ??= fileItem(
-                          context,
-                          item,
-                          fmColor != null ? HexColor.fromHex(fmColor) : null),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return snapshot.data ?? const SizedBox();
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }),
+                  child: _buildFileContent(
+                    context,
+                    fmColor != null ? HexColor.fromHex(fmColor) : null,
+                  ),
                 ),
         ),
       ),
     );
   }
 
-  Future<Widget> fileItem(
-      BuildContext context, FileSystemEntity item, Color? color) async {
-    final itemName = path.basename(item.path);
-    final useFM = context.read<SettingsProvider>().useFrontmatter;
-    final markdownConfigs = theMarkdownConfigs(context,
-        fileUri: item.uri, hideCodeButtons: true, textColor: color);
-    final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
+  Widget _buildFileContent(BuildContext context, Color? color) {
+    final entity = item;
+    if (entity is File) {
+      final type = fileTypeChecker(entity.path);
+      final itemName = path.basename(entity.path);
 
-    String? fmTitle;
-    String? fmDescription;
-
-    if (item is File) {
-      if (fileTypeChecker(item.path) == CFileType.image) {
-        return Image.file(item);
-      } else if (fileTypeChecker(item.path) == CFileType.pdf) {
+      if (type == CFileType.image) {
+        return Image.file(entity);
+      } else if (type == CFileType.pdf) {
         return ListTile(
           leading: Icon(
             Icons.picture_as_pdf,
@@ -144,12 +143,9 @@ class GridTileItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         );
-      } else if (fileTypeChecker(item.path) == CFileType.sketch) {
+      } else if (type == CFileType.sketch) {
         return ListTile(
-          leading: Icon(
-            Icons.draw,
-            size: 34,
-          ),
+          leading: const Icon(Icons.draw, size: 34),
           title: Text(
             itemName.replaceAll('.bson', ''),
             textAlign: TextAlign.start,
@@ -159,25 +155,60 @@ class GridTileItem extends StatelessWidget {
         );
       }
     }
+
+    return FutureBuilder<PreviewData>(
+      future: previewCache[item.path] ??= _loadPreviewData(context),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final data = snapshot.data;
+        if (snapshot.hasError || data == null) {
+          return const SizedBox();
+        }
+        return _buildPreview(context, data, color);
+      },
+    );
+  }
+
+  Future<PreviewData> _loadPreviewData(BuildContext context) async {
+    final useFM = context.read<SettingsProvider>().useFrontmatter;
+    final storage = StorageSystem(context); // created once before any await
+
+    String? fmTitle;
+    String? fmDescription;
+
     if (useFM) {
-      // I am beginning to hate this function, but why create new one when
-      // we can add more functionality to it
-      String fileText = await StorageSystem(context)
-          .getFilePreview(item.uri, isTrimmed: false);
+      final String fileText =
+          await storage.getFilePreview(item.uri, isTrimmed: false);
       if (fileText != 'No preview available') {
         fmTitle = FrontmatterHandleParsing.getTagString(fileText, 'title');
         fmDescription =
             FrontmatterHandleParsing.getTagString(fileText, 'description');
       }
     }
-    final String previewText = await StorageSystem(context)
-        .getFilePreview(item.uri, parseFrontmatter: useFM);
+
+    final String previewText =
+        await storage.getFilePreview(item.uri, parseFrontmatter: useFM);
+
+    return PreviewData(
+      fmTitle: fmTitle,
+      fmDescription: fmDescription,
+      previewText: previewText,
+    );
+  }
+
+  Widget _buildPreview(BuildContext context, PreviewData data, Color? color) {
+    final itemName = path.basename(item.path);
+    final markdownConfigs = theMarkdownConfigs(context,
+        fileUri: item.uri, hideCodeButtons: true, textColor: color);
+    final markdownGenerators = theMarkdownGenerators(context, textScale: 0.95);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          fmTitle ?? itemName.replaceAll(".md", ''),
+          data.fmTitle ?? itemName.replaceAll(".md", ''),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: color,
@@ -186,14 +217,14 @@ class GridTileItem extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        fmDescription != null
+        data.fmDescription != null
             ? Text(
-                fmDescription,
+                data.fmDescription!,
                 style: TextStyle(color: color),
               )
             : MarkdownBlock(
                 selectable: false,
-                data: previewText,
+                data: data.previewText,
                 config: markdownConfigs,
                 generator: markdownGenerators,
               ),
