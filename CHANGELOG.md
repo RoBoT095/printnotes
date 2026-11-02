@@ -8,6 +8,7 @@
 
 ### Fixed:
 
+- Replaced PDF viewer to a working one
 - Tree list view was not reloading when files were modified
 - "All Notes" button in drawer now reloads screen properly
 

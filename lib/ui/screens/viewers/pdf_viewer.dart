@@ -3,13 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
-import 'package:pdfrx/pdfrx.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'package:printnotes/utils/open_explorer.dart';
 import 'package:printnotes/ui/components/app_bar_drag_wrapper.dart';
-import 'package:printnotes/ui/components/dialogs/basic_popup.dart';
 
 class PdfViewScreen extends StatefulWidget {
   const PdfViewScreen({super.key, required this.pdfUri});
@@ -22,76 +19,54 @@ class PdfViewScreen extends StatefulWidget {
 
 class _PdfViewScreenState extends State<PdfViewScreen> {
   final PdfViewerController pdfController = PdfViewerController();
-  late final textSearcher = PdfTextSearcher(pdfController)
-    ..addListener(_update);
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
-  bool linkHighlight = false;
+  PdfTextSearchResult _searchResult = PdfTextSearchResult();
+  bool _isSearching = false;
   bool searchToggled = false;
 
-  int currentZoom = 0;
+  @override
+  void dispose() {
+    _searchResult.removeListener(_onSearchUpdated);
+    _searchResult.clear();
+    searchTextController.dispose();
+    focusNode.dispose();
+    pdfController.dispose();
+    super.dispose();
+  }
 
-  void _update() {
+  // Listener to refresh screen when the search instance changes (jumps)
+  void _onSearchUpdated() {
     if (mounted) {
       setState(() {});
     }
   }
 
-  @override
-  void dispose() {
-    textSearcher.removeListener(_update);
-    textSearcher.dispose();
-    searchTextController.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
+  // Perform search and attach listener so arrows work
+  void _performSearch(String query) {
+    _searchResult.removeListener(_onSearchUpdated);
 
-  Future<void> openLinkHandler(PdfLink link) async {
-    if (link.url != null) {
-      final response = await showBasicPopup(context, 'Open Link?',
-          'Are you sure you want to open:\n${link.url}?');
-      if (response) launchUrl(link.url!);
-    } else if (link.dest != null) {
-      pdfController.goToDest(link.dest);
+    if (query.isEmpty) {
+      _searchResult.clear();
+      if (mounted) setState(() => _isSearching = false);
+      return;
+    }
+
+    if (mounted) {
+      setState(() => _isSearching = true);
+    }
+
+    _searchResult = pdfController.searchText(query);
+
+    _searchResult.addListener(_onSearchUpdated);
+
+    if (mounted) {
+      setState(() {
+        _isSearching = false;
+      });
     }
   }
-
-  Widget pdfSpeedDial({bool? isOpen}) => SpeedDial(
-        isOpenOnStart: isOpen ?? false,
-        icon: Icons.add,
-        activeIcon: Icons.close,
-        tooltip: 'PDF Controls',
-        closeManually: true,
-        renderOverlay: false,
-        overlayOpacity: 0,
-        switchLabelPosition: true,
-        children: <SpeedDialChild>[
-          SpeedDialChild(
-            child: const Icon(Icons.zoom_out),
-            onTap: () async {
-              await pdfController.zoomDown();
-              setState(() => currentZoom = pdfController.currentZoom.toInt());
-            },
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.zoom_in),
-            onTap: () async {
-              await pdfController.zoomUp();
-              setState(() => currentZoom = pdfController.currentZoom.toInt());
-            },
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.last_page),
-            onTap: () =>
-                pdfController.goToPage(pageNumber: pdfController.pageCount),
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.first_page),
-            onTap: () => pdfController.goToPage(pageNumber: 1),
-          ),
-        ],
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -106,17 +81,16 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                setState(() => linkHighlight = !linkHighlight);
-              },
-              color: linkHighlight
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.onSurface,
-              icon: const Icon(Icons.link),
-            ),
-            IconButton(
                 onPressed: () {
-                  setState(() => searchToggled = !searchToggled);
+                  setState(() {
+                    searchToggled = !searchToggled;
+
+                    if (!searchToggled) {
+                      searchTextController.clear();
+                      _searchResult.removeListener(_onSearchUpdated);
+                      _searchResult.clear();
+                    }
+                  });
                 },
                 color: searchToggled
                     ? Theme.of(context).colorScheme.secondary
@@ -152,96 +126,38 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
           bottom: searchToggled
               ? PreferredSize(
                   preferredSize: const Size.fromHeight(kToolbarHeight),
-                  child: searchBar(textSearcher))
+                  child: searchBar())
               : null,
         ),
       ),
-      body: PdfViewer.file(
-        widget.pdfUri.toFilePath(),
+      body: SfPdfViewer.file(
+        File(widget.pdfUri.toFilePath()),
         controller: pdfController,
-        params: PdfViewerParams(
-          // onViewerReady: (document, controller) {},
-          // Search
-          pagePaintCallbacks: [
-            // if (textSearcher.value != null)
-            textSearcher.pageTextMatchPaintCallback
-          ],
-          // Clickable Links
-          linkHandlerParams: linkHighlight
-              ? PdfLinkHandlerParams(
-                  onLinkTap: (link) => openLinkHandler(link),
-                )
-              : null,
-          viewerOverlayBuilder: (context, size, handleLinkTap) => [
-            // Double Taps for zoom
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onDoubleTap: () {
-                pdfController.zoomUp(loop: true);
-              },
-              onTapUp: (details) {
-                handleLinkTap(details.localPosition);
-              },
-              child: IgnorePointer(
-                child: SizedBox(width: size.width, height: size.height),
-              ),
-            ),
-            // Side thumb with page number
-            PdfViewerScrollThumb(
-              controller: pdfController,
-              orientation: ScrollbarOrientation.left,
-              thumbSize: const Size(40, 25),
-              thumbBuilder: (context, thumbSize, pageNumber, controller) =>
-                  Container(
-                color: Theme.of(context).colorScheme.surfaceContainer,
-                // Show page number on the thumb
-                child: Center(
-                  child: Text(
-                    pageNumber.toString(),
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                ),
-              ),
-            ),
-            PdfViewerScrollThumb(
-              controller: pdfController,
-              orientation: ScrollbarOrientation.bottom,
-              thumbSize: const Size(80, 25),
-              thumbBuilder: (context, thumbSize, pageNumber, controller) =>
-                  Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Theme.of(context).colorScheme.onPrimary),
-                        borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      child: Icon(
-                        Icons.linear_scale,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      )),
-            ),
-          ],
-        ),
+        canShowScrollHead: true,
+        canShowScrollStatus: true,
+        canShowHyperlinkDialog: true,
+        onDocumentLoaded: (details) => setState(() {}),
+        onPageChanged: (details) => setState(() {}),
+        onZoomLevelChanged: (details) => setState(() {}),
       ),
-      floatingActionButton:
-          pdfSpeedDial(isOpen: MediaQuery.sizeOf(context).width >= 800),
+      bottomNavigationBar: bottomControls(),
     );
   }
 
-  Widget searchBar(PdfTextSearcher textSearcher) {
+  Widget searchBar() {
     return Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: Border(
-              top: BorderSide(color: Theme.of(context).colorScheme.onSurface))),
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+      ),
       child: Column(
         children: [
-          textSearcher.isSearching
-              ? LinearProgressIndicator(
-                  value: textSearcher.searchProgress,
-                  minHeight: 4,
-                )
+          _isSearching
+              ? const LinearProgressIndicator(minHeight: 4)
               : const SizedBox(height: 4),
           Row(
             children: [
@@ -259,18 +175,14 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
                       ),
                       textInputAction: TextInputAction.search,
                       onChanged: (value) {
-                        textSearcher.startTextSearch(
-                          searchTextController.text,
-                          searchImmediately: true,
-                        );
+                        _performSearch(value);
                       },
-                      onSubmitted: (value) {},
                     ),
-                    if (textSearcher.hasMatches)
+                    if (_searchResult.hasResult)
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          '${textSearcher.currentIndex! + 1} / ${textSearcher.matches.length}',
+                          '${_searchResult.currentInstanceIndex} / ${_searchResult.totalInstanceCount}',
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -282,21 +194,21 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
               ),
               const SizedBox(width: 4),
               IconButton(
-                onPressed: (textSearcher.currentIndex ?? 0) > 0
-                    ? () async {
-                        await textSearcher.goToPrevMatch();
-                        _update();
+                onPressed: _searchResult.hasResult &&
+                        _searchResult.currentInstanceIndex > 1
+                    ? () {
+                        _searchResult.previousInstance();
                       }
                     : null,
                 icon: const Icon(Icons.arrow_upward),
                 iconSize: 20,
               ),
               IconButton(
-                onPressed: (textSearcher.currentIndex ?? 0) <
-                        textSearcher.matches.length
-                    ? () async {
-                        await textSearcher.goToNextMatch();
-                        _update();
+                onPressed: _searchResult.hasResult &&
+                        _searchResult.currentInstanceIndex <
+                            _searchResult.totalInstanceCount
+                    ? () {
+                        _searchResult.nextInstance();
                       }
                     : null,
                 icon: const Icon(Icons.arrow_downward),
@@ -305,9 +217,13 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
               IconButton(
                 onPressed: searchTextController.text.isNotEmpty
                     ? () {
-                        searchTextController.text = '';
-                        textSearcher.resetTextSearch();
+                        searchTextController.clear();
+                        _searchResult.removeListener(
+                          _onSearchUpdated,
+                        );
+                        _searchResult.clear();
                         focusNode.requestFocus();
+                        setState(() {});
                       }
                     : null,
                 icon: const Icon(Icons.close),
@@ -316,6 +232,65 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
             ],
           ),
           const SizedBox(height: 4),
+        ],
+      ),
+    );
+  }
+
+  Widget bottomControls() {
+    return BottomAppBar(
+      height: 48,
+      padding: EdgeInsets.zero,
+      color: Theme.of(context).colorScheme.surface,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            tooltip: 'Top Page',
+            icon: const Icon(Icons.first_page),
+            onPressed: pdfController.pageNumber > 1
+                ? () {
+                    pdfController.jumpToPage(1);
+                  }
+                : null,
+          ),
+          IconButton(
+            tooltip: 'Zoom Out',
+            icon: const Icon(Icons.zoom_out),
+            onPressed: pdfController.zoomLevel > 1.0
+                ? () {
+                    final newZoom = (pdfController.zoomLevel - 0.5).clamp(
+                      1.0,
+                      5.0,
+                    );
+                    pdfController.zoomLevel = newZoom;
+                    setState(() {});
+                  }
+                : null,
+          ),
+          IconButton(
+            tooltip: 'Zoom In',
+            icon: const Icon(Icons.zoom_in),
+            onPressed: pdfController.zoomLevel < 5.0
+                ? () {
+                    final newZoom = (pdfController.zoomLevel + 0.5).clamp(
+                      1.0,
+                      5.0,
+                    );
+                    pdfController.zoomLevel = newZoom;
+                    setState(() {});
+                  }
+                : null,
+          ),
+          IconButton(
+            tooltip: 'Last Page',
+            icon: const Icon(Icons.last_page),
+            onPressed: pdfController.pageNumber < pdfController.pageCount
+                ? () {
+                    pdfController.jumpToPage(pdfController.pageCount);
+                  }
+                : null,
+          ),
         ],
       ),
     );

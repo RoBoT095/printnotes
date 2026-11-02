@@ -21,6 +21,12 @@
 
 ## Day to Day Changes:
 
+### (November 02, 2026)
+
+- Failed to upgrade to flutter `3.44` or `3.47` due to many library dependencies lacking the required changes
+- Migrated android/app/build.gradle to gradle.kts
+- Replaced PDF viewer to one that works and isn't vibe coded so much that every version breaks something
+
 ### (May 11, 2026)
 
 - Fixed tree list view not updating when modifying files
