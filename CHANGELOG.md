@@ -2,7 +2,19 @@
 
 > Moved DevLog into separate file
 
-## v0.10.7
+## v0.10.8 - Nov 02, 2026
+
+### Changes:
+
+- PDF Viewer looks different
+
+### Fixed:
+
+- Replaced PDF viewer to a working one
+- Tree list view was not reloading when files were modified
+- "All Notes" button in drawer now reloads screen properly
+
+## v0.10.7 - May 05, 2026
 
 ### Changes:
 
@@ -19,7 +31,7 @@
 - Fixed issue with note editors text selection extending across full width of screen instead of only around text
 - Empty notes no longer show "..." when it is empty
 
-## v0.10.6 - (Jan 24, 2026)
+## v0.10.6 - Jan 24, 2026
 
 ### Changes:
 

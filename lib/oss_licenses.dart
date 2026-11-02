@@ -16,7 +16,6 @@ const allDependencies = <Package>[
   _analyzer,
   _animated_snack_bar,
   _animated_tree_view,
-  _archive,
   _args,
   _async,
   _boolean_selector,
@@ -37,6 +36,8 @@ const allDependencies = <Package>[
   _dart_pubspec_licenses,
   _dbus,
   _decimal,
+  _device_info_plus,
+  _device_info_plus_platform_interface,
   _diffutil_dart,
   _dots_indicator,
   _dynamic_color,
@@ -74,7 +75,6 @@ const allDependencies = <Package>[
   _http,
   _http_multi_server,
   _http_parser,
-  _image,
   _intl,
   _introduction_screen,
   _io,
@@ -108,10 +108,6 @@ const allDependencies = <Package>[
   _path_provider_linux,
   _path_provider_platform_interface,
   _path_provider_windows,
-  _pdfium_dart,
-  _pdfium_flutter,
-  _pdfrx,
-  _pdfrx_engine,
   _permission_handler,
   _permission_handler_android,
   _permission_handler_apple,
@@ -122,14 +118,12 @@ const allDependencies = <Package>[
   _platform,
   _plugin_platform_interface,
   _pool,
-  _posix,
   _power_extensions,
   _provider,
   _pub_semver,
   _pubspec_parse,
   _rational,
   _retry,
-  _rxdart,
   _safe_url_check,
   _screen_retriever,
   _screen_retriever_linux,
@@ -158,7 +152,15 @@ const allDependencies = <Package>[
   _stack_trace,
   _stream_channel,
   _string_scanner,
-  _synchronized,
+  _syncfusion_flutter_core,
+  _syncfusion_flutter_pdf,
+  _syncfusion_flutter_pdfviewer,
+  _syncfusion_flutter_signaturepad,
+  _syncfusion_pdfviewer_linux,
+  _syncfusion_pdfviewer_macos,
+  _syncfusion_pdfviewer_platform_interface,
+  _syncfusion_pdfviewer_web,
+  _syncfusion_pdfviewer_windows,
   _term_glyph,
   _test,
   _test_api,
@@ -186,6 +188,7 @@ const allDependencies = <Package>[
   _web_socket_channel,
   _webkit_inspection_protocol,
   _win32,
+  _win32_registry,
   _window_manager,
   _xdg_directories,
   _xml,
@@ -221,7 +224,7 @@ const dependencies = <Package>[
   _introduction_screen,
   _flutter_staggered_grid_view,
   _animated_tree_view,
-  _pdfrx,
+  _syncfusion_flutter_pdfviewer,
   _sketch_flow,
   _flutter_speed_dial,
   _animated_snack_bar,
@@ -1091,42 +1094,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.''',
-  );
-
-/// archive 4.0.9
-const _archive = Package(
-    name: 'archive',
-    description: 'Provides encoders and decoders for various archive and compression formats such as zip, tar, bzip2, gzip, and zlib.',
-    repository: 'https://github.com/brendan-duncan/archive',
-    authors: [],
-    version: '4.0.9',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('path'), PackageRef('posix')],
-    devDependencies: [PackageRef('http'), PackageRef('lints'), PackageRef('test'), PackageRef('web')],
-    license: '''The MIT License
-
-Copyright (c) 2013-2021 Brendan Duncan.
-All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.''',
   );
 
 /// args 2.7.0
@@ -2625,6 +2592,90 @@ const _decimal = Package(
    limitations under the License.''',
   );
 
+/// device_info_plus 12.4.0
+const _device_info_plus = Package(
+    name: 'device_info_plus',
+    description: 'Flutter plugin providing detailed information about the device (make, model, etc.), and Android or iOS version the app is running on.',
+    homepage: 'https://github.com/fluttercommunity/plus_plugins',
+    repository: 'https://github.com/fluttercommunity/plus_plugins/tree/main/packages/device_info_plus/device_info_plus',
+    authors: [],
+    version: '12.4.0',
+    spdxIdentifiers: ['BSD-3-Clause'],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('device_info_plus_platform_interface'), PackageRef('ffi'), PackageRef('file'), PackageRef('flutter'), PackageRef('flutter_web_plugins'), PackageRef('meta'), PackageRef('web'), PackageRef('win32'), PackageRef('win32_registry')],
+    devDependencies: [PackageRef('flutter_lints'), PackageRef('flutter_test'), PackageRef('test')],
+    license: '''Copyright 2017 The Chromium Authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
+  );
+
+/// device_info_plus_platform_interface 7.0.3
+const _device_info_plus_platform_interface = Package(
+    name: 'device_info_plus_platform_interface',
+    description: 'A common platform interface for the device_info_plus plugin.',
+    homepage: 'https://github.com/fluttercommunity/plus_plugins',
+    repository: 'https://github.com/fluttercommunity/plus_plugins/tree/main/packages/',
+    authors: [],
+    version: '7.0.3',
+    spdxIdentifiers: ['BSD-3-Clause'],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('meta'), PackageRef('plugin_platform_interface')],
+    devDependencies: [PackageRef('flutter_lints'), PackageRef('flutter_test')],
+    license: '''Copyright 2017 The Chromium Authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
+  );
+
 /// diffutil_dart 4.0.1
 const _diffutil_dart = Package(
     name: 'diffutil_dart',
@@ -3496,13 +3547,13 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// flutter 3.41.7
+/// flutter 3.47.8
 const _flutter = Package(
     name: 'flutter',
     description: 'A framework for writing Flutter applications',
     homepage: 'https://flutter.dev',
     authors: [],
-    version: '3.41.7',
+    version: '3.47.8',
     spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: true,
@@ -4676,42 +4727,6 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// image 4.8.0
-const _image = Package(
-    name: 'image',
-    description: 'Dart Image Library provides server and web apps the ability to load, manipulate, and save images with various image file formats.',
-    homepage: 'https://github.com/brendan-duncan/image',
-    authors: [],
-    version: '4.8.0',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('archive'), PackageRef('meta'), PackageRef('xml')],
-    devDependencies: [PackageRef('http'), PackageRef('intl'), PackageRef('lints'), PackageRef('test'), PackageRef('web')],
-    license: '''The MIT License
-
-Copyright (c) 2013-2022 Brendan Duncan.
-All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.''',
-  );
-
 /// intl 0.20.2
 const _intl = Package(
     name: 'intl',
@@ -5448,13 +5463,13 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// matcher 0.12.19
+/// matcher 0.12.20
 const _matcher = Package(
     name: 'matcher',
     description: 'Support for specifying test expectations via an extensible Matcher class. Also includes a number of built-in Matcher implementations for common cases.',
     repository: 'https://github.com/dart-lang/test/tree/master/pkgs/matcher',
     authors: [],
-    version: '0.12.19',
+    version: '0.12.20',
     spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: false,
@@ -5704,13 +5719,13 @@ const _material_color_utilities = Package(
    limitations under the License.''',
   );
 
-/// meta 1.17.0
+/// meta 1.19.0
 const _meta = Package(
     name: 'meta',
     description: "Annotations used to express developer intentions that can't otherwise be deduced by statically analyzing source code.",
     repository: 'https://github.com/dart-lang/sdk/tree/main/pkg/meta',
     authors: [],
-    version: '1.17.0',
+    version: '1.19.0',
     spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: false,
@@ -6392,106 +6407,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// pdfium_dart 0.1.3
-const _pdfium_dart = Package(
-    name: 'pdfium_dart',
-    description: "Dart FFI bindings for PDFium library. Provides low-level access to PDFium's C API from Dart.",
-    homepage: 'https://github.com/espresso3389/pdfrx',
-    repository: 'https://github.com/espresso3389/pdfrx/tree/master/packages/pdfium_dart',
-    authors: [],
-    version: '0.1.3',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('archive'), PackageRef('ffi'), PackageRef('http'), PackageRef('path')],
-    devDependencies: [PackageRef('lints'), PackageRef('test')],
-    license: '''The MIT License (MIT)
-===============
-
-Copyright (c) 2025 @espresso3389 (Takashi Kawasaki)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''',
-  );
-
-/// pdfium_flutter 0.1.9
-const _pdfium_flutter = Package(
-    name: 'pdfium_flutter',
-    description: 'Flutter FFI plugin for loading PDFium native libraries. Bundles PDFium binaries for Android, iOS, Windows, macOS, and Linux.',
-    homepage: 'https://github.com/espresso3389/pdfrx',
-    repository: 'https://github.com/espresso3389/pdfrx/tree/master/packages/pdfium_flutter',
-    authors: [],
-    version: '0.1.9',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('pdfium_dart'), PackageRef('ffi'), PackageRef('flutter'), PackageRef('path')],
-    devDependencies: [PackageRef('flutter_test'), PackageRef('flutter_lints')],
-    license: '''The MIT License (MIT)
-===============
-
-Copyright (c) 2025 @espresso3389 (Takashi Kawasaki)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''',
-  );
-
-/// pdfrx 2.2.24
-const _pdfrx = Package(
-    name: 'pdfrx',
-    description: 'pdfrx is a rich and fast PDF viewer and manipulation plugin built on the top of PDFium. Supports viewing, editing, combining PDFs on Android, iOS, Windows, macOS, Linux, and Web.',
-    homepage: 'https://github.com/espresso3389/pdfrx',
-    repository: 'https://github.com/espresso3389/pdfrx/tree/master/packages/pdfrx',
-    authors: [],
-    version: '2.2.24',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('pdfrx_engine'), PackageRef('pdfium_flutter'), PackageRef('collection'), PackageRef('crypto'), PackageRef('ffi'), PackageRef('flutter'), PackageRef('http'), PackageRef('path'), PackageRef('path_provider'), PackageRef('rxdart'), PackageRef('synchronized'), PackageRef('url_launcher'), PackageRef('vector_math'), PackageRef('web'), PackageRef('yaml')],
-    devDependencies: [PackageRef('flutter_test'), PackageRef('flutter_lints'), PackageRef('archive')],
-    license: '''The MIT License (MIT)
-===============
-
-Copyright (c) 2018 @espresso3389 (Takashi Kawasaki)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''',
-  );
-
-/// pdfrx_engine 0.3.9
-const _pdfrx_engine = Package(
-    name: 'pdfrx_engine',
-    description: 'pdfrx_engine is a PDF rendering and manipulation API built on top of PDFium, designed to be used with the pdfrx plugin. Supports viewing, editing, and combining PDF documents.',
-    homepage: 'https://github.com/espresso3389/pdfrx',
-    repository: 'https://github.com/espresso3389/pdfrx/tree/master/packages/pdfrx_engine',
-    authors: [],
-    version: '0.3.9',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('pdfium_dart'), PackageRef('collection'), PackageRef('crypto'), PackageRef('ffi'), PackageRef('http'), PackageRef('path'), PackageRef('rxdart'), PackageRef('synchronized'), PackageRef('vector_math'), PackageRef('archive'), PackageRef('image')],
-    devDependencies: [PackageRef('lints'), PackageRef('test')],
-    license: '''The MIT License (MIT)
-===============
-
-Copyright (c) 2018 @espresso3389 (Takashi Kawasaki)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.''',
-  );
-
 /// permission_handler 12.0.1
 const _permission_handler = Package(
     name: 'permission_handler',
@@ -6857,41 +6772,6 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
-  );
-
-/// posix 6.5.0
-const _posix = Package(
-    name: 'posix',
-    description: 'Exposes the POSIX api on OSx and Linux',
-    homepage: 'https://github.com/onepub-dev/dart_posix',
-    authors: [],
-    version: '6.5.0',
-    spdxIdentifiers: ['MIT'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [PackageRef('ffi'), PackageRef('meta'), PackageRef('path')],
-    devDependencies: [PackageRef('logging'), PackageRef('stack_trace'), PackageRef('test'), PackageRef('uuid')],
-    license: '''MIT License
-
-Copyright (c) 2020 Brett Sutton
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.''',
   );
 
 /// power_extensions 0.2.4
@@ -7275,222 +7155,6 @@ const _retry = Package(
     isSdk: false,
     dependencies: [],
     devDependencies: [PackageRef('test'), PackageRef('lints')],
-    license: '''Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.''',
-  );
-
-/// rxdart 0.28.0
-const _rxdart = Package(
-    name: 'rxdart',
-    description: '''RxDart is an implementation of the popular ReactiveX api for asynchronous programming, leveraging the native Dart Streams api.
-''',
-    repository: 'https://github.com/ReactiveX/rxdart',
-    authors: [],
-    version: '0.28.0',
-    spdxIdentifiers: ['Apache-2.0'],
-    isMarkdown: false,
-    isSdk: false,
-    dependencies: [],
-    devDependencies: [PackageRef('lints'), PackageRef('stack_trace'), PackageRef('test')],
     license: '''Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -8708,34 +8372,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-===========================================================================================
-File: layers/external/inplace_function.h
-File: layers/external/parallel_hashmap/phmap_utils.h
-
-Boost Software License - Version 1.0 - August 17th, 2003
-
-Permission is hereby granted, free of charge, to any person or organization
-obtaining a copy of the software and accompanying documentation covered by
-this license (the "Software") to use, reproduce, display, distribute,
-execute, and transmit the Software, and to prepare derivative works of the
-Software, and to permit third-parties to whom the Software is furnished to
-do so, all subject to the following:
-
-The copyright notices in the Software and this entire statement, including
-the above license grant, this restriction and the following disclaimer,
-must be included in all copies of the Software, in whole or in part, and
-all derivative works of the Software, unless such copies or derivative
-works are solely in the form of machine-executable object code generated by
-a source language processor.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
-SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
-FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 fuchsia_sdk
 
@@ -9535,217 +9171,13 @@ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 --------------------------------------------------------------------------------
-skia
-
-
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright 2021 Google LLC
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
---------------------------------------------------------------------------------
 angle
 benchmark
 boringssl
 cpu_features
 flatbuffers
 gtest-parallel
+skia
 spirv-cross
 spirv-tools
 vulkan-headers
@@ -9933,30 +9365,7 @@ yapf
 
    END OF TERMS AND CONDITIONS
 
-   APPENDIX: How to apply the Apache License to your work.
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
 --------------------------------------------------------------------------------
 abseil-cpp
 
@@ -10138,30 +9547,7 @@ abseil-cpp
 
    END OF TERMS AND CONDITIONS
 
-   APPENDIX: How to apply the Apache License to your work.
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       https://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
 --------------------------------------------------------------------------------
 include
 
@@ -10363,24 +9749,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-------------------------------------------------------------------------------
-ALTERNATIVE B - Public Domain (www.unlicense.org)
-This is free and unencumbered software released into the public domain.
-Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
-software, either in source code form or as a compiled binary, for any purpose,
-commercial or non-commercial, and by any means.
-In jurisdictions that recognize copyright laws, the author or authors of this
-software dedicate any and all copyright interest in the software to the public
-domain. We make this dedication for the benefit of the public at large and to
-the detriment of our heirs and successors. We intend this dedication to be an
-overt act of relinquishment in perpetuity of all present and future rights to
-this software under copyright law.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 ffx_spd
 
@@ -10776,6 +10144,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
+flutter
+
+
+Copyright © 2015 Inigo Quilez
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions: The above copyright
+notice and this permission notice shall be included in all copies or
+substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS",
+WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+--------------------------------------------------------------------------------
 swiftshader
 
 
@@ -10956,30 +10343,7 @@ swiftshader
 
    END OF TERMS AND CONDITIONS
 
-   APPENDIX: How to apply the Apache License to your work.
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
 --------------------------------------------------------------------------------
 yapf_diff
 
@@ -11160,235 +10524,9 @@ yapf_diff
 
     END OF TERMS AND CONDITIONS
 
-    APPENDIX: How to apply the Apache License to your work.
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-    Copyright [yyyy] [name of copyright owner]
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
 --------------------------------------------------------------------------------
 flatbuffers
-
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-   1. Definitions.
-
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
-
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
-
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
-
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
-
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
-
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
-
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
-
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
-
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
-
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
-
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
-
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
-
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
-
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
-
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
-
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
-
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
-
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
-
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
-
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
-
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
-
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
-
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
-
-   END OF TERMS AND CONDITIONS
-
-   APPENDIX: How to apply the Apache License to your work.
-
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright 2014 Google Inc.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
---------------------------------------------------------------------------------
 shaderc
 
                                  Apache License
@@ -11568,30 +10706,7 @@ shaderc
 
    END OF TERMS AND CONDITIONS
 
-   APPENDIX: How to apply the Apache License to your work.
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
-
-   Copyright [yyyy] [name of copyright owner]
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
 --------------------------------------------------------------------------------
 perfetto
 
@@ -12026,7 +11141,7 @@ Introduction
 
    """
     Portions of this software are copyright © <year> The FreeType
-    Project (www.freetype.org).  All rights reserved.
+    Project (https://freetype.org).  All rights reserved.
    """
 
   Please replace <year> with the value from the FreeType version you
@@ -12140,7 +11255,7 @@ Legal Terms
 
   Our home page can be found at
 
-    https://www.freetype.org
+    https://freetype.org
 
 
 --- end of FTL.TXT ---
@@ -12192,6 +11307,31 @@ ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
 PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Author(s): Behdad Esfahbod
+
+--------------------------------------------------------------------------------
+harfbuzz
+
+ This is part of HarfBuzz, a text shaping library.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the
+above copyright notice and the following two paragraphs appear in
+all copies of this software.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+Author(s): Khaled Hosny
 
 --------------------------------------------------------------------------------
 expat
@@ -14229,13 +13369,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
---------------------------------------------------------------------------------
-skia
-
-Copyright %s %s
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
 --------------------------------------------------------------------------------
 glfw
 
@@ -17037,15 +16170,6 @@ icu
 
 Copyright (C) 2016 and later: Unicode, Inc. and others.
 License & terms of use: http://www.unicode.org/copyright.html
----------------------------------------------------------
-Copyright (C) 2013, International Business Machines
-Corporation and others.  All Rights Reserved.
-
---------------------------------------------------------------------------------
-icu
-
-Copyright (C) 2016 and later: Unicode, Inc. and others.
-License & terms of use: http://www.unicode.org/copyright.html
 Copyright (C) 1999-2016, International Business Machines
 Corporation and others.  All Rights Reserved.
 
@@ -17349,6 +16473,38 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
+perfetto
+
+Copyright (C) 2017 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the
+License. You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an "AS
+IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+--------------------------------------------------------------------------------
+perfetto
+
+Copyright (C) 2017 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
 glslang
 
 Copyright (C) 2017-2018 Google, Inc.
@@ -17436,6 +16592,56 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
+perfetto
+
+Copyright (C) 2018 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an "AS
+IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+--------------------------------------------------------------------------------
+angle
+dart
+perfetto
+
+Copyright (C) 2018 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
+swiftshader
+
+Copyright (C) 2018 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
 glslang
 
 Copyright (C) 2018 The Khronos Group Inc.
@@ -17521,6 +16727,23 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
+dart
+perfetto
+
+Copyright (C) 2019 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
 shaderc
 
 Copyright (C) 2020 Google Inc.
@@ -17572,6 +16795,24 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
+dart
+perfetto
+swiftshader
+
+Copyright (C) 2020 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
 shaderc
 
 Copyright (C) 2020-2022 Google LLC
@@ -17591,7 +16832,41 @@ limitations under the License.
 dart
 perfetto
 
+Copyright (C) 2021 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
+dart
+perfetto
+
 Copyright (C) 2022  The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
+dart
+perfetto
+
+Copyright (C) 2022 The Android Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17639,6 +16914,23 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+--------------------------------------------------------------------------------
+dart
+perfetto
+
+Copyright (C) 2023 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --------------------------------------------------------------------------------
 glslang
 
@@ -17764,6 +17056,33 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+--------------------------------------------------------------------------------
+harfbuzz
+
+Copyright (C) 2026  Behdad Esfahbod
+
+ This is part of HarfBuzz, a text shaping library.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the
+above copyright notice and the following two paragraphs appear in
+all copies of this software.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+Author(s): Behdad Esfahbod
+
 --------------------------------------------------------------------------------
 libjpeg-turbo
 
@@ -17932,12 +17251,6 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
---------------------------------------------------------------------------------
-dart
-
-Copyright (c) %d, the Dart project authors.  Please see the AUTHORS file
-for details. All rights reserved. Use of this source code is governed by a
-BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
 expat
 
@@ -20234,6 +19547,7 @@ Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
 dart
+flutter
 
 Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 for details. All rights reserved. Use of this source code is governed by a
@@ -21327,7 +20641,7 @@ limitations under the License.
 --------------------------------------------------------------------------------
 skia
 
-Copyright (c) 2020 Google LLC. All rights reserved.
+Copyright (c) 2020 Google LLC All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
@@ -21977,6 +21291,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
+skia
+
+Copyright (c) 2022 Google LLC All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+--------------------------------------------------------------------------------
 spirv-tools
 
 Copyright (c) 2022 Google LLC.
@@ -21992,12 +21312,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
---------------------------------------------------------------------------------
-skia
-
-Copyright (c) 2022 Google LLC. All rights reserved.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
 --------------------------------------------------------------------------------
 spirv-tools
 
@@ -22761,6 +22075,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
+ai
 dart
 
 Copyright (c) 2025, the Dart project authors.  Please see the AUTHORS file
@@ -22770,6 +22085,13 @@ BSD-style license that can be found in the LICENSE file.
 perfetto
 
 Copyright (c) 2025, the Dart project authors. Please see the AUTHORS file
+for details. All rights reserved. Use of this source code is governed by a
+BSD-style license that can be found in the LICENSE file.
+--------------------------------------------------------------------------------
+ai
+dart
+
+Copyright (c) 2026, the Dart project authors.  Please see the AUTHORS file
 for details. All rights reserved. Use of this source code is governed by a
 BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
@@ -23272,13 +22594,6 @@ tree. An additional intellectual property rights grant can be found
 in the file PATENTS. All contributing project authors may
 be found in the AUTHORS file in the root of the source tree.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2012 Google LLC
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 angle
 
 Copyright 2012 The ANGLE Project Authors. All rights reserved.
@@ -23292,7 +22607,6 @@ Copyright 2012 The Android Open Source Project
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
-dart
 zlib
 
 Copyright 2012 The Chromium Authors
@@ -23632,10 +22946,15 @@ Copyright 2014-2022 The Khronos Group Inc.
 SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
 swiftshader
-vulkan
 vulkan-headers
 
 Copyright 2014-2025 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0
+--------------------------------------------------------------------------------
+vulkan
+
+Copyright 2014-2026 The Khronos Group Inc.
 
 SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
@@ -23685,6 +23004,13 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2015 Google LLC
+
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
 --------------------------------------------------------------------------------
 angle
 
@@ -23765,10 +23091,15 @@ Copyright 2015-2023 LunarG, Inc.
 SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
 swiftshader
-vulkan
 vulkan-headers
 
 Copyright 2015-2025 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0
+--------------------------------------------------------------------------------
+vulkan
+
+Copyright 2015-2026 The Khronos Group Inc.
 
 SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
@@ -23965,27 +23296,6 @@ Copyright 2017 ARM Ltd.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2017 Google Inc.
-
-Use of this source code is governed by a BD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2017 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2017 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be found
-in the LICENSE file.
---------------------------------------------------------------------------------
 libwebp
 
 Copyright 2017 Google Inc. All Rights Reserved.
@@ -24029,6 +23339,27 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
+skia
+
+Copyright 2017 Google LLC
+
+Use of this source code is governed by a BD-style license that can be
+found in the LICENSE file.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2017 Google LLC
+
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2017 Google LLC
+
+Use of this source code is governed by a BSD-style license that can be found
+in the LICENSE file.
+--------------------------------------------------------------------------------
 cpu_features
 
 Copyright 2017 Google LLC
@@ -24039,6 +23370,22 @@ you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2017 Google LLC All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -24256,12 +23603,6 @@ Copyright 2018 Google Inc.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2018 Google Inc.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 libwebp
 
 Copyright 2018 Google Inc. All Rights Reserved.
@@ -24291,14 +23632,25 @@ limitations under the License.
 --------------------------------------------------------------------------------
 skia
 
-Copyright 2018 Google Inc. All rights reserved.
+Copyright 2018 Google LLC
+
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
 Copyright 2018 Google LLC
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+--------------------------------------------------------------------------------
+skia
 
+Copyright 2018 Google LLC
+Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2018 Google LLC All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
@@ -24317,17 +23669,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2018 Google LLC.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2018 Google LLC.
-Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
@@ -24543,19 +23884,6 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2019 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2019 Google Inc.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 flatbuffers
 
 Copyright 2019 Google Inc. All rights reserved.
@@ -24571,13 +23899,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2019 Google Inc. and Adobe Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
 --------------------------------------------------------------------------------
 spirv-tools
 
@@ -24610,21 +23931,15 @@ found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
-Copyright 2019 Google LLC.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2019 Google LLC.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2019 Google LLC.
+Copyright 2019 Google LLC
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2019 Google LLC and Adobe Inc.
+
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
@@ -24689,7 +24004,6 @@ Use of this source code is governed by a BSD-style license that can be
 found in the Chromium source repository LICENSE file.
 --------------------------------------------------------------------------------
 accessibility
-dart
 skia
 
 Copyright 2019 The Chromium Authors. All rights reserved.
@@ -24876,13 +24190,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2020 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
+benchmark
 flatbuffers
 
 Copyright 2020 Google Inc. All rights reserved.
@@ -24908,14 +24216,7 @@ found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
-Copyright 2020 Google LLC.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2020 Google LLC.
+Copyright 2020 Google LLC
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
@@ -25081,13 +24382,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2021 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 libwebp
 
 Copyright 2021 Google Inc. All Rights Reserved.
@@ -25124,14 +24418,7 @@ found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
-Copyright 2021 Google LLC.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2021 Google LLC.
+Copyright 2021 Google LLC
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
@@ -25243,13 +24530,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2022 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 libwebp
 
 Copyright 2022 Google Inc. All Rights Reserved.
@@ -25303,18 +24583,6 @@ found in the LICENSE file.
 skia
 
 Copyright 2022 Google LLC
-Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2022 Google LLC.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2022 Google LLC.
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
@@ -25455,12 +24723,6 @@ Copyright 2023 Google Inc.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2023 Google Inc.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 flatbuffers
 
 Copyright 2023 Google Inc. All rights reserved.
@@ -25503,20 +24765,13 @@ found in the LICENSE file.
 skia
 
 Copyright 2023 Google LLC
-
-Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
 Copyright 2023 Google LLC
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2023 Google LLC.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
@@ -25638,13 +24893,6 @@ vulkan-headers
 Copyright 2023-2025 The Khronos Group Inc.
 SPDX-License-Identifier: Apache-2.0
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2024 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 angle
 
 Copyright 2024 Google Inc.  All rights reserved.
@@ -25676,20 +24924,13 @@ found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
-Copyright 2024 Google LLC.
-
+Copyright 2024 Google LLC
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
 
-Copyright 2024 Google LLC.
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2024 Google LLC.
+Copyright 2024 Google LLC
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 --------------------------------------------------------------------------------
 skia
@@ -25750,13 +24991,6 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
-skia
-
-Copyright 2025 Google Inc.
-
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
 spirv-tools
 
 Copyright 2025 Google LLC
@@ -25784,13 +25018,6 @@ found in the LICENSE file.
 skia
 
 Copyright 2025 Google LLC
-Use of this source code is governed by a BSD-style license that can be
-found in the LICENSE file.
---------------------------------------------------------------------------------
-skia
-
-Copyright 2025 Google LLC.
-
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 --------------------------------------------------------------------------------
@@ -25855,6 +25082,50 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+--------------------------------------------------------------------------------
+ai
+
+Copyright 2025, the Dart project authors.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google LLC nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2026 Google LLC
+
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+--------------------------------------------------------------------------------
+skia
+
+Copyright 2026 The Android Open Source Project
+
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
 --------------------------------------------------------------------------------
 angle
 
@@ -26111,6 +25382,7 @@ Red Hat Author(s): Behdad Esfahbod
 Google Author(s): Behdad Esfahbod, Garret Rieger
 
 --------------------------------------------------------------------------------
+freetype2
 harfbuzz
 
 Copyright © 2007,2008,2009  Red Hat, Inc.
@@ -29377,6 +28649,33 @@ FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
 ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
 PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+Google Author(s): Garret Rieger, Qunxin Liu, Roderick Sheeter
+
+--------------------------------------------------------------------------------
+harfbuzz
+
+Copyright © 2023  Google, Inc.
+
+ This is part of HarfBuzz, a text shaping library.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the
+above copyright notice and the following two paragraphs appear in
+all copies of this software.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
 Google Author(s): Qunxin Liu
 
 --------------------------------------------------------------------------------
@@ -29513,6 +28812,33 @@ Author(s): Behdad Esfahbod
 --------------------------------------------------------------------------------
 harfbuzz
 
+Copyright © 2025  Google, Inc.
+
+ This is part of HarfBuzz, a text shaping library.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the
+above copyright notice and the following two paragraphs appear in
+all copies of this software.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+Google Author(s): Garret Rieger
+
+--------------------------------------------------------------------------------
+harfbuzz
+
 Copyright © 2025 Behdad Esfahbod
 
  This is part of HarfBuzz, a text shaping library.
@@ -29536,6 +28862,58 @@ ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
 PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 Author(s): Behdad Esfahbod
+
+--------------------------------------------------------------------------------
+harfbuzz
+
+Copyright © 2026  Behdad Esfahbod
+
+ This is part of HarfBuzz, a text shaping library.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the
+above copyright notice and the following two paragraphs appear in
+all copies of this software.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+Author(s): Behdad Esfahbod
+
+--------------------------------------------------------------------------------
+harfbuzz
+
+Copyright © 2026 Behdad Esfahbod
+
+ This is part of HarfBuzz, a text shaping library.
+
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the
+above copyright notice and the following two paragraphs appear in
+all copies of this software.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 --------------------------------------------------------------------------------
 glslang
@@ -29572,6 +28950,35 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+--------------------------------------------------------------------------------
+vulkan-validation-layers
+
+File: layers/external/inplace_function.h
+File: layers/external/parallel_hashmap/phmap_utils.h
+
+Boost Software License - Version 1.0 - August 17th, 2003
+
+Permission is hereby granted, free of charge, to any person or organization
+obtaining a copy of the software and accompanying documentation covered by
+this license (the "Software") to use, reproduce, display, distribute,
+execute, and transmit the Software, and to prepare derivative works of the
+Software, and to permit third-parties to whom the Software is furnished to
+do so, all subject to the following:
+
+The copyright notices in the Software and this entire statement, including
+the above license grant, this restriction and the following disclaimer,
+must be included in all copies of the Software, in whole or in part, and
+all derivative works of the Software, unless such copies or derivative
+works are solely in the form of machine-executable object code generated by
+a source language processor.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
 --------------------------------------------------------------------------------
 harfbuzz
 
@@ -29660,390 +29067,13 @@ which is quoted below:
   all her or his copyright and related or neighboring legal rights in
   the Work.
 --------------------------------------------------------------------------------
-fallback_root_certificates
-
-Mozilla Public License Version 2.0
-==================================
-
-1. Definitions
---------------
-
-1.1. "Contributor"
-    means each individual or legal entity that creates, contributes to
-    the creation of, or owns Covered Software.
-
-1.2. "Contributor Version"
-    means the combination of the Contributions of others (if any) used
-    by a Contributor and that particular Contributor's Contribution.
-
-1.3. "Contribution"
-    means Covered Software of a particular Contributor.
-
-1.4. "Covered Software"
-    means Source Code Form to which the initial Contributor has attached
-    the notice in Exhibit A, the Executable Form of such Source Code
-    Form, and Modifications of such Source Code Form, in each case
-    including portions thereof.
-
-1.5. "Incompatible With Secondary Licenses"
-    means
-
-    (a) that the initial Contributor has attached the notice described
-        in Exhibit B to the Covered Software; or
-
-    (b) that the Covered Software was made available under the terms of
-        version 1.1 or earlier of the License, but not also under the
-        terms of a Secondary License.
-
-1.6. "Executable Form"
-    means any form of the work other than Source Code Form.
-
-1.7. "Larger Work"
-    means a work that combines Covered Software with other material, in
-    a separate file or files, that is not Covered Software.
-
-1.8. "License"
-    means this document.
-
-1.9. "Licensable"
-    means having the right to grant, to the maximum extent possible,
-    whether at the time of the initial grant or subsequently, any and
-    all of the rights conveyed by this License.
-
-1.10. "Modifications"
-    means any of the following:
-
-    (a) any file in Source Code Form that results from an addition to,
-        deletion from, or modification of the contents of Covered
-        Software; or
-
-    (b) any new file in Source Code Form that contains any Covered
-        Software.
-
-1.11. "Patent Claims" of a Contributor
-    means any patent claim(s), including without limitation, method,
-    process, and apparatus claims, in any patent Licensable by such
-    Contributor that would be infringed, but for the grant of the
-    License, by the making, using, selling, offering for sale, having
-    made, import, or transfer of either its Contributions or its
-    Contributor Version.
-
-1.12. "Secondary License"
-    means either the GNU General Public License, Version 2.0, the GNU
-    Lesser General Public License, Version 2.1, the GNU Affero General
-    Public License, Version 3.0, or any later versions of those
-    licenses.
-
-1.13. "Source Code Form"
-    means the form of the work preferred for making modifications.
-
-1.14. "You" (or "Your")
-    means an individual or a legal entity exercising rights under this
-    License. For legal entities, "You" includes any entity that
-    controls, is controlled by, or is under common control with You. For
-    purposes of this definition, "control" means (a) the power, direct
-    or indirect, to cause the direction or management of such entity,
-    whether by contract or otherwise, or (b) ownership of more than
-    fifty percent (50%) of the outstanding shares or beneficial
-    ownership of such entity.
-
-2. License Grants and Conditions
---------------------------------
-
-2.1. Grants
-
-Each Contributor hereby grants You a world-wide, royalty-free,
-non-exclusive license:
-
-(a) under intellectual property rights (other than patent or trademark)
-    Licensable by such Contributor to use, reproduce, make available,
-    modify, display, perform, distribute, and otherwise exploit its
-    Contributions, either on an unmodified basis, with Modifications, or
-    as part of a Larger Work; and
-
-(b) under Patent Claims of such Contributor to make, use, sell, offer
-    for sale, have made, import, and otherwise transfer either its
-    Contributions or its Contributor Version.
-
-2.2. Effective Date
-
-The licenses granted in Section 2.1 with respect to any Contribution
-become effective for each Contribution on the date the Contributor first
-distributes such Contribution.
-
-2.3. Limitations on Grant Scope
-
-The licenses granted in this Section 2 are the only rights granted under
-this License. No additional rights or licenses will be implied from the
-distribution or licensing of Covered Software under this License.
-Notwithstanding Section 2.1(b) above, no patent license is granted by a
-Contributor:
-
-(a) for any code that a Contributor has removed from Covered Software;
-    or
-
-(b) for infringements caused by: (i) Your and any other third party's
-    modifications of Covered Software, or (ii) the combination of its
-    Contributions with other software (except as part of its Contributor
-    Version); or
-
-(c) under Patent Claims infringed by Covered Software in the absence of
-    its Contributions.
-
-This License does not grant any rights in the trademarks, service marks,
-or logos of any Contributor (except as may be necessary to comply with
-the notice requirements in Section 3.4).
-
-2.4. Subsequent Licenses
-
-No Contributor makes additional grants as a result of Your choice to
-distribute the Covered Software under a subsequent version of this
-License (see Section 10.2) or under the terms of a Secondary License (if
-permitted under the terms of Section 3.3).
-
-2.5. Representation
-
-Each Contributor represents that the Contributor believes its
-Contributions are its original creation(s) or it has sufficient rights
-to grant the rights to its Contributions conveyed by this License.
-
-2.6. Fair Use
-
-This License is not intended to limit any rights You have under
-applicable copyright doctrines of fair use, fair dealing, or other
-equivalents.
-
-2.7. Conditions
-
-Sections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted
-in Section 2.1.
-
-3. Responsibilities
--------------------
-
-3.1. Distribution of Source Form
-
-All distribution of Covered Software in Source Code Form, including any
-Modifications that You create or to which You contribute, must be under
-the terms of this License. You must inform recipients that the Source
-Code Form of the Covered Software is governed by the terms of this
-License, and how they can obtain a copy of this License. You may not
-attempt to alter or restrict the recipients' rights in the Source Code
-Form.
-
-3.2. Distribution of Executable Form
-
-If You distribute Covered Software in Executable Form then:
-
-(a) such Covered Software must also be made available in Source Code
-    Form, as described in Section 3.1, and You must inform recipients of
-    the Executable Form how they can obtain a copy of such Source Code
-    Form by reasonable means in a timely manner, at a charge no more
-    than the cost of distribution to the recipient; and
-
-(b) You may distribute such Executable Form under the terms of this
-    License, or sublicense it under different terms, provided that the
-    license for the Executable Form does not attempt to limit or alter
-    the recipients' rights in the Source Code Form under this License.
-
-3.3. Distribution of a Larger Work
-
-You may create and distribute a Larger Work under terms of Your choice,
-provided that You also comply with the requirements of this License for
-the Covered Software. If the Larger Work is a combination of Covered
-Software with a work governed by one or more Secondary Licenses, and the
-Covered Software is not Incompatible With Secondary Licenses, this
-License permits You to additionally distribute such Covered Software
-under the terms of such Secondary License(s), so that the recipient of
-the Larger Work may, at their option, further distribute the Covered
-Software under the terms of either this License or such Secondary
-License(s).
-
-3.4. Notices
-
-You may not remove or alter the substance of any license notices
-(including copyright notices, patent notices, disclaimers of warranty,
-or limitations of liability) contained within the Source Code Form of
-the Covered Software, except that You may alter any license notices to
-the extent required to remedy known factual inaccuracies.
-
-3.5. Application of Additional Terms
-
-You may choose to offer, and to charge a fee for, warranty, support,
-indemnity or liability obligations to one or more recipients of Covered
-Software. However, You may do so only on Your own behalf, and not on
-behalf of any Contributor. You must make it absolutely clear that any
-such warranty, support, indemnity, or liability obligation is offered by
-You alone, and You hereby agree to indemnify every Contributor for any
-liability incurred by such Contributor as a result of warranty, support,
-indemnity or liability terms You offer. You may include additional
-disclaimers of warranty and limitations of liability specific to any
-jurisdiction.
-
-4. Inability to Comply Due to Statute or Regulation
----------------------------------------------------
-
-If it is impossible for You to comply with any of the terms of this
-License with respect to some or all of the Covered Software due to
-statute, judicial order, or regulation then You must: (a) comply with
-the terms of this License to the maximum extent possible; and (b)
-describe the limitations and the code they affect. Such description must
-be placed in a text file included with all distributions of the Covered
-Software under this License. Except to the extent prohibited by statute
-or regulation, such description must be sufficiently detailed for a
-recipient of ordinary skill to be able to understand it.
-
-5. Termination
---------------
-
-5.1. The rights granted under this License will terminate automatically
-if You fail to comply with any of its terms. However, if You become
-compliant, then the rights granted under this License from a particular
-Contributor are reinstated (a) provisionally, unless and until such
-Contributor explicitly and finally terminates Your grants, and (b) on an
-ongoing basis, if such Contributor fails to notify You of the
-non-compliance by some reasonable means prior to 60 days after You have
-come back into compliance. Moreover, Your grants from a particular
-Contributor are reinstated on an ongoing basis if such Contributor
-notifies You of the non-compliance by some reasonable means, this is the
-first time You have received notice of non-compliance with this License
-from such Contributor, and You become compliant prior to 30 days after
-Your receipt of the notice.
-
-5.2. If You initiate litigation against any entity by asserting a patent
-infringement claim (excluding declaratory judgment actions,
-counter-claims, and cross-claims) alleging that a Contributor Version
-directly or indirectly infringes any patent, then the rights granted to
-You by any and all Contributors for the Covered Software under Section
-2.1 of this License shall terminate.
-
-5.3. In the event of termination under Sections 5.1 or 5.2 above, all
-end user license agreements (excluding distributors and resellers) which
-have been validly granted by You or Your distributors under this License
-prior to termination shall survive termination.
-
-************************************************************************
-*                                                                      *
-*  6. Disclaimer of Warranty                                           *
-*  -------------------------                                           *
-*                                                                      *
-*  Covered Software is provided under this License on an "as is"       *
-*  basis, without warranty of any kind, either expressed, implied, or  *
-*  statutory, including, without limitation, warranties that the       *
-*  Covered Software is free of defects, merchantable, fit for a        *
-*  particular purpose or non-infringing. The entire risk as to the     *
-*  quality and performance of the Covered Software is with You.        *
-*  Should any Covered Software prove defective in any respect, You     *
-*  (not any Contributor) assume the cost of any necessary servicing,   *
-*  repair, or correction. This disclaimer of warranty constitutes an   *
-*  essential part of this License. No use of any Covered Software is   *
-*  authorized under this License except under this disclaimer.         *
-*                                                                      *
-************************************************************************
-
-************************************************************************
-*                                                                      *
-*  7. Limitation of Liability                                          *
-*  --------------------------                                          *
-*                                                                      *
-*  Under no circumstances and under no legal theory, whether tort      *
-*  (including negligence), contract, or otherwise, shall any           *
-*  Contributor, or anyone who distributes Covered Software as          *
-*  permitted above, be liable to You for any direct, indirect,         *
-*  special, incidental, or consequential damages of any character      *
-*  including, without limitation, damages for lost profits, loss of    *
-*  goodwill, work stoppage, computer failure or malfunction, or any    *
-*  and all other commercial damages or losses, even if such party      *
-*  shall have been informed of the possibility of such damages. This   *
-*  limitation of liability shall not apply to liability for death or   *
-*  personal injury resulting from such party's negligence to the       *
-*  extent applicable law prohibits such limitation. Some               *
-*  jurisdictions do not allow the exclusion or limitation of           *
-*  incidental or consequential damages, so this exclusion and          *
-*  limitation may not apply to You.                                    *
-*                                                                      *
-************************************************************************
-
-8. Litigation
--------------
-
-Any litigation relating to this License may be brought only in the
-courts of a jurisdiction where the defendant maintains its principal
-place of business and such litigation shall be governed by laws of that
-jurisdiction, without reference to its conflict-of-law provisions.
-Nothing in this Section shall prevent a party's ability to bring
-cross-claims or counter-claims.
-
-9. Miscellaneous
-----------------
-
-This License represents the complete agreement concerning the subject
-matter hereof. If any provision of this License is held to be
-unenforceable, such provision shall be reformed only to the extent
-necessary to make it enforceable. Any law or regulation which provides
-that the language of a contract shall be construed against the drafter
-shall not be used to construe this License against a Contributor.
-
-10. Versions of the License
----------------------------
-
-10.1. New Versions
-
-Mozilla Foundation is the license steward. Except as provided in Section
-10.3, no one other than the license steward has the right to modify or
-publish new versions of this License. Each version will be given a
-distinguishing version number.
-
-10.2. Effect of New Versions
-
-You may distribute the Covered Software under the terms of the version
-of the License under which You originally received the Covered Software,
-or under the terms of any subsequent version published by the license
-steward.
-
-10.3. Modified Versions
-
-If you create software not governed by this License, and you want to
-create a new license for such software, you may create and use a
-modified version of this License if you rename the license and remove
-any references to the name of the license steward (except to note that
-such modified license differs from this License).
-
-10.4. Distributing Source Code Form that is Incompatible With Secondary
-Licenses
-
-If You choose to distribute Source Code Form that is Incompatible With
-Secondary Licenses under the terms of this version of the License, the
-notice described in Exhibit B of this License must be attached.
-
-Exhibit A - Source Code Form License Notice
--------------------------------------------
-
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-If it is not possible or desirable to put the notice in a particular
-file, then You may include the notice in a location (such as a LICENSE
-file in a relevant directory) where a recipient would be likely to look
-for such a notice.
-
-You may add additional accurate notices of copyright ownership.
-
-Exhibit B - "Incompatible With Secondary Licenses" Notice
----------------------------------------------------------
-
-  This Source Code Form is "Incompatible With Secondary Licenses", as
-  defined by the Mozilla Public License, v. 2.0.
-
---------------------------------------------------------------------------------
 libpng
 
 PNG Reference Library License version 2
 ---------------------------------------
 
- * Copyright (c) 1995-2025 The PNG Reference Library Authors.
- * Copyright (c) 2018-2025 Cosmin Truta.
+ * Copyright (c) 1995-2026 The PNG Reference Library Authors.
+ * Copyright (c) 2018-2026 Cosmin Truta.
  * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.
  * Copyright (c) 1996-1997 Andreas Dilger.
  * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
@@ -30177,8 +29207,8 @@ libpng
 PNG Reference Library License version 2
 ---------------------------------------
 
- * Copyright (c) 1995-2025 The PNG Reference Library Authors.
- * Copyright (c) 2018-2025 Cosmin Truta.
+ * Copyright (c) 1995-2026 The PNG Reference Library Authors.
+ * Copyright (c) 2018-2026 Cosmin Truta.
  * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.
  * Copyright (c) 1996-1997 Andreas Dilger.
  * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
@@ -30426,38 +29456,6 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied-> See the License for the
 specific language governing permissions and limitations under the License->
---------------------------------------------------------------------------------
-rapidjson
-
-Tencent is pleased to support the open source community by making RapidJSON available.
-
-Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.
-
-Licensed under the MIT License (the "License"); you may not use this file except
-in compliance with the License. You may obtain a copy of the License at
-
-http://opensource.org/licenses/MIT
-
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
---------------------------------------------------------------------------------
-rapidjson
-
-Tencent is pleased to support the open source community by making RapidJSON available.
-
-Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.
-
-Licensed under the MIT License (the "License"); you may not use this file except
-in compliance with the License. You may obtain a copy of the License at
-
-http://opensource.org/licenses/MIT
-
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
 --------------------------------------------------------------------------------
 rapidjson
 
@@ -32105,20 +31103,29 @@ SOFTWARE.
 ----------------------------------------------------------------------
 
 
-File: install-sh (only for ICU4C)
+File: sorttable.js (only for ICU4J)
 
+The MIT Licence, for code from kryogenix.org
 
-Copyright 1991 by the Massachusetts Institute of Technology
+Code downloaded from the Browser Experiments section of kryogenix.org is
+licenced under the so-called MIT licence. The licence is below.
 
-Permission to use, copy, modify, distribute, and sell this software and its
-documentation for any purpose is hereby granted without fee, provided that
-the above copyright notice appear in all copies and that both that
-copyright notice and this permission notice appear in supporting
-documentation, and that the name of M.I.T. not be used in advertising or
-publicity pertaining to distribution of the software without specific,
-written prior permission.  M.I.T. makes no representations about the
-suitability of this software for any purpose.  It is provided "as is"
-without express or implied warranty.
+Copyright (c) 1997-date Stuart Langridge
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --------------------------------------------------------------------------------
 libcxx
@@ -33597,28 +32604,6 @@ TO DO
 Please send bug reports, offers of help, etc. to jpeg-info@jpegclub.org.
 
 --------------------------------------------------------------------------------
-freetype2
-
-version 1.2.11, January 15th, 2017
-
-Copyright (C) 1995-2017 Jean-loup Gailly and Mark Adler
-
-This software is provided 'as-is', without any express or implied
-warranty.  In no event will the authors be held liable for any damages
-arising from the use of this software.
-
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it
-freely, subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not
-claim that you wrote the original software. If you use this software
-in a product, an acknowledgment in the product documentation would be
-appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be
-misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
---------------------------------------------------------------------------------
 zlib
 
 version 1.2.12, March 27th, 2022
@@ -33641,11 +32626,12 @@ freely, subject to the following restrictions:
    misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 --------------------------------------------------------------------------------
+freetype2
 zlib
 
-version 1.3.0.1, August xxth, 2023
+version 1.3.1, January 22nd, 2024
 
-Copyright (C) 1995-2023 Jean-loup Gailly and Mark Adler
+Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -39455,39 +38441,240 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// synchronized 3.4.0
-const _synchronized = Package(
-    name: 'synchronized',
-    description: 'Lock mechanism to prevent concurrent access to asynchronous code.',
-    homepage: 'https://github.com/tekartik/synchronized.dart/tree/master/synchronized',
+/// syncfusion_flutter_core 33.2.15
+const _syncfusion_flutter_core = Package(
+    name: 'syncfusion_flutter_core',
+    description: 'Syncfusion Flutter Core is a dependent package for all the Syncfusion Flutter widgets.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_flutter_core',
     authors: [],
-    version: '3.4.0',
-    spdxIdentifiers: ['MIT'],
+    version: '33.2.15',
+    spdxIdentifiers: [],
     isMarkdown: false,
     isSdk: false,
-    dependencies: [],
-    devDependencies: [PackageRef('web'), PackageRef('lints'), PackageRef('pub_semver'), PackageRef('test'), PackageRef('yaml')],
-    license: '''MIT License
+    dependencies: [PackageRef('flutter'), PackageRef('vector_math')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
 
-Copyright (c) 2016, Alexandre Roux Tekartik.
+Syncfusion<sup>&reg;</sup> Flutter Core package is available under the Syncfusion Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by Syncfusion<sup>&reg;</sup> terms and conditions.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.''',
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_flutter_pdf 33.2.13
+const _syncfusion_flutter_pdf = Package(
+    name: 'syncfusion_flutter_pdf',
+    description: 'The Flutter PDF is a library written natively in Dart for creating, reading, editing, and securing PDF files in Android, iOS, and web platforms.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_flutter_pdf',
+    authors: [],
+    version: '33.2.13',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('intl'), PackageRef('xml'), PackageRef('crypto'), PackageRef('convert'), PackageRef('http'), PackageRef('syncfusion_flutter_core')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF package is available under the Syncfusion Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by Syncfusion<sup>&reg;</sup>’s terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by Syncfusion<sup>&reg;</sup>’s license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf
+
+Syncfusion<sup>&reg;</sup> provides implementation but you would subsequently need to have a license to use Flutter. The Flutter engine must be licensed from google directly. We do not license Flutter or the Flutter Engine and provide no license or rights even if you end up with the binaries from us by mistake.''',
+  );
+
+/// syncfusion_flutter_pdfviewer 33.2.13
+const _syncfusion_flutter_pdfviewer = Package(
+    name: 'syncfusion_flutter_pdfviewer',
+    description: 'Flutter PDF Viewer library is used to display a PDF document seamlessly and efficiently.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_flutter_pdfviewer',
+    authors: [],
+    version: '33.2.13',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('web'), PackageRef('http'), PackageRef('uuid'), PackageRef('async'), PackageRef('vector_math'), PackageRef('url_launcher'), PackageRef('intl'), PackageRef('device_info_plus'), PackageRef('syncfusion_pdfviewer_platform_interface'), PackageRef('syncfusion_pdfviewer_web'), PackageRef('syncfusion_pdfviewer_macos'), PackageRef('syncfusion_pdfviewer_windows'), PackageRef('syncfusion_pdfviewer_linux'), PackageRef('syncfusion_flutter_core'), PackageRef('syncfusion_flutter_pdf'), PackageRef('syncfusion_flutter_signaturepad')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF Viewer package is available under the Syncfusion<sup>&reg;</sup> Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by the Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by the Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_flutter_signaturepad 33.2.15
+const _syncfusion_flutter_signaturepad = Package(
+    name: 'syncfusion_flutter_signaturepad',
+    description: 'The Flutter Signature Pad widget allows you to capture smooth and more realistic signatures through drawn gestures and save it as an image.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_flutter_signaturepad',
+    authors: [],
+    version: '33.2.15',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('web'), PackageRef('syncfusion_flutter_core')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter SignaturePad package is available under the Syncfusion Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_pdfviewer_linux 33.2.15
+const _syncfusion_pdfviewer_linux = Package(
+    name: 'syncfusion_pdfviewer_linux',
+    description: 'Linux platform implementation of the Flutter PDF Viewer library that lets you view the PDF documents seamlessly and efficiently.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_pdfviewer_linux',
+    authors: [],
+    version: '33.2.15',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('plugin_platform_interface')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF Viewer package is available under the Syncfusion<sup>&reg;</sup> Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by the Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by the Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_pdfviewer_macos 33.2.15
+const _syncfusion_pdfviewer_macos = Package(
+    name: 'syncfusion_pdfviewer_macos',
+    description: 'macOS platform implementation of the Flutter PDF Viewer library that lets you view the PDF documents seamlessly and efficiently.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_pdfviewer_macos',
+    authors: [],
+    version: '33.2.15',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('syncfusion_pdfviewer_platform_interface')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF Viewer package is available under the Syncfusion<sup>&reg;</sup> Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by the Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by the Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_pdfviewer_platform_interface 33.2.15
+const _syncfusion_pdfviewer_platform_interface = Package(
+    name: 'syncfusion_pdfviewer_platform_interface',
+    description: 'A common platform interface for the Flutter PDF Viewer library that lets you view the PDF documents seamlessly and efficiently.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_pdfviewer_platform_interface',
+    authors: [],
+    version: '33.2.15',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('plugin_platform_interface')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF Viewer package is available under the Syncfusion<sup>&reg;</sup> Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by the Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by the Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_pdfviewer_web 33.2.15
+const _syncfusion_pdfviewer_web = Package(
+    name: 'syncfusion_pdfviewer_web',
+    description: 'Web platform implementation of the Flutter PDF Viewer library that lets you view the PDF documents seamlessly and efficiently.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_pdfviewer_web',
+    authors: [],
+    version: '33.2.15',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter'), PackageRef('flutter_web_plugins'), PackageRef('web'), PackageRef('syncfusion_pdfviewer_platform_interface')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF Viewer package is available under the Syncfusion<sup>&reg;</sup> Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by the Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by the Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
+  );
+
+/// syncfusion_pdfviewer_windows 33.2.15
+const _syncfusion_pdfviewer_windows = Package(
+    name: 'syncfusion_pdfviewer_windows',
+    description: 'Windows platform implementation of the Flutter PDF Viewer library that lets you view the PDF documents seamlessly and efficiently.',
+    homepage: 'https://github.com/syncfusion/flutter-widgets/tree/master/packages/syncfusion_pdfviewer_windows',
+    authors: [],
+    version: '33.2.15',
+    spdxIdentifiers: [],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('flutter')],
+    devDependencies: [],
+    license: '''Syncfusion<sup>&reg;</sup> License
+
+Syncfusion<sup>&reg;</sup> Flutter PDF Viewer package is available under the Syncfusion<sup>&reg;</sup> Essential Studio<sup>&reg;</sup> program, and can be licensed either under the Syncfusion<sup>&reg;</sup> Community License Program or the Syncfusion<sup>&reg;</sup> commercial license.
+
+To be qualified for the Syncfusion<sup>&reg;</sup> Community License Program you must have a gross revenue of less than one (1) million U.S. dollars (\$1,000,000.00 USD) per year and have less than five (5) developers in your organization, and agree to be bound by the Syncfusion<sup>&reg;</sup> terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+Under no circumstances can you use this product without (1) either a Community License or a commercial license and (2) without agreeing and abiding by the Syncfusion<sup>&reg;</sup> license containing all terms and conditions.
+
+The Syncfusion<sup>&reg;</sup> license that contains the terms and conditions can be found at
+https://www.syncfusion.com/content/downloads/syncfusion_license.pdf''',
   );
 
 /// term_glyph 1.2.2
@@ -39531,13 +38718,13 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// test 1.30.0
+/// test 1.31.1
 const _test = Package(
     name: 'test',
     description: 'A full featured library for writing and running Dart tests across platforms.',
     repository: 'https://github.com/dart-lang/test/tree/master/pkgs/test',
     authors: [],
-    version: '1.30.0',
+    version: '1.31.1',
     spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: false,
@@ -39572,13 +38759,13 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// test_api 0.7.10
+/// test_api 0.7.12
 const _test_api = Package(
     name: 'test_api',
     description: 'The user facing API for structuring Dart tests and checking expectations.',
     repository: 'https://github.com/dart-lang/test/tree/master/pkgs/test_api',
     authors: [],
-    version: '0.7.10',
+    version: '0.7.12',
     spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: false,
@@ -39613,13 +38800,13 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// test_core 0.6.16
+/// test_core 0.6.18
 const _test_core = Package(
     name: 'test_core',
     description: 'A basic library for writing tests and running them on the VM.',
     repository: 'https://github.com/dart-lang/test/tree/master/pkgs/test_core',
     authors: [],
-    version: '0.6.16',
+    version: '0.6.18',
     spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: false,
@@ -40388,64 +39575,43 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
-/// vector_math 2.2.0
+/// vector_math 2.4.4
 const _vector_math = Package(
     name: 'vector_math',
-    description: 'A Vector Math library for 2D and 3D applications.',
-    repository: 'https://github.com/google/vector_math.dart',
+    description: 'A vector math library for 2D and 3D applications, supporting 2D, 3D, and 4D matrices.',
+    repository: 'https://github.com/flutter/core-packages/tree/main/packages/vector_math',
     authors: [],
-    version: '2.2.0',
-    spdxIdentifiers: ['Zlib', 'BSD-3-Clause'],
+    version: '2.4.4',
+    spdxIdentifiers: ['BSD-3-Clause'],
     isMarkdown: false,
     isSdk: false,
     dependencies: [],
     devDependencies: [PackageRef('path'), PackageRef('test')],
-    license: '''Copyright 2015, Google Inc. All rights reserved.
+    license: '''Copyright 2013 The Flutter Authors
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-Copyright (C) 2013 Andrew Magill
-
-This software is provided 'as-is', without any express or implied
-warranty.  In no event will the authors be held liable for any damages
-arising from the use of this software.
-
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it
-freely, subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not
-   claim that you wrote the original software. If you use this software
-   in a product, an acknowledgment in the product documentation would be
-   appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be
-   misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.''',
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
 /// visibility_detector 0.4.0+2
@@ -40780,6 +39946,48 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
   );
 
+/// win32_registry 2.1.0
+const _win32_registry = Package(
+    name: 'win32_registry',
+    description: 'A package that provides a friendly Dart API for accessing the Windows Registry.',
+    repository: 'https://github.com/halildurmus/win32_registry',
+    authors: [],
+    version: '2.1.0',
+    spdxIdentifiers: ['BSD-3-Clause'],
+    isMarkdown: false,
+    isSdk: false,
+    dependencies: [PackageRef('ffi'), PackageRef('meta'), PackageRef('win32')],
+    devDependencies: [PackageRef('hooks'), PackageRef('lints'), PackageRef('test')],
+    license: '''BSD 3-Clause License
+
+Copyright (c) 2023, Halil Durmus
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''',
+  );
+
 /// window_manager 0.5.1
 const _window_manager = Package(
     name: 'window_manager',
@@ -40925,16 +40133,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.''',
   );
 
-/// printnotes 0.10.7+16
+/// printnotes 0.10.8+17
 const _printnotes = Package(
     name: 'printnotes',
     description: 'A Markdown Notes app made with Flutter',
     authors: [],
-    version: '0.10.7+16',
+    version: '0.10.8+17',
     spdxIdentifiers: ['GPL-3.0'],
     isMarkdown: false,
     isSdk: false,
-    dependencies: [PackageRef('flutter'), PackageRef('provider'), PackageRef('path'), PackageRef('path_provider'), PackageRef('file_picker'), PackageRef('listen_sharing_intent'), PackageRef('window_manager'), PackageRef('share_plus'), PackageRef('shared_preferences'), PackageRef('permission_handler'), PackageRef('url_launcher'), PackageRef('http'), PackageRef('intl'), PackageRef('markdown'), PackageRef('flutter_math_fork'), PackageRef('flutter_widget_from_html_core'), PackageRef('html'), PackageRef('flutter_highlight'), PackageRef('highlight'), PackageRef('cosmic_frontmatter'), PackageRef('visibility_detector'), PackageRef('expandable'), PackageRef('scroll_to_index'), PackageRef('keyboard_attachable'), PackageRef('introduction_screen'), PackageRef('flutter_staggered_grid_view'), PackageRef('animated_tree_view'), PackageRef('pdfrx'), PackageRef('sketch_flow'), PackageRef('flutter_speed_dial'), PackageRef('animated_snack_bar'), PackageRef('font_awesome_flutter'), PackageRef('dynamic_color')],
+    dependencies: [PackageRef('flutter'), PackageRef('provider'), PackageRef('path'), PackageRef('path_provider'), PackageRef('file_picker'), PackageRef('listen_sharing_intent'), PackageRef('window_manager'), PackageRef('share_plus'), PackageRef('shared_preferences'), PackageRef('permission_handler'), PackageRef('url_launcher'), PackageRef('http'), PackageRef('intl'), PackageRef('markdown'), PackageRef('flutter_math_fork'), PackageRef('flutter_widget_from_html_core'), PackageRef('html'), PackageRef('flutter_highlight'), PackageRef('highlight'), PackageRef('cosmic_frontmatter'), PackageRef('visibility_detector'), PackageRef('expandable'), PackageRef('scroll_to_index'), PackageRef('keyboard_attachable'), PackageRef('introduction_screen'), PackageRef('flutter_staggered_grid_view'), PackageRef('animated_tree_view'), PackageRef('syncfusion_flutter_pdfviewer'), PackageRef('sketch_flow'), PackageRef('flutter_speed_dial'), PackageRef('animated_snack_bar'), PackageRef('font_awesome_flutter'), PackageRef('dynamic_color')],
     devDependencies: [PackageRef('flutter_test'), PackageRef('flutter_lints'), PackageRef('dart_pubspec_licenses')],
     license: '''GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

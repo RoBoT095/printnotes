@@ -13,22 +13,32 @@ class GridListView extends StatefulWidget {
   const GridListView({
     super.key,
     required this.items,
-    required this.onChange,
   });
 
   final List<FileSystemEntity> items;
-  final VoidCallback onChange;
 
   @override
   State<GridListView> createState() => _GridListViewState();
 }
 
 class _GridListViewState extends State<GridListView> {
+  final Map<String, Future<PreviewData>> previewCache = {};
+
+  @override
+  void didUpdateWidget(covariant GridListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.items != oldWidget.items) {
+      previewCache.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!context.watch<SelectingProvider>().selectingMode) {
       context.read<SelectingProvider>().selectedItems.clear();
     }
+
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -42,7 +52,9 @@ class _GridListViewState extends State<GridListView> {
                 context.watch<CustomizationProvider>().noteTileSpacing,
             childCount: widget.items.length,
             itemBuilder: (context, index) => GridTileItem(
-                item: widget.items[index], onChange: widget.onChange),
+              item: widget.items[index],
+              previewCache: previewCache,
+            ),
           ),
         ),
         // Adds empty space at bottom, helps when in list view

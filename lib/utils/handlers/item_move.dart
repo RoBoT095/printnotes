@@ -31,7 +31,7 @@ class ItemMoveHandler {
         }
         if (context.mounted) {
           final readSettProv = context.read<SettingsProvider>();
-          readSettProv.loadItems(context, readSettProv.currentPath);
+          readSettProv.loadItems(readSettProv.currentPath);
         }
         onComplete?.call();
       }

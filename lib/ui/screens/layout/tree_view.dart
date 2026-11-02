@@ -20,19 +20,23 @@ import 'package:printnotes/ui/components/dialogs/bottom_menu_popup.dart';
 // Good luck to future me to understanding all this again if I need to change something later
 
 class TreeLayoutView extends StatefulWidget {
-  const TreeLayoutView({
-    super.key,
-    required this.onChange,
-  });
-
-  final VoidCallback onChange;
+  const TreeLayoutView({super.key});
 
   @override
   State<TreeLayoutView> createState() => _TreeLayoutViewState();
 }
 
 class _TreeLayoutViewState extends State<TreeLayoutView> {
-  late TreeNode<Explorable> _rootNode;
+  TreeNode<Explorable>? _rootNode;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    context.watch<SettingsProvider>().items;
+
+    _loadTree();
+  }
 
   @override
   void initState() {
@@ -43,9 +47,13 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
   Future<void> _loadTree() async {
     String mainDir = context.read<SettingsProvider>().mainDir;
 
-    _rootNode = TreeNode.root(
+    final rootNode = TreeNode.root(
         data: TFolder(mainDir.split(path.separator).last, mainDir));
-    _rootNode.addAll(await getTree(mainDir));
+    rootNode.addAll(await getTree(mainDir));
+
+    if (mounted) {
+      setState(() => _rootNode = rootNode);
+    }
   }
 
   Future<List<Node>> getTree(String dir) async {
@@ -85,13 +93,17 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
 
   @override
   Widget build(BuildContext context) {
+    if (_rootNode == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     if (!context.watch<SelectingProvider>().selectingMode) {
       context.read<SelectingProvider>().selectedItems.clear();
     }
 
     return SafeArea(
       child: TreeView.simpleTyped<Explorable, TreeNode<Explorable>>(
-        tree: _rootNode,
+        tree: _rootNode!,
         expansionBehavior: ExpansionBehavior.collapseOthersAndSnapToTop,
         expansionIndicatorBuilder: (context, node) {
           return ChevronIndicator.rightDown(
@@ -118,7 +130,6 @@ class _TreeLayoutViewState extends State<TreeLayoutView> {
                 node is FileNode
                     ? File(node.data!.path)
                     : Directory(node.data!.path),
-                widget.onChange,
               ),
               child: ListTile(
                 title: Text(node.data?.name ?? 'N/A'),

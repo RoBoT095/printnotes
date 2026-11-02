@@ -27,7 +27,7 @@ class ItemCreationHandler {
         final selectedDir = await DataPath.selectedDirectory;
         if (context.mounted) {
           final readSettProv = context.read<SettingsProvider>();
-          readSettProv.loadItems(context, readSettProv.currentPath);
+          readSettProv.loadItems(readSettProv.currentPath);
 
           customSnackBar(
                   'Folder created: ${path.relative(newFolderPath, from: selectedDir)}',
@@ -54,7 +54,7 @@ class ItemCreationHandler {
             .then((e) {
           if (context.mounted) {
             final readSettProv = context.read<SettingsProvider>();
-            readSettProv.loadItems(context, readSettProv.currentPath);
+            readSettProv.loadItems(readSettProv.currentPath);
 
             context
                 .read<NavigationProvider>()
@@ -83,7 +83,7 @@ class ItemCreationHandler {
             .then((e) {
           if (context.mounted) {
             final readSettProv = context.read<SettingsProvider>();
-            readSettProv.loadItems(context, readSettProv.currentPath);
+            readSettProv.loadItems(readSettProv.currentPath);
 
             context
                 .read<NavigationProvider>()

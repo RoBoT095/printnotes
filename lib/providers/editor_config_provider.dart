@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:printnotes/constants/toolbar_items_list.dart';
+
 import 'package:printnotes/utils/config_file/toolbar_config_handler.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 
@@ -52,6 +53,7 @@ class EditorConfigProvider with ChangeNotifier {
     } else if (configList.length > defaultToolbarList.length) {
       // Remove toolbar items if they don't exist in default list
       configList.removeWhere((item) => !defaultToolbarList.contains(item));
+      _toolbarItemList = configList;
     } else if (configList.length < defaultToolbarList.length) {
       // If default list longer than config list, add to it
       for (ToolbarConfigItem item in defaultToolbarList) {

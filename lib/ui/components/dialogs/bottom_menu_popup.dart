@@ -11,12 +11,11 @@ import 'package:printnotes/utils/handlers/item_duplication.dart';
 import 'package:printnotes/utils/handlers/item_archive.dart';
 import 'package:printnotes/utils/handlers/item_delete.dart';
 
-void showBottomMenu(
+Future<void> showBottomMenu(
   BuildContext context,
   FileSystemEntity item,
-  Function loadItems,
-) {
-  showModalBottomSheet(
+) async {
+  await showModalBottomSheet(
     context: context,
     builder: (BuildContext sheetContext) {
       bool isTreeView = sheetContext.read<SettingsProvider>().layout == 'tree';
@@ -51,9 +50,9 @@ void showBottomMenu(
                 color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('Move'),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(sheetContext);
-                ItemMoveHandler.showMoveDialog(context, [item.uri]);
+                await ItemMoveHandler.showMoveDialog(context, [item.uri]);
               },
             ),
             ListTile(
@@ -62,9 +61,9 @@ void showBottomMenu(
                 color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('Rename'),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(sheetContext);
-                ItemRenameHandler.showRenameDialog(context, item);
+                await ItemRenameHandler.showRenameDialog(context, item);
               },
             ),
             if (item is! Directory)
@@ -74,9 +73,10 @@ void showBottomMenu(
                   color: Theme.of(sheetContext).colorScheme.secondary,
                 ),
                 title: const Text('Duplicate'),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(sheetContext);
-                  ItemDuplicationHandler(context).handleDuplicateItem(item);
+                  await ItemDuplicationHandler(context)
+                      .handleDuplicateItem(item);
                 },
               ),
             ListTile(
@@ -85,9 +85,9 @@ void showBottomMenu(
                 color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('Archive'),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(sheetContext);
-                ItemArchiveHandler(context).handleArchiveItem(item);
+                await ItemArchiveHandler(context).handleArchiveItem(item);
               },
             ),
             ListTile(
@@ -96,9 +96,9 @@ void showBottomMenu(
                 color: Theme.of(sheetContext).colorScheme.secondary,
               ),
               title: const Text('To Trash'),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(sheetContext);
-                ItemDeletionHandler(context).showTrashConfirmation(item);
+                await ItemDeletionHandler(context).showTrashConfirmation(item);
               },
             ),
             ListTile(
@@ -107,9 +107,9 @@ void showBottomMenu(
                 color: Colors.red,
               ),
               title: const Text('Delete'),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(sheetContext);
-                ItemDeletionHandler(context)
+                await ItemDeletionHandler(context)
                     .showPermanentDeleteConfirmation(item);
               },
             ),

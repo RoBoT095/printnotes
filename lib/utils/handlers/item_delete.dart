@@ -51,7 +51,7 @@ class ItemDeletionHandler {
 
       if (context.mounted) {
         final readSettProv = context.read<SettingsProvider>();
-        readSettProv.loadItems(context, readSettProv.currentPath);
+        readSettProv.loadItems(readSettProv.currentPath);
 
         onComplete?.call();
 
@@ -107,7 +107,7 @@ class ItemDeletionHandler {
 
       if (context.mounted) {
         final readSettProv = context.read<SettingsProvider>();
-        readSettProv.loadItems(context, readSettProv.currentPath);
+        readSettProv.loadItems(readSettProv.currentPath);
 
         onComplete?.call();
 
@@ -139,7 +139,7 @@ class ItemDeletionHandler {
         onComplete?.call();
 
         final readSettProv = context.read<SettingsProvider>();
-        readSettProv.loadItems(context, readSettProv.currentPath);
+        readSettProv.loadItems(readSettProv.currentPath);
       }
     } catch (e) {
       if (context.mounted) {
@@ -191,7 +191,7 @@ class ItemDeletionHandler {
 
       if (context.mounted) {
         final readSettProv = context.read<SettingsProvider>();
-        readSettProv.loadItems(context, readSettProv.currentPath);
+        readSettProv.loadItems(readSettProv.currentPath);
 
         onComplete?.call();
 

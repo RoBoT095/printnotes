@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:printnotes/constants/themes/theme_color_data.dart';
+
 import 'package:printnotes/utils/config_file/custom_themes/theme_json_handler.dart';
 import 'package:printnotes/utils/configs/user_preference.dart';
 

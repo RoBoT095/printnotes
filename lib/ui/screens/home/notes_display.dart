@@ -44,9 +44,9 @@ class _NotesDisplayState extends State<NotesDisplay> {
   @override
   void initState() {
     super.initState();
+    widget.onReload(_loadItems);
     if (Platform.isAndroid) _checkMediaIntent();
     _loadItems();
-    // widget.onReload(_loadItems);
   }
 
   Future<void> _loadItems() async {
@@ -54,9 +54,7 @@ class _NotesDisplayState extends State<NotesDisplay> {
     final readSettings = context.read<SettingsProvider>();
     final readNavProv = context.read<NavigationProvider>();
 
-    // readNavProv.initRouteHistory(readSettings.mainDir);
-
-    await readSettings.loadItems(context, readNavProv.routeHistory.last);
+    await readSettings.loadItems(readNavProv.routeHistory.last);
 
     if (mounted) setState(() => _isLoading = false);
   }
@@ -135,8 +133,8 @@ class _NotesDisplayState extends State<NotesDisplay> {
     }
 
     Widget layoutView = watchSettings.layout == 'tree'
-        ? TreeLayoutView(onChange: _loadItems)
-        : GridListView(items: items, onChange: _loadItems);
+        ? TreeLayoutView()
+        : GridListView(items: items);
 
     return PopScope(
       canPop: false,

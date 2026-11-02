@@ -21,9 +21,23 @@
 
 ## Day to Day Changes:
 
-### (May 05, 2026)
+### (November 02, 2026)
 
-- Fixed issue with note editor text selection extending across full width instead of only around text
+- Fixed grid/list view clicking on a folder did not reload screen, broke it when fixing tree view (probably, it has been 6 months)
+- Fixed issue where file preview wasn't cached properly and caused text off the screen to be disposes prematurely
+- Failed to upgrade to flutter `3.44` or `3.47` due to many library dependencies lacking the required changes
+- Migrated android/app/build.gradle to gradle.kts
+- Replaced PDF viewer to one that works and isn't vibe coded so much that every version breaks something
+
+### (May 11, 2026)
+
+- Fixed tree list view not updating when modifying files
+- Fixed drawers "All Notes" button... again
+- Upgrade flutter version from `3.41.7` to `3.41.9`
+
+### (May 10, 2026)
+
+- Fixed issue with note editors text selection extending across full width of screen instead of only around text
 
 ### (April 26, 2026)
 

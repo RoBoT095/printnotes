@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:printnotes/utils/configs/user_preference.dart';
 
 class CustomizationProvider with ChangeNotifier {
