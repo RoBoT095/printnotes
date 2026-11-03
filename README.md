@@ -1,3 +1,22 @@
+> **⚠️ Project Archived Notice**
+>
+> **This project is no longer being developed and has been archived.**
+>
+> No further updates or bug fixes will be provided, and issues and pull requests will no longer be monitored. The code remains available for reference, and you're welcome to fork it and continue development on your own.
+>
+> Thank you to everyone who used, contributed to, or supported this project.
+
+<details>
+<summary><b>Why was this archived?</b></summary>
+
+I code as a hobby, and between being really busy and not getting much practice lately, my motivation to keep my skills up is fading. Watching AI take over everything has also made coding feel a lot less fun for me.
+
+The bigger reason is that I started this project knowing very little about Flutter, so it has a _lot_ of technical debt. I also added way too many half-baked features, and they're all tangled up with unrelated parts of the app. Fixing any one thing would mean rewriting far more than I'm willing to take on.
+
+If I get more free time (and a predictable schedule) down the road, I might start fresh with a version that has fewer features but a cleaner, more readable structure.
+
+</details>
+
 # Print(Notes) a better way to take Notes
 
 [![GitHub](https://img.shields.io/github/license/RoBoT095/printnotes)](https://github.com/RoBoT095/printnotes/blob/main/LICENSE)
